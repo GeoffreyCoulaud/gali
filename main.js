@@ -1,9 +1,7 @@
 import { getSteamInstallDirs, getSteamInstalledGames } from "./list-steam-games.js";
+import { getLutrisInstalledGames } from "./list-lutris-games.js";
 
-let dirs = await getSteamInstallDirs();
-console.log("Steam install dirs :");
-console.log(dirs);
-
-let games = await getSteamInstalledGames(dirs);
-console.log("Installed games :");
-console.log(games);
+let steamDirs = await getSteamInstallDirs();
+let steamGames = await getSteamInstalledGames(steamDirs);
+let lutrisGames = await getLutrisInstalledGames();
+console.log(steamGames.concat(lutrisGames));

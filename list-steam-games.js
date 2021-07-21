@@ -1,22 +1,12 @@
 import * as VDF from "vdf-parser";
 import * as fs from "fs";
 import * as path from "path";
+import { SteamGame } from "./games.js";
 const fsp = fs.promises;
 
 const USER_DIR = process.env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  path.join(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
 const STEAM_DEFAULT_INSTALL_DIR = path.join(USER_DIR, ".steam", "root");
-
-class SteamGame{
-	constructor(appid, name, steamLibraryFolder){
-		this.appid = appid;
-		this.name = name;
-		this.steamLibraryFolder = steamLibraryFolder;
-	}
-	toString(){
-		return `${this.appid} - "${this.name}"`;
-	}
-}
 
 function isundef(thing){
 	return typeof thing === "undefined";
@@ -78,7 +68,7 @@ export async function getSteamInstalledGames(dirs){
 			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name, dir);
 			// Ignore some non-games entries
 			let ignored = false;
-			if (isundef(game.appid) || isundef(game.name)){
+			if (isundef(game.appId) || isundef(game.name)){
 				ignored = true;
 			} else {
 				for (let regex of IGNORED_ENTRIES_REGEXES){
