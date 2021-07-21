@@ -1,0 +1,21 @@
+{
+  "name": "game-launcher",
+  "version": "1.0.0",
+  "description": "WIP game launcher for linux",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "main": "node main.js"
+  },
+  "keywords": [
+    "game",
+    "launcher",
+    "linux",
+    "GUI"
+  ],
+  "author": "Geoffrey Coulaud",
+  "license": "GPL-2.0-only",
+  "dependencies": {
+    "vdf-parser": "^1.2.0"
+  }
+}
