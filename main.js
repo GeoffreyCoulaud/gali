@@ -1,7 +1,11 @@
-import { getSteamInstallDirs, getSteamInstalledGames } from "./list-steam-games.js";
-import { getLutrisInstalledGames } from "./list-lutris-games.js";
+import { getSteamInstalledGames, getSteamInstallDirs } from "./scanners/steam.js";
+import { getLutrisInstalledGames } from "./scanners/lutris.js";
 
-let steamDirs = await getSteamInstallDirs();
-let steamGames = await getSteamInstalledGames(steamDirs);
-let lutrisGames = await getLutrisInstalledGames();
-console.log(steamGames.concat(lutrisGames));
+async function getInstalledGames(){
+	let steamDirs = await getSteamInstallDirs();
+	let steamGames = await getSteamInstalledGames(steamDirs);
+	let lutrisGames = await getLutrisInstalledGames();
+	return steamGames.concat(lutrisGames);
+}
+
+console.log(await getInstalledGames());

@@ -1,7 +1,7 @@
 import * as VDF from "vdf-parser";
 import * as fs from "fs";
 import * as path from "path";
-import { SteamGame } from "./games.js";
+import { SteamGame } from "../games.js";
 const fsp = fs.promises;
 
 const USER_DIR = process.env["HOME"];
@@ -42,9 +42,11 @@ export async function getSteamInstallDirs(){
 }
 
 export async function getSteamInstalledGames(dirs){
+	
+	const IS_VERBOSE = process.env.includes("--verbose");
 	const IGNORED_ENTRIES_REGEXES = [
 		/^Steamworks.*/,
-		/^SteamLinuxRuntime.*/,
+		/^(S|s)team ?(L|l)inux ?(R|r)untime.*/,
 		/^Proton.*/
 	];
 
@@ -56,10 +58,10 @@ export async function getSteamInstalledGames(dirs){
 		try {
 			entries = await fsp.readdir(manifestsDir);
 		} catch (err) {
-			console.warn(`Skipping directory ${manifestsDir} (${err})`);
+			if (IS_VERBOSE) console.warn(`Skipping directory ${manifestsDir} (${err})`);
 			continue;
 		}
-		console.log(`Reading manifests in ${manifestsDir}`);
+		if (IS_VERBOSE) console.log(`Reading manifests in ${manifestsDir}`);
 		let manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 		for (let manifest of manifests){
 			let manifestPath = path.join(manifestsDir, manifest);
@@ -79,7 +81,7 @@ export async function getSteamInstalledGames(dirs){
 				}
 			}
 			if (ignored){
-				console.warn(`Ignored game ${game.toString()}`);
+				if (IS_VERBOSE) console.warn(`\tIgnored game ${game.toString()}`);
 			} else {
 				games.push(game);
 			}
