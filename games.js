@@ -19,13 +19,35 @@ export class SteamGame extends Game{
 }
 export class LutrisGame extends Game{
 	source = "Lutris";
-	constructor(gameSlug, name, installDir, localId = undefined){
+	constructor(gameSlug, name, path, localId = undefined){
 		super(name);
 		this.gameSlug = gameSlug;
-		this.installDir = installDir;
+		this.path = path;
 		this.localId = localId;
 	}
 	toString(){
 		return `${this.source} - ${this.gameSlug} - "${this.name}"`;
+	}
+}
+export class DolphinEmuGame extends Game{
+	source = "Dolphin Emulator";
+	constructor(name, path, console = undefined){
+		super(name);
+		this.path = path;
+		this.console = console;
+	}
+	toString(){
+		let string = `${this.source} - "${this.name}"`;
+		if (typeof this.console !== "undefined"){
+			string += ` ${this.console}`;
+		}
+		return string;
+	}
+}
+
+export class GameDir{
+	constructor(path, recursive = false){
+		this.path = path;
+		this.recursive = recursive;
 	}
 }

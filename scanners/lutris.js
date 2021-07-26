@@ -1,9 +1,10 @@
-import { LutrisGame } from "../games.js";
 import { exec } from "child_process";
-import * as util from "util";
-const execp = util.promisify(exec);
+import { promisify } from "util";
+import { LutrisGame } from "../games.js";
+const execp = promisify(exec);
 
 export async function getLutrisInstalledGames(){
+	
 	let games = [];
 	
 	// Execute a command to get lutris games
@@ -23,7 +24,7 @@ export async function getLutrisInstalledGames(){
 	try {
 		parsedStdout = JSON.parse(stdout);
 	} catch (err){
-		console.warn(`Error while parsing lutris JSON : ${err}`);
+		console.warn(`Error while parsing lutris JSON (${err})`);
 		return games;
 	}
 	

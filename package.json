@@ -18,6 +18,7 @@
   "dependencies": {
     "command": "^0.0.5",
     "csv-parse": "^4.16.0",
+    "readdir-enhanced": "^6.0.4",
     "vdf-parser": "^1.2.0"
   }
 }
