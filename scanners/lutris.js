@@ -1,37 +1,30 @@
-import { exec } from "child_process";
-import { promisify } from "util";
+import { join as pathJoin } from "path";
+import { env } from "process";
+import sqlite3 from 'sqlite3'
+import { open } from 'sqlite'
 import { LutrisGame } from "../games.js";
-const execp = promisify(exec);
+
+const USER_DIR = env["HOME"];
+const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
 
 export async function getLutrisInstalledGames(){
-	
 	let games = [];
 	
-	// Execute a command to get lutris games
-	let stdout, stderr;
-	const COMMAND = "lutris --list-games --json";
+	// Open DB
+	let db;
 	try {
-		const result = await execp(COMMAND);
-		({stdout, stderr} = result);
-	} catch (error) {
-		console.warn(`Error while executing ${COMMAND} : ${err}`);
-		console.warn(stderr);
+		db = await open({filename: LUTRIS_DB_PATH, driver: sqlite3.cached.Database});
+	} catch(error){
+		console.warn(`Could not open lutris DB (${error})`);
 		return games;
 	}
-	
-	// Parse output JSON
-	let parsedStdout;
-	try {
-		parsedStdout = JSON.parse(stdout);
-	} catch (err){
-		console.warn(`Error while parsing lutris JSON (${err})`);
-		return games;
+
+	// Get games
+	const DB_REQUEST_INSTALLED_GAMES = "SELECT id, name, slug, directory FROM 'games' WHERE installed = 1";
+	const results = await db.all(DB_REQUEST_INSTALLED_GAMES);
+	for (let result of results){
+		games.push(new LutrisGame(result?.slug, result?.name, result?.directory, result?.id));
 	}
-	
-	// Make game list
-	for (let game of parsedStdout){
-		games.push(new LutrisGame(game?.slug, game?.name, game?.directory, game?.id));
-	}
-	
+
 	return games;
 }

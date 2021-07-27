@@ -2,9 +2,6 @@ class Game{
 	constructor(name){
 		this.name = name;
 	}
-	toString(){
-		return `"${this.name}"`;
-	}
 }
 export class SteamGame extends Game{
 	source = "Steam"
@@ -14,7 +11,10 @@ export class SteamGame extends Game{
 		this.steamLibraryFolder = steamLibraryFolder;
 	}
 	toString(){
-		return `${this.source} - ${this.appId} - "${this.name}"`;
+		return `"${this.name}" - ${this.source} - ${this.appId}`;
+	}
+	toArray(){
+		return [this.name, this.source, this.appId, this.steamLibraryFolder];
 	}
 }
 export class LutrisGame extends Game{
@@ -26,7 +26,10 @@ export class LutrisGame extends Game{
 		this.localId = localId;
 	}
 	toString(){
-		return `${this.source} - ${this.gameSlug} - "${this.name}"`;
+		return `"${this.name}" - ${this.source} - ${this.gameSlug}`;
+	}
+	toArray(){
+		return [this.name, this.source, this.gameSlug, this.path];
 	}
 }
 export class DolphinEmuGame extends Game{
@@ -37,11 +40,15 @@ export class DolphinEmuGame extends Game{
 		this.console = console;
 	}
 	toString(){
-		let string = `${this.source} - "${this.name}"`;
+		let string = `"${this.name}"`;
 		if (typeof this.console !== "undefined"){
-			string += ` ${this.console}`;
+			string += ` (${this.console})`;
 		}
+		string += ` - ${this.source}`;
 		return string;
+	}
+	toArray(){
+		return [this.name, this.console, this.source, this.path];
 	}
 }
 

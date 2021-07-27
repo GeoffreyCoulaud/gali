@@ -63,10 +63,12 @@ export async function getSteamInstalledGames(dirs){
 
 		// Get info from manifests
 		for (let manifest of manifests){
+
 			let manifestPath = pathJoin(manifestsDir, manifest);
 			let manifestContent = await fsp.readFile(manifestPath, {encoding: "utf-8"});
 			let manifestParsedContent = parseVDF(manifestContent);
-			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name, dir);
+			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name, dir.path);
+
 			// Ignore some non-games entries
 			let ignored = false;
 			if (typeof game.appId === "undefined" || typeof game.name === "undefined"){
@@ -82,6 +84,7 @@ export async function getSteamInstalledGames(dirs){
 			if (!ignored){
 				games.push(game);
 			}
+
 		}
 	}
 	

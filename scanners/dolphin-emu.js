@@ -53,7 +53,7 @@ export async function getDolphinEmuInstalledGames(dirs){
 		try {
 			files = await readdirAsync(dir.path, {filter: GAME_FILES_REGEX, deep: dir.recursive});
 		} catch (error){
-			console.warn(`Error while reading ${dir.path} : ${error}`);
+			console.warn(`Skipping directory ${dir.path} (${error})`);
 			continue;
 		}
 

@@ -19,6 +19,8 @@
     "command": "^0.0.5",
     "csv-parse": "^4.16.0",
     "readdir-enhanced": "^6.0.4",
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2",
     "vdf-parser": "^1.2.0"
   }
 }

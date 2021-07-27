@@ -2,14 +2,41 @@ import { getDolphinEmuInstallDirs, getDolphinEmuInstalledGames } from "./scanner
 import { getSteamInstalledGames, getSteamInstallDirs } from "./scanners/steam.js";
 import { getLutrisInstalledGames } from "./scanners/lutris.js";
 
-const steamDirs = await getSteamInstallDirs();
-const dolphinDirs = await getDolphinEmuInstallDirs();
-let dolphinGames = await getDolphinEmuInstalledGames(dolphinDirs);
-let steamGames = await getSteamInstalledGames(steamDirs);
-let lutrisGames = await getLutrisInstalledGames();
-let games = (new Array()).concat(steamGames, lutrisGames, dolphinGames);
-
-console.log("Games list :");
-for (let game of games){
-	console.log(`\t${game.toString()}`);
+async function getInstalledGames(){
+	const dolphinDirs = await getDolphinEmuInstallDirs();
+	const dolphinGames = await getDolphinEmuInstalledGames(dolphinDirs);
+	const steamDirs = await getSteamInstallDirs();
+	const steamGames = await getSteamInstalledGames(steamDirs);
+	const lutrisGames = await getLutrisInstalledGames();
+	return (new Array()).concat(steamGames, lutrisGames, dolphinGames);
 }
+
+function getArrayColumnSizes(gameArrays){
+	let padding = [];
+	for (let gameArray of gameArrays){
+		for (let i = 0; i < gameArray.length; i++){
+			let strlen = gameArray[i].length;
+			if (typeof padding[i] === "undefined"){
+				padding[i] = strlen;
+			} else if (padding[i] < strlen){
+				padding[i] = strlen;
+			}
+		}
+	}
+	return padding;
+}
+
+function displayGames(games){
+	const gameArrays = games.map(game=>game.toArray());
+	const padding    = getArrayColumnSizes(gameArrays);
+	for (let arr of gameArrays){
+		let string = " ● ";
+		string += arr.map((column, index) => String(column).padEnd(padding[index])).join(" | ");
+		console.log(string);
+	}
+}
+
+console.log("Getting games...");
+const games = await getInstalledGames();
+console.log("\nGames list :");
+displayGames(games);
