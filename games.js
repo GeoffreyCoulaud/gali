@@ -1,10 +1,19 @@
-class Game{
+export class Game{
+	source = "Unknown";
 	constructor(name){
 		this.name = name;
 	}
 }
+
+export class GameDir{
+	constructor(path, recursive = false){
+		this.path = path;
+		this.recursive = recursive;
+	}
+}
+
 export class SteamGame extends Game{
-	source = "Steam"
+	source = "Steam";
 	constructor(appId, name, steamLibraryFolder){
 		super(name);
 		this.appId = appId;
@@ -17,6 +26,7 @@ export class SteamGame extends Game{
 		return [this.name, this.source, this.appId, this.steamLibraryFolder];
 	}
 }
+
 export class LutrisGame extends Game{
 	source = "Lutris";
 	constructor(gameSlug, name, path, localId = undefined){
@@ -32,29 +42,36 @@ export class LutrisGame extends Game{
 		return [this.name, this.source, this.gameSlug, this.path];
 	}
 }
-export class DolphinEmuGame extends Game{
-	source = "Dolphin Emulator";
-	constructor(name, path, console = undefined){
+
+export class EmulatedGame extends Game{
+	constructor(name, path, source = "Unknown", console = "Unknown"){
 		super(name);
 		this.path = path;
+		this.source = source;
 		this.console = console;
 	}
 	toString(){
-		let string = `"${this.name}"`;
-		if (typeof this.console !== "undefined"){
-			string += ` (${this.console})`;
-		}
-		string += ` - ${this.source}`;
-		return string;
+		return `"${this.name}" - ${this.source} (${this.console})`;
 	}
 	toArray(){
-		return [this.name, this.console, this.source, this.path];
+		return [this.name, this.source, this.console, this.path];
 	}
 }
 
-export class GameDir{
-	constructor(path, recursive = false){
-		this.path = path;
-		this.recursive = recursive;
+export class DolphinEmuGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Dolphin emulator", "Nintendo Wii / GameCube");
+	}
+}
+
+export class YuzuGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Yuzu", "Nintendo Switch");
+	}
+}
+
+export class CitraGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Citra", "Nintendo 3DS");
 	}
 }

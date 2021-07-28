@@ -8,7 +8,7 @@ import config2obj from "../config2obj.js";
 const USER_DIR = env["HOME"];
 const DOLPHIN_EMU_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config", "dolphin-emu", "Dolphin.ini");
 
-export async function getDolphinEmuInstallDirs(){
+export async function getDolphinEmuInstallDirs(warn = false){
 
 	let dirs = [];
 	
@@ -17,7 +17,7 @@ export async function getDolphinEmuInstallDirs(){
 	try{
 		configFileContents = await fsp.readFile(DOLPHIN_EMU_INSTALL_DIRS_PATH, "utf-8");
 	} catch (error){
-		console.warn(`Unable to read dolphin config file : ${error}`);
+		if (warn) console.warn(`Unable to read dolphin config file : ${error}`);
 		return dirs;
 	}
 	
@@ -32,16 +32,18 @@ export async function getDolphinEmuInstallDirs(){
 	// Get paths
 	if (Number.isNaN(nDirs)){ return dirs; }
 	for (let i = 0; i < nDirs; i++){
-		let dir = parsedConfig["General"].get(`ISOPath${i}`);
-		if (typeof dir === "undefined"){ continue; }
-		dirs.push(new GameDir(dir, recursive));
+		let path = parsedConfig["General"].get(`ISOPath${i}`);
+		if (typeof path === "undefined"){ continue; }
+		dirs.push(new GameDir(path, recursive));
 	}
 
 	return dirs;
 
 }
 
-export async function getDolphinEmuInstalledGames(dirs){
+export async function getDolphinEmuInstalledGames(dirs, warn = false){
+
+	// TODO detect games console between GameCube and Wii
 
 	const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
 	let games = [];
@@ -53,7 +55,7 @@ export async function getDolphinEmuInstalledGames(dirs){
 		try {
 			files = await readdirAsync(dir.path, {filter: GAME_FILES_REGEX, deep: dir.recursive});
 		} catch (error){
-			console.warn(`Skipping directory ${dir.path} (${error})`);
+			if (warn) console.warn(`Skipping directory ${dir.path} (${error})`);
 			continue;
 		}
 

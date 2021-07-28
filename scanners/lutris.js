@@ -7,7 +7,7 @@ import { LutrisGame } from "../games.js";
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
 
-export async function getLutrisInstalledGames(){
+export async function getLutrisInstalledGames(warn = false){
 	let games = [];
 	
 	// Open DB
@@ -15,7 +15,7 @@ export async function getLutrisInstalledGames(){
 	try {
 		db = await open({filename: LUTRIS_DB_PATH, driver: sqlite3.cached.Database});
 	} catch(error){
-		console.warn(`Could not open lutris DB (${error})`);
+		if (warn) console.warn(`Could not open lutris DB (${error})`);
 		return games;
 	}
 

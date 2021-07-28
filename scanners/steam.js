@@ -8,7 +8,7 @@ const USER_DIR = env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
 const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam", "root");
 
-export async function getSteamInstallDirs(){
+export async function getSteamInstallDirs(warn = false){
 	let dirs = [];
 
 	// Read default steam install directory
@@ -22,7 +22,7 @@ export async function getSteamInstallDirs(){
 		let fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
 		parsedContents = parseVDF(fileContents);
 	} catch (error){
-		console.warn("Error during read of user specified install directories file.");
+		if (warn) console.warn("Error during read of user specified install directories file.");
 		return dirs;
 	}
 	const libraryfolders = parsedContents.libraryfolders;
@@ -38,7 +38,7 @@ export async function getSteamInstallDirs(){
 	return dirs;
 }
 
-export async function getSteamInstalledGames(dirs){
+export async function getSteamInstalledGames(dirs, warn = false){
 	
 	const IGNORED_ENTRIES_REGEXES = [
 		/^Steamworks.*/,
@@ -56,7 +56,7 @@ export async function getSteamInstalledGames(dirs){
 		try {
 			entries = await fsp.readdir(manifestsDir);
 		} catch (err) {
-			console.warn(`Skipping directory ${manifestsDir} (${err})`);
+			if (warn) console.warn(`Skipping directory ${manifestsDir} (${err})`);
 			continue;
 		}
 		let manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
