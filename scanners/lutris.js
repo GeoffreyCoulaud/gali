@@ -1,8 +1,8 @@
+import { LutrisGame } from "../games.js";
 import { join as pathJoin } from "path";
+import { open } from 'sqlite'
 import { env } from "process";
 import sqlite3 from 'sqlite3'
-import { open } from 'sqlite'
-import { LutrisGame } from "../games.js";
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");

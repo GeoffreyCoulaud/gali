@@ -1,76 +1,103 @@
-import { join as pathJoin } from "path";
+import { join as pathJoin, basename as pathBasename } from "path";
 import { CitraGame, GameDir } from "../games.js";
-import { promises as fsp } from "fs"
-import { readdirAsync } from "readdir-enhanced";
 import config2obj from "../config2obj.js";
+import { promises as fsp } from "fs"
+import { getROMs } from "./roms.js";
 import { env } from "process";
 
-const USER_DIR = env["HOME"];
-const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config", "citra-emu", "qt-config.ini");
+async function getCitraConfig(){
+	
+	const USER_DIR = env["HOME"];
+	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config", "citra-emu", "qt-config.ini");
+	const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
+	const config = config2obj(configFileContents);
+	
+	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
+	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
+	if (Number.isNaN(nDirs)){
+		throw Error("Non numeric Paths\\gamedirs\\size value in config file")
+	}
 
-export async function getCitraInstallDirs(warn = false){
+	return config;
+}
 
-	// TODO test with 3ds files. 
+async function getCitraROMDirs(config){
 
-	// Read config
 	let dirs = [];
 	
-	// Read dolphin config file
-	let configFileContents;
-	try{
-		configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
-	} catch (error){
-		if (warn) console.warn(`Unable to read yuzu config file : ${error}`);
-		return dirs;
-	}
-	
-	// Parse config file lines 
-	const parsedConfig = config2obj(configFileContents);
-	
 	// Get number of paths
-	if (typeof parsedConfig["UI"] === "undefined") { return dirs; }
-	const nDirs = parseInt(parsedConfig["UI"].get("Paths\\gamedirs\\size"));
+	if (typeof config["UI"] === "undefined") { return dirs; }
+	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
 	
 	// Get paths
-	if (Number.isNaN(nDirs)){ return dirs; }
 	for (let i = 1; i <= nDirs; i++){
-		let recursive = String(parsedConfig["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
-		let path       = parsedConfig["UI"].get(`Paths\\gamedirs\\${i}\\path`);
+		let recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
+		let path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
 		if (typeof path === "undefined"){ continue; }
 		dirs.push(new GameDir(path, recursive));
 	}
-
+	
 	return dirs;
+	
+}
+
+async function getCitraROMs(dirs){
+	
+	// TODO test with 3ds files. 
+	const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
+	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
+	const games = gamePaths.map(path => new CitraGame(pathBasename(path), path));
+	return games;
 
 }
 
-export async function getCitraInstalledGames(dirs, warn = false){
+async function getCitraInstalledGames(config){
 
-	const GAME_FILES_REGEX = /.+\.(3ds|cia|cci)/i;
-	let games = [];
+	// TODO	
+	throw "Not implemented";
 
-	for (let dir of dirs){
-		
-		// Get all the files in dir recursively
-		let files;
-		try {
-			files = await readdirAsync(dir.path, {filter: GAME_FILES_REGEX, deep: dir.recursive});
-		} catch (error){
-			if (warn) console.warn(`Skipping directory ${dir.path} (${error})`);
-			continue;
-		}
+}
 
-		// Filter to keep only game files
-		if (files.length === 0) console.warn(`No game files in "${dir.path}"${dir.recursive ? " (recursively)" : ""}`);
+export async function getCitraGames(warn = false){
 
-		// Add games
-		for (let file of files){
-			let fileAbsPath = pathJoin(dir.path, file);
-			games.push(new CitraGame(file, fileAbsPath));
-		}
-
+	// Get config
+	let config; 
+	try {
+		config = await getCitraConfig(warn);
+	} catch (error) {
+		if (warn) console.warn(`Unable to read citra config file : ${error}`);
 	}
 
-	return games;
+	// Get ROM dirs
+	let romDirs = [];
+	if (typeof config !== "undefined"){
+		try {
+			romDirs = await getCitraROMDirs(config);
+		} catch (error){
+			if (warn) console.warn(`Unable to get citra ROM dirs : ${error}`);
+		}
+	}
+
+	// Get ROM games
+	let romGames = [];
+	if (romDirs.length > 0){
+		try {
+			romGames = await getCitraROMs(romDirs);
+		} catch {
+			if (warn) console.warn(`Unable to get citra ROMs : ${error}`);
+		}
+	}
+
+	// Get installed games
+	let installedGames = [];
+	if (typeof config !== "undefined"){
+		try {
+			installedGames = await getCitraInstalledGames();
+		} catch (error){
+			if (warn) console.warn(`Unable to get citra installed games : ${error}`);
+		}
+	}
+
+	return [...romGames, ...installedGames];
 
 }

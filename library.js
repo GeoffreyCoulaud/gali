@@ -1,8 +1,9 @@
-import { getDolphinEmuInstallDirs, getDolphinEmuInstalledGames } from "./scanners/dolphin-emu.js";
 import { getSteamInstalledGames, getSteamInstallDirs } from "./scanners/steam.js";
-import { getYuzuInstallDirs, getYuzuInstalledGames } from "./scanners/yuzu.js";
+import { getDolphinGames } from "./scanners/dolphin.js";
 import { getLutrisInstalledGames } from "./scanners/lutris.js";
+import { getCitraGames } from "./scanners/citra.js";
 import { get2DArrayColumnSizes } from "./utils.js";
+import { getYuzuGames } from "./scanners/yuzu.js";
 
 export class Library{	
 	
@@ -16,14 +17,11 @@ export class Library{
 	}
 
 	async scan(){
-		const [yuzuDirs, dolphinDirs, steamDirs] = await Promise.all([
-			getYuzuInstallDirs(this.warn),
-			getDolphinEmuInstallDirs(this.warn),
-			getSteamInstallDirs(this.warn),
-		]);
+		const steamDirs = await getSteamInstallDirs(this.warn);
 		let games = await Promise.all([
-			getYuzuInstalledGames(yuzuDirs, this.warn),
-			getDolphinEmuInstalledGames(dolphinDirs, this.warn),
+			getYuzuGames(this.warn),
+			getCitraGames(this.warn),
+			getDolphinGames(this.warn),
 			getSteamInstalledGames(steamDirs, this.warn),
 			getLutrisInstalledGames(this.warn),
 		]);

@@ -58,9 +58,9 @@ export class EmulatedGame extends Game{
 	}
 }
 
-export class DolphinEmuGame extends EmulatedGame{
+export class DolphinGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "Dolphin emulator", "Nintendo Wii / GameCube");
+		super(name, path, "Dolphin", "Nintendo Wii / GameCube");
 	}
 }
 

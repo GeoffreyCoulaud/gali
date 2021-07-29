@@ -1,8 +1,8 @@
-import { parse as parseVDF} from "vdf-parser";
+import { GameDir, SteamGame } from "../games.js";
 import { promises as fsp, existsSync } from "fs";
+import { parse as parseVDF} from "vdf-parser";
 import { join as pathJoin } from "path";
 import { env } from "process";
-import { GameDir, SteamGame } from "../games.js";
 
 const USER_DIR = env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
