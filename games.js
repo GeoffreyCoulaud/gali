@@ -29,11 +29,11 @@ export class SteamGame extends Game{
 
 export class LutrisGame extends Game{
 	source = "Lutris";
-	constructor(gameSlug, name, path, localId = undefined){
+	constructor(gameSlug, name, path, configPath = undefined){
 		super(name);
 		this.gameSlug = gameSlug;
 		this.path = path;
-		this.localId = localId;
+		this.configPath = configPath;
 	}
 	toString(){
 		return `"${this.name}" - ${this.source} - ${this.gameSlug}`;
@@ -73,5 +73,11 @@ export class YuzuGame extends EmulatedGame{
 export class CitraGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Citra", "Nintendo 3DS");
+	}
+}
+
+export class CemuGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Cemu in Lutris", "Nintendo Wii U");
 	}
 }

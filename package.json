@@ -21,6 +21,8 @@
     "readdir-enhanced": "^6.0.4",
     "sqlite": "^4.0.23",
     "sqlite3": "^5.0.2",
-    "vdf-parser": "^1.2.0"
+    "vdf-parser": "^1.2.0",
+    "xml2js": "^0.4.23",
+    "yaml": "^1.10.2"
   }
 }
