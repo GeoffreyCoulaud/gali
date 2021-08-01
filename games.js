@@ -71,3 +71,9 @@ export class CemuGame extends EmulatedGame{
 		super(name, path, "Cemu in Lutris", "Nintendo Wii U");
 	}
 }
+
+export class PPSSPPGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "PPSSPP", "Sony PSP");
+	}
+}

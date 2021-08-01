@@ -1,6 +1,7 @@
 import { getLutrisInstalledGames } from "./scanners/lutris.js";
 import { getCemuGames } from "./scanners/lutris-cemu.js";
 import { getDolphinGames } from "./scanners/dolphin.js";
+import { getPPSSPPGames } from "./scanners/ppsspp.js";
 import { getCitraGames } from "./scanners/citra.js";
 import { getSteamGames } from "./scanners/steam.js";
 import { getYuzuGames } from "./scanners/yuzu.js";
@@ -12,6 +13,7 @@ export class Library{
 		"dolphin",
 		"yuzu",
 		"citra",
+		"ppsspp",
 		"lutris",
 		"cemu in lutris",
 	];
@@ -61,6 +63,9 @@ export class Library{
 		}
 		if (this.enabledSources.includes("citra")){
 			promises.push(getCitraGames(this.warn));
+		}
+		if (this.enabledSources.includes("ppsspp")){
+			promises.push(getPPSSPPGames(this.warn));
 		}
 
 		// Add straightforward games to the list 
