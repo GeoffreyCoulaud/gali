@@ -1,11 +1,87 @@
-import { dirname as pathDirname, join as pathJoin } from "path";
+import { dirname as pathDirname, join as pathJoin, basename as pathBasename, resolve as pathResolve } from "path";
 import { Parser as XMLParser } from "xml2js";
-import { CemuGame } from "../games.js";
+import { GameDir, CemuGame } from "../games.js";
 import { promises as fsp } from "fs";
+import { osLocale } from "os-locale";
+import { getROMs } from "./roms.js";
 import { env } from "process";
 import YAML from "yaml";
 
-// ? Scan games for use through cemu in lutris
+
+function winePathToLinux(winePath){
+
+	if (typeof winePath !== "string"){
+		throw new TypeError("path must be a string");
+	}
+	if (!winePath.startsWith("Z:\\")){
+		throw new Error("path must be in the Z: drive");
+	}
+
+	let linuxPath = winePath.replace("Z:\\", "/");
+	linuxPath = linuxPath.replaceAll("\\", "/");
+	return linuxPath;
+
+}
+
+function linuxPathToWine(linuxPath){
+
+	if (typeof linuxPath !== "string"){
+		throw new TypeError("path must be a string");
+	}
+	if (!linuxPath.startsWith("/")){
+		throw new Error("path must be absolute");
+	}
+
+	let winePath = linuxPath.replace("/", "Z:\\");
+	winePath = winePath.replaceAll("/", "\\");
+	return winePath;
+
+}
+
+async function getRPXGameName(linuxGamePath){
+
+	let name;
+
+	// Read meta.xml
+	let meta;
+	try {
+		const gameDir = pathDirname(linuxGamePath);
+		const metaPath = pathResolve(pathJoin(gameDir, "..", "meta", "meta.xml"));
+		const metaFileContents = await fsp.readFile(metaPath, "utf-8");
+		const parser = new XMLParser();
+		meta = await parser.parseStringPromise(metaFileContents);
+	} catch (error){		
+		return name;
+	}
+	
+	// Get user locale for game name
+	let preferredLangs = ["en", "ja"]; // Prevalence : system > english > japanese
+	let userLang;
+	try {
+		userLang = (new Intl.locale(await osLocale())).language;
+	} catch (error){}
+	if (typeof userLang !== "undefined"){
+		preferredLangs.splice(0, 0, userLang);
+	}
+
+	// Get longname lang key from available lang options
+	const longnameLangOptions = Object.keys(meta?.menu).filter(key=>key.startsWith("longname_")).map(key=>key.replace("longname_", ""));
+	let longnameKey;
+	for (let lang of preferredLangs){
+		if (longnameLangOptions.includes(lang)){
+			longnameKey = `longname_${lang}`;
+			break;
+		}
+	}
+	
+	// Get longname in config
+	let longname = meta?.menu?.[longnameKey]?.[0]?.["_"];
+	longname = longname.replaceAll("\n", " - ");
+	name = longname;
+
+	return name;
+
+}
 
 async function getCemuConfig(cemuExePath){
 
@@ -14,16 +90,7 @@ async function getCemuConfig(cemuExePath){
 	const configFileContents = await fsp.readFile(configFilePath, "utf-8");
 	const parser = new XMLParser();
 	const config = await parser.parseStringPromise(configFileContents);
-
-	// TODO validate config
-
 	return config;
-
-}
-
-async function getCemuROMDirs(config){
-
-	// Search into config for game directories
 
 }
 
@@ -32,9 +99,9 @@ async function getCemuCachedROMs(config){
 	// Search into config for cached games
 	let games = [];
 
-	const gameCacheEntry = config?.content?.GameCache?.[0]?.Entry;
-	if (typeof gameCacheEntry !== "undefined"){
-		for (let game of gameCacheEntry){
+	const gameCache = config?.content?.GameCache?.[0]?.Entry;
+	if (typeof gameCache !== "undefined"){
+		for (let game of gameCache){
 			let customName = game?.custom_name?.[0];
 			let defaultName = game?.name?.[0];
 			let path = game?.path?.[0];
@@ -60,14 +127,52 @@ async function getCemuCachedROMs(config){
 
 }
 
-async function getCemuROMs(dirs){
+async function getCemuROMDirs(config){
 
-	// Scan cemu dirs
-	throw "Not implemented";
+	// Search into config for ROM dirs
+	const wineGamePaths = config?.content?.GamePaths?.[0]?.Entry;
+
+	// Convert wine paths into linux paths
+	// TODO Find a way to not rely on Z: path
+	const linuxGamePaths = wineGamePaths.map(winePath=>winePathToLinux(winePath)); 
+	
+	// Convert paths into gameDirs 
+	const gameDirs = linuxGamePaths.map(path=>new GameDir(path, true)); 
+	return gameDirs;
 
 }
 
-export async function getCemuGames(cemuLutrisGame, scan = true, warn = false){
+async function getCemuROMs(dirs, warn = false){
+
+	// Scan cemu dirs
+	const GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
+	const gameRomPaths = await getROMs(dirs, GAME_FILES_REGEX, warn);
+
+	// Convert found paths into cemu games
+	let romGamesPromises = gameRomPaths.map(async linuxPath=>{
+		// Get base info
+		const winePath = linuxPathToWine(linuxPath);
+		
+		// Try to get game real name
+		const basename = pathBasename(linuxPath);
+		let name = basename;
+		if (basename.endsWith("rpx")){
+			const gameName = await getRPXGameName(linuxPath);
+			if (typeof gameName !== "undefined"){
+				name = gameName;
+			}
+		}
+		
+		// Build game
+		return new CemuGame(name, winePath);
+	});
+	const romGames = await Promise.all(romGamesPromises);
+	
+	return romGames;
+
+}
+
+export async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
 
 	// Read lutris config for cemu (to get cemu's exe path)
 	const USER_DIR = env["HOME"];
@@ -96,12 +201,12 @@ export async function getCemuGames(cemuLutrisGame, scan = true, warn = false){
 	let romGames = [];
 	if (typeof config !== "undefined"){
 		
-		if (scan){
+		if (!preferCache){
 			
 			// Get cemu's ROM dirs
-			let romDirs
+			let romDirs;
 			try {
-				romDirs = getCemuROMDirs(config);
+				romDirs = await getCemuROMDirs(config);
 			} catch (error){
 				if (warn) console.warn(`Unable to get cemu ROM dirs : ${error}`);
 			}
@@ -109,7 +214,7 @@ export async function getCemuGames(cemuLutrisGame, scan = true, warn = false){
 			// Scan ROMDirs for ROMs
 			if (romDirs.length > 0){
 				try {
-					romGames = getCemuROMs(romDirs);
+					romGames = await getCemuROMs(romDirs, warn);
 				} catch (error){
 					if (warn) console.warn(`Unable to get cemu ROMs : ${error}`);
 				}
@@ -119,7 +224,7 @@ export async function getCemuGames(cemuLutrisGame, scan = true, warn = false){
 
 			// Get cemu's cached ROM games
 			try {
-				romGames = getCemuCachedROMs(config);
+				romGames = await getCemuCachedROMs(config);
 			} catch (error){
 				if (warn) console.warn(`Unable to get cemu cached ROMs : ${error}`);
 			}

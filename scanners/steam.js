@@ -8,7 +8,21 @@ const USER_DIR = env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
 const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam", "root");
 
-export async function getSteamInstallDirs(warn = false){
+async function getSteamConfig(){
+
+	const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
+	const config = parseVDF(fileContents);
+
+	// Validate
+	if (typeof config.libraryfolders === "undefined"){
+		throw "Invalid steam config : libraryfolders key undefined";
+	}
+
+	return config;
+
+}
+
+async function getSteamInstallDirs(config){
 	let dirs = [];
 
 	// Read default steam install directory
@@ -17,28 +31,16 @@ export async function getSteamInstallDirs(warn = false){
 	}
 
 	// Read user specified steam install directories
-	let parsedContents;
-	try {
-		let fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
-		parsedContents = parseVDF(fileContents);
-	} catch (error){
-		if (warn) console.warn("Error during read of user specified install directories file.");
-		return dirs;
+	const libraryfolders = config.libraryfolders;
+	let keys = Object.keys(libraryfolders);
+	for (let i = 0; i < keys.length-1; i++){
+		dirs.push(new GameDir(libraryfolders[keys[i]].path));
 	}
-	const libraryfolders = parsedContents.libraryfolders;
 	
-	// Get library folder path
-	if (libraryfolders){
-		let keys = Object.keys(libraryfolders);
-		for (let i = 0; i < keys.length-1; i++){
-			dirs.push(new GameDir(libraryfolders[keys[i]].path));
-		}
-	}
-
 	return dirs;
 }
 
-export async function getSteamInstalledGames(dirs, warn = false){
+async function getSteamInstalledGames(dirs){
 	
 	const IGNORED_ENTRIES_REGEXES = [
 		/^Steamworks.*/,
@@ -52,13 +54,9 @@ export async function getSteamInstalledGames(dirs, warn = false){
 
 		// Get all games manifests of dir
 		const manifestsDir = pathJoin(dir.path, "steamapps");
-		let entries;
-		try {
-			entries = await fsp.readdir(manifestsDir);
-		} catch (err) {
-			if (warn) console.warn(`Skipping directory ${manifestsDir} (${err})`);
-			continue;
-		}
+		let entries = [];
+		try { entries = await fsp.readdir(manifestsDir); } 
+		catch (err) { continue; }
 		let manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 
 		// Get info from manifests
@@ -67,7 +65,7 @@ export async function getSteamInstalledGames(dirs, warn = false){
 			let manifestPath = pathJoin(manifestsDir, manifest);
 			let manifestContent = await fsp.readFile(manifestPath, {encoding: "utf-8"});
 			let manifestParsedContent = parseVDF(manifestContent);
-			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name, dir.path);
+			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name);
 
 			// Ignore some non-games entries
 			let ignored = false;
@@ -89,4 +87,38 @@ export async function getSteamInstalledGames(dirs, warn = false){
 	}
 	
 	return games;
+}
+
+export async function getSteamGames(warn = false){
+
+	// Get config
+	let config;
+	try {
+		config = await getSteamConfig();
+	} catch (error){
+		if (warn) console.warn(`Unable to get steam config : ${error}`);
+	}
+
+	// Get game dirs
+	let dirs = [];
+	if (typeof config !== "undefined"){
+		try{
+			dirs = await getSteamInstallDirs(config);
+		} catch (error){
+			if (warn) console.warn(`Unable to get steam install dirs : ${error}`);
+		}
+	}
+
+	// Get games
+	let games = [];
+	if (dirs.length > 0){
+		try {
+			games = await getSteamInstalledGames(dirs);
+		} catch (error){
+			if (warn) console.warn(`Unable to get steam installed games : ${error}`);
+		}
+	}
+
+	return games;
+
 }

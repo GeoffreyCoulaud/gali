@@ -1,10 +1,15 @@
 import { Library } from "./library.js";
 
 console.log("Getting games...");
-let lib = new Library();
-lib.warn = true;
-await lib.scan();
-await lib.sort("name", 1);
+
+let library = new Library(
+	Library.sources, 
+	true,
+	true
+);
+await library.scan();
+await library.sort("name", 1);
 
 console.log("\nGames list :");
-lib.displayInConsole();
+
+library.displayInConsole();

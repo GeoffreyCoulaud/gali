@@ -11,12 +11,13 @@
 
 ## Known issues
 * Dolphin emulator games get named after their ROM's filename
+* Cemu in lutris games get named after their ROM's filename (unpacked games are fine)
 * Dolphin emulator games don't get distinguished between GameCube and Wii
 * Installed Citra games aren't supported
 * Installed Yuzu games aren't supported
-* Cemu scanner isn't fully implemented. Reading from game cache is implemented but discovering from disk is not.
 
 ## TODO
+* Retroarch support
+* Get icon paths for all game types
 * Start method for all game types
 * Launcher UI
-* Retroarch support

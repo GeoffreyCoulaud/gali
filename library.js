@@ -1,15 +1,28 @@
-import { getSteamInstalledGames, getSteamInstallDirs } from "./scanners/steam.js";
 import { getLutrisInstalledGames } from "./scanners/lutris.js";
+import { getCemuGames } from "./scanners/lutris-cemu.js";
 import { getDolphinGames } from "./scanners/dolphin.js";
 import { getCitraGames } from "./scanners/citra.js";
-import { getCemuGames } from "./scanners/lutris-cemu.js";
+import { getSteamGames } from "./scanners/steam.js";
 import { getYuzuGames } from "./scanners/yuzu.js";
-import { get2DArrayColumnSizes } from "./utils.js";
 
 export class Library{	
 	
+	static sources =[
+		"steam",
+		"dolphin",
+		"yuzu",
+		"citra",
+		"lutris",
+		"cemu in lutris",
+	];
+
+	enabledSources = [];
+	preferCache = true;
+	warn = false;
 	games = [];
-	constructor(warn = false){
+	constructor(sources = [], preferCache = true, warn = false){
+		this.enabledSources = sources;
+		this.preferCache = preferCache;
 		this.warn = warn;
 	}
 
@@ -19,44 +32,42 @@ export class Library{
 
 	async scan(){
 		
-		let promises = [
+		// Get lutris games
+		if (this.enabledSources.includes("lutris")){
+			const lutrisGames = await getLutrisInstalledGames(this.warn);
+			this.games.push(...lutrisGames);
 			
-			// Get lutris games
-			getLutrisInstalledGames(this.warn)
-			.then(lutrisGames=>{
-				this.games.push(...lutrisGames);
-				// Get cemu in lutris games
-				const cemuInLutrisGame = lutrisGames.find(game => game.name.toLowerCase() === "cemu");
-				if (typeof cemuInLutrisGame !== "undefined"){
-					return getCemuGames(cemuInLutrisGame, false, this.warn); // TODO choose between "scan" / "read cache"
-				} else {
-					return [];
+			// Get cemu games
+			if (this.enabledSources.includes("cemu in lutris")){
+				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
+				if (typeof cemuGame !== "undefined"){
+					const cemuGames = await getCemuGames(cemuGame, this.preferCache, this.warn);
+					this.games.push(...cemuGames);
 				}
-			}).then(cemuGames=>{
-				this.games.push(...cemuGames);
-			}),
+			}
 
-			// Get steam games
-			getSteamInstallDirs(this.warn)
-			.then(steamDirs=>{
-				return getSteamInstalledGames(steamDirs, this.warn);
-			}).then(steamGames=>{
-				this.games.push(...steamGames);
-			}),
+		}
 
-			// Get other games
-			Promise.all([
-				getYuzuGames(this.warn),
-				getCitraGames(this.warn),
-				getDolphinGames(this.warn),
-			]).then(scans=>{
-				for (let scan of scans){
-					this.games.push(...scan);
-				}
-			})
-		];
+		// Get all other straightforward games
+		let promises = []
+		if (this.enabledSources.includes("steam")){
+			promises.push(getSteamGames(this.warn));
+		}
+		if (this.enabledSources.includes("yuzu")){
+			promises.push(getYuzuGames(this.warn));
+		}
+		if (this.enabledSources.includes("dolphin")){
+			promises.push(getDolphinGames(this.warn));
+		}
+		if (this.enabledSources.includes("citra")){
+			promises.push(getCitraGames(this.warn));
+		}
 
-		await Promise.all(promises);
+		// Add straightforward games to the list 
+		const results = await Promise.all(promises);
+		const games = results.flat();
+		this.games.push(...games);
+
 	}
 
 	async sort(criteria = "name", order = 1){
@@ -74,10 +85,8 @@ export class Library{
 	}
 
 	displayInConsole(){
-		const gameArrays = this.games.map(game=>game.toArray());
-		const padding    = get2DArrayColumnSizes(gameArrays);
-		for (let arr of gameArrays){
-			let string = " ● " + arr.map((column, index) => String(column).padEnd(padding[index])).join(" | ");
+		for (let game of this.games){
+			let string = " ● " + game.toString();
 			console.log(string);
 		}
 	}

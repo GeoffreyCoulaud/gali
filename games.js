@@ -14,32 +14,25 @@ export class GameDir{
 
 export class SteamGame extends Game{
 	source = "Steam";
-	constructor(appId, name, steamLibraryFolder){
+	constructor(appId, name){
 		super(name);
 		this.appId = appId;
-		this.steamLibraryFolder = steamLibraryFolder;
 	}
 	toString(){
-		return `"${this.name}" - ${this.source} - ${this.appId}`;
-	}
-	toArray(){
-		return [this.name, this.source, this.appId, this.steamLibraryFolder];
+		return `${this.name} - ${this.source} - ${this.appId}`;
 	}
 }
 
 export class LutrisGame extends Game{
 	source = "Lutris";
-	constructor(gameSlug, name, path, configPath = undefined){
+	constructor(gameSlug, name, prefixPath, configPath = undefined){
 		super(name);
 		this.gameSlug = gameSlug;
-		this.path = path;
+		this.prefixPath = prefixPath;
 		this.configPath = configPath;
 	}
 	toString(){
-		return `"${this.name}" - ${this.source} - ${this.gameSlug}`;
-	}
-	toArray(){
-		return [this.name, this.source, this.gameSlug, this.path];
+		return `${this.name} - ${this.source} - ${this.gameSlug}`;
 	}
 }
 
@@ -51,10 +44,7 @@ export class EmulatedGame extends Game{
 		this.console = console;
 	}
 	toString(){
-		return `"${this.name}" - ${this.source} (${this.console})`;
-	}
-	toArray(){
-		return [this.name, this.source, this.console, this.path];
+		return `${this.name} - ${this.source} (${this.console})`;
 	}
 }
 
