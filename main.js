@@ -13,3 +13,4 @@ await library.sort("name", 1);
 console.log("\nGames list :");
 
 library.displayInConsole();
+console.log(`Library contains ${library.length} games`);

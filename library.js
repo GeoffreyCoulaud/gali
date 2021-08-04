@@ -1,4 +1,5 @@
 import { getLutrisInstalledGames } from "./scanners/lutris.js";
+import { getRetroarchGames } from "./scanners/retroarch.js";
 import { getCemuGames } from "./scanners/lutris-cemu.js";
 import { getDolphinGames } from "./scanners/dolphin.js";
 import { getPPSSPPGames } from "./scanners/ppsspp.js";
@@ -16,6 +17,7 @@ export class Library{
 		"ppsspp",
 		"lutris",
 		"cemu in lutris",
+		"retroarch",
 	];
 
 	enabledSources = [];
@@ -54,6 +56,9 @@ export class Library{
 		let promises = []
 		if (this.enabledSources.includes("steam")){
 			promises.push(getSteamGames(this.warn));
+		}
+		if (this.enabledSources.includes("retroarch")){
+			promises.push(getRetroarchGames(this.warn));
 		}
 		if (this.enabledSources.includes("yuzu")){
 			promises.push(getYuzuGames(this.warn));

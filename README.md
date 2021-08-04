@@ -17,7 +17,7 @@
 * Installed Yuzu games aren't supported
 
 ## TODO
-* Retroarch support
+* Legendary launcher support
 * Get icon paths for all game types
 * Start method for all game types
 * Launcher UI

@@ -48,32 +48,39 @@ export class EmulatedGame extends Game{
 	}
 }
 
+export class RetroarchGame extends EmulatedGame{
+	constructor(name, romPath, corePath, console){
+		super(name, romPath, "Retroarch", console);
+		this.corePath = corePath;
+	}
+}
+
 export class DolphinGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "Dolphin", "Nintendo Wii / GameCube");
+		super(name, path, "Dolphin", "Nintendo - Wii / GameCube");
 	}
 }
 
 export class YuzuGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "Yuzu", "Nintendo Switch");
+		super(name, path, "Yuzu", "Nintendo - Switch");
 	}
 }
 
 export class CitraGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "Citra", "Nintendo 3DS");
+		super(name, path, "Citra", "Nintendo - 3DS");
 	}
 }
 
 export class CemuGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "Cemu in Lutris", "Nintendo Wii U");
+		super(name, path, "Cemu in Lutris", "Nintendo - Wii U");
 	}
 }
 
 export class PPSSPPGame extends EmulatedGame{
 	constructor(name, path){
-		super(name, path, "PPSSPP", "Sony PSP");
+		super(name, path, "PPSSPP", "Sony - PlayStation Portable");
 	}
 }
