@@ -8,16 +8,18 @@
 * Citra (Nintendo 3DS)
 * Yuzu (Nintendo Switch)
 * Cemu (Nintendo Wii U) (through Lutris)
+* Retroarch
 
 ## Known issues
-* Dolphin emulator games get named after their ROM's filename
-* Cemu in lutris games get named after their ROM's filename (unpacked games are fine)
+* Emulated games are named after their ROM's filename (Dolphin, Cemu, PPSSPP)
 * Dolphin emulator games don't get distinguished between GameCube and Wii
 * Installed Citra games aren't supported
 * Installed Yuzu games aren't supported
 
 ## TODO
 * Legendary launcher support
-* Get icon paths for all game types
 * Start method for all game types
+* Get icons (box art) for all game types
 * Launcher UI
+* Fix game naming for ROMs
+* Regroup games that have the same name into a "multiple source game"
