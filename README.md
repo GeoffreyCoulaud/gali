@@ -8,7 +8,7 @@
 * Citra (Nintendo 3DS)
 * Yuzu (Nintendo Switch)
 * Cemu (Nintendo Wii U) (through Lutris)
-* Retroarch
+* Retroarch (Frontend for emulators)
 
 ## Known issues
 * Emulated games are named after their ROM's filename (Dolphin, Cemu, PPSSPP)
