@@ -8,6 +8,17 @@ If you think alike and are tired of starting 3 programs before finding the one t
 
 However, if you want a single place to install, configure and manage your games, this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. You will have to install other software to manage your games, they will definitely do it better.
 
+## Supported sources
+Name | Description | Notes
+---- | ----------- | -----
+Steam | PC games store | Only installed games
+Lutris | Open Source gaming platform for Linux | Only installed games
+Retroarch | Frontend for the libretro API | -
+Dolphin | Nintendo Wii / GameCube emulator | -
+Citra | Nintendo 3DS emulator | -
+Yuzu | Nintendo Switch emulator | -
+Cemu | Nintendo Wii U emulator | Cemu installed from lutris
+
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
 
@@ -23,17 +34,6 @@ cd brag-launcher
 npm install
 npm run start
 ```
-
-## Supported sources
-Name | Description | Notes
----- | ----------- | -----
-Steam | PC games store | Only installed games
-Lutris | Open Source gaming platform for Linux | Only installed games
-Retroarch | Frontend for the libretro API | -
-Dolphin | Nintendo Wii / GameCube emulator | -
-Citra | Nintendo 3DS emulator | -
-Yuzu | Nintendo Switch emulator | -
-Cemu | Nintendo Wii U emulator | Cemu installed from lutris
 
 ## Known issues
 * Dolphin emulator games don't get distinguished between GameCube and Wii
