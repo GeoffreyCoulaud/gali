@@ -1,9 +1,9 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { EmulatedGame } from "./generic.js";
-import { GameDir } from "./generic.js";
+import { EmulatedGame } from "./common.js";
+import { GameDir } from "./common.js";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
-import { getROMs } from "./generic.js";
+import { getROMs } from "./common.js";
 import { env } from "process";
 
 export class DolphinGame extends EmulatedGame{

@@ -1,7 +1,7 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { getROMs, EmulatedGame } from "./generic.js";
+import { getROMs, EmulatedGame } from "./common.js";
 import config2obj from "../config2obj.js";
-import { GameDir } from "./generic.js";
+import { GameDir } from "./common.js";
 import { promises as fsp } from "fs"
 import { env } from "process";
 

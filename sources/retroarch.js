@@ -1,5 +1,5 @@
 import { join as pathJoin, basename as pathBasename, extname as pathExtname} from "path";
-import { EmulatedGame } from "./generic.js";
+import { EmulatedGame } from "./common.js";
 import { promises as fsp } from "fs";
 import { env } from "process";
 

@@ -1,6 +1,6 @@
 import { join as pathJoin } from "path";
 import { promises as fsp } from "fs";
-import { Game } from "./generic.js";
+import { Game } from "./common.js";
 import { env } from "process";
 
 export class LegendaryGame extends Game{

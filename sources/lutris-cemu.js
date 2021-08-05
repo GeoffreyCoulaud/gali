@@ -1,7 +1,7 @@
 import { dirname as pathDirname, join as pathJoin, basename as pathBasename, resolve as pathResolve } from "path";
-import { EmulatedGame, getROMs } from "./generic.js";
+import { EmulatedGame, getROMs } from "./common.js";
 import { Parser as XMLParser } from "xml2js";
-import { GameDir } from "./generic.js";
+import { GameDir } from "./common.js";
 import { promises as fsp } from "fs";
 import { osLocale } from "os-locale";
 import { env } from "process";

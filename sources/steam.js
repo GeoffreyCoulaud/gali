@@ -1,7 +1,7 @@
+import { Game, GameDir, GameProcessContainer } from "./common.js";
 import { promises as fsp, existsSync } from "fs";
 import { parse as parseVDF} from "vdf-parser";
 import { join as pathJoin } from "path";
-import { Game, GameDir } from "./generic.js";
 import { spawn } from "child_process";
 import { env } from "process";
 
@@ -9,18 +9,28 @@ const USER_DIR = env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
 const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam", "root");
 
-export class SteamGame extends Game{
-	source = "Steam";
-	constructor(appId, name){
-		super(name);
+class SteamGameProcessContainer extends GameProcessContainer{
+	constructor(appId){
+		super();
 		this.appId = appId;
 	}
+	start(){
+		this.process = spawn("steam" [`steam://rungameid/${this.appId}`]);
+		this._bindProcessEvents();
+	}
+}
+
+export class SteamGame extends Game{
+	
+	constructor(appId, name){
+		super(name);
+		this.source = "Steam";
+		this.appId = appId;
+		this.processContainer = new SteamGameProcessContainer(this.appId);
+	}
+
 	toString(){
 		return `${this.name} - ${this.source} - ${this.appId}`;
-	}
-	start(){
-		this.subprocess = spawn("steam" [`steam://rungameid/${this.appId}`], {detached: true});
-		this._bindSubprocessEvents();
 	}
 }
 

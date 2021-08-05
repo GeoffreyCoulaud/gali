@@ -1,6 +1,6 @@
+import { Game, GameProcessContainer } from "./common.js";
 import { join as pathJoin } from "path";
 import { spawn } from "child_process";
-import { Game } from "./generic.js";
 import { open } from 'sqlite'
 import { env } from "process";
 import sqlite3 from 'sqlite3'

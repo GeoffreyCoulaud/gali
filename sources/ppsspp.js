@@ -1,5 +1,5 @@
-import { EmulatedGame, getROMs } from "./generic.js";
-import { GameDir } from "./generic.js";
+import { EmulatedGame, getROMs } from "./common.js";
+import { GameDir } from "./common.js";
 import { basename as pathBasename, join as pathJoin } from "path";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
