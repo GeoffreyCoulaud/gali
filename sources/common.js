@@ -47,7 +47,7 @@ export class GameProcessContainer extends EventEmitter{
 export class Game{
 	source = "Unknown";
 	
-	subprocess = new GameProcessContainer();
+	processContainer = new GameProcessContainer();
 	isRunning = false;
 	
 	constructor(name){
