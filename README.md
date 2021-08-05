@@ -11,13 +11,14 @@ However, if you want a single place to install, configure and manage your games,
 ## Supported sources
 Name | Description | Notes
 ---- | ----------- | -----
-Steam     | PC games store                        | Only installed games
-Lutris    | Open Source gaming platform for Linux | Only installed games
-Retroarch | Frontend for the libretro API         | -
-Dolphin   | Nintendo Wii / GameCube emulator      | -
-Citra     | Nintendo 3DS emulator                 | -
-Yuzu      | Nintendo Switch emulator              | -
-Cemu      | Nintendo Wii U emulator               | Cemu installed from lutris
+Steam     | PC games store                                       | Only installed games
+Lutris    | Open Source gaming platform for Linux                | Only installed games
+Legendary | FOSS Epic Games Launcher alternative | Only installed games
+Retroarch | Frontend for the libretro API                        | -
+Dolphin   | Nintendo Wii / GameCube emulator                     | -
+Citra     | Nintendo 3DS emulator                                | -
+Yuzu      | Nintendo Switch emulator                             | -
+Cemu      | Nintendo Wii U emulator                              | Cemu installed from lutris
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
