@@ -1,7 +1,14 @@
 import { join as pathJoin, basename as pathBasename, extname as pathExtname} from "path";
-import { RetroarchGame } from "../games.js";
+import { EmulatedGame } from "./generic.js";
 import { promises as fsp } from "fs";
 import { env } from "process";
+
+export class RetroarchGame extends EmulatedGame{
+	constructor(name, romPath, corePath, console){
+		super(name, romPath, "Retroarch", console);
+		this.corePath = corePath;
+	}
+}
 
 async function getRetroarchPlaylistPaths(){
 

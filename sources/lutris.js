@@ -1,11 +1,29 @@
-import { LutrisGame } from "../games.js";
 import { join as pathJoin } from "path";
+import { spawn } from "child_process";
+import { Game } from "./generic.js";
 import { open } from 'sqlite'
 import { env } from "process";
 import sqlite3 from 'sqlite3'
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
+
+export class LutrisGame extends Game{
+	source = "Lutris";
+	constructor(gameSlug, name, prefixPath, configPath = undefined){
+		super(name);
+		this.gameSlug = gameSlug;
+		this.prefixPath = prefixPath;
+		this.configPath = configPath;
+	}
+	toString(){
+		return `${this.name} - ${this.source} - ${this.gameSlug}`;
+	}
+	start(){
+		this.subprocess = spawn("lutris" [`lutris:rungame/${this.gameSlug}`], {detached: true});
+		this._bindSubprocessEvents();
+	}
+}
 
 async function getLutrisInstalledGames(warn = false){
 	let games = [];

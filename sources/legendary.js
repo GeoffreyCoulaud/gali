@@ -1,7 +1,18 @@
-import { join as pathJoin, basename as pathBasename, extname as pathExtname} from "path";
-import { LegendaryGame } from "../games.js";
+import { join as pathJoin } from "path";
 import { promises as fsp } from "fs";
+import { Game } from "./generic.js";
 import { env } from "process";
+
+export class LegendaryGame extends Game{
+	source = "Legendary";
+	constructor(appName, name){
+		super(name);
+		this.appName = appName;
+	}
+	toString(){
+		return `${this.name} - ${this.source} - ${this.appName}`;
+	}
+}
 
 async function getLegendaryInstalledGames(warn = false){
 

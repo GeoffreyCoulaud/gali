@@ -1,12 +1,12 @@
-import { getLegendaryGames } from "./scanners/legendary.js";
-import { getRetroarchGames } from "./scanners/retroarch.js";
-import { getCemuGames } from "./scanners/lutris-cemu.js";
-import { getDolphinGames } from "./scanners/dolphin.js";
-import { getLutrisGames } from "./scanners/lutris.js";
-import { getPPSSPPGames } from "./scanners/ppsspp.js";
-import { getCitraGames } from "./scanners/citra.js";
-import { getSteamGames } from "./scanners/steam.js";
-import { getYuzuGames } from "./scanners/yuzu.js";
+import { getLegendaryGames } from "./sources/legendary.js";
+import { getRetroarchGames } from "./sources/retroarch.js";
+import { getCemuGames } from "./sources/lutris-cemu.js";
+import { getDolphinGames } from "./sources/dolphin.js";
+import { getLutrisGames } from "./sources/lutris.js";
+import { getPPSSPPGames } from "./sources/ppsspp.js";
+import { getCitraGames } from "./sources/citra.js";
+import { getSteamGames } from "./sources/steam.js";
+import { getYuzuGames } from "./sources/yuzu.js";
 
 export class Library{	
 	

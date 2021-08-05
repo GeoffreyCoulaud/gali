@@ -1,10 +1,16 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { DolphinGame, GameDir } from "../games.js";
+import { EmulatedGame } from "./generic.js";
+import { GameDir } from "./generic.js";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
-import { getROMs } from "./roms.js";
+import { getROMs } from "./generic.js";
 import { env } from "process";
 
+export class DolphinGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Dolphin", "Nintendo - Wii / GameCube");
+	}
+}
 
 async function getDolphinConfig(){
 	

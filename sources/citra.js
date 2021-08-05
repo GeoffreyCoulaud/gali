@@ -1,15 +1,21 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { YuzuGame, GameDir } from "../games.js";
+import { getROMs, EmulatedGame } from "./generic.js";
 import config2obj from "../config2obj.js";
+import { GameDir } from "./generic.js";
 import { promises as fsp } from "fs"
-import { getROMs } from "./roms.js";
 import { env } from "process";
 
-async function getYuzuConfig(){
+export class CitraGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Citra", "Nintendo - 3DS");
+	}
+}
 
+async function getCitraConfig(){
+	
 	const USER_DIR = env["HOME"];
-	const YUZU_CONFIG_PATH = pathJoin(USER_DIR, ".config", "yuzu", "qt-config.ini");
-	const configFileContents = await fsp.readFile(YUZU_CONFIG_PATH, "utf-8");
+	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config", "citra-emu", "qt-config.ini");
+	const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
 	const config = config2obj(configFileContents);
 	
 	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
@@ -19,12 +25,10 @@ async function getYuzuConfig(){
 	}
 
 	return config;
-
 }
 
-async function getYuzuROMDirs(config){
+async function getCitraROMDirs(config){
 
-	// Read config
 	let dirs = [];
 	
 	// Get number of paths
@@ -32,51 +36,51 @@ async function getYuzuROMDirs(config){
 	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
 	
 	// Get paths
-	if (Number.isNaN(nDirs)){ return dirs; }
 	for (let i = 1; i <= nDirs; i++){
 		let recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
 		let path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
 		if (typeof path === "undefined"){ continue; }
 		dirs.push(new GameDir(path, recursive));
 	}
-
+	
 	return dirs;
-
+	
 }
 
-async function getYuzuROMs(dirs){
-
-	const GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
+async function getCitraROMs(dirs){
+	
+	// TODO test with 3ds files. 
+	const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
 	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-	const games = gamePaths.map(path => new YuzuGame(pathBasename(path), path));
+	const games = gamePaths.map(path => new CitraGame(pathBasename(path), path));
 	return games;
 
 }
 
-async function getYuzuInstalledGames(config){
-	
-	// TODO
+async function getCitraInstalledGames(config){
+
+	// TODO	
 	throw "Not implemented";
 
 }
 
-export async function getYuzuGames(warn = false){
+export async function getCitraGames(warn = false){
 
 	// Get config
 	let config; 
 	try {
-		config = await getYuzuConfig();
+		config = await getCitraConfig(warn);
 	} catch (error) {
-		if (warn) console.warn(`Unable to read yuzu config file : ${error}`);
+		if (warn) console.warn(`Unable to read citra config file : ${error}`);
 	}
 
 	// Get ROM dirs
 	let romDirs = [];
 	if (typeof config !== "undefined"){
 		try {
-			romDirs = await getYuzuROMDirs(config);
+			romDirs = await getCitraROMDirs(config);
 		} catch (error){
-			if (warn) console.warn(`Unable to get yuzu ROM dirs : ${error}`);
+			if (warn) console.warn(`Unable to get citra ROM dirs : ${error}`);
 		}
 	}
 
@@ -84,9 +88,9 @@ export async function getYuzuGames(warn = false){
 	let romGames = [];
 	if (romDirs.length > 0){
 		try {
-			romGames = await getYuzuROMs(romDirs);
-		} catch (error) {
-			if (warn) console.warn(`Unable to get yuzu ROMs : ${error}`);
+			romGames = await getCitraROMs(romDirs);
+		} catch {
+			if (warn) console.warn(`Unable to get citra ROMs : ${error}`);
 		}
 	}
 
@@ -94,9 +98,9 @@ export async function getYuzuGames(warn = false){
 	let installedGames = [];
 	if (typeof config !== "undefined"){
 		try {
-			installedGames = await getYuzuInstalledGames();
+			installedGames = await getCitraInstalledGames();
 		} catch (error){
-			if (warn) console.warn(`Unable to get yuzu installed games : ${error}`);
+			if (warn) console.warn(`Unable to get citra installed games : ${error}`);
 		}
 	}
 

@@ -1,9 +1,15 @@
-import { PPSSPPGame, GameDir } from "../games.js";
+import { EmulatedGame, getROMs } from "./generic.js";
+import { GameDir } from "./generic.js";
 import { basename as pathBasename, join as pathJoin } from "path";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
-import { getROMs } from "./roms.js";
 import { env } from "process";
+
+export class PPSSPPGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "PPSSPP", "Sony - PlayStation Portable");
+	}
+}
 
 async function getPPSSPPConfig(){
 

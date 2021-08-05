@@ -1,12 +1,17 @@
 import { dirname as pathDirname, join as pathJoin, basename as pathBasename, resolve as pathResolve } from "path";
+import { EmulatedGame, getROMs } from "./generic.js";
 import { Parser as XMLParser } from "xml2js";
-import { GameDir, CemuGame } from "../games.js";
+import { GameDir } from "./generic.js";
 import { promises as fsp } from "fs";
 import { osLocale } from "os-locale";
-import { getROMs } from "./roms.js";
 import { env } from "process";
 import YAML from "yaml";
 
+export class CemuGame extends EmulatedGame{
+	constructor(name, path){
+		super(name, path, "Cemu in Lutris", "Nintendo - Wii U");
+	}
+}
 
 function winePathToLinux(winePath){
 
