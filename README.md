@@ -43,7 +43,6 @@ npm run start
 * Cemu in lutris is a clunky solution, but it's the best we have currently on linux  
 
 ## TODO
-* Legendary launcher support
 * Start method for all game types
 * Launcher UI
 * Fix game metadata (see dedicated section)
