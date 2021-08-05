@@ -19,6 +19,7 @@ Dolphin   | Nintendo Wii / GameCube emulator                     | -
 Citra     | Nintendo 3DS emulator                                | -
 Yuzu      | Nintendo Switch emulator                             | -
 Cemu      | Nintendo Wii U emulator                              | Cemu installed from lutris
+PPSSPP    | Sony PSP emulator                                    | -
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
