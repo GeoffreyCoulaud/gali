@@ -4,20 +4,20 @@ A game launcher for **linux** where your library is the star of the show.
 ## Why, how ?
 > I'm so tired of interfaces that inlude 9 out 10 of my games. I want it all in one, pretty, place ! 
 
-If you think alike and are tired of starting 3 programs before finding the one that lists that one game you want to play, I believe Brag is for you. 
+If you think alike, I believe Brag is for you. 
 
 However, if you want a single place to install, configure and manage your games, this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
 Name | Description | Notes
 ---- | ----------- | -----
-Steam | PC games store | Only installed games
-Lutris | Open Source gaming platform for Linux | Only installed games
-Retroarch | Frontend for the libretro API | -
-Dolphin | Nintendo Wii / GameCube emulator | -
-Citra | Nintendo 3DS emulator | -
-Yuzu | Nintendo Switch emulator | -
-Cemu | Nintendo Wii U emulator | Cemu installed from lutris
+Steam     | PC games store                        | Only installed games
+Lutris    | Open Source gaming platform for Linux | Only installed games
+Retroarch | Frontend for the libretro API         | -
+Dolphin   | Nintendo Wii / GameCube emulator      | -
+Citra     | Nintendo 3DS emulator                 | -
+Yuzu      | Nintendo Switch emulator              | -
+Cemu      | Nintendo Wii U emulator               | Cemu installed from lutris
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**

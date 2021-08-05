@@ -7,7 +7,7 @@ import sqlite3 from 'sqlite3'
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
 
-export async function getLutrisInstalledGames(warn = false){
+async function getLutrisInstalledGames(warn = false){
 	let games = [];
 	
 	// Open DB
@@ -35,4 +35,12 @@ export async function getLutrisInstalledGames(warn = false){
 	}
 
 	return games;
+}
+
+export async function getLutrisGames(warn = false){
+
+	// ? Add support for non-installed games ?
+	
+	return getLutrisInstalledGames(warn);
+
 }

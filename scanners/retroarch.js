@@ -45,7 +45,7 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 
 }
 
-export async function getRetroarchGames(warn){
+export async function getRetroarchGames(warn = false){
 
 	// Get retroarch playlists
 	let playlistPaths = [];

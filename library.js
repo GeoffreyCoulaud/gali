@@ -1,7 +1,8 @@
-import { getLutrisInstalledGames } from "./scanners/lutris.js";
+import { getLegendaryGames } from "./scanners/legendary.js";
 import { getRetroarchGames } from "./scanners/retroarch.js";
 import { getCemuGames } from "./scanners/lutris-cemu.js";
 import { getDolphinGames } from "./scanners/dolphin.js";
+import { getLutrisGames } from "./scanners/lutris.js";
 import { getPPSSPPGames } from "./scanners/ppsspp.js";
 import { getCitraGames } from "./scanners/citra.js";
 import { getSteamGames } from "./scanners/steam.js";
@@ -18,6 +19,7 @@ export class Library{
 		"lutris",
 		"cemu in lutris",
 		"retroarch",
+		"legendary",
 	];
 
 	enabledSources = [];
@@ -38,13 +40,13 @@ export class Library{
 		
 		// Get lutris games
 		if (this.enabledSources.includes("lutris")){
-			const lutrisGames = await getLutrisInstalledGames(this.warn);
+			const lutrisGames = await getLutrisGames(this.warn);
 			this.games.push(...lutrisGames);
 			
 			// Get cemu games
 			if (this.enabledSources.includes("cemu in lutris")){
 				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
-				if (typeof cemuGame !== "undefined"){
+				if (cemuGame){
 					const cemuGames = await getCemuGames(cemuGame, this.preferCache, this.warn);
 					this.games.push(...cemuGames);
 				}
@@ -72,6 +74,9 @@ export class Library{
 		if (this.enabledSources.includes("ppsspp")){
 			promises.push(getPPSSPPGames(this.warn));
 		}
+		if (this.enabledSources.includes("legendary")){
+			promises.push(getLegendaryGames(this.warn));
+		}
 
 		// Add straightforward games to the list 
 		const results = await Promise.all(promises);
@@ -96,7 +101,7 @@ export class Library{
 
 	displayInConsole(){
 		for (let game of this.games){
-			let string = " ● " + game.toString();
+			let string = "● " + game.toString();
 			console.log(string);
 		}
 	}

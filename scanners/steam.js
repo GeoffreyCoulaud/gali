@@ -119,6 +119,8 @@ export async function getSteamGames(warn = false){
 		}
 	}
 
+	// ? Add support for non-installed games ?
+
 	return games;
 
 }

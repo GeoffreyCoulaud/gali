@@ -36,6 +36,17 @@ export class LutrisGame extends Game{
 	}
 }
 
+export class LegendaryGame extends Game{
+	source = "Legendary";
+	constructor(appName, name){
+		super(name);
+		this.appName = appName;
+	}
+	toString(){
+		return `${this.name} - ${this.source} - ${this.appName}`;
+	}
+}
+
 export class EmulatedGame extends Game{
 	constructor(name, path, source = "Unknown", console = "Unknown"){
 		super(name);
