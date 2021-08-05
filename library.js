@@ -32,10 +32,6 @@ export class Library{
 		this.warn = warn;
 	}
 
-	get length(){
-		return this.games.length;
-	}
-
 	async scan(){
 		
 		// Get lutris games

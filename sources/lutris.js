@@ -8,20 +8,29 @@ import sqlite3 from 'sqlite3'
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
 
+class LutrisGameProcessContainer extends GameProcessContainer{
+	constructor(gameSlug){
+		super();
+		this.gameSlug = gameSlug;
+	}
+	start(){
+		this.process = spawn("lutris", [`lutris:rungame/${this.gameSlug}`], GameProcessContainer.defaultSpawnOptions);
+		this._bindProcessEvents();
+	}
+} 
+
 export class LutrisGame extends Game{
-	source = "Lutris";
 	constructor(gameSlug, name, prefixPath, configPath = undefined){
 		super(name);
+		this.source = "Lutris";
 		this.gameSlug = gameSlug;
 		this.prefixPath = prefixPath;
 		this.configPath = configPath;
+		this.processContainer = new LutrisGameProcessContainer(this.gameSlug);
 	}
+
 	toString(){
 		return `${this.name} - ${this.source} - ${this.gameSlug}`;
-	}
-	start(){
-		this.subprocess = spawn("lutris" [`lutris:rungame/${this.gameSlug}`], {detached: true});
-		this._bindSubprocessEvents();
 	}
 }
 

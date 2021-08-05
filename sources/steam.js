@@ -15,7 +15,7 @@ class SteamGameProcessContainer extends GameProcessContainer{
 		this.appId = appId;
 	}
 	start(){
-		this.process = spawn("steam" [`steam://rungameid/${this.appId}`]);
+		this.process = spawn("steam" [`steam://rungameid/${this.appId}`], GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
 }

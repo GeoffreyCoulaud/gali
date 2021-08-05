@@ -1,8 +1,13 @@
 import { readdirAsync } from "readdir-enhanced";
 import { join as pathJoin } from "path";
 import { EventEmitter } from "events";
+import { kill } from "process";
 
 export class GameProcessContainer extends EventEmitter{
+	static defaultSpawnOptions = {
+		detached: true,
+	}
+	
 	process = undefined;
 	isRunning = false;
 
@@ -21,14 +26,21 @@ export class GameProcessContainer extends EventEmitter{
 		});
 	}
 
-	sendSignal(signal){
-		// TODO kill all children before killing subprocess
-		return this.process.kill(signal);		
+	sendSignal(signal, wholeGroup = false){
+		if (!this.process.pid) return;
+		try {
+			let pid = this.process.pid;
+			if (wholeGroup) pid *= -1; // negative PID means send to all process in group
+			kill(pid, signal);
+		} catch (error){
+			return false;
+		}
+		return true;
 	}
 	
 	kill(){
 		if (!this.isRunning){ return; }
-		const hasKilled = this.sendSignal("SIGKILL");
+		const hasKilled = this.sendSignal("SIGKILL", true);
 		if (hasKilled){
 			this.isRunning = false;
 		}
@@ -36,7 +48,7 @@ export class GameProcessContainer extends EventEmitter{
 	
 	stop(){
 		if (!this.isRunning){ return; }
-		const hasStopped = this.sendSignal("SIGTERM");
+		const hasStopped = this.sendSignal("SIGTERM", true);
 		if (hasStopped){
 			this.isRunning = false;
 		}
