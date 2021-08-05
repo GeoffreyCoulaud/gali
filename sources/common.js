@@ -27,7 +27,7 @@ export class GameProcessContainer extends EventEmitter{
 	}
 
 	sendSignal(signal, wholeGroup = false){
-		if (!this.process.pid) return;
+		if (!this.process.pid) return false;
 		try {
 			let pid = this.process.pid;
 			if (wholeGroup) pid *= -1; // negative PID means send to all process in group
