@@ -14,9 +14,18 @@ class SteamGameProcessContainer extends GameProcessContainer{
 		super();
 		this.appId = appId;
 	}
+	// ! There is no way (AFAIK) to control a steam game's life cycle.
 	start(){
-		this.process = spawn("steam" [`steam://rungameid/${this.appId}`], GameProcessContainer.defaultSpawnOptions);
+		this.process = spawn("steam", [`steam://rungameid/${this.appId}`], GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
+	}
+	stop(){
+		console.warn("Stopping steam games is not supported, please use Steam's UI");
+		return false;
+	}
+	kill(){
+		console.warn("Killing steam games is not supported, please use Steam's UI");
+		return false;
 	}
 }
 

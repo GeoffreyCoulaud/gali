@@ -1,14 +1,29 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { EmulatedGame } from "./common.js";
+import { EmulatedGame, GameProcessContainer } from "./common.js";
 import { GameDir } from "./common.js";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
 import { getROMs } from "./common.js";
+import { spawn } from "child_process";
 import { env } from "process";
+
+class DolphinGameProcessContainer extends GameProcessContainer{
+	constructor(romPath){
+		super();
+		this.romPath = romPath;
+	}
+	start(noUi = false){
+		let args = ["-e", this.romPath];
+		if (noUi) args.splice(0, 0, "-b");
+		this.process = spawn("dolphin-emu", args, GameProcessContainer.defaultSpawnOptions);
+		this._bindProcessEvents();
+	}
+}
 
 export class DolphinGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Dolphin", "Nintendo - Wii / GameCube");
+		this.processContainer = new DolphinGameProcessContainer(this.path);
 	}
 }
 

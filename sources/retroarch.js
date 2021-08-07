@@ -1,12 +1,26 @@
 import { join as pathJoin, basename as pathBasename, extname as pathExtname} from "path";
-import { EmulatedGame } from "./common.js";
+import { EmulatedGame, GameProcessContainer } from "./common.js";
+import { spawn } from "child_process";
 import { promises as fsp } from "fs";
 import { env } from "process";
 
-export class RetroarchGame extends EmulatedGame{
-	constructor(name, romPath, corePath, console){
-		super(name, romPath, "Retroarch", console);
+class RetroarchGameProcessContainer extends GameProcessContainer{
+	constructor(romPath, corePath){
+		super();
+		this.romPath = romPath;
 		this.corePath = corePath;
+	}
+	start(){
+		this.process = spawn("retroarch", ["--verbose","--libretro", this.corePath, this.romPath], GameProcessContainer.defaultSpawnOptions);
+		this._bindProcessEvents();
+	}
+}
+
+export class RetroarchGame extends EmulatedGame{
+	constructor(name, path, corePath, console){
+		super(name, path, "Retroarch", console);
+		this.corePath = corePath;
+		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
 }
 
@@ -34,13 +48,15 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 	let games = [];
 	for (let entry of playlist.items){
 		
-		const game = new RetroarchGame(entry.label, entry.path, entry.corePath, PLAYLIST_CONSOLE);
-		if (!game.corePath || game.corePath === "DETECT"){
-			game.corePath = PLAYLIST_DEFAULT_CORE_PATH;
-		} 
-		if (!game.name){
-			game.name = pathBasename(game.path, pathExtname(game.path));
+		let gameName = entry.label;
+		let gameCorePath = entry.corePath;
+		if (!gameName){
+			gameName = pathBasename(entry.path);
 		}
+		if (!gameCorePath || gameCorePath === "DETECT"){
+			gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
+		} 
+		const game = new RetroarchGame(gameName, entry.path, gameCorePath, PLAYLIST_CONSOLE);
 		
 		// Validate game data
 		if (game.name && game.path && game.corePath && game.console){

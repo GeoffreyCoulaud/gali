@@ -1,13 +1,30 @@
+import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
-import { getROMs, EmulatedGame } from "./common.js";
 import config2obj from "../config2obj.js";
 import { GameDir } from "./common.js";
+import { spawn } from "child_process";
 import { promises as fsp } from "fs"
 import { env } from "process";
+
+class YuzuGameProcessContainer extends GameProcessContainer{
+	constructor(romPath){
+		super();
+		this.romPath = romPath;
+	}
+	start(){
+		this.process = spawn("yuzu", [this.romPath], GameProcessContainer.defaultSpawnOptions);
+		this._bindProcessEvents();
+	}
+	stop(){
+		// For yuzu, SIGTERM doesn't work, use SIGKILL instead. 
+		return this.kill();
+	}
+}
 
 export class YuzuGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Yuzu", "Nintendo - Switch");
+		this.processContainer = new YuzuGameProcessContainer(this.path);
 	}
 }
 

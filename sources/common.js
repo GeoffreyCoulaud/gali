@@ -27,31 +27,34 @@ export class GameProcessContainer extends EventEmitter{
 	}
 
 	sendSignal(signal, wholeGroup = false){
-		if (!this.process.pid) return false;
+		if (!this.process.pid){
+			console.error(`Could not signal ${this.process.pid}${wholeGroup?"(group)":""} ${signal}`);
+			return false;
+		}
 		try {
-			let pid = this.process.pid;
-			if (wholeGroup) pid *= -1; // negative PID means send to all process in group
-			kill(pid, signal);
+			let pidToKill = this.process.pid;
+			if (wholeGroup) pidToKill *= -1; // negative PID means send to all process in group
+			kill(pidToKill, signal);
 		} catch (error){
+			console.error(`Error while signaling ${this.process.pid}${wholeGroup?"(group)":""} ${signal} : ${error}`);
 			return false;
 		}
 		return true;
 	}
 	
 	kill(){
-		if (!this.isRunning){ return; }
+		if (!this.isRunning){ return true; }
 		const hasKilled = this.sendSignal("SIGKILL", true);
-		if (hasKilled){
-			this.isRunning = false;
-		}
+		if (hasKilled) this.isRunning = false;
+		return hasKilled;
+		
 	}
 	
 	stop(){
-		if (!this.isRunning){ return; }
+		if (!this.isRunning){ return true; }
 		const hasStopped = this.sendSignal("SIGTERM", true);
-		if (hasStopped){
-			this.isRunning = false;
-		}
+		if (hasStopped) this.isRunning = false;
+		return hasStopped;
 	}
 
 }

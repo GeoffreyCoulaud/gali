@@ -19,19 +19,30 @@ console.log("Games list :");
 library.displayInConsole();
 console.log(`Library contains ${library.games.length} games`);
 
-// Test - Start cemu in lutris
 // Find the game
-const findCriteria = {key: "gameSlug", value: "cemu"};
-const foundGame = library.games.filter(game => game[findCriteria.key] === findCriteria.value)?.[0];
-if (!foundGame){
-	console.error(`No game found with the gameSlug "cemu"`);
+function findGame(game){
+	return (game.name === "Cemu");
+}
+const game = library.games.filter(findGame)?.[0];
+if (!game){
+	console.error(`No game found`);
 } else {
+	console.log(game.corePath);
 	// Start
-	console.log(`Starting ${foundGame.name}`);
-	foundGame.processContainer.start();
+	console.log(`Starting ${game.name}`);
+	game.processContainer.start();
+	game.processContainer.on("exit", (code, signal)=>{
+		console.log(`Stopped ${game.name} (code ${code}, signal ${signal})`);
+	});
+	game.processContainer.on("error", (error)=>{
+		console.error(`Error on game process : ${error}`);
+	});
+	game.processContainer.on("spawn", ()=>{
+		console.log(`Spawned game process ${game.processContainer.process.pid}`);
+	});
 	// Wait 10s
 	await sleep(10000);
 	// Stop
-	console.log(`Stopping ${foundGame.name}`);
-	foundGame.processContainer.stop();
+	console.log(`Stopping ${game.name}`);
+	game.processContainer.stop();
 }

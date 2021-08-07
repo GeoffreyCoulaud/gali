@@ -1,13 +1,38 @@
+import { Game, GameProcessContainer } from "./common.js";
 import { join as pathJoin } from "path";
 import { promises as fsp } from "fs";
-import { Game } from "./common.js";
+import { spawn } from "child_process";
 import { env } from "process";
+
+class LegendaryGameProcessContainer extends GameProcessContainer{
+	constructor(appName){
+		super();
+		this.appName = appName;
+	}
+	// ! There is no way (AFAIK) to control a legendary game's life cycle from the launcher.
+	// TODO Try to launch directly from wine
+	start(offline = false){
+		let args = ["launch", this.appName];
+		if (offline) args.splice(1,0,"--offline");
+		this.process = spawn("legendary", args);
+		this._bindProcessEvents();
+	}
+	stop(){
+		console.warn("Stopping legendary games is not supported");
+		return false;
+	}
+	kill(){
+		console.warn("Killing legendary games is not supported");
+		return false;
+	}
+}
 
 export class LegendaryGame extends Game{
 	source = "Legendary";
 	constructor(appName, name){
 		super(name);
 		this.appName = appName;
+		this.processContainer = new LegendaryGameProcessContainer(this.appName);
 	}
 	toString(){
 		return `${this.name} - ${this.source} - ${this.appName}`;

@@ -1,13 +1,28 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { getROMs, EmulatedGame } from "./common.js";
+import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
 import config2obj from "../config2obj.js";
 import { GameDir } from "./common.js";
+import { spawn } from "child_process";
 import { promises as fsp } from "fs"
 import { env } from "process";
+
+
+class CitraGameProcessContainer extends GameProcessContainer{
+	constructor(romPath){
+		super();
+		this.romPath = romPath;
+	}
+	start(){
+		const citraCommand = "citra-qt"; // ? Could support "citra"
+		this.process = spawn(citraCommand, [this.romPath], GameProcessContainer.defaultSpawnOptions);
+		this._bindProcessEvents();
+	}
+}
 
 export class CitraGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Citra", "Nintendo - 3DS");
+		this.processContainer = new CitraGameProcessContainer(this.path);
 	}
 }
 
