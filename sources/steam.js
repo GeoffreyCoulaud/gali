@@ -20,11 +20,11 @@ class SteamGameProcessContainer extends GameProcessContainer{
 		this._bindProcessEvents();
 	}
 	stop(){
-		console.warn("Stopping steam games is not supported, please use Steam's UI");
+		console.warn("Stopping steam games is not supported, please use steam's UI");
 		return false;
 	}
 	kill(){
-		console.warn("Killing steam games is not supported, please use Steam's UI");
+		console.warn("Killing steam games is not supported, please use steam's UI");
 		return false;
 	}
 }

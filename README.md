@@ -66,10 +66,18 @@ This means multiple things must be extracted from a game file name
 Note that for this project points 1-3 are mandatory in my opinion.
 
 ### Possible solutions  
-* __crc32 based recognition__, useful only for known good ROMs. This is the preferred option in most cases because most of the ROMs people have are the "good" ones, and it's insanely fast to get this value for most files compared to other identification methods.
+* __crc32 based recognition__, useful only for known good ROMs. 
+This is the preferred option in most cases because most of the ROMs people have are the "good" ones, 
+and it's insanely fast to get this value for most files compared to other identification methods.
 
-* __filename based recognition__, useful for well-named ROMs. This is for "the rest", bad dumps, translations, hacks, compressed ROMs or a brand new format that the emulator can play but the good roms database doesn't have yet.
+* __filename based recognition__, useful for well-named ROMs. 
+This is for "the rest", bad dumps, translations, hacks, compressed ROMs or a brand new format 
+that the emulator can play but the good roms database doesn't have yet.
 
-* __content based recognition__, useful for unpacked ROMs. This is the best case scenario, we don't have any guess work to do, the game provides its metadata.
+* __content based recognition__, useful for unpacked ROMs. 
+This is the best case scenario, we don't have any guess work to do, the game provides its metadata.
 
-However this comes with the cost of having to rely on a trusted game database. This is fine in itself, but rubs me in the wrong way in the case of hash based recognition (which is the way retroarch does it). It's just not reliable enough. I want a solution that is **not necessarily fast** but is **reliable** even with uncommon / bad data and **accurate** enough to not produce weird results. 
+However this comes with the cost of having to rely on a trusted game database. 
+This is fine in itself, but rubs me in the wrong way in the case of hash based recognition (which is the way retroarch does it). 
+It's just not reliable enough. I want a solution that is **not necessarily fast** but is **reliable** even with uncommon / bad data 
+and **accurate** enough to not produce weird results. 
