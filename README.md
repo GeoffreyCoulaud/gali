@@ -38,20 +38,21 @@ npm run start
 ```
 
 ## Known issues
-* Steam, Legendary, Lutris (other than wine) games can be started but not stopped or killed
+* Games from Steam, Legendary, Lutris can be started but not stopped or killed
 * Dolphin emulator games don't get distinguished between GameCube and Wii
 * Installed Citra games aren't listed
 * Installed Yuzu games aren't listed
-* Cemu in lutris is a clunky solution, but it's the best we have currently on linux  
+* Cemu in lutris is a clunky solution, but it's the best we have currently on linux
+* Cemu in lutris games can't be started yet (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Start method for Lutris (wine runners), Cemu
 2. Support Heroic Games Launcher
 3. Comment all the code **thoroughly** before doing anything else
 4. Add tests 
-4. Launcher UI
-5. Fix game metadata (see dedicated section)
-6. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
+5. Support desktop entries
+6. Launcher UI
+7. Fix game metadata (see dedicated section)
+8. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
 ## Fixing game metadata
 ### The problem
