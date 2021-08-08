@@ -6,28 +6,64 @@ import { spawn } from "child_process";
 import { promises as fsp } from "fs"
 import { env } from "process";
 
+/**
+ * A wrapper for yuzu game process management
+ * @property {string} romPath - The game's ROM path, used to invoke yuzu
+ */
 class YuzuGameProcessContainer extends GameProcessContainer{
+
+	/**
+	 * Create a yuzu game process container
+	 * @param {string} romPath - The game's ROM path
+	 */
 	constructor(romPath){
 		super();
 		this.romPath = romPath;
 	}
+
+	/**
+	 * Start the game in a subprocess
+	 */
 	start(){
 		this.process = spawn("yuzu", [this.romPath], GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
+
+	/**
+	 * Overwrite the inherited stop method to equal the inherited kill method.
+	 * This is done because yuzu seems to trap SIGTERM and needs to get SIGKILL to terminate.
+	 * @returns {boolean} - True on success, else false
+	 */
 	stop(){
 		// For yuzu, SIGTERM doesn't work, use SIGKILL instead. 
 		return this.kill();
 	}
 }
 
+/**
+ * A class representing a yuzu game
+ * @property {YuzuGameProcessContainer} processContainer - The game's process container
+ */
 export class YuzuGame extends EmulatedGame{
+	
+	/**
+	 * Create a yuzu game
+	 * @param {string} name - The game's displayed name
+	 * @param {string} path - The game's ROM path
+	 */
 	constructor(name, path){
 		super(name, path, "Yuzu", "Nintendo - Switch");
 		this.processContainer = new YuzuGameProcessContainer(this.path);
 	}
+
 }
 
+/**
+ * Get yuzu's config data from its config file.
+ * Found in $HOME/.config/yuzu/qt-config.ini
+ * Validates the data before returning it.
+ * @returns {object} - Yuzu's config data
+ */
 async function getYuzuConfig(){
 
 	const USER_DIR = env["HOME"];
@@ -45,6 +81,11 @@ async function getYuzuConfig(){
 
 }
 
+/**
+ * Get yuzu's game dirs from its config data
+ * @param {object} config - Yuzu's config data 
+ * @returns {GameDir[]} - The game dirs extracted from yuzu's config
+ */
 async function getYuzuROMDirs(config){
 
 	// Read config
@@ -67,6 +108,11 @@ async function getYuzuROMDirs(config){
 
 }
 
+/**
+ * Get yuzu games from given game directories
+ * @param {GameDir[]} dirs - The dirs to scan for ROMs 
+ * @returns {YuzuGame[]} - An array of found games
+ */
 async function getYuzuROMs(dirs){
 
 	const GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
@@ -76,13 +122,24 @@ async function getYuzuROMs(dirs){
 
 }
 
+/**
+ * Get yuzu installed games.
+ * @throws Will throw a "Not implemented" error on every case, this is not yet supported
+ * @param {object} config - Yuzu's config data 
+ * @todo
+ */
 async function getYuzuInstalledGames(config){
 	
 	// TODO
-	throw "Not implemented";
+	throw new Error("Not implemented");
 
 }
 
+/**
+ * Get all yuzu games
+ * @param {boolean} warn - Whether to display additional warnings
+ * @returns {YuzuGame[]} - An array of found games
+ */
 export async function getYuzuGames(warn = false){
 
 	// Get config

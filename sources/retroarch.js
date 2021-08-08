@@ -4,26 +4,60 @@ import { spawn } from "child_process";
 import { promises as fsp } from "fs";
 import { env } from "process";
 
+/**
+ * A wrapper for retroarch game process management
+ * @property {string} romPath - The game's ROM path, used to invoke retroarch
+ * @property {string} corePath - The games's libretro core path, used to invoke retroarch 
+ */
 class RetroarchGameProcessContainer extends GameProcessContainer{
+	
+	/**
+	 * Create a retroarch game process container
+	 * @param {string} romPath The game's ROM path
+	 * @param {string} corePath The game's libretro core path
+	 */
 	constructor(romPath, corePath){
 		super();
 		this.romPath = romPath;
 		this.corePath = corePath;
 	}
+	
+	/**
+	 * Start the game in a subprocess
+	 */
 	start(){
-		this.process = spawn("retroarch", ["--verbose","--libretro", this.corePath, this.romPath], GameProcessContainer.defaultSpawnOptions);
+		this.process = spawn("retroarch", ["--libretro", this.corePath, this.romPath], GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
 }
 
+/**
+ * A class representing a retroarch game
+ * @property {string} corePath - The game's libretro core path
+ * @property {RetroarchGameProcessContainer} processContainer - The game's process container
+ */
 export class RetroarchGame extends EmulatedGame{
+	
+	/**
+	 * Create a retroarch game
+	 * @param {string} name - The game's displayed name
+	 * @param {string} path - The game's ROM path
+	 * @param {string} corePath - The game's libretro core path
+	 * @param {string} console - The game's original console
+	 */
 	constructor(name, path, corePath, console){
 		super(name, path, "Retroarch", console);
 		this.corePath = corePath;
 		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
+
 }
 
+/**
+ * Get the paths to retroarch playlists.
+ * Found in $HOME/.config/retroarch/playlists
+ * @returns {string[]} - An array of playlist paths
+ */
 async function getRetroarchPlaylistPaths(){
 
 	const USER_DIR = env["HOME"];
@@ -34,6 +68,11 @@ async function getRetroarchPlaylistPaths(){
 	return playlists;
 }
 
+/**
+ * Get retroarch games from a playlist path.
+ * @param {string} playlistPath - Path to the playlist file to read from 
+ * @returns {RetroarchGame[]} - An array of found games.
+ */
 async function getRetroarchGamesFromPlaylist(playlistPath){
 
 	// Read the playlist file (it's JSON)
@@ -68,6 +107,11 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 
 }
 
+/**
+ * Get all retroarch games
+ * @param {boolean} warn - Whether to display additional warnings 
+ * @returns {RetroarchGame[]} - An array of found games
+ */
 export async function getRetroarchGames(warn = false){
 
 	// Get retroarch playlists

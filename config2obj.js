@@ -1,3 +1,11 @@
+
+/**
+ * Convert a config file text into a JS readable object
+ * @param {string} config - A config file contents
+ * @returns {object} - The config's equivalent as a JS object. 
+ *                     sections are the object's keys, 
+ *                     key/values pairs are stored in their section's maps   
+ */
 export default function config2obj(config){
 	let obj = new Object();
 	let currentKey = undefined;

@@ -1,5 +1,5 @@
 import { join as pathJoin, basename as pathBasename } from "path";
-import { EmulatedGame, GameProcessContainer } from "./common.js";
+import { EmulatedGame, Game, GameProcessContainer } from "./common.js";
 import { GameDir } from "./common.js";
 import config2obj from "../config2obj.js";
 import { promises as fsp } from "fs";
@@ -7,11 +7,24 @@ import { getROMs } from "./common.js";
 import { spawn } from "child_process";
 import { env } from "process";
 
+/**
+ * A wrapper for dolphin game management
+ * @property {string} romPath - The game's ROM path, used to invoke dolphin 
+ */
 class DolphinGameProcessContainer extends GameProcessContainer{
+	/**
+	 * Create a dolphin game process container.
+	 * @param {string} romPath - The game's ROM path 
+	 */
 	constructor(romPath){
 		super();
 		this.romPath = romPath;
 	}
+
+	/**
+	 * Start the game in a subprocess
+	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game 
+	 */
 	start(noUi = false){
 		let args = ["-e", this.romPath];
 		if (noUi) args.splice(0, 0, "-b");
@@ -20,13 +33,26 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 	}
 }
 
+/**
+ * Class representing a dolphin game
+ * @property {DolphinGameProcessContainer} processContainer - The game's process container 
+ */
 export class DolphinGame extends EmulatedGame{
+	/**
+	 * Create a dolphin game
+	 * @param {string} name - The game's displayed name 
+	 * @param {string} path - The game's ROM path 
+	 */
 	constructor(name, path){
 		super(name, path, "Dolphin", "Nintendo - Wii / GameCube");
 		this.processContainer = new DolphinGameProcessContainer(this.path);
 	}
 }
 
+/**
+ * Get dolphin's config data
+ * @returns {config} - Dolphin's config data
+ */
 async function getDolphinConfig(){
 	
 	const USER_DIR = env["HOME"];
@@ -44,6 +70,11 @@ async function getDolphinConfig(){
 
 }
 
+/**
+ * Get dolphin's ROM dirs from its config data
+ * @param {object} config - Dolphin's config dara 
+ * @returns {GameDir} - The game dirs extracted from dolphin's config
+ */
 async function getDolphinROMDirs(config){
 	
 	let dirs = [];
@@ -64,6 +95,11 @@ async function getDolphinROMDirs(config){
 
 }
 
+/**
+ * Get dolphin ROMs from the given game dirs
+ * @param {GameDir[]} dirs - The game dirs to search ROMs into 
+ * @returns {DolphinGame[]} - An array of found games
+ */
 async function getDolphinROMs(dirs){
 
 	// TODO detect games console between GameCube and Wii
@@ -73,6 +109,11 @@ async function getDolphinROMs(dirs){
 	return games;
 }
 
+/**
+ * Get all dolphin games.
+ * @param {boolean} warn - Whether to display additional warnings 
+ * @returns {DolphinGame[]} - An array of found games
+ */
 export async function getDolphinGames(warn = false){
 
 	// Get config

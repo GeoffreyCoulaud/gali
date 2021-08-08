@@ -8,8 +8,18 @@ import { getCitraGames } from "./sources/citra.js";
 import { getSteamGames } from "./sources/steam.js";
 import { getYuzuGames } from "./sources/yuzu.js";
 
+/**
+ * A representation of a game library.
+ * @property {Game[]} games - An array of games in the library
+ * @property {boolean} preferCache - Whether to prefer cache while scanning. Defaults to true
+ * @property {boolean} warn - Whether to display additional warnings (especially during scan)
+ * @property {string[]} enabledSources - Names of the sources to scan for games. Defaults to none   
+ */
 export class Library{	
 	
+	/**
+	 * A list of available game sources
+	 */
 	static sources =[
 		"steam",
 		"dolphin",
@@ -26,12 +36,22 @@ export class Library{
 	preferCache = true;
 	warn = false;
 	games = [];
+	
+	/**
+	 * Create a game library.
+	 * @param {string[]} sources - Sources to get games from
+	 * @param {boolean} preferCache - If true, when available scanning will prefer using a cache
+	 * @param {boolean} warn - If true, additional warnings will be displayed
+	 */
 	constructor(sources = [], preferCache = true, warn = false){
 		this.enabledSources = sources;
 		this.preferCache = preferCache;
 		this.warn = warn;
 	}
 
+	/**
+	 * Scan library's sources for games
+	 */
 	async scan(){
 		
 		// Get lutris games
@@ -81,6 +101,11 @@ export class Library{
 
 	}
 
+	/**
+	 * Sort library's games by a criteria
+	 * @param {string} criteria - The game property to sort games by 
+	 * @param {number} order - Either 1 (normal order) or -1 (reverse order)
+	 */
 	async sort(criteria = "name", order = 1){
 		this.games.sort((gameA, gameB)=>{
 			let a = String(gameA[criteria]).toLowerCase(); 
@@ -95,6 +120,9 @@ export class Library{
 		});
 	}
 
+	/**
+	 * Display library's games in the console
+	 */
 	displayInConsole(){
 		for (let game of this.games){
 			let string = "● " + game.toString();

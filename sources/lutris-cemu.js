@@ -7,12 +7,21 @@ import { osLocale } from "os-locale";
 import { env } from "process";
 import YAML from "yaml";
 
+/**
+ * A class representing a cemu (in lutris) game
+ */
 export class CemuGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Cemu in Lutris", "Nintendo - Wii U");
 	}
 }
 
+/**
+ * Convert an absolute (Z:\) wine path into a linux path.
+ * Changes "\" into "/" and the "Z:\" into "/" (fs root).
+ * @param {string} winePath - An absolute wine path (windows style)
+ * @returns {string} - The same path converted into a linux path
+ */
 function winePathToLinux(winePath){
 
 	if (typeof winePath !== "string"){
@@ -28,6 +37,12 @@ function winePathToLinux(winePath){
 
 }
 
+/**
+ * Convert an absolute linux path into a wine path. 
+ * Changes "/" into "\" and the (root fs) "/"  into "Z:\".
+ * @param {string} linuxPath - An absolute linux path
+ * @returns {string} - The same path converted into a wine path
+ */
 function linuxPathToWine(linuxPath){
 
 	if (typeof linuxPath !== "string"){
@@ -43,6 +58,11 @@ function linuxPathToWine(linuxPath){
 
 }
 
+/**
+ * Get a game's name from its rpx ROM path
+ * @param {string} linuxGamePath - A linux path to a rpx Wii U game
+ * @returns {string} - The localized (if available) game name
+ */
 async function getRPXGameName(linuxGamePath){
 
 	let name;
@@ -88,6 +108,11 @@ async function getRPXGameName(linuxGamePath){
 
 }
 
+/**
+ * Get cemu's config data
+ * @param {string} cemuExePath - The path to cemu's executable
+ * @returns {object} - Cemu's config data
+ */
 async function getCemuConfig(cemuExePath){
 
 	const configDir = pathDirname(cemuExePath);
@@ -99,6 +124,11 @@ async function getCemuConfig(cemuExePath){
 
 }
 
+/**
+ * Get cemu's cached games from its config data
+ * @param {object} config - Cemu's config data
+ * @returns {CemuGame[]} - An array of found cached games
+ */
 async function getCemuCachedROMs(config){
 
 	// Search into config for cached games
@@ -132,6 +162,11 @@ async function getCemuCachedROMs(config){
 
 }
 
+/**
+ * Get cemu's game dirs from its config data
+ * @param {object} config - Cemu's config data
+ * @returns {GameDir[]} - The game dirs extracted from cemu's config
+ */
 async function getCemuROMDirs(config){
 
 	// Search into config for ROM dirs
@@ -147,6 +182,12 @@ async function getCemuROMDirs(config){
 
 }
 
+/**
+ * Get cemu ROM games from given game directories
+ * @param {GameDir[]} dirs - The game dirs to scan for ROMs
+ * @param {boolean} warn - Whether to display additional warnings
+ * @returns {CemuGame[]} - An array of found games
+ */
 async function getCemuROMs(dirs, warn = false){
 
 	// Scan cemu dirs
@@ -177,6 +218,13 @@ async function getCemuROMs(dirs, warn = false){
 
 }
 
+/**
+ * Get all cemu games
+ * @param {LutrisGame} cemuLutrisGame - A reference to cemu in lutris
+ * @param {boolean} preferCache - Whether to find games from cache of to scan. Defaults to false.
+ * @param {boolean} warn - Whether to display additional warnings
+ * @returns {CemuGame[]} - An array of found games
+ */
 export async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
 
 	// Read lutris config for cemu (to get cemu's exe path)

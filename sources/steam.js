@@ -9,28 +9,60 @@ const USER_DIR = env["HOME"];
 const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
 const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam", "root");
 
+/**
+ * A wrapper for steam game process management
+ * @property {string} appId - A steam appid, used to invoke steam
+ */
 class SteamGameProcessContainer extends GameProcessContainer{
+	
+	/**
+	 * Create a steam game process container
+	 * @param {string} appId - A steam appid
+	 */
 	constructor(appId){
 		super();
 		this.appId = appId;
 	}
+
 	// ! There is no way (AFAIK) to control a steam game's life cycle.
+	
+	/**
+	 * Start the game in a subprocess
+	 */
 	start(){
 		this.process = spawn("steam", [`steam://rungameid/${this.appId}`], GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
+	
+	/**
+	 * Overwrite the inherited stop method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
 	stop(){
 		console.warn("Stopping steam games is not supported, please use steam's UI");
 		return false;
 	}
+	
+	/**
+	 * Overwrite the inherited kill method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
 	kill(){
 		console.warn("Killing steam games is not supported, please use steam's UI");
 		return false;
 	}
 }
 
+/**
+ * Class representing a steam game
+ */
 export class SteamGame extends Game{
 	
+	/**
+	 * Create a steam game
+	 * @param {string} appId - A steam appid
+	 * @param {string} name - The game's displayed name
+	 */
 	constructor(appId, name){
 		super(name);
 		this.source = "Steam";
@@ -38,11 +70,19 @@ export class SteamGame extends Game{
 		this.processContainer = new SteamGameProcessContainer(this.appId);
 	}
 
+	/**
+	 * Create a string representation of the game
+	 * @returns {string} - A string representing the game
+	 */
 	toString(){
 		return `${this.name} - ${this.source} - ${this.appId}`;
 	}
 }
 
+/**
+ * Get steam's config data about install dirs
+ * @returns {object} - Steam's config data (install dirs)
+ */
 async function getSteamConfig(){
 
 	const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
@@ -57,6 +97,11 @@ async function getSteamConfig(){
 
 }
 
+/**
+ * Get steam install dirs from its config data
+ * @param {object} config - Steam's config data
+ * @returns {GameDir[]} - The game dirs extracted from Steam's config
+ */
 async function getSteamInstallDirs(config){
 	let dirs = [];
 
@@ -75,6 +120,11 @@ async function getSteamInstallDirs(config){
 	return dirs;
 }
 
+/**
+ * Get all steam installed games
+ * @param {GameDir[]} dirs - The steam game dirs to scan for game manifests
+ * @returns {SteamGame[]} - An array of found games
+ */
 async function getSteamInstalledGames(dirs){
 	
 	const IGNORED_ENTRIES_REGEXES = [
@@ -124,6 +174,12 @@ async function getSteamInstalledGames(dirs){
 	return games;
 }
 
+/**
+ * Get all steam games
+ * @param {boolean} warn - Whether to display additional warnings
+ * @returns {SteamGame[]} - An array of found games
+ * @todo add support for non installed games
+ */
 export async function getSteamGames(warn = false){
 
 	// Get config

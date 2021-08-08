@@ -9,17 +9,17 @@ If you think alike, I believe Brag is for you.
 However, if you want a single place to install, configure and manage your games, this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
-Name      | Description                                          | Notes
---------- | ---------------------------------------------------- | ----------------------------------------------
-Steam     | PC games store                                       | Only installed games
-Lutris    | Open Source gaming platform for Linux                | Only installed games
-Legendary | FOSS Epic Games Launcher alternative                 | Only installed games
-Retroarch | Frontend for the libretro API                        | -
-Dolphin   | Nintendo Wii / GameCube emulator                     | -
-Citra     | Nintendo 3DS emulator                                | -
-Yuzu      | Nintendo Switch emulator                             | -
-PPSSPP    | Sony PSP emulator                                    | -
-Cemu      | Nintendo Wii U emulator                              | Cemu installed from lutris. Can't start games.
+Name      | Description                           | Notes
+--------- | ------------------------------------- | ----------------------------------------------
+Steam     | PC games store                        | Only installed games
+Lutris    | Open Source gaming platform for Linux | Only installed games
+Legendary | FOSS Epic Games Launcher alternative  | Only installed games
+Retroarch | Frontend for the libretro API         | -
+Dolphin   | Nintendo Wii / GameCube emulator      | -
+Citra     | Nintendo 3DS emulator                 | -
+Yuzu      | Nintendo Switch emulator              | -
+PPSSPP    | Sony PSP emulator                     | -
+Cemu      | Nintendo Wii U emulator               | Cemu installed from lutris. Can't start games, only list them.
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
@@ -43,16 +43,15 @@ npm run start
 * Installed Citra games aren't listed
 * Installed Yuzu games aren't listed
 * Cemu in lutris is a clunky solution, but it's the best we have currently on linux
-* Cemu in lutris games can't be started yet (lutris doesn't support passing args to exe)
+* Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Support Heroic Games Launcher
-2. Comment all the code **thoroughly** before doing anything else
-3. Add tests 
-4. Support desktop entries
-5. Launcher UI
-6. Fix game metadata (see dedicated section)
-7. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
+1. Add tests 
+2. Support desktop entries
+3. Consider using TS
+4. Launcher UI
+5. Fix game metadata (see dedicated section)
+6. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
 ## Fixing game metadata
 ### The problem

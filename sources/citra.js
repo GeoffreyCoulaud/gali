@@ -6,12 +6,24 @@ import { spawn } from "child_process";
 import { promises as fsp } from "fs"
 import { env } from "process";
 
-
+/**
+ * A wrapper for citra game process management
+ * @property {string} romPath - The game's ROM path, used to invoke citra
+ */
 class CitraGameProcessContainer extends GameProcessContainer{
+	/**
+	 * Create a citra game process container
+	 * @param {string} romPath - The game's ROM path
+	 */
 	constructor(romPath){
 		super();
 		this.romPath = romPath;
 	}
+
+	/**
+	 * Start the game in a subprocess
+	 * @todo Support "citra" and "citra-qt" commands
+	 */
 	start(){
 		const citraCommand = "citra-qt"; // ? Could support "citra"
 		this.process = spawn(citraCommand, [this.romPath], GameProcessContainer.defaultSpawnOptions);
@@ -19,13 +31,30 @@ class CitraGameProcessContainer extends GameProcessContainer{
 	}
 }
 
+/**
+ * Represents a Citra (Nintendo 3DS emulator) game
+ * @property {string} name - The game's displayed name
+ * @property {string} path - The game's ROM path 
+ * @property {CitraGameProcessContainer} processContainer - The game's process container
+ */
 export class CitraGame extends EmulatedGame{
+	/**
+	 * Creat a citra game
+	 * @param {string} name - The game's displayed name 
+	 * @param {string} path - The game's ROM path 
+	 */
 	constructor(name, path){
 		super(name, path, "Citra", "Nintendo - 3DS");
 		this.processContainer = new CitraGameProcessContainer(this.path);
 	}
 }
 
+/**
+ * Get the citra config data from $HOME/.config/citra-emu/qt-config.ini
+ * Found in $HOME/.config/citra-emu/qt-config.ini
+ * Validates the config data before returning it.
+ * @returns {object} - An object containing citra's config
+ */
 async function getCitraConfig(){
 	
 	const USER_DIR = env["HOME"];
@@ -42,6 +71,11 @@ async function getCitraConfig(){
 	return config;
 }
 
+/**
+ * Get citra's game dirs from its config data 
+ * @param {object} config - Citra's config data 
+ * @returns {GameDir[]} - The game dirs extracted from citra's config
+ */
 async function getCitraROMDirs(config){
 
 	let dirs = [];
@@ -62,6 +96,11 @@ async function getCitraROMDirs(config){
 	
 }
 
+/**
+ * Get citra ROM games from given game directories
+ * @param {GameDir[]} dirs - The directories in which to search for ROMs 
+ * @returns {CitraGame[]} - An array of found games
+ */
 async function getCitraROMs(dirs){
 	
 	// TODO test with 3ds files. 
@@ -72,13 +111,24 @@ async function getCitraROMs(dirs){
 
 }
 
+/**
+ * Get citra installed games.
+ * @throws Will throw a "Not implemented" error on every case, this is not yet supported
+ * @param {object} config - Citra's config data 
+ * @todo
+ */
 async function getCitraInstalledGames(config){
 
 	// TODO	
-	throw "Not implemented";
+	throw new Error("Not implemented");
 
 }
 
+/**
+ * Get all citra games
+ * @param {boolean} warn - Whether to display additional warnings 
+ * @returns {CitraGame[]} - An array of found games 
+ */
 export async function getCitraGames(warn = false){
 
 	// Get config

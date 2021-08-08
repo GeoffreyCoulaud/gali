@@ -11,6 +11,12 @@ const fsp = fs.promises;
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
 
+/** 
+ * Deeply merge multiple objects
+ * @param {object[]} objects - The objects to merge 
+ * @returns {object} - A merged object
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#warning_for_deep_clone
+ */
 function deepMergeObjects(objects){
 	let merged = {};
 	for (let object of objects){
@@ -28,45 +34,91 @@ function deepMergeObjects(objects){
 	return merged;
 }
 
+/**
+ * A wrapper for lutris game process management
+ * @property {string} gameSlug - A lutris game slug, used to invoke lutris
+ */
 class LutrisGameProcessContainer extends GameProcessContainer{	
+	
+	/**
+	 * Create a lutris game process container
+	 * @param {string} gameSlug - A lutris game slug
+	 */
 	constructor(gameSlug){
 		super();
 		this.gameSlug = gameSlug;
 	}
+
 	// ! It is possible to manage lutris games's life cycle but it's clunky at best. 
 	// (means parsing options, starting wine by yourself...)
+	
+	/**
+	 * Start the game in a subprocess
+	 */
 	start(){
 		console.warn("Using lutris command, process management unavailable");
 		this.process = spawn("lutris", [`lutris://rungame/${this.game.gameSlug}`]); // Can't handle process life in lutris 
 		this._bindProcessEvents();
 	}
+
+	/**
+	 * Overwrite the inherited stop method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
 	stop(){
 		console.warn("Stopping lutris games is not supported, please use lutris's UI");
 		return false;
 	}
+
+	/**
+	 * Overwrite the inherited kill method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
 	kill(){
 		console.warn("Killing lutris games is not supported, please use lutris's UI");
 		return false;
 	}
 } 
 
+/**
+ * A class representing a Lutris game
+ * @property {string} gameSlug - A lutris game slug
+ * @property {string} configPath - The game's config path
+ * @property {string} runner - The game's runner
+ * @property {LutrisGameProcessContainer} processContainer - The game's process container
+ */
 export class LutrisGame extends Game{
-	constructor(gameSlug, name, prefixPath, runner, service, serviceId, configPath){
+	
+	/**
+	 * Create a lutris game
+	 * @param {string} gameSlug - A lutris game slug 
+	 * @param {string} name - The game's displayed name
+	 * @param {string} runner - The game's lutris runner
+	 * @param {string} configPath - The games's config path
+	 */
+	constructor(gameSlug, name, runner, configPath){
 		super(name);
 		this.source = "Lutris";
 		this.gameSlug = gameSlug;
-		this.prefixPath = prefixPath;
 		this.configPath = configPath;
 		this.runner = runner;
-		this.service = service;
-		this.serviceId = serviceId;
 		this.processContainer = new LutrisGameProcessContainer(this.gameSlug);
 	}
 
+	/**
+	 * Create a string representation of the game
+	 * @returns {string} - A string representing the game
+	 */
 	toString(){
 		return `${this.name} - ${this.source} - ${this.gameSlug}`;
 	}
 
+	/**
+	 * Get the game's config ath the specified level
+	 * @param {string} level - A value within "game", "runner" or "system" 
+	 * @returns {object} - The config data at the specified level
+	 * @access protected
+	 */
 	async _getSpecificConfig(level){
 		const paths = {
 			game: pathJoin(USER_DIR, ".config", "lutris", "games", `${this.configPath}.yml`),
@@ -87,6 +139,10 @@ export class LutrisGame extends Game{
 		return config;
 	}
 
+	/**
+	 * Get full game config
+	 * @returns {object} - The game's config data
+	 */
 	async getConfig(){
 		// Get all config levels
 		const levels = ["system", "runner", "game"];
@@ -97,6 +153,11 @@ export class LutrisGame extends Game{
 	}
 }
 
+/**
+ * Get all lutris installed games from its SQLite database
+ * @param {boolean} warn - Whether to display additional warnings 
+ * @returns {LutrisGame[]} - An array of found games
+ */
 async function getLutrisInstalledGames(warn = false){
 	let games = [];
 	
@@ -124,13 +185,19 @@ async function getLutrisInstalledGames(warn = false){
 				row.service && row.service_id
 			)
 		){
-			games.push(new LutrisGame(row.slug, row.name, row.directory, row.runner, row.service, row.serviceId, row.configpath));
+			games.push(new LutrisGame(row.slug, row.name, row.runner, row.configpath));
 		}
 	}
 
 	return games;
 }
 
+/**
+ * Get all lutris games
+ * @param {boolean} warn - Whether to display additional warnings 
+ * @returns {LutrisGame[]} - A list of found games
+ * @todo add support for non installed games
+ */
 export async function getLutrisGames(warn = false){
 
 	// ? Add support for non-installed games ?
