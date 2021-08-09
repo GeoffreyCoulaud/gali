@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "test": "node tests/all.test.js",
-    "main": "node main.js"
+    "start": "node main.js"
   },
   "keywords": [
     "game",
