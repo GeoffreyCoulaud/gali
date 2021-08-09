@@ -48,12 +48,11 @@ npm run start
 * Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Add tests 
-2. Support desktop entries
-3. Consider using TS
-4. Launcher UI
-5. Fix game metadata (see dedicated section)
-6. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
+1. Support desktop entries
+2. Consider using TS
+3. Launcher UI
+4. Fix game metadata (see dedicated section)
+5. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
 ## Fixing game metadata
 ### The problem
