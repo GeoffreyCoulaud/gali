@@ -1,6 +1,6 @@
 import { EmulatedGame, getROMs, GameProcessContainer } from "./common.js";
 import { basename as pathBasename, join as pathJoin } from "path";
-import config2obj from "../config2obj.js";
+import config2js from "../utils/config2js.js";
 import { GameDir } from "./common.js";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs";
@@ -57,7 +57,7 @@ async function getPPSSPPConfig(){
 	const USER_DIR = env["HOME"];
 	const PPSSPP_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config", "ppsspp", "PSP", "SYSTEM", "ppsspp.ini");
 	const configFileContents = await fsp.readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8"); 
-	const config = config2obj(configFileContents);
+	const config = config2js(configFileContents);
 	return config;
 
 }

@@ -30,7 +30,8 @@ class SteamGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		this.process = spawn("steam", [`steam://rungameid/${this.appId}`], GameProcessContainer.defaultSpawnOptions);
+		this.process = spawn("steam", [`steam://rungameid/${this.appId}`], GameProcessContainer.doNotWaitSpawnOptions);
+		this.process.unref();
 		this._bindProcessEvents();
 	}
 	

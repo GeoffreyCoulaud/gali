@@ -14,10 +14,20 @@ import { kill } from "process";
 export class GameProcessContainer extends EventEmitter{
 	
 	/**
-	 * Default options to pass to child_process.spawn
+	 * Default spawn options to pass to child_process.spawn
 	 */
 	static defaultSpawnOptions = {
 		detached: true,
+	}
+
+	/**
+	 * Spawn options to pass to child_process.spawn.
+	 * Usually, spawn is followed by unref, this is to allow parent to exit 
+	 * before the subprocess. 
+	 */
+	static doNotWaitSpawnOptions = {
+		detached: true,
+		stdio: "ignore",
 	}
 
 	process = undefined;

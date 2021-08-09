@@ -5,6 +5,7 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
+    "test": "node tests/all.test.js",
     "main": "node main.js"
   },
   "keywords": [
@@ -16,12 +17,12 @@
   "author": "Geoffrey Coulaud",
   "license": "GPL-2.0-only",
   "dependencies": {
-    "command": "^0.0.5",
+    "command": "^0.0.1",
     "csv-parse": "^4.16.0",
     "os-locale": "^6.0.0",
     "readdir-enhanced": "^6.0.4",
     "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2",
+    "sqlite3": "^4.2.0",
     "vdf-parser": "^1.2.0",
     "xml2js": "^0.4.23",
     "yaml": "^1.10.2"

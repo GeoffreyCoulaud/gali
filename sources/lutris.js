@@ -56,8 +56,8 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		console.warn("Using lutris command, process management unavailable");
-		this.process = spawn("lutris", [`lutris://rungame/${this.game.gameSlug}`]); // Can't handle process life in lutris 
+		this.process = spawn("lutris", [`lutris://rungame/${this.gameSlug}`], GameProcessContainer.doNotWaitSpawnOptions);
+		this.process.unref();
 		this._bindProcessEvents();
 	}
 

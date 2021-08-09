@@ -1,6 +1,6 @@
 import { join as pathJoin, basename as pathBasename } from "path";
 import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
-import config2obj from "../config2obj.js";
+import config2js from "../utils/config2js.js";
 import { GameDir } from "./common.js";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs"
@@ -60,7 +60,7 @@ async function getCitraConfig(){
 	const USER_DIR = env["HOME"];
 	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config", "citra-emu", "qt-config.ini");
 	const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
-	const config = config2obj(configFileContents);
+	const config = config2js(configFileContents);
 	
 	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
 	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
@@ -161,13 +161,14 @@ export async function getCitraGames(warn = false){
 
 	// Get installed games
 	let installedGames = [];
-	if (typeof config !== "undefined"){
+	// TODO implement scanning for installed switch games
+	/*if (typeof config !== "undefined"){
 		try {
 			installedGames = await getCitraInstalledGames();
 		} catch (error){
 			if (warn) console.warn(`Unable to get citra installed games : ${error}`);
 		}
-	}
+	}*/
 
 	return [...romGames, ...installedGames];
 

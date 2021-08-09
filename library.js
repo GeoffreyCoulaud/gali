@@ -20,7 +20,7 @@ export class Library{
 	/**
 	 * A list of available game sources
 	 */
-	static sources =[
+	static sources = [
 		"steam",
 		"dolphin",
 		"yuzu",
@@ -44,9 +44,16 @@ export class Library{
 	 * @param {boolean} warn - If true, additional warnings will be displayed
 	 */
 	constructor(sources = [], preferCache = true, warn = false){
-		this.enabledSources = sources;
+		this.enabledSources = sources.map(str=>str.toLowerCase());
 		this.preferCache = preferCache;
 		this.warn = warn;
+	}
+
+	/**
+	 * Empty the library from games
+	 */
+	empty(){
+		this.games.length = 0;
 	}
 
 	/**

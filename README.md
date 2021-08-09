@@ -6,7 +6,9 @@ A game launcher for **linux** where your library is the star of the show.
 
 If you think alike, I believe Brag is for you. 
 
-However, if you want a single place to install, configure and manage your games, this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. You will have to install other software to manage your games, they will definitely do it better.
+However, if you want a single place to install, configure and manage your games, 
+this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. 
+You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
 Name      | Description                           | Notes
@@ -55,7 +57,10 @@ npm run start
 
 ## Fixing game metadata
 ### The problem
-For frontends like this one it just isn't enough to get a ROM file that can be played. Brag's goal is to *see and play* your library, to be able to choose a game to play for a chill session or with friends. The games are the star of the show, not any software around them. (Though, you should support projects you like if you have the means !)
+For frontends like this one it just isn't enough to get a ROM file that can be played. 
+Brag's goal is to *see and play* your library, to be able to choose a game to play for a chill session or with friends. 
+The games are the star of the show, not any software around them. 
+(Though, you should support projects you like if you have the means !)
 
 This means multiple things must be extracted from a game file name
 1. Original name,

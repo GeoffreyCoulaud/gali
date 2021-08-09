@@ -1,7 +1,7 @@
 import { join as pathJoin, basename as pathBasename } from "path";
 import { EmulatedGame, Game, GameProcessContainer } from "./common.js";
 import { GameDir } from "./common.js";
-import config2obj from "../config2obj.js";
+import config2js from "../utils/config2js.js";
 import { promises as fsp } from "fs";
 import { getROMs } from "./common.js";
 import { spawn } from "child_process";
@@ -58,7 +58,7 @@ async function getDolphinConfig(){
 	const USER_DIR = env["HOME"];
 	const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config", "dolphin-emu", "Dolphin.ini");
 	const configFileContents = await fsp.readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8"); 
-	const config = config2obj(configFileContents);
+	const config = config2js(configFileContents);
 	
 	// Check "General -> ISOPaths" value to be numeric
 	const nDirs = parseInt(config["General"].get("ISOPaths"));

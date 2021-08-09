@@ -1,11 +1,13 @@
 import { dirname as pathDirname, join as pathJoin, basename as pathBasename, resolve as pathResolve } from "path";
+import { linuxToWine, wineToLinux } from "../utils/convertPathPlatform.js";
+import { getUserLocalePreference } from "../utils/locale.js";
 import { EmulatedGame, getROMs } from "./common.js";
 import { Parser as XMLParser } from "xml2js";
 import { GameDir } from "./common.js";
 import { promises as fsp } from "fs";
-import { osLocale } from "os-locale";
 import { env } from "process";
 import YAML from "yaml";
+
 
 /**
  * A class representing a cemu (in lutris) game
@@ -17,51 +19,10 @@ export class CemuGame extends EmulatedGame{
 }
 
 /**
- * Convert an absolute (Z:\) wine path into a linux path.
- * Changes "\" into "/" and the "Z:\" into "/" (fs root).
- * @param {string} winePath - An absolute wine path (windows style)
- * @returns {string} - The same path converted into a linux path
- */
-function winePathToLinux(winePath){
-
-	if (typeof winePath !== "string"){
-		throw new TypeError("path must be a string");
-	}
-	if (!winePath.startsWith("Z:\\")){
-		throw new Error("path must be in the Z: drive");
-	}
-
-	let linuxPath = winePath.replace("Z:\\", "/");
-	linuxPath = linuxPath.replaceAll("\\", "/");
-	return linuxPath;
-
-}
-
-/**
- * Convert an absolute linux path into a wine path. 
- * Changes "/" into "\" and the (root fs) "/"  into "Z:\".
- * @param {string} linuxPath - An absolute linux path
- * @returns {string} - The same path converted into a wine path
- */
-function linuxPathToWine(linuxPath){
-
-	if (typeof linuxPath !== "string"){
-		throw new TypeError("path must be a string");
-	}
-	if (!linuxPath.startsWith("/")){
-		throw new Error("path must be absolute");
-	}
-
-	let winePath = linuxPath.replace("/", "Z:\\");
-	winePath = winePath.replaceAll("/", "\\");
-	return winePath;
-
-}
-
-/**
  * Get a game's name from its rpx ROM path
  * @param {string} linuxGamePath - A linux path to a rpx Wii U game
  * @returns {string} - The localized (if available) game name
+ * @todo generalize for all rpx metadata
  */
 async function getRPXGameName(linuxGamePath){
 
@@ -80,14 +41,7 @@ async function getRPXGameName(linuxGamePath){
 	}
 	
 	// Get user locale for game name
-	let preferredLangs = ["en", "ja"]; // Prevalence : system > english > japanese
-	let userLang;
-	try {
-		userLang = (new Intl.locale(await osLocale())).language;
-	} catch (error){}
-	if (typeof userLang !== "undefined"){
-		preferredLangs.splice(0, 0, userLang);
-	}
+	const preferredLangs = await getUserLocalePreference(true);
 
 	// Get longname lang key from available lang options
 	const longnameLangOptions = Object.keys(meta?.menu).filter(key=>key.startsWith("longname_")).map(key=>key.replace("longname_", ""));
@@ -173,8 +127,7 @@ async function getCemuROMDirs(config){
 	const wineGamePaths = config?.content?.GamePaths?.[0]?.Entry;
 
 	// Convert wine paths into linux paths
-	// TODO Find a way to not rely on Z: path
-	const linuxGamePaths = wineGamePaths.map(winePath=>winePathToLinux(winePath)); 
+	const linuxGamePaths = wineGamePaths.map(winePath=>wineToLinux(winePath)); 
 	
 	// Convert paths into gameDirs 
 	const gameDirs = linuxGamePaths.map(path=>new GameDir(path, true)); 
@@ -197,7 +150,7 @@ async function getCemuROMs(dirs, warn = false){
 	// Convert found paths into cemu games
 	let romGamesPromises = gameRomPaths.map(async linuxPath=>{
 		// Get base info
-		const winePath = linuxPathToWine(linuxPath);
+		const winePath = linuxToWine(linuxPath);
 		
 		// Try to get game real name
 		const basename = pathBasename(linuxPath);

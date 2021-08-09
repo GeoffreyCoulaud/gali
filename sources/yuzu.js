@@ -1,6 +1,6 @@
 import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
-import config2obj from "../config2obj.js";
+import config2js from "../utils/config2js.js";
 import { GameDir } from "./common.js";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs"
@@ -69,7 +69,7 @@ async function getYuzuConfig(){
 	const USER_DIR = env["HOME"];
 	const YUZU_CONFIG_PATH = pathJoin(USER_DIR, ".config", "yuzu", "qt-config.ini");
 	const configFileContents = await fsp.readFile(YUZU_CONFIG_PATH, "utf-8");
-	const config = config2obj(configFileContents);
+	const config = config2js(configFileContents);
 	
 	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
 	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
@@ -172,13 +172,14 @@ export async function getYuzuGames(warn = false){
 
 	// Get installed games
 	let installedGames = [];
-	if (typeof config !== "undefined"){
+	// TODO implement scanning for installed CIAs
+	/*if (typeof config !== "undefined"){
 		try {
 			installedGames = await getYuzuInstalledGames();
 		} catch (error){
 			if (warn) console.warn(`Unable to get yuzu installed games : ${error}`);
 		}
-	}
+	}*/
 
 	return [...romGames, ...installedGames];
 

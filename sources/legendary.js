@@ -29,7 +29,8 @@ class LegendaryGameProcessContainer extends GameProcessContainer{
 	start(offline = false){
 		let args = ["launch", this.appName];
 		if (offline) args.splice(1,0,"--offline");
-		this.process = spawn("legendary", args);
+		this.process = spawn("legendary", args, GameProcessContainer.doNotWaitSpawnOptions);
+		this.process.unref();
 		this._bindProcessEvents();
 	}
 

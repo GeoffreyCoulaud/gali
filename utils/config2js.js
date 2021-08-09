@@ -6,7 +6,7 @@
  *                     sections are the object's keys, 
  *                     key/values pairs are stored in their section's maps   
  */
-export default function config2obj(config){
+export default function config2js(config){
 	let obj = new Object();
 	let currentKey = undefined;
 	const sectionRegex = /\[(?<sectionName>[^\[\]]+)\]/;
