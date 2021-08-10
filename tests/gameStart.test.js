@@ -59,7 +59,7 @@ export default async function testGameStart(){
 	// Start, wait, kill
 	const TEN_SECONDS = 10000;
 	for (let game of games){
-		console.log(`\nStarting ${game.name}`);
+		console.log(`\nStarting ${game.name} (${game.source})`);
 		game.processContainer.on("error", (error)=>{
 			console.error(`Error emitted by process container : ${error}`);
 		});

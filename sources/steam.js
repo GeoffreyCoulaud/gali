@@ -1,4 +1,5 @@
-import { Game, GameDir, GameProcessContainer } from "./common.js";
+import { Game, GameDir, GameProcessContainer, NoCommandError } from "./common.js";
+import { sync as commandExistsSync } from "command-exists";
 import { promises as fsp, existsSync } from "fs";
 import { parse as parseVDF} from "vdf-parser";
 import { join as pathJoin } from "path";
@@ -30,7 +31,15 @@ class SteamGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		this.process = spawn("steam", [`steam://rungameid/${this.appId}`], GameProcessContainer.doNotWaitSpawnOptions);
+		const steamCommand = "steam";
+		if (!commandExistsSync(steamCommand)){
+			throw new NoCommandError("No steam command found");
+		}
+		this.process = spawn(
+			steamCommand, 
+			[`steam://rungameid/${this.appId}`], 
+			GameProcessContainer.doNotWaitSpawnOptions
+		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}

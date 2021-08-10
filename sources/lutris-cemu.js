@@ -8,6 +8,7 @@ import { promises as fsp } from "fs";
 import { env } from "process";
 import YAML from "yaml";
 
+// TODO implement game process container
 
 /**
  * A class representing a cemu (in lutris) game

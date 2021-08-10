@@ -3,6 +3,8 @@ import { join as pathJoin } from "path";
 import { EventEmitter } from "events";
 import { kill } from "process";
 
+export class NoCommandError extends Error{}
+
 /**
  * A wrapper for game process management
  * @property {ChildProcess|undefined} process - A reference to the game process
@@ -74,6 +76,13 @@ export class GameProcessContainer extends EventEmitter{
 		return true;
 	}
 	
+	/**
+	 * Start the game in a subprocess.
+	 * @throws {NoCommandError} - Can throw in case no known command was found to start the game.
+	 * @abstract
+	 */
+	start(){}
+
 	/**
 	 * Send the SIGKILL signal to the game's subprocess.
 	 * Will do nothing if the game is not running.
@@ -184,9 +193,6 @@ export async function getROMs(dirs, filesRegex, warn = false){
 			if (warn) console.warn(`Skipping directory ${dir.path} (${error})`);
 			continue;
 		}
-
-		// Filter to keep only game files
-		if (filePaths.length === 0) console.warn(`No game files in "${dir.path}"${dir.recursive ? " (recursively)" : ""}`);
 
 		// Add games
 		for (let file of filePaths){

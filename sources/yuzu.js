@@ -1,5 +1,6 @@
-import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
+import { getROMs, EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
+import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
 import { GameDir } from "./common.js";
 import { spawn } from "child_process";
@@ -25,7 +26,15 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		this.process = spawn("yuzu", [this.romPath], GameProcessContainer.defaultSpawnOptions);
+		const yuzuCommand = "yuzu";
+		if (!commandExistsSync(yuzuCommand)){
+			throw new NoCommandError("No yuzu command found");
+		}
+		this.process = spawn(
+			yuzuCommand, 
+			[this.romPath], 
+			GameProcessContainer.defaultSpawnOptions
+		);
 		this._bindProcessEvents();
 	}
 

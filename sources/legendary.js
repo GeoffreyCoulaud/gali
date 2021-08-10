@@ -1,4 +1,5 @@
-import { Game, GameProcessContainer } from "./common.js";
+import { Game, GameProcessContainer, NoCommandError } from "./common.js";
+import { sync as commandExistsSync } from "command-exists";
 import { join as pathJoin } from "path";
 import { promises as fsp } from "fs";
 import { spawn } from "child_process";
@@ -27,9 +28,17 @@ class LegendaryGameProcessContainer extends GameProcessContainer{
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false. 
 	 */
 	start(offline = false){
+		const legendaryCommand = "legendary";
+		if (!commandExistsSync(legendaryCommand)){
+			throw new NoCommandError("No legendary command found");
+		}
 		let args = ["launch", this.appName];
 		if (offline) args.splice(1,0,"--offline");
-		this.process = spawn("legendary", args, GameProcessContainer.doNotWaitSpawnOptions);
+		this.process = spawn(
+			legendaryCommand, 
+			args, 
+			GameProcessContainer.doNotWaitSpawnOptions
+		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}

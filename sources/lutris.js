@@ -1,4 +1,6 @@
-import { Game, GameProcessContainer } from "./common.js";
+import { Game, GameProcessContainer, NoCommandError } from "./common.js";
+import deepMerge from "../utils/deepMerge.js";
+import { sync as commandExistsSync } from "command-exists";
 import { join as pathJoin } from "path";
 import { spawn } from "child_process";
 import { env } from "process";
@@ -10,29 +12,6 @@ const fsp = fs.promises;
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
-
-/** 
- * Deeply merge multiple objects
- * @param {object[]} objects - The objects to merge 
- * @returns {object} - A merged object
- * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#warning_for_deep_clone
- */
-function deepMergeObjects(objects){
-	let merged = {};
-	for (let object of objects){
-		for (let key of Object.keys(object)){
-			// If the key doesn't exist, simply copy.
-			// If the key exists and is not an object, copy to overwrite it.
-			// If the key exists and is an object, recurse into it.
-			if (!merged.hasOwnProperty(key) || typeof merged[key] !== "object"){
-				merged[key] = object[key];
-			} else {
-				merged[key] = deepMergeObjects([merged[key], object[key]]);
-			}
-		}
-	}
-	return merged;
-}
 
 /**
  * A wrapper for lutris game process management
@@ -56,7 +35,15 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		this.process = spawn("lutris", [`lutris://rungame/${this.gameSlug}`], GameProcessContainer.doNotWaitSpawnOptions);
+		const lutrisCommand = "lutris";
+		if (!commandExistsSync(lutrisCommand)){
+			throw new NoCommandError("No lutris command found");
+		}
+		this.process = spawn(
+			lutrisCommand, 
+			[`lutris://rungame/${this.gameSlug}`], 
+			GameProcessContainer.doNotWaitSpawnOptions
+		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}
@@ -148,7 +135,7 @@ export class LutrisGame extends Game{
 		const levels = ["system", "runner", "game"];
 		const configs = await Promise.all(levels.map(level=>this._getSpecificConfig(level)));
 		// Merge all configs into one
-		let mergedConfig = deepMergeObjects(configs);
+		let mergedConfig = deepMerge(configs);
 		return mergedConfig;
 	}
 }

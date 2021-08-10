@@ -1,7 +1,7 @@
+import { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
-import { getROMs, EmulatedGame, GameProcessContainer } from "./common.js";
+import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
-import { GameDir } from "./common.js";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs"
 import { env } from "process";
@@ -25,8 +25,24 @@ class CitraGameProcessContainer extends GameProcessContainer{
 	 * @todo Support "citra" and "citra-qt" commands
 	 */
 	start(){
-		const citraCommand = "citra-qt"; // ? Could support "citra"
-		this.process = spawn(citraCommand, [this.romPath], GameProcessContainer.defaultSpawnOptions);
+		// Find the right command to use
+		const commandOptions = ["citra", "citra-qt"];
+		let citraCommand;
+		for (let option of commandOptions){
+			if (commandExistsSync(option)){
+				citraCommand = option;
+				break;
+			}
+		}
+		if (!citraCommand){
+			throw new NoCommandError("No citra command found");
+		}
+		// Start the game
+		this.process = spawn(
+			citraCommand, 
+			[this.romPath], 
+			GameProcessContainer.defaultSpawnOptions
+		);
 		this._bindProcessEvents();
 	}
 }

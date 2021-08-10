@@ -1,10 +1,9 @@
+import { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
-import { EmulatedGame, Game, GameProcessContainer } from "./common.js";
-import { GameDir } from "./common.js";
+import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
-import { promises as fsp } from "fs";
-import { getROMs } from "./common.js";
 import { spawn } from "child_process";
+import { promises as fsp } from "fs";
 import { env } from "process";
 
 /**
@@ -26,9 +25,13 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game 
 	 */
 	start(noUi = false){
+		const dolphinCommand = "dolphin-emu";
+		if (!commandExistsSync(dolphinCommand)){
+			throw new NoCommandError("No dolphin command found");
+		}
 		let args = ["-e", this.romPath];
 		if (noUi) args.splice(0, 0, "-b");
-		this.process = spawn("dolphin-emu", args, GameProcessContainer.defaultSpawnOptions);
+		this.process = spawn(dolphinCommand, args, GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
 }

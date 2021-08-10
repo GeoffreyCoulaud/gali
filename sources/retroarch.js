@@ -1,5 +1,6 @@
-import { join as pathJoin, basename as pathBasename, extname as pathExtname} from "path";
-import { EmulatedGame, GameProcessContainer } from "./common.js";
+import { EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
+import { join as pathJoin, basename as pathBasename} from "path";
+import { sync as commandExistsSync } from "command-exists";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs";
 import { env } from "process";
@@ -26,7 +27,15 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	start(){
-		this.process = spawn("retroarch", ["--libretro", this.corePath, this.romPath], GameProcessContainer.defaultSpawnOptions);
+		const retroarchCommand = "retroarch";
+		if (!commandExistsSync(retroarchCommand)){
+			throw new NoCommandError("No retroarch command found");
+		}
+		this.process = spawn(
+			"retroarch", 
+			["--libretro", this.corePath, this.romPath], 
+			GameProcessContainer.defaultSpawnOptions
+		);
 		this._bindProcessEvents();
 	}
 }

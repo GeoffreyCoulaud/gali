@@ -1,7 +1,7 @@
-import { EmulatedGame, getROMs, GameProcessContainer } from "./common.js";
+import { GameDir, EmulatedGame, getROMs, GameProcessContainer } from "./common.js";
 import { basename as pathBasename, join as pathJoin } from "path";
+import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
-import { GameDir } from "./common.js";
 import { spawn } from "child_process";
 import { promises as fsp } from "fs";
 import { env } from "process";
@@ -23,10 +23,26 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 	
 	/**
 	 * Start the game in a subprocess
-	 * @param {string} ppssppCommand - The ppsspp command to use. Default is "PPSSPPSDL", can also be "PPSSPPQT"
 	 */
-	start(ppssppCommand = "PPSSPPSDL"){
-		this.process = spawn(ppssppCommand, [this.romPath], GameProcessContainer.defaultSpawnOptions);
+	start(){
+		// Find the right command to use
+		const commandOptions = ["PPSSPPSDL", "PPSSPPQT"];
+		let ppssppCommand;
+		for (let option of commandOptions){
+			if (commandExistsSync(option)){
+				ppssppCommand = option;
+				break;
+			}
+		}
+		if (!ppssppCommand){
+			throw new NoCommandError("No ppsspp command found");
+		}
+		// Start the game
+		this.process = spawn(
+			ppssppCommand, 
+			[this.romPath], 
+			GameProcessContainer.defaultSpawnOptions
+		);
 		this._bindProcessEvents();
 	}
 

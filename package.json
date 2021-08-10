@@ -17,8 +17,7 @@
   "author": "Geoffrey Coulaud",
   "license": "GPL-2.0-only",
   "dependencies": {
-    "command": "^0.0.1",
-    "csv-parse": "^4.16.0",
+    "command-exists": "^1.2.9",
     "os-locale": "^6.0.0",
     "readdir-enhanced": "^6.0.4",
     "sqlite": "^4.0.23",
