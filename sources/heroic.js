@@ -1,7 +1,9 @@
 import { Game, StartOnlyGameProcessContainer, NoCommandError } from "./common.js";
 import { sync as commandExistsSync } from "command-exists";
-import { spawn } from "child_process";
+import { join as pathJoin } from "path";
 import { readFile } from "fs/promises";
+import { spawn } from "child_process";
+import { env } from "process";
 
 /**
  * A wrapper for legendary game process management.
@@ -27,7 +29,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 		if (!commandExistsSync(command)){
 			throw new NoCommandError("No xdg-open command found");
 		}
-		let args = [`heroic://${this.appName}`];
+		let args = [`heroic://launch/${this.appName}`];
 		this.process = spawn(
 			command, 
 			args, 
@@ -43,6 +45,8 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
  * A class representing a Heroic launcher game
  */
 class HeroicGame extends Game{
+
+	source = "Heroic";
 
 	/**
 	 * Create a Heroic launcher game
@@ -61,7 +65,7 @@ class HeroicGame extends Game{
 
 }
 
-export function getHeroicGames(warn = false){
+export async function getHeroicGames(warn = false){
 
 	// Read library.json file
 	const USER_DIR = env["HOME"];

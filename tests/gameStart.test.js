@@ -48,8 +48,12 @@ export default async function testGameStart(){
 	// (edit depending on your library)
 	const knownGames = [
 		new KnownGame("Extreme Tux Racer", "Desktop entries"),
+		new KnownGame("Next Up Hero", "Heroic"),
+		/*
 		new KnownGame("Sonic Mania", "Steam"),
 		new KnownGame("Cemu", "Lutris"),
+		new KnownGame("Next Up Hero", "Legendary"),
+		*/
 	];
 	let games = [];
 	for (let knownGame of knownGames){
