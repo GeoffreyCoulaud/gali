@@ -7,8 +7,6 @@ import { spawn } from "child_process";
 import { env } from "process";
 
 const USER_DIR = env["HOME"];
-const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam", "root", "config", "libraryfolders.vdf");
-const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam", "root");
 
 /**
  * A wrapper for steam game process management
@@ -95,6 +93,7 @@ export class SteamGame extends Game{
  */
 async function getSteamConfig(){
 
+	const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam/root/config/libraryfolders.vdf");
 	const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
 	const config = parseVDF(fileContents);
 
@@ -116,6 +115,7 @@ async function getSteamInstallDirs(config){
 	let dirs = [];
 
 	// Read default steam install directory
+	const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam/root");
 	if (existsSync(STEAM_DEFAULT_INSTALL_DIR)){
 		dirs.push(new GameDir(STEAM_DEFAULT_INSTALL_DIR));
 	}

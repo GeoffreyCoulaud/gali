@@ -1,3 +1,4 @@
+import { getDesktopEntryGames } from "./sources/desktop-entries.js";
 import { getLegendaryGames } from "./sources/legendary.js";
 import { getRetroarchGames } from "./sources/retroarch.js";
 import { getCemuGames } from "./sources/lutris-cemu.js";
@@ -30,6 +31,7 @@ export class Library{
 		"cemu in lutris",
 		"retroarch",
 		"legendary",
+		"desktop entries",
 	];
 
 	enabledSources = [];
@@ -99,6 +101,9 @@ export class Library{
 		}
 		if (this.enabledSources.includes("legendary")){
 			promises.push(getLegendaryGames(this.warn));
+		}
+		if (this.enabledSources.includes("desktop entries")){
+			promises.push(getDesktopEntryGames(this.warn));
 		}
 
 		// Add straightforward games to the list 

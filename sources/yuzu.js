@@ -76,7 +76,7 @@ export class YuzuGame extends EmulatedGame{
 async function getYuzuConfig(){
 
 	const USER_DIR = env["HOME"];
-	const YUZU_CONFIG_PATH = pathJoin(USER_DIR, ".config", "yuzu", "qt-config.ini");
+	const YUZU_CONFIG_PATH = pathJoin(USER_DIR, ".config/yuzu/qt-config.ini");
 	const configFileContents = await fsp.readFile(YUZU_CONFIG_PATH, "utf-8");
 	const config = config2js(configFileContents);
 	

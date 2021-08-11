@@ -26,8 +26,12 @@ class LegendaryGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false. 
+	 * @todo add option to start with heroic
 	 */
 	start(offline = false){
+
+		// TODO add option to start with Heroic
+
 		const legendaryCommand = "legendary";
 		if (!commandExistsSync(legendaryCommand)){
 			throw new NoCommandError("No legendary command found");
@@ -100,7 +104,7 @@ async function getLegendaryInstalledGames(warn = false){
 
 	// Read installed.json file
 	const USER_DIR = env["HOME"];
-	const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config", "legendary", "installed.json");
+	const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config/legendary/installed.json");
 	
 	let installed;
 	try {

@@ -70,7 +70,7 @@ export class RetroarchGame extends EmulatedGame{
 async function getRetroarchPlaylistPaths(){
 
 	const USER_DIR = env["HOME"];
-	const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config", "retroarch", "playlists");
+	const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
 	let playlists = await fsp.readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
 	playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith("lpl"));
 	playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));

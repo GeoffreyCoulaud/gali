@@ -20,6 +20,7 @@
     "command-exists": "^1.2.9",
     "os-locale": "^6.0.0",
     "readdir-enhanced": "^6.0.4",
+    "shell-quote": "^1.7.2",
     "sqlite": "^4.0.23",
     "sqlite3": "^4.2.0",
     "vdf-parser": "^1.2.0",

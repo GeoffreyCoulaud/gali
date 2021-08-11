@@ -7,19 +7,20 @@
  *                     key/values pairs are stored in their section's maps   
  */
 export default function config2js(config){
+	
 	let obj = new Object();
 	let currentKey = undefined;
 	const sectionRegex = /\[(?<sectionName>[^\[\]]+)\]/;
-	const propertyRegex = /(?<propertyName>\S+)\s?=\s?(?<propertyValue>.*)/i
+	const propertyRegex = /(?<propertyName>\S+)\s?=\s?(?<propertyValue>.*)/i;
 	
 	for (let line of config.split("\n")){
 		
-		// Remove commented part of config line
-		let lineNoComment = line.split("#")[0];
+		// Remove comment lines
+		if (line.trimStart().startsWith("#")) continue;
 
 		// Detect line type
-		let lineMatchSection = lineNoComment.match(sectionRegex);
-		let lineMatchProperty = lineNoComment.match(propertyRegex);
+		let lineMatchSection = line.match(sectionRegex);
+		let lineMatchProperty = line.match(propertyRegex);
 		
 		if (lineMatchSection != null){
 		
@@ -37,12 +38,8 @@ export default function config2js(config){
 			let propertyValue = lineMatchProperty.groups["propertyValue"];
 			obj[currentKey].set(propertyName, propertyValue);
 		
-		} else if (line.length > 0) {
-			
-			// Other line
-			console.warn(`Skipped line (unsure of type) : "${lineNoComment}"`);
-
 		}
+		
 	}
 
 	return obj;

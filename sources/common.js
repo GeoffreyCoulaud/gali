@@ -70,7 +70,7 @@ export class GameProcessContainer extends EventEmitter{
 			if (wholeGroup) pidToKill *= -1; // negative PID means send to all process in group
 			kill(pidToKill, signal);
 		} catch (error){
-			console.error(`Error while signaling ${this.process.pid}${wholeGroup?"(group)":""} ${signal} : ${error}`);
+			console.error(`Error while signaling ${this.process.pid}${wholeGroup?" (group)":""} ${signal} : ${error}`);
 			return false;
 		}
 		return true;

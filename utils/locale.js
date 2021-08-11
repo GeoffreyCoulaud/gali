@@ -30,8 +30,8 @@ export async function getUserLocalePreference(onlyLanguageCode = true, fallback 
 	}
 
 	// Return locales or language codes
-	if (onlyLanguageCode){
-		return preferredLocales.map(l=>(new Intl.locale(l)).language);
+	if (onlyLanguageCode){ 
+		return preferredLocales.map(l=>(new Intl.Locale(l)).language);
 	} else {
 		return preferredLocales;
 	}

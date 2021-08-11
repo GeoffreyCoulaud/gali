@@ -59,7 +59,7 @@ export class DolphinGame extends EmulatedGame{
 async function getDolphinConfig(){
 	
 	const USER_DIR = env["HOME"];
-	const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config", "dolphin-emu", "Dolphin.ini");
+	const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/dolphin-emu/Dolphin.ini");
 	const configFileContents = await fsp.readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8"); 
 	const config = config2js(configFileContents);
 	

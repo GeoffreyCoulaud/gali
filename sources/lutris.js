@@ -11,7 +11,7 @@ import YAML from "yaml";
 const fsp = fs.promises;
 
 const USER_DIR = env["HOME"];
-const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local", "share", "lutris", "pga.db");
+const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
 
 /**
  * A wrapper for lutris game process management

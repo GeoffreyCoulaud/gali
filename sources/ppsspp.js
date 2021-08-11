@@ -71,7 +71,7 @@ export class PPSSPPGame extends EmulatedGame{
 async function getPPSSPPConfig(){
 
 	const USER_DIR = env["HOME"];
-	const PPSSPP_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config", "ppsspp", "PSP", "SYSTEM", "ppsspp.ini");
+	const PPSSPP_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/ppsspp/PSP/SYSTEM/ppsspp.ini");
 	const configFileContents = await fsp.readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8"); 
 	const config = config2js(configFileContents);
 	return config;

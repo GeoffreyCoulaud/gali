@@ -22,7 +22,6 @@ class CitraGameProcessContainer extends GameProcessContainer{
 
 	/**
 	 * Start the game in a subprocess
-	 * @todo Support "citra" and "citra-qt" commands
 	 */
 	start(){
 		// Find the right command to use
@@ -74,7 +73,7 @@ export class CitraGame extends EmulatedGame{
 async function getCitraConfig(){
 	
 	const USER_DIR = env["HOME"];
-	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config", "citra-emu", "qt-config.ini");
+	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config/citra-emu/qt-config.ini");
 	const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
 	const config = config2js(configFileContents);
 	

@@ -47,6 +47,7 @@ export default async function testGameStart(){
 	// Check presence of known games
 	// (edit depending on your library)
 	const knownGames = [
+		new KnownGame("Extreme Tux Racer", "Desktop entries"),
 		new KnownGame("Sonic Mania", "Steam"),
 		new KnownGame("Cemu", "Lutris"),
 	];

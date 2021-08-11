@@ -4,10 +4,9 @@ import { Library } from "../library.js";
  * Run the library scan test
  * @param {boolean} displayLibrary - Whether to display the game list or not
  */
-export default async function testLibraryScan(displayLibrary = true){ 
+export default async function testLibraryScan(sources = Library.sources, displayLibrary = false){ 
 
 	// Scan for games, sort them and display the list
-	const sources = Library.sources;
 	const library = new Library(sources, true, true);
 	await library.scan();
 	await library.sort("name", 1);
