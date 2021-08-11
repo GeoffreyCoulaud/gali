@@ -11,18 +11,19 @@ this is not the intended purpose of Brag. This project is for *brag*ging, showin
 You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
-Name            | Description                           | Notes
---------------- | ------------------------------------- | ----------------------------------------------
-Steam           | PC games store                        | Only installed games
-Lutris          | Open Source gaming platform for Linux | Only installed games
-Legendary       | FOSS Epic Games Launcher alternative  | Only installed games
-Desktop entries | Regular linux desktop entries         | -
-Retroarch       | Frontend for the libretro API         | -
-Dolphin         | Nintendo Wii / GameCube emulator      | -
-Citra           | Nintendo 3DS emulator                 | -
-Yuzu            | Nintendo Switch emulator              | -
-PPSSPP          | Sony PSP emulator                     | -
-Cemu            | Nintendo Wii U emulator               | Cemu installed from lutris. Can't start games, only list them.
+Name            | Description                                              | Notes
+--------------- | -------------------------------------------------------- | ----------------------------------------------
+Steam           | PC games store                                           | Only installed games
+Lutris          | Open Source gaming platform for Linux                    | Only installed games
+Legendary       | FOSS Epic Games Launcher alternative                     | Only installed games
+Heroic          | FOSS Epic Games Launcher alternative (GUI for Legendary) | -
+Desktop entries | Regular linux desktop entries                            | -
+Retroarch       | Frontend for the libretro API                            | -
+Dolphin         | Nintendo Wii / GameCube emulator                         | -
+Citra           | Nintendo 3DS emulator                                    | -
+Yuzu            | Nintendo Switch emulator                                 | -
+PPSSPP          | Sony PSP emulator                                        | -
+Cemu            | Nintendo Wii U emulator                                  | Cemu installed from lutris. Can't start games, only list them.
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
@@ -49,10 +50,9 @@ npm run start
 * Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Support Heroic games launcher
-2. Launcher UI
-3. Fix game metadata (see dedicated section)
-4. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
+1. Launcher UI
+2. Fix game metadata (see dedicated section)
+3. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
 ## Fixing game metadata
 ### The problem
