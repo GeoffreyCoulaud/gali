@@ -99,17 +99,79 @@ async function getDesktopEntries(){
 }
 
 /**
+ * Filter function to apply to all desktop entries.
+ * Returns true if the entry is a game (with exceptions), else false.
+ * @param {Map} data - A map of desktop entry key and values
+ * @returns {boolean} - True if the entry is kept, else false.
+ */
+function filterDesktopEntries(data){
+
+	const EXCLUDED_NAMES = [
+		"Citra", "Yuzu", "Dolphin Emulator", "Heroic Games Launcher", "Lutris", 
+		"Pegasus", "PPSSPP (Qt)", "PPSSPP (SDL)", "Steam (Runtime)", 
+		"Steam (Native)", "yuzu", "RetroArch"
+	];
+
+	const EXCLUDED_EXEC_STARTS = [
+		"lutris", "steam", "heroic://"
+	];
+
+	// Filter out hidden desktop entries
+	const isHidden = String(data.get("Hidden")).toLowerCase() === "true";
+	const noDisplay = String(data.get("NoDisplay")).toLowerCase() === "true";
+	if (isHidden || noDisplay) return false;
+	
+	// Filter out non game desktop entries
+	let categories = data.get("Categories");
+	if (typeof categories === "undefined") return false;
+	categories = categories.split(";").filter(str=>str.length > 0);
+	if (!categories.includes("Game")) return false;
+
+	// Filter out explicitly excluded names
+	let name = data.get("Name");
+	if (EXCLUDED_NAMES.includes(name)) return false;
+	
+	// Filter out excluded exec starts
+	let exec = data.get("Exec");
+	for (let EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS){
+		if (exec.startsWith(EXCLUDED_EXEC_START)){
+			return false;
+		}
+	}
+
+	// If game doesn't match any filter out condition, keep it
+	return true;
+
+}
+
+/**
+ * Get a desktop entry's localized name according to user preference.
+ * Falls back to the regular name if none is found.
+ * @param {Map} data - A map of desktop entry key and values
+ * @param {string[]} preferredLangs - The user's preferred languages
+ * @returns {string} - A name
+ */
+function getDesktopEntryLocalizedName(data, preferredLangs){
+
+	let name = data.get("Name");
+	for (let lang of preferredLangs){
+		let localizedName = data.get(`Name[${lang}]`);
+		if (localizedName){
+			name = localizedName;
+			break;
+		}
+	}
+
+	return name;
+
+}
+
+/**
  * Get all games that have a desktop entry
  * @param {boolean} warn - Whether to display additional warnings
  * @returns {DesktopEntryGame[]} - An array of found games
  */
 export async function getDesktopEntryGames(warn = false){
-
-	const NON_GAME_NAMES = [
-		"Citra", "Yuzu", "Dolphin Emulator", "Heroic Games Launcher", "Lutris", 
-		"Pegasus", "PPSSPP (Qt)", "PPSSPP (SDL)", "Steam (Runtime)", 
-		"Steam (Native)", "yuzu", "RetroArch"
-	];
 	
 	// Get entries paths
 	const paths = await getDesktopEntries();
@@ -119,38 +181,21 @@ export async function getDesktopEntryGames(warn = false){
 	let games = [];
 	for (let path of paths){
 		
-		// Get data
+		// Get desktop entry data
 		const contents = await fsp.readFile(path, "utf-8");
 		let data = desktop2js(contents);
 		data = data?.["Desktop Entry"];
-		
-		// Filter out hidden desktop entries
-		const isHidden = String(data.get("Hidden")).toLowerCase() === "true";
-		const noDisplay = String(data.get("NoDisplay")).toLowerCase() === "true";
-		if (isHidden || noDisplay) continue;
-		
-		// Filter out non game desktop entries
-		let categories = data.get("Categories");
-		if (typeof categories === "undefined") continue;
-		categories = categories.split(";").filter(str=>str.length > 0);
-		if (!categories.includes("Game")) continue;
+		if (!data) continue;
 
-		// Filter out explicitly excluded names
-		let name = data.get("Name");
-		if (NON_GAME_NAMES.includes(name)) continue;
+		// Filter entry by its data
+		if (!filterDesktopEntries(data)) continue;
 		
-		// Get localized name according to user preference
-		for (let lang of preferredLangs){
-			let localizedName = data.get(`Name[${lang}]`);
-			if (localizedName){
-				name = localizedName;
-				break;
-			}
-		}
+		// Get needed fields
+		let name = getDesktopEntryLocalizedName(data, preferredLangs);
+		let icon = data.get("Icon");
+		let exec = data.get("Exec");
 		
 		// Add game
-		let exec = data.get("Exec");
-		let icon = data.get("Icon");
 		games.push(new DesktopEntryGame(name, icon, exec));
 
 	}
