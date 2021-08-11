@@ -49,7 +49,7 @@ npm run start
 * Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Consider using TS
+1. Support Heroic games launcher
 2. Launcher UI
 3. Fix game metadata (see dedicated section)
 4. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"

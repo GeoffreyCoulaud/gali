@@ -112,7 +112,7 @@ function filterDesktopEntries(data){
 	];
 
 	const EXCLUDED_EXEC_STARTS = [
-		"lutris", "steam", "heroic://"
+		"lutris", "steam", "xdg-open heroic://"
 	];
 
 	// Filter out hidden desktop entries

@@ -147,9 +147,13 @@ export class Game{
 	/**
 	 * Create a game
 	 * @param {string} name - The game's display name 
+	 * @param {string} cover - A path or url to the game's cover
+	 * @param {string} icon - A path or url to the game's icon 
 	 */
-	constructor(name){
+	constructor(name, cover = undefined, icon = undefined){
 		this.name = name;
+		this.cover = cover;
+		this.icon = icon;
 	}
 }
 

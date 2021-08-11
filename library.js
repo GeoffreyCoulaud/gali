@@ -5,6 +5,7 @@ import { getCemuGames } from "./sources/lutris-cemu.js";
 import { getDolphinGames } from "./sources/dolphin.js";
 import { getLutrisGames } from "./sources/lutris.js";
 import { getPPSSPPGames } from "./sources/ppsspp.js";
+import { getHeroicGames } from "./sources/heroic.js";
 import { getCitraGames } from "./sources/citra.js";
 import { getSteamGames } from "./sources/steam.js";
 import { getYuzuGames } from "./sources/yuzu.js";
@@ -31,6 +32,7 @@ export class Library{
 		"cemu in lutris",
 		"retroarch",
 		"legendary",
+		"heroic",
 		"desktop entries",
 	];
 
@@ -101,6 +103,9 @@ export class Library{
 		}
 		if (this.enabledSources.includes("legendary")){
 			promises.push(getLegendaryGames(this.warn));
+		}
+		if (this.enabledSources.includes("heroic")){
+			promises.push(getHeroicGames(this.warn));
 		}
 		if (this.enabledSources.includes("desktop entries")){
 			promises.push(getDesktopEntryGames(this.warn));

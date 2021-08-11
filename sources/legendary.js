@@ -6,9 +6,9 @@ import { spawn } from "child_process";
 import { env } from "process";
 
 /**
- * A wrapper legendary game process management.
+ * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
- * @property {string} appName - The epic games store app name, used to invoke legendary
+ * @property {string} appName - The epic games store app name, used to start the game
  */
 class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	/**
@@ -26,12 +26,8 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false. 
-	 * @todo add option to start with heroic
 	 */
 	start(offline = false){
-
-		// TODO add option to start with Heroic
-
 		const legendaryCommand = "legendary";
 		if (!commandExistsSync(legendaryCommand)){
 			throw new NoCommandError("No legendary command found");
@@ -95,6 +91,7 @@ async function getLegendaryInstalledGames(warn = false){
 		installed = JSON.parse(fileContents);
 	} catch (error){
 		if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);
+		installed = undefined;
 	}
 
 	// Build games
