@@ -1,13 +1,12 @@
 import { Game, GameDir, GameProcessContainer, NoCommandError } from "./common.js";
 import { join as pathJoin, basename as pathBasename } from "path";
 import { getUserLocalePreference } from "../utils/locale.js";
-import { sync as commandExistsSync } from "command-exists";
+import { splitDesktopExec } from "../utils/xdg.js";
 import { readdirAsync } from "readdir-enhanced";
 import desktop2js from "../utils/desktop2js.js";
+import { readFile } from "fs/promises";
 import { spawn } from "child_process";
-import { promises as fsp } from "fs";
 import { env } from "process";
-import { splitDesktopExec } from "../utils/xdg.js";
 
 /**
  * A wrapper for desktop entry game process management
@@ -182,7 +181,7 @@ export async function getDesktopEntryGames(warn = false){
 	for (let path of paths){
 		
 		// Get desktop entry data
-		const contents = await fsp.readFile(path, "utf-8");
+		const contents = await readFile(path, "utf-8");
 		let data = desktop2js(contents);
 		data = data?.["Desktop Entry"];
 		if (!data) continue;

@@ -1,8 +1,8 @@
 import { EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
 import { join as pathJoin, basename as pathBasename} from "path";
 import { sync as commandExistsSync } from "command-exists";
+import { readFile, readdir } from "fs/promises";
 import { spawn } from "child_process";
-import { promises as fsp } from "fs";
 import { env } from "process";
 
 /**
@@ -71,7 +71,7 @@ async function getRetroarchPlaylistPaths(){
 
 	const USER_DIR = env["HOME"];
 	const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
-	let playlists = await fsp.readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
+	let playlists = await readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
 	playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith("lpl"));
 	playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));
 	return playlists;
@@ -85,7 +85,7 @@ async function getRetroarchPlaylistPaths(){
 async function getRetroarchGamesFromPlaylist(playlistPath){
 
 	// Read the playlist file (it's JSON)
-	const fileContents = await fsp.readFile(playlistPath, "utf-8");
+	const fileContents = await readFile(playlistPath, "utf-8");
 	const playlist = JSON.parse(fileContents);
 
 	// Get playlist console and default playlist core

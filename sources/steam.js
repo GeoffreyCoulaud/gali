@@ -1,9 +1,10 @@
-import { Game, GameDir, GameProcessContainer, NoCommandError } from "./common.js";
+import { StartOnlyGameProcessContainer, NoCommandError, GameDir, Game } from "./common.js";
 import { sync as commandExistsSync } from "command-exists";
-import { promises as fsp, existsSync } from "fs";
+import { readdir, readFile } from "fs/promises";
 import { parse as parseVDF} from "vdf-parser";
 import { join as pathJoin } from "path";
 import { spawn } from "child_process";
+import { existsSync } from "fs";
 import { env } from "process";
 
 const USER_DIR = env["HOME"];
@@ -12,7 +13,7 @@ const USER_DIR = env["HOME"];
  * A wrapper for steam game process management
  * @property {string} appId - A steam appid, used to invoke steam
  */
-class SteamGameProcessContainer extends GameProcessContainer{
+class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 	
 	/**
 	 * Create a steam game process container
@@ -36,7 +37,7 @@ class SteamGameProcessContainer extends GameProcessContainer{
 		this.process = spawn(
 			steamCommand, 
 			[`steam://rungameid/${this.appId}`], 
-			GameProcessContainer.doNotWaitSpawnOptions
+			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();
@@ -94,7 +95,7 @@ export class SteamGame extends Game{
 async function getSteamConfig(){
 
 	const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam/root/config/libraryfolders.vdf");
-	const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
+	const fileContents = await readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
 	const config = parseVDF(fileContents);
 
 	// Validate
@@ -150,7 +151,7 @@ async function getSteamInstalledGames(dirs){
 		// Get all games manifests of dir
 		const manifestsDir = pathJoin(dir.path, "steamapps");
 		let entries = [];
-		try { entries = await fsp.readdir(manifestsDir); } 
+		try { entries = await readdir(manifestsDir); } 
 		catch (err) { continue; }
 		let manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 
@@ -158,7 +159,7 @@ async function getSteamInstalledGames(dirs){
 		for (let manifest of manifests){
 
 			let manifestPath = pathJoin(manifestsDir, manifest);
-			let manifestContent = await fsp.readFile(manifestPath, {encoding: "utf-8"});
+			let manifestContent = await readFile(manifestPath, {encoding: "utf-8"});
 			let manifestParsedContent = parseVDF(manifestContent);
 			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name);
 

@@ -2,8 +2,8 @@ import { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError } 
 import { join as pathJoin, basename as pathBasename } from "path";
 import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
+import { readFile } from "fs/promises";
 import { spawn } from "child_process";
-import { promises as fsp } from "fs"
 import { env } from "process";
 
 /**
@@ -74,7 +74,7 @@ async function getCitraConfig(){
 	
 	const USER_DIR = env["HOME"];
 	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config/citra-emu/qt-config.ini");
-	const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
+	const configFileContents = await readFile(CITRA_CONFIG_PATH, "utf-8");
 	const config = config2js(configFileContents);
 	
 	// Check "UI > Paths\Gamedirs\size" value in config to be numeric

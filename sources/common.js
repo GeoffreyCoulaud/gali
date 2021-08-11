@@ -110,6 +110,30 @@ export class GameProcessContainer extends EventEmitter{
 
 }
 
+export class StartOnlyGameProcessContainer extends GameProcessContainer{
+
+	static defaultSpawnOptions = GameProcessContainer.doNotWaitSpawnOptions;
+
+	/**
+	 * Overwrite the inherited stop method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
+	stop(){
+		console.warn(`${this.constructor} does not implement stopping`);
+		return false;
+	}
+
+	/**
+	 * Overwrite the inherited kill method to neutralize it
+	 * @returns {boolean} - Always false
+	 */
+	kill(){
+		console.warn(`${this.constructor} does not implement killing`);
+		return false;
+	}
+
+}
+
 /**
  * Class representing a generic game.
  * You're not supposed to use it directly, instead use a descendent of this class. 

@@ -2,8 +2,8 @@ import { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError } 
 import { join as pathJoin, basename as pathBasename } from "path";
 import { sync as commandExistsSync } from "command-exists";
 import config2js from "../utils/config2js.js";
+import { readFile } from "fs/promises";
 import { spawn } from "child_process";
-import { promises as fsp } from "fs";
 import { env } from "process";
 
 /**
@@ -60,7 +60,7 @@ async function getDolphinConfig(){
 	
 	const USER_DIR = env["HOME"];
 	const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/dolphin-emu/Dolphin.ini");
-	const configFileContents = await fsp.readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8"); 
+	const configFileContents = await readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8"); 
 	const config = config2js(configFileContents);
 	
 	// Check "General -> ISOPaths" value to be numeric

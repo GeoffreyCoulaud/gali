@@ -3,8 +3,8 @@ import { linuxToWine, wineToLinux } from "../utils/convertPathPlatform.js";
 import { getUserLocalePreference } from "../utils/locale.js";
 import { EmulatedGame, getROMs } from "./common.js";
 import { Parser as XMLParser } from "xml2js";
+import { readFile } from "fs/promises";
 import { GameDir } from "./common.js";
-import { promises as fsp } from "fs";
 import { env } from "process";
 import YAML from "yaml";
 
@@ -34,7 +34,7 @@ async function getRPXGameName(linuxGamePath){
 	try {
 		const gameDir = pathDirname(linuxGamePath);
 		const metaPath = pathResolve(pathJoin(gameDir, "..", "meta", "meta.xml"));
-		const metaFileContents = await fsp.readFile(metaPath, "utf-8");
+		const metaFileContents = await readFile(metaPath, "utf-8");
 		const parser = new XMLParser();
 		meta = await parser.parseStringPromise(metaFileContents);
 	} catch (error){		
@@ -72,7 +72,7 @@ async function getCemuConfig(cemuExePath){
 
 	const configDir = pathDirname(cemuExePath);
 	const configFilePath = pathJoin(configDir, "settings.xml");
-	const configFileContents = await fsp.readFile(configFilePath, "utf-8");
+	const configFileContents = await readFile(configFilePath, "utf-8");
 	const parser = new XMLParser();
 	const config = await parser.parseStringPromise(configFileContents);
 	return config;
@@ -186,7 +186,7 @@ export async function getCemuGames(cemuLutrisGame, preferCache = false, warn = f
 	const lutrisConfigPath = pathJoin(USER_DIR, ".config", "lutris", "games", `${cemuLutrisGame.configPath}.yml`);
 	let cemuExePath; 
 	try {
-		let lutrisConfigContents = await fsp.readFile(lutrisConfigPath, "utf-8");
+		let lutrisConfigContents = await readFile(lutrisConfigPath, "utf-8");
 		let parsedLutrisConfig = YAML.parse(lutrisConfigContents);
 		cemuExePath = parsedLutrisConfig.game.exe;
 	} catch (error) {

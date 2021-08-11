@@ -1,7 +1,7 @@
-import { Game, GameProcessContainer, NoCommandError } from "./common.js";
+import { StartOnlyGameProcessContainer, NoCommandError, Game } from "./common.js";
 import { sync as commandExistsSync } from "command-exists";
 import { join as pathJoin } from "path";
-import { promises as fsp } from "fs";
+import { readFile } from "fs/promises";
 import { spawn } from "child_process";
 import { env } from "process";
 
@@ -10,7 +10,7 @@ import { env } from "process";
  * Doesn't support stop and kill !
  * @property {string} appName - The epic games store app name, used to invoke legendary
  */
-class LegendaryGameProcessContainer extends GameProcessContainer{
+class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	/**
 	 * Create a legendary game process container
 	 * @param {string} appName - The epic games store app name 
@@ -41,29 +41,12 @@ class LegendaryGameProcessContainer extends GameProcessContainer{
 		this.process = spawn(
 			legendaryCommand, 
 			args, 
-			GameProcessContainer.doNotWaitSpawnOptions
+			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}
 
-	/**
-	 * Overwrite the inherited stop method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	stop(){
-		console.warn("Stopping legendary games is not supported");
-		return false;
-	}
-
-	/**
-	 * Overwrite the inherited kill method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	kill(){
-		console.warn("Killing legendary games is not supported");
-		return false;
-	}
 }
 
 /**
@@ -108,7 +91,7 @@ async function getLegendaryInstalledGames(warn = false){
 	
 	let installed;
 	try {
-		const fileContents = await fsp.readFile(INSTALLED_FILE_PATH, "utf-8");
+		const fileContents = await readFile(INSTALLED_FILE_PATH, "utf-8");
 		installed = JSON.parse(fileContents);
 	} catch (error){
 		if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);

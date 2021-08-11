@@ -1,14 +1,14 @@
-import { Game, GameProcessContainer, NoCommandError } from "./common.js";
-import deepMerge from "../utils/deepMerge.js";
+import { StartOnlyGameProcessContainer, NoCommandError, Game } from "./common.js";
 import { sync as commandExistsSync } from "command-exists";
+import deepMerge from "../utils/deepMerge.js";
 import { join as pathJoin } from "path";
+import { readFile } from "fs/promises";
 import { spawn } from "child_process";
+import { existsSync } from "fs";
 import { env } from "process";
 import { open } from "sqlite";
 import sqlite3 from "sqlite3";
-import * as fs from "fs";
 import YAML from "yaml";
-const fsp = fs.promises;
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
@@ -17,7 +17,7 @@ const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
  */
-class LutrisGameProcessContainer extends GameProcessContainer{	
+class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{	
 	
 	/**
 	 * Create a lutris game process container
@@ -42,29 +42,12 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 		this.process = spawn(
 			lutrisCommand, 
 			[`lutris://rungame/${this.gameSlug}`], 
-			GameProcessContainer.doNotWaitSpawnOptions
+			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}
 
-	/**
-	 * Overwrite the inherited stop method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	stop(){
-		console.warn("Stopping lutris games is not supported, please use lutris's UI");
-		return false;
-	}
-
-	/**
-	 * Overwrite the inherited kill method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	kill(){
-		console.warn("Killing lutris games is not supported, please use lutris's UI");
-		return false;
-	}
 } 
 
 /**
@@ -118,7 +101,7 @@ export class LutrisGame extends Game{
 		if (!fs.existsSync(paths[level])) return config;
 		// Read file contents + parse yml
 		try {
-			const contents = await fsp.readFile(paths[level], "utf-8");
+			const contents = await readFile(paths[level], "utf-8");
 			config = YAML.parse(contents);
 		} catch (error){
 			return new Object();
