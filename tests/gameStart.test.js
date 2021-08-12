@@ -24,7 +24,7 @@ class KnownGame{
 	 * @returns {null|Game} - The corresponding game or null in case it's not present
 	 */
 	async findIn(library){
-		for (let game of library.games){
+		for (const game of library.games){
 			if (game.name === this.name && game.source === this.source){
 				return game;
 			}
@@ -55,15 +55,15 @@ async function testGameStart(){
 		new KnownGame("Next Up Hero", "Legendary"),
 		*/
 	];
-	let games = [];
-	for (let knownGame of knownGames){
-		let game = await knownGame.findIn(library);
+	const games = [];
+	for (const knownGame of knownGames){
+		const game = await knownGame.findIn(library);
 		if (game) games.push(game);
 	}
 
 	// Start, wait, kill
 	const TEN_SECONDS = 10000;
-	for (let game of games){
+	for (const game of games){
 		console.log(`\nStarting ${game.name} (${game.source})`);
 		game.processContainer.on("error", (error)=>{
 			console.error(`Error emitted by process container : ${error}`);
@@ -74,7 +74,7 @@ async function testGameStart(){
 			console.log(`Killing ${game.name} after 10s`);
 			game.processContainer.kill();
 		} else {
-			console.log(`Game has already exited, not killing`);
+			console.log("Game has already exited, not killing");
 		}
 	}
 

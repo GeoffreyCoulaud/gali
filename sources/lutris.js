@@ -4,6 +4,7 @@ const deepMerge = require("../utils/deepMerge.js");
 const { join: pathJoin } = require("path");
 const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
+const { existsSync } = require("fs");
 const { env } = require("process");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
@@ -16,8 +17,8 @@ const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
  */
-class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{	
-	
+class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
+
 	/**
 	 * Create a lutris game process container
 	 * @param {string} gameSlug - A lutris game slug
@@ -27,9 +28,9 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
 		this.gameSlug = gameSlug;
 	}
 
-	// ! It is possible to manage lutris games's life cycle but it's clunky at best. 
+	// ! It is possible to manage lutris games's life cycle but it's clunky at best.
 	// (means parsing options, starting wine by yourself...)
-	
+
 	/**
 	 * Start the game in a subprocess
 	 */
@@ -39,15 +40,15 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
 			throw new NoCommandError("No lutris command found");
 		}
 		this.process = spawn(
-			lutrisCommand, 
-			[`lutris://rungame/${this.gameSlug}`], 
+			lutrisCommand,
+			[`lutris://rungame/${this.gameSlug}`],
 			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}
 
-} 
+}
 
 /**
  * A class representing a Lutris game
@@ -57,10 +58,10 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
  * @property {LutrisGameProcessContainer} processContainer - The game's process container
  */
 class LutrisGame extends Game{
-	
+
 	/**
 	 * Create a lutris game
-	 * @param {string} gameSlug - A lutris game slug 
+	 * @param {string} gameSlug - A lutris game slug
 	 * @param {string} name - The game's displayed name
 	 * @param {string} runner - The game's lutris runner
 	 * @param {string} configPath - The games's config path
@@ -84,7 +85,7 @@ class LutrisGame extends Game{
 
 	/**
 	 * Get the game's config ath the specified level
-	 * @param {string} level - A value within "game", "runner" or "system" 
+	 * @param {string} level - A value within "game", "runner" or "system"
 	 * @returns {object} - The config data at the specified level
 	 * @access protected
 	 */
@@ -93,11 +94,11 @@ class LutrisGame extends Game{
 			game: pathJoin(USER_DIR, ".config", "lutris", "games", `${this.configPath}.yml`),
 			runner: pathJoin(USER_DIR, ".config", "lutris", "runners", `${this.runner}.yml`),
 			system: pathJoin(USER_DIR, ".config", "lutris", "system.yml"),
-		}
+		};
 		// Sanitize level + check file existence
 		let config = new Object();
 		if (!paths.hasOwnProperty(level)) return config;
-		if (!fs.existsSync(paths[level])) return config;
+		if (!existsSync(paths[level])) return config;
 		// Read file contents + parse yml
 		try {
 			const contents = await readFile(paths[level], "utf-8");
@@ -117,19 +118,19 @@ class LutrisGame extends Game{
 		const levels = ["system", "runner", "game"];
 		const configs = await Promise.all(levels.map(level=>this._getSpecificConfig(level)));
 		// Merge all configs into one
-		let mergedConfig = deepMerge(configs);
+		const mergedConfig = deepMerge(configs);
 		return mergedConfig;
 	}
 }
 
 /**
  * Get all lutris installed games from its SQLite database
- * @param {boolean} warn - Whether to display additional warnings 
+ * @param {boolean} warn - Whether to display additional warnings
  * @returns {LutrisGame[]} - An array of found games
  */
 async function getLutrisInstalledGames(warn = false){
-	let games = [];
-	
+	const games = [];
+
 	// Open DB
 	let db;
 	try {
@@ -142,15 +143,15 @@ async function getLutrisInstalledGames(warn = false){
 	// Get games
 	const DB_REQUEST_INSTALLED_GAMES = "SELECT name, slug, directory, configpath, service, service_id, runner FROM 'games' WHERE installed AND NOT hidden";
 	const results = await db.all(DB_REQUEST_INSTALLED_GAMES);
-	for (let row of results){
+	for (const row of results){
 		// Validate every request row
 		if (
 			row.slug &&
 			row.name &&
 			row.directory &&
-			row.configpath && 
+			row.configpath &&
 			(
-				row.runner || 
+				row.runner ||
 				row.service && row.service_id
 			)
 		){
@@ -163,14 +164,14 @@ async function getLutrisInstalledGames(warn = false){
 
 /**
  * Get all lutris games
- * @param {boolean} warn - Whether to display additional warnings 
+ * @param {boolean} warn - Whether to display additional warnings
  * @returns {LutrisGame[]} - A list of found games
  * @todo add support for non installed games
  */
 async function getLutrisGames(warn = false){
 
 	// ? Add support for non-installed games ?
-	
+
 	return getLutrisInstalledGames(warn);
 
 }

@@ -1,0 +1,33 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 12
+    },
+    "rules": {
+        "no-prototype-builtins": "warn",
+        "max-lines-per-function": ["warn", { "max": 60, "skipBlankLines": true, "skipComments": true }],
+        "no-trailing-spaces": "warn",
+        "no-unused-vars": ["error", { "args": "none" }],
+        "arrow-spacing": ["error", { "before": false, "after": false }],
+        "no-sequences": ["error", { "allowInParentheses": false }],
+        "no-use-before-define": "error",
+        "no-this-before-super": "error",
+        "no-var": "error",
+        "prefer-const": ["error", {"destructuring": "all"}],
+        "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
+        "comma-dangle": ["error", "only-multiline"],
+        "comma-spacing": ["error", { "before": false, "after": true }],
+        "eqeqeq": ["error", "smart"],
+        "indent": ["error", "tab"],
+        "linebreak-style": ["error","unix"],
+        "quotes": ["error","double"],
+        "semi": ["error","always"],
+        "curly": ["error", "multi-line"]
+    }
+}

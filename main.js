@@ -1,5 +1,4 @@
 const { app, BrowserWindow } = require("electron");
-const { join: pathJoin } = require("path");
 
 // App entry point file.
 // The library is scanned, the UI is started and app management happens.
@@ -10,7 +9,7 @@ function createWindow(){
 		height: 600,
 	};
 	const mainWindow = new BrowserWindow(options);
-	mainWindow.loadFile('frontend/index.html');
+	mainWindow.loadFile("frontend/index.html");
 	mainWindow.webContents.openDevTools();
 }
 
@@ -20,6 +19,6 @@ app.whenReady().then(()=>{
 });
 
 // Close the process when all windows are closed
-app.on('window-all-closed', ()=>{
-	app.quit()
-})
+app.on("window-all-closed", ()=>{
+	app.quit();
+});

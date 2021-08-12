@@ -1,4 +1,4 @@
-const { GameDir, EmulatedGame, getROMs, GameProcessContainer } = require("./common.js");
+const { GameDir, EmulatedGame, getROMs, GameProcessContainer, NoCommandError } = require("./common.js");
 const { basename: pathBasename, join: pathJoin } = require("path");
 const { sync: commandExistsSync } = require("command-exists");
 const config2js = require("../utils/config2js.js");
@@ -11,16 +11,16 @@ const { env } = require("process");
  * @property {string} romPath - The game's ROM path, used to invoke ppsspp
  */
 class PPSSPPGameProcessContainer extends GameProcessContainer{
-	
+
 	/**
 	 * Create a ppsspp game container
-	 * @param {string} romPath - The game's ROM path 
+	 * @param {string} romPath - The game's ROM path
 	 */
 	constructor(romPath){
 		super();
 		this.romPath = romPath;
 	}
-	
+
 	/**
 	 * Start the game in a subprocess
 	 */
@@ -28,7 +28,7 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 		// Find the right command to use
 		const commandOptions = ["PPSSPPSDL", "PPSSPPQT"];
 		let ppssppCommand;
-		for (let option of commandOptions){
+		for (const option of commandOptions){
 			if (commandExistsSync(option)){
 				ppssppCommand = option;
 				break;
@@ -39,8 +39,8 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 		}
 		// Start the game
 		this.process = spawn(
-			ppssppCommand, 
-			[this.romPath], 
+			ppssppCommand,
+			[this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
@@ -55,8 +55,8 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 class PPSSPPGame extends EmulatedGame{
 	/**
 	 * Create a ppsspp game
-	 * @param {string} name - The game's displayed name 
-	 * @param {string} path - The games' ROM path 
+	 * @param {string} name - The game's displayed name
+	 * @param {string} path - The games' ROM path
 	 */
 	constructor(name, path){
 		super(name, path, "PPSSPP", "Sony - PlayStation Portable");
@@ -72,7 +72,7 @@ async function getPPSSPPConfig(){
 
 	const USER_DIR = env["HOME"];
 	const PPSSPP_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/ppsspp/PSP/SYSTEM/ppsspp.ini");
-	const configFileContents = await readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8"); 
+	const configFileContents = await readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8");
 	const config = config2js(configFileContents);
 	return config;
 
@@ -80,14 +80,14 @@ async function getPPSSPPConfig(){
 
 /**
  * Get ppsspp ROM dirs from its config data (pinned paths)
- * @param {object} config - ppsspp config data 
+ * @param {object} config - ppsspp config data
  * @returns {GameDir[]} - The game dirs extracted from ppsspp's config data
  */
 async function getPPSSPPRomDirs(config){
 
-	let dirs = [];
+	const dirs = [];
 	const paths = config?.["PinnedPaths"].values();
-	for (let path of paths){
+	for (const path of paths){
 		dirs.push(new GameDir(path, false));
 	}
 
@@ -97,21 +97,21 @@ async function getPPSSPPRomDirs(config){
 
 /**
  * Get all ppsspp ROMs in the specified game dirs
- * @param {GameDir[]} dirs - The game dirs to scan for ROMs 
+ * @param {GameDir[]} dirs - The game dirs to scan for ROMs
  * @returns {PPSSPPGame[]} - An array of found games
  */
 async function getPPSSPPRoms(dirs){
 
 	const GAME_FILES_REGEX = /.+\.(iso|cso)/i;
 	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-	const games = gamePaths.map(path => new PPSSPPGame(pathBasename(path), path));
+	const games = gamePaths.map(path=>new PPSSPPGame(pathBasename(path), path));
 	return games;
 
 }
 
 /**
  * Get all ppsspp games
- * @param {boolean} warn - Whether to display additional warnings. 
+ * @param {boolean} warn - Whether to display additional warnings.
  * @returns {PPSSPPGame[]} - An array of found games
  */
 async function getPPSSPPGames(warn = false){
@@ -128,7 +128,7 @@ async function getPPSSPPGames(warn = false){
 	let romDirs = [];
 	if (typeof config !== "undefined"){
 		try {
-			romDirs = await getPPSSPPRomDirs(config); 
+			romDirs = await getPPSSPPRomDirs(config);
 		} catch (error){
 			if (warn) console.warn(`Unable to get PPSSPP rom dirs : ${error}`);
 		}

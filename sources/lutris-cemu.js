@@ -27,8 +27,6 @@ class CemuGame extends EmulatedGame{
  */
 async function getRPXGameName(linuxGamePath){
 
-	let name;
-
 	// Read meta.xml
 	let meta;
 	try {
@@ -37,29 +35,28 @@ async function getRPXGameName(linuxGamePath){
 		const metaFileContents = await readFile(metaPath, "utf-8");
 		const parser = new XMLParser();
 		meta = await parser.parseStringPromise(metaFileContents);
-	} catch (error){		
+	} catch (error){
 		return name;
 	}
-	
+
 	// Get user locale for game name
 	const preferredLangs = await getUserLocalePreference(true);
 
 	// Get longname lang key from available lang options
 	const longnameLangOptions = Object.keys(meta?.menu).filter(key=>key.startsWith("longname_")).map(key=>key.replace("longname_", ""));
 	let longnameKey;
-	for (let lang of preferredLangs){
+	for (const lang of preferredLangs){
 		if (longnameLangOptions.includes(lang)){
 			longnameKey = `longname_${lang}`;
 			break;
 		}
 	}
-	
+
 	// Get longname in config
 	let longname = meta?.menu?.[longnameKey]?.[0]?.["_"];
 	longname = longname.replaceAll("\n", " - ");
-	name = longname;
 
-	return name;
+	return longname;
 
 }
 
@@ -87,14 +84,14 @@ async function getCemuConfig(cemuExePath){
 async function getCemuCachedROMs(config){
 
 	// Search into config for cached games
-	let games = [];
+	const games = [];
 
 	const gameCache = config?.content?.GameCache?.[0]?.Entry;
 	if (typeof gameCache !== "undefined"){
-		for (let game of gameCache){
-			let customName = game?.custom_name?.[0];
-			let defaultName = game?.name?.[0];
-			let path = game?.path?.[0];
+		for (const game of gameCache){
+			const customName = game?.custom_name?.[0];
+			const defaultName = game?.name?.[0];
+			const path = game?.path?.[0];
 			let name;
 			for (let candidate of [customName, defaultName]){
 				if (typeof candidate !== "string"){ continue; }
@@ -106,7 +103,7 @@ async function getCemuCachedROMs(config){
 			}
 			if (
 				typeof name !== "undefined" &&
-				typeof path !== "undefined" 
+				typeof path !== "undefined"
 			){
 				games.push(new CemuGame(name, path));
 			}
@@ -128,10 +125,10 @@ async function getCemuROMDirs(config){
 	const wineGamePaths = config?.content?.GamePaths?.[0]?.Entry;
 
 	// Convert wine paths into linux paths
-	const linuxGamePaths = wineGamePaths.map(winePath=>wineToLinux(winePath)); 
-	
-	// Convert paths into gameDirs 
-	const gameDirs = linuxGamePaths.map(path=>new GameDir(path, true)); 
+	const linuxGamePaths = wineGamePaths.map(winePath=>wineToLinux(winePath));
+
+	// Convert paths into gameDirs
+	const gameDirs = linuxGamePaths.map(path=>new GameDir(path, true));
 	return gameDirs;
 
 }
@@ -149,10 +146,10 @@ async function getCemuROMs(dirs, warn = false){
 	const gameRomPaths = await getROMs(dirs, GAME_FILES_REGEX, warn);
 
 	// Convert found paths into cemu games
-	let romGamesPromises = gameRomPaths.map(async linuxPath=>{
+	const romGamesPromises = gameRomPaths.map(async linuxPath=>{
 		// Get base info
 		const winePath = linuxToWine(linuxPath);
-		
+
 		// Try to get game real name
 		const basename = pathBasename(linuxPath);
 		let name = basename;
@@ -162,12 +159,12 @@ async function getCemuROMs(dirs, warn = false){
 				name = gameName;
 			}
 		}
-		
+
 		// Build game
 		return new CemuGame(name, winePath);
 	});
 	const romGames = await Promise.all(romGamesPromises);
-	
+
 	return romGames;
 
 }
@@ -184,10 +181,10 @@ async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
 	// Read lutris config for cemu (to get cemu's exe path)
 	const USER_DIR = env["HOME"];
 	const lutrisConfigPath = pathJoin(USER_DIR, ".config", "lutris", "games", `${cemuLutrisGame.configPath}.yml`);
-	let cemuExePath; 
+	let cemuExePath;
 	try {
-		let lutrisConfigContents = await readFile(lutrisConfigPath, "utf-8");
-		let parsedLutrisConfig = YAML.parse(lutrisConfigContents);
+		const lutrisConfigContents = await readFile(lutrisConfigPath, "utf-8");
+		const parsedLutrisConfig = YAML.parse(lutrisConfigContents);
 		cemuExePath = parsedLutrisConfig.game.exe;
 	} catch (error) {
 		if (warn) console.warn(`Unable to read lutris's game config file for cemu : ${error}`);
@@ -207,9 +204,9 @@ async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
 	// Else      : trust cemu's game cache
 	let romGames = [];
 	if (typeof config !== "undefined"){
-		
+
 		if (!preferCache){
-			
+
 			// Get cemu's ROM dirs
 			let romDirs;
 			try {

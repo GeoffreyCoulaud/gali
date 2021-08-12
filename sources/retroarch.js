@@ -8,10 +8,10 @@ const { env } = require("process");
 /**
  * A wrapper for retroarch game process management
  * @property {string} romPath - The game's ROM path, used to invoke retroarch
- * @property {string} corePath - The games's libretro core path, used to invoke retroarch 
+ * @property {string} corePath - The games's libretro core path, used to invoke retroarch
  */
 class RetroarchGameProcessContainer extends GameProcessContainer{
-	
+
 	/**
 	 * Create a retroarch game process container
 	 * @param {string} romPath The game's ROM path
@@ -22,7 +22,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 		this.romPath = romPath;
 		this.corePath = corePath;
 	}
-	
+
 	/**
 	 * Start the game in a subprocess
 	 */
@@ -32,8 +32,8 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 			throw new NoCommandError("No retroarch command found");
 		}
 		this.process = spawn(
-			"retroarch", 
-			["--libretro", this.corePath, this.romPath], 
+			"retroarch",
+			["--libretro", this.corePath, this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
@@ -46,7 +46,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  * @property {RetroarchGameProcessContainer} processContainer - The game's process container
  */
 class RetroarchGame extends EmulatedGame{
-	
+
 	/**
 	 * Create a retroarch game
 	 * @param {string} name - The game's displayed name
@@ -79,7 +79,7 @@ async function getRetroarchPlaylistPaths(){
 
 /**
  * Get retroarch games from a playlist path.
- * @param {string} playlistPath - Path to the playlist file to read from 
+ * @param {string} playlistPath - Path to the playlist file to read from
  * @returns {RetroarchGame[]} - An array of found games.
  */
 async function getRetroarchGamesFromPlaylist(playlistPath){
@@ -93,9 +93,9 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 	const PLAYLIST_CONSOLE = pathBasename(playlistPath, ".lpl");
 
 	// Build games from the given entries
-	let games = [];
-	for (let entry of playlist.items){
-		
+	const games = [];
+	for (const entry of playlist.items){
+
 		let gameName = entry.label;
 		let gameCorePath = entry.corePath;
 		if (!gameName){
@@ -103,13 +103,13 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 		}
 		if (!gameCorePath || gameCorePath === "DETECT"){
 			gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
-		} 
+		}
 		const game = new RetroarchGame(gameName, entry.path, gameCorePath, PLAYLIST_CONSOLE);
-		
+
 		// Validate game data
 		if (game.name && game.path && game.corePath && game.console){
 			games.push(game);
-		} 
+		}
 
 	}
 	return games;
@@ -118,7 +118,7 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
 
 /**
  * Get all retroarch games
- * @param {boolean} warn - Whether to display additional warnings 
+ * @param {boolean} warn - Whether to display additional warnings
  * @returns {RetroarchGame[]} - An array of found games
  */
 async function getRetroarchGames(warn = false){
@@ -132,8 +132,8 @@ async function getRetroarchGames(warn = false){
 	}
 
 	// Read playlists
-	let games = [];
-	for (let playlistPath of playlistPaths){
+	const games = [];
+	for (const playlistPath of playlistPaths){
 		let tempGames;
 		try {
 			tempGames = await getRetroarchGamesFromPlaylist(playlistPath);
@@ -145,7 +145,7 @@ async function getRetroarchGames(warn = false){
 			games.push(...tempGames);
 		}
 	}
-	
+
 	return games;
 
 }

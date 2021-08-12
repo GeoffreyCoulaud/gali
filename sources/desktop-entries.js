@@ -10,7 +10,7 @@ const { env } = require("process");
 
 /**
  * A wrapper for desktop entry game process management
- * @property {string} exec - The exec value of the desktop entry file, 
+ * @property {string} exec - The exec value of the desktop entry file,
  *                           used to start the game in a subprocess.
  */
 class DesktopEntryGameProcessContainer extends GameProcessContainer{
@@ -33,7 +33,7 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 	start(){
 		this.process = spawn(
 			this.spawnCommand,
-			this.spawnArgs, 
+			this.spawnArgs,
 			GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
@@ -81,14 +81,14 @@ async function getDesktopEntries(){
 
 	// Find all .desktop files in dirs
 	const filesRegex = /.+\.desktop/;
-	let paths = [];
-	for (let dir of dirs){
+	const paths = [];
+	for (const dir of dirs){
 		let filePaths;
 		try {
 			filePaths = await readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
 		} catch (error){ continue; }
-		for (let file of filePaths){
-			let fileAbsPath = pathJoin(dir.path, file);
+		for (const file of filePaths){
+			const fileAbsPath = pathJoin(dir.path, file);
 			paths.push(fileAbsPath);
 		}
 	}
@@ -106,8 +106,8 @@ async function getDesktopEntries(){
 function filterDesktopEntries(data){
 
 	const EXCLUDED_NAMES = [
-		"Citra", "Yuzu", "Dolphin Emulator", "Heroic Games Launcher", "Lutris", 
-		"Pegasus", "PPSSPP (Qt)", "PPSSPP (SDL)", "Steam (Runtime)", 
+		"Citra", "Yuzu", "Dolphin Emulator", "Heroic Games Launcher", "Lutris",
+		"Pegasus", "PPSSPP (Qt)", "PPSSPP (SDL)", "Steam (Runtime)",
 		"Steam (Native)", "yuzu", "RetroArch"
 	];
 
@@ -119,7 +119,7 @@ function filterDesktopEntries(data){
 	const isHidden = String(data.get("Hidden")).toLowerCase() === "true";
 	const noDisplay = String(data.get("NoDisplay")).toLowerCase() === "true";
 	if (isHidden || noDisplay) return false;
-	
+
 	// Filter out non game desktop entries
 	let categories = data.get("Categories");
 	if (typeof categories === "undefined") return false;
@@ -127,12 +127,12 @@ function filterDesktopEntries(data){
 	if (!categories.includes("Game")) return false;
 
 	// Filter out explicitly excluded names
-	let name = data.get("Name");
+	const name = data.get("Name");
 	if (EXCLUDED_NAMES.includes(name)) return false;
-	
+
 	// Filter out excluded exec starts
-	let exec = data.get("Exec");
-	for (let EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS){
+	const exec = data.get("Exec");
+	for (const EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS){
 		if (exec.startsWith(EXCLUDED_EXEC_START)){
 			return false;
 		}
@@ -153,8 +153,8 @@ function filterDesktopEntries(data){
 function getDesktopEntryLocalizedName(data, preferredLangs){
 
 	let name = data.get("Name");
-	for (let lang of preferredLangs){
-		let localizedName = data.get(`Name[${lang}]`);
+	for (const lang of preferredLangs){
+		const localizedName = data.get(`Name[${lang}]`);
 		if (localizedName){
 			name = localizedName;
 			break;
@@ -171,15 +171,15 @@ function getDesktopEntryLocalizedName(data, preferredLangs){
  * @returns {DesktopEntryGame[]} - An array of found games
  */
 async function getDesktopEntryGames(warn = false){
-	
+
 	// Get entries paths
-	const paths = await getDesktopEntries();
+	const paths = await getDesktopEntries(warn);
 
 	// Read each of the entries to decide of its fate
 	const preferredLangs = await getUserLocalePreference(true);
-	let games = [];
-	for (let path of paths){
-		
+	const games = [];
+	for (const path of paths){
+
 		// Get desktop entry data
 		const contents = await readFile(path, "utf-8");
 		let data = desktop2js(contents);
@@ -188,12 +188,12 @@ async function getDesktopEntryGames(warn = false){
 
 		// Filter entry by its data
 		if (!filterDesktopEntries(data)) continue;
-		
+
 		// Get needed fields
-		let name = getDesktopEntryLocalizedName(data, preferredLangs);
-		let icon = data.get("Icon");
-		let exec = data.get("Exec");
-		
+		const name = getDesktopEntryLocalizedName(data, preferredLangs);
+		const icon = data.get("Icon");
+		const exec = data.get("Exec");
+
 		// Add game
 		games.push(new DesktopEntryGame(name, icon, exec));
 

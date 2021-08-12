@@ -5,7 +5,7 @@ const testGameStart = require("./gameStart.test.js");
 (async function(){
 	console.log("--- Library scan ---");
 	await testLibraryScan();
-	
+
 	console.log("\n--- Game start ---");
 	await testGameStart();
 })();

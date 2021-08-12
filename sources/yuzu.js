@@ -31,8 +31,8 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 			throw new NoCommandError("No yuzu command found");
 		}
 		this.process = spawn(
-			yuzuCommand, 
-			[this.romPath], 
+			yuzuCommand,
+			[this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
@@ -44,7 +44,7 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 	 * @returns {boolean} - True on success, else false
 	 */
 	stop(){
-		// For yuzu, SIGTERM doesn't work, use SIGKILL instead. 
+		// For yuzu, SIGTERM doesn't work, use SIGKILL instead.
 		return this.kill();
 	}
 }
@@ -54,7 +54,7 @@ class YuzuGameProcessContainer extends GameProcessContainer{
  * @property {YuzuGameProcessContainer} processContainer - The game's process container
  */
 class YuzuGame extends EmulatedGame{
-	
+
 	/**
 	 * Create a yuzu game
 	 * @param {string} name - The game's displayed name
@@ -79,11 +79,11 @@ async function getYuzuConfig(){
 	const YUZU_CONFIG_PATH = pathJoin(USER_DIR, ".config/yuzu/qt-config.ini");
 	const configFileContents = await readFile(YUZU_CONFIG_PATH, "utf-8");
 	const config = config2js(configFileContents);
-	
+
 	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
 	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
 	if (Number.isNaN(nDirs)){
-		throw Error("Non numeric Paths\\gamedirs\\size value in config file")
+		throw Error("Non numeric Paths\\gamedirs\\size value in config file");
 	}
 
 	return config;
@@ -92,23 +92,23 @@ async function getYuzuConfig(){
 
 /**
  * Get yuzu's game dirs from its config data
- * @param {object} config - Yuzu's config data 
+ * @param {object} config - Yuzu's config data
  * @returns {GameDir[]} - The game dirs extracted from yuzu's config
  */
 async function getYuzuROMDirs(config){
 
 	// Read config
-	let dirs = [];
-	
+	const dirs = [];
+
 	// Get number of paths
 	if (typeof config["UI"] === "undefined") { return dirs; }
 	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
-	
+
 	// Get paths
 	if (Number.isNaN(nDirs)){ return dirs; }
 	for (let i = 1; i <= nDirs; i++){
-		let recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
-		let path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
+		const recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
+		const path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
 		if (typeof path === "undefined"){ continue; }
 		dirs.push(new GameDir(path, recursive));
 	}
@@ -119,14 +119,14 @@ async function getYuzuROMDirs(config){
 
 /**
  * Get yuzu games from given game directories
- * @param {GameDir[]} dirs - The dirs to scan for ROMs 
+ * @param {GameDir[]} dirs - The dirs to scan for ROMs
  * @returns {YuzuGame[]} - An array of found games
  */
 async function getYuzuROMs(dirs){
 
 	const GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
 	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-	const games = gamePaths.map(path => new YuzuGame(pathBasename(path), path));
+	const games = gamePaths.map(path=>new YuzuGame(pathBasename(path), path));
 	return games;
 
 }
@@ -134,11 +134,11 @@ async function getYuzuROMs(dirs){
 /**
  * Get yuzu installed games.
  * @throws Will throw a "Not implemented" error on every case, this is not yet supported
- * @param {object} config - Yuzu's config data 
+ * @param {object} config - Yuzu's config data
  * @todo
  */
 async function getYuzuInstalledGames(config){
-	
+
 	// TODO
 	throw new Error("Not implemented");
 
@@ -152,7 +152,7 @@ async function getYuzuInstalledGames(config){
 async function getYuzuGames(warn = false){
 
 	// Get config
-	let config; 
+	let config;
 	try {
 		config = await getYuzuConfig();
 	} catch (error) {
@@ -182,13 +182,13 @@ async function getYuzuGames(warn = false){
 	// Get installed games
 	let installedGames = [];
 	// TODO implement scanning for installed CIAs
-	/*if (typeof config !== "undefined"){
+	if (typeof config !== "undefined"){
 		try {
-			installedGames = await getYuzuInstalledGames();
+			installedGames = await getYuzuInstalledGames(config);
 		} catch (error){
 			if (warn) console.warn(`Unable to get yuzu installed games : ${error}`);
 		}
-	}*/
+	}
 
 	return [...romGames, ...installedGames];
 

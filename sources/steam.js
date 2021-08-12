@@ -14,7 +14,7 @@ const USER_DIR = env["HOME"];
  * @property {string} appId - A steam appid, used to invoke steam
  */
 class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
-	
+
 	/**
 	 * Create a steam game process container
 	 * @param {string} appId - A steam appid
@@ -25,7 +25,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 	}
 
 	// ! There is no way (AFAIK) to control a steam game's life cycle.
-	
+
 	/**
 	 * Start the game in a subprocess
 	 */
@@ -35,14 +35,14 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 			throw new NoCommandError("No steam command found");
 		}
 		this.process = spawn(
-			steamCommand, 
-			[`steam://rungameid/${this.appId}`], 
+			steamCommand,
+			[`steam://rungameid/${this.appId}`],
 			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();
 	}
-	
+
 	/**
 	 * Overwrite the inherited stop method to neutralize it
 	 * @returns {boolean} - Always false
@@ -51,7 +51,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 		console.warn("Stopping steam games is not supported, please use steam's UI");
 		return false;
 	}
-	
+
 	/**
 	 * Overwrite the inherited kill method to neutralize it
 	 * @returns {boolean} - Always false
@@ -66,7 +66,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
  * Class representing a steam game
  */
 class SteamGame extends Game{
-	
+
 	/**
 	 * Create a steam game
 	 * @param {string} appId - A steam appid
@@ -113,7 +113,7 @@ async function getSteamConfig(){
  * @returns {GameDir[]} - The game dirs extracted from Steam's config
  */
 async function getSteamInstallDirs(config){
-	let dirs = [];
+	const dirs = [];
 
 	// Read default steam install directory
 	const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam/root");
@@ -123,11 +123,11 @@ async function getSteamInstallDirs(config){
 
 	// Read user specified steam install directories
 	const libraryfolders = config.libraryfolders;
-	let keys = Object.keys(libraryfolders);
+	const keys = Object.keys(libraryfolders);
 	for (let i = 0; i < keys.length-1; i++){
 		dirs.push(new GameDir(libraryfolders[keys[i]].path));
 	}
-	
+
 	return dirs;
 }
 
@@ -137,38 +137,37 @@ async function getSteamInstallDirs(config){
  * @returns {SteamGame[]} - An array of found games
  */
 async function getSteamInstalledGames(dirs){
-	
+
 	const IGNORED_ENTRIES_REGEXES = [
 		/^Steamworks.*/,
 		/^(S|s)team ?(L|l)inux ?(R|r)untime.*/,
 		/^Proton.*/
 	];
 
-	let games = [];
+	const games = [];
 
-	for (let dir of dirs){
+	for (const dir of dirs){
 
 		// Get all games manifests of dir
 		const manifestsDir = pathJoin(dir.path, "steamapps");
 		let entries = [];
-		try { entries = await readdir(manifestsDir); } 
-		catch (err) { continue; }
-		let manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
+		try { entries = await readdir(manifestsDir); } catch (err) { continue; }
+		const manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 
 		// Get info from manifests
-		for (let manifest of manifests){
+		for (const manifest of manifests){
 
-			let manifestPath = pathJoin(manifestsDir, manifest);
-			let manifestContent = await readFile(manifestPath, {encoding: "utf-8"});
-			let manifestParsedContent = parseVDF(manifestContent);
-			let game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name);
+			const manifestPath = pathJoin(manifestsDir, manifest);
+			const manifestContent = await readFile(manifestPath, {encoding: "utf-8"});
+			const manifestParsedContent = parseVDF(manifestContent);
+			const game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name);
 
 			// Ignore some non-games entries
 			let ignored = false;
 			if (typeof game.appId === "undefined" || typeof game.name === "undefined"){
 				ignored = true;
 			} else {
-				for (let regex of IGNORED_ENTRIES_REGEXES){
+				for (const regex of IGNORED_ENTRIES_REGEXES){
 					if (game.name.match(regex)){
 						ignored = true;
 						break;
@@ -181,7 +180,7 @@ async function getSteamInstalledGames(dirs){
 
 		}
 	}
-	
+
 	return games;
 }
 
