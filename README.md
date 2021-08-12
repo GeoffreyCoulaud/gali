@@ -38,6 +38,7 @@ Cemu            | Nintendo Wii U emulator                                  | Cem
 git clone https://github.com/GeoffreyCoulaud/brag-launcher.git
 cd brag-launcher
 npm install
+npm run build
 npm run start
 ```
 
@@ -50,7 +51,7 @@ npm run start
 * Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
 
 ## TODO
-1. Launcher UI
+1. Launcher UI (task to be split up)
 2. Fix game metadata (see dedicated section)
 3. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
