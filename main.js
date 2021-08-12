@@ -10,7 +10,7 @@ function createWindow(){
 		height: 600,
 	};
 	const mainWindow = new BrowserWindow(options);
-	mainWindow.loadFile('frontend/main.html');
+	mainWindow.loadFile('frontend/index.html');
 	mainWindow.webContents.openDevTools();
 }
 

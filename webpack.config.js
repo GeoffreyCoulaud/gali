@@ -1,19 +1,22 @@
 const { resolve: pathResolve } = require('path');
-const { VueLoaderPlugin } = require('vue-loader');
 
 module.exports = {
 	mode: 'development',
-	entry: './frontend/main.js',
+	entry: './frontend/src/js/index.js',
 	output: {
 		path: pathResolve(__dirname, 'frontend/dist'),
-		filename: 'main.bundle.js',
+		filename: 'index.bundle.js',
 	},
 	module: {
 		rules: [
-			{test: /\.vue$/, use: "vue-loader"}
+			{
+				test: /\.styl$/, 
+				use: [
+					{ loader: "style-loader" },
+					{ loader: "css-loader" },
+					{ loader: "stylus-loader" }
+				]
+			}
 		]
 	},
-	plugins: [
-		new VueLoaderPlugin()
-	]
 };
