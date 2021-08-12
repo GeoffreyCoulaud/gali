@@ -1,5 +1,5 @@
-import isIterable from "./isIterable.js";
-import { osLocale } from "os-locale";
+const isIterable = require("./isIterable.js");
+const { osLocale } = import("os-locale");
 
 const DEFAULT_PREFERENCE = ["en-US", "ja-JP"];
 
@@ -9,7 +9,7 @@ const DEFAULT_PREFERENCE = ["en-US", "ja-JP"];
  * @param {string[]} fallback - The fallback preferred locales in case the OS one can't be detected, by default "en" and "ja".
  * @returns {string[]} - An array of 2 letter locale names.
  */
-export async function getUserLocalePreference(onlyLanguageCode = true, fallback = DEFAULT_PREFERENCE){
+async function getUserLocalePreference(onlyLanguageCode = true, fallback = DEFAULT_PREFERENCE){
 	let userLocale;
 	let preferredLocales = [];
 
@@ -36,3 +36,7 @@ export async function getUserLocalePreference(onlyLanguageCode = true, fallback 
 		return preferredLocales;
 	}
 }
+
+module.exports = {
+	getUserLocalePreference,
+};

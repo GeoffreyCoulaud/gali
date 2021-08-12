@@ -1,19 +1,19 @@
-import { dirname as pathDirname, join as pathJoin, basename as pathBasename, resolve as pathResolve } from "path";
-import { linuxToWine, wineToLinux } from "../utils/convertPathPlatform.js";
-import { getUserLocalePreference } from "../utils/locale.js";
-import { EmulatedGame, getROMs } from "./common.js";
-import { Parser as XMLParser } from "xml2js";
-import { readFile } from "fs/promises";
-import { GameDir } from "./common.js";
-import { env } from "process";
-import YAML from "yaml";
+const { dirname: pathDirname, join: pathJoin, basename: pathBasename, resolve: pathResolve } = require("path");
+const { linuxToWine, wineToLinux } = require("../utils/convertPathPlatform.js");
+const { getUserLocalePreference } = require("../utils/locale.js");
+const { EmulatedGame, getROMs } = require("./common.js");
+const { Parser: XMLParser } = require("xml2js");
+const { readFile } = require("fs/promises");
+const { GameDir } = require("./common.js");
+const { env } = require("process");
+const YAML = require("yaml");
 
 // TODO implement game process container
 
 /**
  * A class representing a cemu (in lutris) game
  */
-export class CemuGame extends EmulatedGame{
+class CemuGame extends EmulatedGame{
 	constructor(name, path){
 		super(name, path, "Cemu in Lutris", "Nintendo - Wii U");
 	}
@@ -179,7 +179,7 @@ async function getCemuROMs(dirs, warn = false){
  * @param {boolean} warn - Whether to display additional warnings
  * @returns {CemuGame[]} - An array of found games
  */
-export async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
+async function getCemuGames(cemuLutrisGame, preferCache = false, warn = false){
 
 	// Read lutris config for cemu (to get cemu's exe path)
 	const USER_DIR = env["HOME"];
@@ -242,3 +242,8 @@ export async function getCemuGames(cemuLutrisGame, preferCache = false, warn = f
 	return romGames;
 
 }
+
+module.exports = {
+	getCemuGames,
+	CemuGame,
+};

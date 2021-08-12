@@ -1,10 +1,10 @@
-import { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
-import { join as pathJoin, basename as pathBasename } from "path";
-import { sync as commandExistsSync } from "command-exists";
-import config2js from "../utils/config2js.js";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError } = require("./common.js");
+const { join: pathJoin, basename: pathBasename } = require("path");
+const { sync: commandExistsSync } = require("command-exists");
+const config2js = require("../utils/config2js.js");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for citra game process management
@@ -52,7 +52,7 @@ class CitraGameProcessContainer extends GameProcessContainer{
  * @property {string} path - The game's ROM path 
  * @property {CitraGameProcessContainer} processContainer - The game's process container
  */
-export class CitraGame extends EmulatedGame{
+class CitraGame extends EmulatedGame{
 	/**
 	 * Creat a citra game
 	 * @param {string} name - The game's displayed name 
@@ -144,7 +144,7 @@ async function getCitraInstalledGames(config){
  * @param {boolean} warn - Whether to display additional warnings 
  * @returns {CitraGame[]} - An array of found games 
  */
-export async function getCitraGames(warn = false){
+async function getCitraGames(warn = false){
 
 	// Get config
 	let config; 
@@ -188,3 +188,9 @@ export async function getCitraGames(warn = false){
 	return [...romGames, ...installedGames];
 
 }
+
+module.exports = {
+	CitraGameProcessContainer,
+	getCitraGames,
+	CitraGame,
+};

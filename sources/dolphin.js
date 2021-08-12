@@ -1,10 +1,10 @@
-import { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError } from "./common.js";
-import { join as pathJoin, basename as pathBasename } from "path";
-import { sync as commandExistsSync } from "command-exists";
-import config2js from "../utils/config2js.js";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError } = require("./common.js");
+const { join: pathJoin, basename: pathBasename } = require("path");
+const { sync: commandExistsSync } = require("command-exists");
+const config2js = require("../utils/config2js.js");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for dolphin game management
@@ -40,7 +40,7 @@ class DolphinGameProcessContainer extends GameProcessContainer{
  * Class representing a dolphin game
  * @property {DolphinGameProcessContainer} processContainer - The game's process container 
  */
-export class DolphinGame extends EmulatedGame{
+class DolphinGame extends EmulatedGame{
 	/**
 	 * Create a dolphin game
 	 * @param {string} name - The game's displayed name 
@@ -117,7 +117,7 @@ async function getDolphinROMs(dirs){
  * @param {boolean} warn - Whether to display additional warnings 
  * @returns {DolphinGame[]} - An array of found games
  */
-export async function getDolphinGames(warn = false){
+async function getDolphinGames(warn = false){
 
 	// Get config
 	let config; 
@@ -150,3 +150,9 @@ export async function getDolphinGames(warn = false){
 	return romGames;
 
 }
+
+module.exports = {
+	DolphinGameProcessContainer,
+	getDolphinGames,
+	DolphinGame,
+};

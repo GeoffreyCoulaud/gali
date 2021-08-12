@@ -1,9 +1,9 @@
-import { EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
-import { join as pathJoin, basename as pathBasename} from "path";
-import { sync as commandExistsSync } from "command-exists";
-import { readFile, readdir } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { EmulatedGame, GameProcessContainer, NoCommandError } = require("./common.js");
+const { join: pathJoin, basename: pathBasename} = require("path");
+const { sync: commandExistsSync } = require("command-exists");
+const { readFile, readdir } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for retroarch game process management
@@ -45,7 +45,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  * @property {string} corePath - The game's libretro core path
  * @property {RetroarchGameProcessContainer} processContainer - The game's process container
  */
-export class RetroarchGame extends EmulatedGame{
+class RetroarchGame extends EmulatedGame{
 	
 	/**
 	 * Create a retroarch game
@@ -121,7 +121,7 @@ async function getRetroarchGamesFromPlaylist(playlistPath){
  * @param {boolean} warn - Whether to display additional warnings 
  * @returns {RetroarchGame[]} - An array of found games
  */
-export async function getRetroarchGames(warn = false){
+async function getRetroarchGames(warn = false){
 
 	// Get retroarch playlists
 	let playlistPaths = [];
@@ -149,3 +149,9 @@ export async function getRetroarchGames(warn = false){
 	return games;
 
 }
+
+module.exports = {
+	RetroarchGameProcessContainer,
+	getRetroarchGames,
+	RetroarchGame,
+};

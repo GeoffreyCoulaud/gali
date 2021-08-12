@@ -6,7 +6,7 @@
  *                     sections are the object's keys, 
  *                     key/values pairs are stored in their section's maps   
  */
-export default function config2js(config){
+function config2js(config){
 	
 	let obj = new Object();
 	let currentKey = undefined;
@@ -44,3 +44,5 @@ export default function config2js(config){
 
 	return obj;
 } 
+
+module.exports = config2js;

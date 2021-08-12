@@ -1,11 +1,11 @@
-import { getROMs, EmulatedGame, GameProcessContainer, NoCommandError } from "./common.js";
-import { join as pathJoin, basename as pathBasename } from "path";
-import { sync as commandExistsSync } from "command-exists";
-import config2js from "../utils/config2js.js";
-import { readFile } from "fs/promises";
-import { GameDir } from "./common.js";
-import { spawn } from "child_process";
-import { env } from "process";
+const { getROMs, EmulatedGame, GameProcessContainer, NoCommandError } = require("./common.js");
+const { join: pathJoin, basename: pathBasename } = require("path");
+const { sync: commandExistsSync } = require("command-exists");
+const config2js = require("../utils/config2js.js");
+const { readFile } = require("fs/promises");
+const { GameDir } = require("./common.js");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for yuzu game process management
@@ -53,7 +53,7 @@ class YuzuGameProcessContainer extends GameProcessContainer{
  * A class representing a yuzu game
  * @property {YuzuGameProcessContainer} processContainer - The game's process container
  */
-export class YuzuGame extends EmulatedGame{
+class YuzuGame extends EmulatedGame{
 	
 	/**
 	 * Create a yuzu game
@@ -149,7 +149,7 @@ async function getYuzuInstalledGames(config){
  * @param {boolean} warn - Whether to display additional warnings
  * @returns {YuzuGame[]} - An array of found games
  */
-export async function getYuzuGames(warn = false){
+async function getYuzuGames(warn = false){
 
 	// Get config
 	let config; 
@@ -193,3 +193,9 @@ export async function getYuzuGames(warn = false){
 	return [...romGames, ...installedGames];
 
 }
+
+module.exports = {
+	YuzuGameProcessContainer,
+	getYuzuGames,
+	YuzuGame,
+};

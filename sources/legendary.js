@@ -1,9 +1,9 @@
-import { StartOnlyGameProcessContainer, NoCommandError, Game } from "./common.js";
-import { sync as commandExistsSync } from "command-exists";
-import { join as pathJoin } from "path";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { StartOnlyGameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { sync: commandExistsSync } = require("command-exists");
+const { join: pathJoin } = require("path");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for legendary game process management.
@@ -50,7 +50,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
  * @property {string} appName - The game's epic games launcher app name
  * @property {LegendaryGameProcessContainer} processContainer - The game's process container 
  */
-export class LegendaryGame extends Game{
+class LegendaryGame extends Game{
 	
 	source = "Legendary";
 	
@@ -115,10 +115,16 @@ async function getLegendaryInstalledGames(warn = false){
  * @returns {LegendaryGame[]} - An array of found games
  * @todo get also non installed games
  */
-export async function getLegendaryGames(warn = false){
+async function getLegendaryGames(warn = false){
 
 	// ? Add support for non-installed games ?
 
 	return getLegendaryInstalledGames(warn);
 
 }
+
+module.exports = {
+	LegendaryGameProcessContainer,
+	getLegendaryGames,
+	LegendaryGame,
+};

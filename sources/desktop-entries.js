@@ -1,12 +1,12 @@
-import { Game, GameDir, GameProcessContainer, NoCommandError } from "./common.js";
-import { join as pathJoin, basename as pathBasename } from "path";
-import { getUserLocalePreference } from "../utils/locale.js";
-import { splitDesktopExec } from "../utils/xdg.js";
-import { readdirAsync } from "readdir-enhanced";
-import desktop2js from "../utils/desktop2js.js";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { Game, GameDir, GameProcessContainer } = require("./common.js");
+const { getUserLocalePreference } = require("../utils/locale.js");
+const { splitDesktopExec } = require("../utils/xdg.js");
+const { readdirAsync } = require("readdir-enhanced");
+const desktop2js = require("../utils/desktop2js.js");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { join: pathJoin } = require("path");
+const { env } = require("process");
 
 /**
  * A wrapper for desktop entry game process management
@@ -170,7 +170,7 @@ function getDesktopEntryLocalizedName(data, preferredLangs){
  * @param {boolean} warn - Whether to display additional warnings
  * @returns {DesktopEntryGame[]} - An array of found games
  */
-export async function getDesktopEntryGames(warn = false){
+async function getDesktopEntryGames(warn = false){
 	
 	// Get entries paths
 	const paths = await getDesktopEntries();
@@ -201,3 +201,9 @@ export async function getDesktopEntryGames(warn = false){
 
 	return games;
 }
+
+module.exports = {
+	DesktopEntryGameProcessContainer,
+	getDesktopEntryGames,
+	DesktopEntryGame,
+};

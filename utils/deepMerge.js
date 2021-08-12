@@ -4,7 +4,7 @@
  * @returns {object} - A merged object
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#warning_for_deep_clone
  */
-export default function deepMergeObjects(objects){
+function deepMergeObjects(objects){
 	let merged = {};
 	for (let object of objects){
 		for (let key of Object.keys(object)){
@@ -20,3 +20,5 @@ export default function deepMergeObjects(objects){
 	}
 	return merged;
 }
+
+module.exports = deepMergeObjects;

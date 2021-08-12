@@ -1,11 +1,11 @@
-import { StartOnlyGameProcessContainer, NoCommandError, GameDir, Game } from "./common.js";
-import { sync as commandExistsSync } from "command-exists";
-import { readdir, readFile } from "fs/promises";
-import { parse as parseVDF} from "vdf-parser";
-import { join as pathJoin } from "path";
-import { spawn } from "child_process";
-import { existsSync } from "fs";
-import { env } from "process";
+const { StartOnlyGameProcessContainer, NoCommandError, GameDir, Game } = require("./common.js");
+const { sync: commandExistsSync } = require("command-exists");
+const { readdir, readFile } = require("fs/promises");
+const { parse: parseVDF} = require("vdf-parser");
+const { join: pathJoin } = require("path");
+const { spawn } = require("child_process");
+const { existsSync } = require("fs");
+const { env } = require("process");
 
 const USER_DIR = env["HOME"];
 
@@ -65,7 +65,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 /**
  * Class representing a steam game
  */
-export class SteamGame extends Game{
+class SteamGame extends Game{
 	
 	/**
 	 * Create a steam game
@@ -191,7 +191,7 @@ async function getSteamInstalledGames(dirs){
  * @returns {SteamGame[]} - An array of found games
  * @todo add support for non installed games
  */
-export async function getSteamGames(warn = false){
+async function getSteamGames(warn = false){
 
 	// Get config
 	let config;
@@ -226,3 +226,9 @@ export async function getSteamGames(warn = false){
 	return games;
 
 }
+
+module.exports = {
+	SteamGameProcessContainer,
+	getSteamGames,
+	SteamGame,
+};

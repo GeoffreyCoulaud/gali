@@ -1,9 +1,9 @@
-import { Game, StartOnlyGameProcessContainer, NoCommandError } from "./common.js";
-import { sync as commandExistsSync } from "command-exists";
-import { join as pathJoin } from "path";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { Game, StartOnlyGameProcessContainer, NoCommandError } = require("./common.js");
+const { sync: commandExistsSync } = require("command-exists");
+const { readFile } = require("fs/promises");
+const { join: pathJoin } = require("path");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for legendary game process management.
@@ -65,7 +65,7 @@ class HeroicGame extends Game{
 
 }
 
-export async function getHeroicGames(warn = false){
+async function getHeroicGames(warn = false){
 
 	// Read library.json file
 	const USER_DIR = env["HOME"];
@@ -99,4 +99,10 @@ export async function getHeroicGames(warn = false){
 
 	return games;
 
+}
+
+module.exports = {
+	HeroicGameProcessContainer,
+	getHeroicGames,
+	HeroicGame,
 }

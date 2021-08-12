@@ -6,7 +6,7 @@
  * @param {string} winePath - An absolute wine path (windows style)
  * @returns {string} - The same path converted into a linux path
  */
-export function wineToLinux(winePath){
+function wineToLinux(winePath){
 
 	if (typeof winePath !== "string"){
 		throw new TypeError("path must be a string");
@@ -27,7 +27,7 @@ export function wineToLinux(winePath){
  * @param {string} linuxPath - An absolute linux path
  * @returns {string} - The same path converted into a wine path
  */
-export function linuxToWine(linuxPath){
+function linuxToWine(linuxPath){
 
 	if (typeof linuxPath !== "string"){
 		throw new TypeError("path must be a string");
@@ -41,3 +41,8 @@ export function linuxToWine(linuxPath){
 	return winePath;
 
 }
+
+module.exports = {
+	wineToLinux,
+	linuxToWine,
+};

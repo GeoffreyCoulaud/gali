@@ -1,14 +1,14 @@
-import { getDesktopEntryGames } from "./sources/desktop-entries.js";
-import { getLegendaryGames } from "./sources/legendary.js";
-import { getRetroarchGames } from "./sources/retroarch.js";
-import { getCemuGames } from "./sources/lutris-cemu.js";
-import { getDolphinGames } from "./sources/dolphin.js";
-import { getLutrisGames } from "./sources/lutris.js";
-import { getPPSSPPGames } from "./sources/ppsspp.js";
-import { getHeroicGames } from "./sources/heroic.js";
-import { getCitraGames } from "./sources/citra.js";
-import { getSteamGames } from "./sources/steam.js";
-import { getYuzuGames } from "./sources/yuzu.js";
+const { getDesktopEntryGames } = require("./sources/desktop-entries.js");
+const { getLegendaryGames } = require("./sources/legendary.js");
+const { getRetroarchGames } = require("./sources/retroarch.js");
+const { getCemuGames } = require("./sources/lutris-cemu.js");
+const { getDolphinGames } = require("./sources/dolphin.js");
+const { getLutrisGames } = require("./sources/lutris.js");
+const { getPPSSPPGames } = require("./sources/ppsspp.js");
+const { getHeroicGames } = require("./sources/heroic.js");
+const { getCitraGames } = require("./sources/citra.js");
+const { getSteamGames } = require("./sources/steam.js");
+const { getYuzuGames } = require("./sources/yuzu.js");
 
 /**
  * A representation of a game library.
@@ -17,7 +17,7 @@ import { getYuzuGames } from "./sources/yuzu.js";
  * @property {boolean} warn - Whether to display additional warnings (especially during scan)
  * @property {string[]} enabledSources - Names of the sources to scan for games. Defaults to none   
  */
-export class Library{	
+class Library{	
 	
 	/**
 	 * A list of available game sources
@@ -148,3 +148,5 @@ export class Library{
 	}
 
 }
+
+module.exports = Library;

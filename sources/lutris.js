@@ -1,14 +1,13 @@
-import { StartOnlyGameProcessContainer, NoCommandError, Game } from "./common.js";
-import { sync as commandExistsSync } from "command-exists";
-import deepMerge from "../utils/deepMerge.js";
-import { join as pathJoin } from "path";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { existsSync } from "fs";
-import { env } from "process";
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
-import YAML from "yaml";
+const { StartOnlyGameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { sync: commandExistsSync } = require("command-exists");
+const deepMerge = require("../utils/deepMerge.js");
+const { join: pathJoin } = require("path");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
+const { open } = require("sqlite");
+const sqlite3 = require("sqlite3");
+const YAML = require("yaml");
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
@@ -57,7 +56,7 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
  * @property {string} runner - The game's runner
  * @property {LutrisGameProcessContainer} processContainer - The game's process container
  */
-export class LutrisGame extends Game{
+class LutrisGame extends Game{
 	
 	/**
 	 * Create a lutris game
@@ -168,10 +167,16 @@ async function getLutrisInstalledGames(warn = false){
  * @returns {LutrisGame[]} - A list of found games
  * @todo add support for non installed games
  */
-export async function getLutrisGames(warn = false){
+async function getLutrisGames(warn = false){
 
 	// ? Add support for non-installed games ?
 	
 	return getLutrisInstalledGames(warn);
 
 }
+
+module.exports = {
+	LutrisGameProcessContainer,
+	getLutrisGames,
+	LutrisGame,
+};

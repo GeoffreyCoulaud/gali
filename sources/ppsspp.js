@@ -1,10 +1,10 @@
-import { GameDir, EmulatedGame, getROMs, GameProcessContainer } from "./common.js";
-import { basename as pathBasename, join as pathJoin } from "path";
-import { sync as commandExistsSync } from "command-exists";
-import config2js from "../utils/config2js.js";
-import { readFile } from "fs/promises";
-import { spawn } from "child_process";
-import { env } from "process";
+const { GameDir, EmulatedGame, getROMs, GameProcessContainer } = require("./common.js");
+const { basename: pathBasename, join: pathJoin } = require("path");
+const { sync: commandExistsSync } = require("command-exists");
+const config2js = require("../utils/config2js.js");
+const { readFile } = require("fs/promises");
+const { spawn } = require("child_process");
+const { env } = require("process");
 
 /**
  * A wrapper for ppsspp game process management
@@ -52,7 +52,7 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
  * A class representing a ppsspp game
  * @property {PPSSPPGameProcessContainer} processContainer - The game's process container
  */
-export class PPSSPPGame extends EmulatedGame{
+class PPSSPPGame extends EmulatedGame{
 	/**
 	 * Create a ppsspp game
 	 * @param {string} name - The game's displayed name 
@@ -114,7 +114,7 @@ async function getPPSSPPRoms(dirs){
  * @param {boolean} warn - Whether to display additional warnings. 
  * @returns {PPSSPPGame[]} - An array of found games
  */
-export async function getPPSSPPGames(warn = false){
+async function getPPSSPPGames(warn = false){
 
 	// Get config
 	let config;
@@ -147,3 +147,9 @@ export async function getPPSSPPGames(warn = false){
 	return romGames;
 
 }
+
+module.exports = {
+	PPSSPPGameProcessContainer,
+	getPPSSPPGames,
+	PPSSPPGame,
+};

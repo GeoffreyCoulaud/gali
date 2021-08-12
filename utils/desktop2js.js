@@ -1,5 +1,3 @@
-import config2js from "./config2js.js";
-
 /**
  * Convert a desktop entry text into a JS readable object
  * @param {string} desktopEntry - A desktop entry contents
@@ -7,7 +5,7 @@ import config2js from "./config2js.js";
  *                     groups are the object's keys, 
  *                     key/values pairs are stored in their section's maps   
  */
-export default function desktop2js(desktopEntry){
+function desktop2js(desktopEntry){
 	
 	let obj = new Object();
 	let currentKey = undefined;
@@ -54,3 +52,5 @@ export default function desktop2js(desktopEntry){
 	return obj;
 
 }
+
+module.exports = desktop2js;

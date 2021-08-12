@@ -1,6 +1,6 @@
-import { parse } from "shell-quote";
+const { parse } = require("shell-quote");
 
-export function splitDesktopExec(exec){
+function splitDesktopExec(exec){
 
 	// Split, Remove field codes, return array
 	const execFieldCodesRegex = /%[fFuUdDnNickvm]/g;
@@ -9,3 +9,7 @@ export function splitDesktopExec(exec){
 	return arr;
 
 }
+
+module.exports = {
+	splitDesktopExec,
+};

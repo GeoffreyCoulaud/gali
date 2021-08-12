@@ -1,9 +1,9 @@
-import { readdirAsync } from "readdir-enhanced";
-import { join as pathJoin } from "path";
-import { EventEmitter } from "events";
-import { kill } from "process";
+const { readdirAsync } = require("readdir-enhanced");
+const { EventEmitter } = require("events");
+const { join: pathJoin } = require("path");
+const { kill } = require("process");
 
-export class NoCommandError extends Error{}
+class NoCommandError extends Error{}
 
 /**
  * A wrapper for game process management
@@ -13,7 +13,7 @@ export class NoCommandError extends Error{}
  * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
  * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler. 
  */
-export class GameProcessContainer extends EventEmitter{
+class GameProcessContainer extends EventEmitter{
 	
 	/**
 	 * Default spawn options to pass to child_process.spawn
@@ -110,7 +110,7 @@ export class GameProcessContainer extends EventEmitter{
 
 }
 
-export class StartOnlyGameProcessContainer extends GameProcessContainer{
+class StartOnlyGameProcessContainer extends GameProcessContainer{
 
 	static defaultSpawnOptions = GameProcessContainer.doNotWaitSpawnOptions;
 
@@ -138,7 +138,7 @@ export class StartOnlyGameProcessContainer extends GameProcessContainer{
  * Class representing a generic game.
  * You're not supposed to use it directly, instead use a descendent of this class. 
  */
-export class Game{
+class Game{
 	source = "Unknown";
 	
 	processContainer = new GameProcessContainer();
@@ -160,7 +160,7 @@ export class Game{
 /**
  * Class representing a game directory
  */
-export class GameDir {
+class GameDir {
 	/**
 	 * Create a game directory
 	 * @param {string} path - The local path corresponding to the directory 
@@ -176,7 +176,7 @@ export class GameDir {
  * Class representing an emulated game.
  * You're not supposed to use it directly, instead use a descendent of this class.
  */
-export class EmulatedGame extends Game{
+class EmulatedGame extends Game{
 	/**
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name 
@@ -207,7 +207,7 @@ export class EmulatedGame extends Game{
  * @param {boolean} warn - Whether to display additional warnings 
  * @returns {string[]} - A list of path to game ROMs 
  */
-export async function getROMs(dirs, filesRegex, warn = false){
+async function getROMs(dirs, filesRegex, warn = false){
 	let paths = [];
 
 	// Get roms
@@ -233,3 +233,13 @@ export async function getROMs(dirs, filesRegex, warn = false){
 	return paths;
 
 }
+
+module.exports = {
+	StartOnlyGameProcessContainer,
+	GameProcessContainer,
+	NoCommandError,
+	EmulatedGame,
+	GameDir,
+	getROMs,
+	Game,
+};

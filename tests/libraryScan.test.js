@@ -1,10 +1,10 @@
-import { Library } from "../library.js";
+const Library = require("../library.js");
 
 /**
  * Run the library scan test
  * @param {boolean} displayLibrary - Whether to display the game list or not
  */
-export default async function testLibraryScan(sources = Library.sources, displayLibrary = false){ 
+async function testLibraryScan(sources = Library.sources, displayLibrary = false){ 
 
 	// Scan for games, sort them and display the list
 	const library = new Library(sources, true, true);
@@ -47,3 +47,5 @@ export default async function testLibraryScan(sources = Library.sources, display
 	}
 
 }
+
+module.exports = testLibraryScan;

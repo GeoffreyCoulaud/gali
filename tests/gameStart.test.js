@@ -1,5 +1,5 @@
-import { Library } from "../library.js";
-import sleep from "../utils/sleep.js";
+const sleep = require("../utils/sleep.js");
+const Library = require("../library.js");
 
 /**
  * A class representing a known game
@@ -37,7 +37,7 @@ class KnownGame{
 /**
  * Run the game start test
  */
-export default async function testGameStart(){
+async function testGameStart(){
 
 	// Scan library
 	const library = new Library(Library.sources, true, true);
@@ -79,3 +79,5 @@ export default async function testGameStart(){
 	}
 
 }
+
+module.exports = testGameStart;
