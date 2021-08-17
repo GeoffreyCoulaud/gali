@@ -62,32 +62,17 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	async start(){
-		const lutrisCommand = "lutris";
-		if (!commandExistsSync(lutrisCommand)){
-			throw new NoCommandError("No lutris command found");
-		}
-		const scriptPath = await getLutrisGameStartScript(this.gameSlug);
-		this.process = spawn(
-			"sh",
-			[scriptPath],
-			this.constructor.defaultSpawnOptions
-		);
-		this._bindProcessEvents();
-
-		/*
-		const lutrisCommand = "lutris";
-		if (!commandExistsSync(lutrisCommand)){
-			throw new NoCommandError("No lutris command found");
-		}
-		this.process = spawn(
-			lutrisCommand,
-			[`lutris://rungame/${this.gameSlug}`],
-			this.constructor.defaultSpawnOptions
-		);
-		this.process.unref();
-		this._bindProcessEvents();
-		*/
+	start(){
+		getLutrisGameStartScript(this.gameSlug).then((scriptPath)=>{
+			this.process = spawn(
+				"sh",
+				[scriptPath],
+				this.constructor.defaultSpawnOptions
+			);
+			this._bindProcessEvents();
+		}).catch((error)=>{
+			throw new Error(`Error while getting ${this.gameSlug} start script : ${error}`);
+		});
 	}
 
 }
