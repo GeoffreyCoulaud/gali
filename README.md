@@ -23,7 +23,7 @@ Dolphin         | Nintendo Wii / GameCube emulator                         | -
 Citra           | Nintendo 3DS emulator                                    | -
 Yuzu            | Nintendo Switch emulator                                 | -
 PPSSPP          | Sony PSP emulator                                        | -
-Cemu            | Nintendo Wii U emulator                                  | Cemu installed from lutris. Can't start games, only list them.
+Cemu            | Nintendo Wii U emulator                                  | Cemu installed from lutris
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
@@ -43,12 +43,12 @@ npm run start
 ```
 
 ## Known issues
-* Games from Steam, Legendary, Lutris can be started but not stopped or killed
+* Games from Steam, Legendary, Heroic can be started but not stopped or killed
 * Dolphin emulator games don't get distinguished between GameCube and Wii
 * Installed Citra games aren't listed
 * Installed Yuzu games aren't listed
-* Cemu in lutris is a clunky solution, but it's the best we have currently on linux
-* Cemu in lutris games can't be started *yet* (lutris doesn't support passing args to exe)
+* Cemu in lutris is a clunky solution, but it's the best we currently have on linux
+* Cemu in lutris games can't be started *yet*
 
 ## TODO
 1. Launcher UI (task to be split up)

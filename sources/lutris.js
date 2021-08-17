@@ -1,23 +1,54 @@
-const { StartOnlyGameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { GameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { bragUserLocalData } = require("../utils/directories.js");
 const { sync: commandExistsSync } = require("command-exists");
-const deepMerge = require("../utils/deepMerge.js");
+const { spawn, exec } = require("child_process");
 const { join: pathJoin } = require("path");
-const { readFile } = require("fs/promises");
-const { spawn } = require("child_process");
-const { existsSync } = require("fs");
 const { env } = require("process");
 const { open } = require("sqlite");
 const sqlite3 = require("sqlite3");
-const YAML = require("yaml");
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
 
 /**
+ * A promise version of the child_process exec
+ */
+function execp(command){
+	return new Promise((resolve, reject)=>{
+		exec(command, (error, stdout, stderr)=>{
+			if (error) reject(error);
+			else resolve(stdout, stderr);
+		});
+	});
+}
+
+/**
+ * Get a start shell script for a lutris game
+ * @param {string} gameSlug - The lutris game's slug for which to get a start script
+ * @returns {string} - An absolute path to the script
+ */
+async function getLutrisGameStartScript(gameSlug){
+
+	// Get the start script from lutris
+	const lutrisCommand = "lutris";
+	if (!commandExistsSync(lutrisCommand)){
+		throw new NoCommandError("No lutris command found");
+	}
+
+	// Store the script
+	const scriptBaseName = `lutris-${gameSlug}.sh`;
+	const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
+	await execp(`${lutrisCommand} ${gameSlug} --output-script ${scriptPath}`);
+
+	return scriptPath;
+
+}
+
+/**
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
  */
-class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
+class LutrisGameProcessContainer extends GameProcessContainer{
 
 	/**
 	 * Create a lutris game process container
@@ -28,13 +59,23 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
 		this.gameSlug = gameSlug;
 	}
 
-	// ! It is possible to manage lutris games's life cycle but it's clunky at best.
-	// (means parsing options, starting wine by yourself...)
-
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
+		const lutrisCommand = "lutris";
+		if (!commandExistsSync(lutrisCommand)){
+			throw new NoCommandError("No lutris command found");
+		}
+		const scriptPath = await getLutrisGameStartScript(this.gameSlug);
+		this.process = spawn(
+			"sh",
+			[scriptPath],
+			this.constructor.defaultSpawnOptions
+		);
+		this._bindProcessEvents();
+
+		/*
 		const lutrisCommand = "lutris";
 		if (!commandExistsSync(lutrisCommand)){
 			throw new NoCommandError("No lutris command found");
@@ -46,6 +87,7 @@ class LutrisGameProcessContainer extends StartOnlyGameProcessContainer{
 		);
 		this.process.unref();
 		this._bindProcessEvents();
+		*/
 	}
 
 }
@@ -83,44 +125,6 @@ class LutrisGame extends Game{
 		return `${this.name} - ${this.source} - ${this.gameSlug}`;
 	}
 
-	/**
-	 * Get the game's config ath the specified level
-	 * @param {string} level - A value within "game", "runner" or "system"
-	 * @returns {object} - The config data at the specified level
-	 * @access protected
-	 */
-	async _getSpecificConfig(level){
-		const paths = {
-			game: pathJoin(USER_DIR, ".config", "lutris", "games", `${this.configPath}.yml`),
-			runner: pathJoin(USER_DIR, ".config", "lutris", "runners", `${this.runner}.yml`),
-			system: pathJoin(USER_DIR, ".config", "lutris", "system.yml"),
-		};
-		// Sanitize level + check file existence
-		let config = new Object();
-		if (!paths.hasOwnProperty(level)) return config;
-		if (!existsSync(paths[level])) return config;
-		// Read file contents + parse yml
-		try {
-			const contents = await readFile(paths[level], "utf-8");
-			config = YAML.parse(contents);
-		} catch (error){
-			return new Object();
-		}
-		return config;
-	}
-
-	/**
-	 * Get full game config
-	 * @returns {object} - The game's config data
-	 */
-	async getConfig(){
-		// Get all config levels
-		const levels = ["system", "runner", "game"];
-		const configs = await Promise.all(levels.map(level=>this._getSpecificConfig(level)));
-		// Merge all configs into one
-		const mergedConfig = deepMerge(configs);
-		return mergedConfig;
-	}
 }
 
 /**
@@ -141,8 +145,8 @@ async function getLutrisInstalledGames(warn = false){
 	}
 
 	// Get games
-	const DB_REQUEST_INSTALLED_GAMES = "SELECT name, slug, directory, configpath, service, service_id, runner FROM 'games' WHERE installed AND NOT hidden";
-	const results = await db.all(DB_REQUEST_INSTALLED_GAMES);
+	const DB_REQUEST = "SELECT name, slug, directory, configpath, runner FROM 'games' WHERE installed AND NOT hidden";
+	const results = await db.all(DB_REQUEST);
 	for (const row of results){
 		// Validate every request row
 		if (
@@ -150,10 +154,7 @@ async function getLutrisInstalledGames(warn = false){
 			row.name &&
 			row.directory &&
 			row.configpath &&
-			(
-				row.runner ||
-				row.service && row.service_id
-			)
+			row.runner
 		){
 			games.push(new LutrisGame(row.slug, row.name, row.runner, row.configpath));
 		}

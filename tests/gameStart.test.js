@@ -47,12 +47,12 @@ async function testGameStart(){
 	// Check presence of known games
 	// (edit depending on your library)
 	const knownGames = [
-		new KnownGame("Extreme Tux Racer", "Desktop entries"),
-		new KnownGame("Next Up Hero", "Heroic"),
-		/*
-		new KnownGame("Sonic Mania", "Steam"),
 		new KnownGame("Cemu", "Lutris"),
+		/*
+		new KnownGame("Extreme Tux Racer", "Desktop entries"),
 		new KnownGame("Next Up Hero", "Legendary"),
+		new KnownGame("Next Up Hero", "Heroic"),
+		new KnownGame("Sonic Mania", "Steam"),
 		*/
 	];
 	const games = [];
@@ -62,16 +62,16 @@ async function testGameStart(){
 	}
 
 	// Start, wait, kill
-	const TEN_SECONDS = 10000;
+	const MILLIS_BEFORE_KILL = 20000;
 	for (const game of games){
 		console.log(`\nStarting ${game.name} (${game.source})`);
 		game.processContainer.on("error", (error)=>{
 			console.error(`Error emitted by process container : ${error}`);
 		});
 		game.processContainer.start();
-		await sleep(TEN_SECONDS);
+		await sleep(MILLIS_BEFORE_KILL);
 		if (game.processContainer.isRunning){
-			console.log(`Killing ${game.name} after 10s`);
+			console.log(`Killing ${game.name} after ${MILLIS_BEFORE_KILL}ms`);
 			game.processContainer.kill();
 		} else {
 			console.log("Game has already exited, not killing");
