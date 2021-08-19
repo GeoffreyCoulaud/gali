@@ -22,7 +22,7 @@ function wineToLinux(winePath){
 }
 
 /**
- * Convert an absolute linux path into a wine path. 
+ * Convert an absolute linux path into a wine path.
  * Changes "/" into "\" and the (root fs) "/"  into "Z:\".
  * @param {string} linuxPath - An absolute linux path
  * @returns {string} - The same path converted into a wine path

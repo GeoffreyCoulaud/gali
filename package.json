@@ -8,8 +8,8 @@
     "start": "electron .",
     "build": "webpack",
     "build-watch": "webpack --watch",
-    "lint": "eslint library.js main.js tests sources frontend/src",
-    "lint-fix": "eslint --fix library.js main.js tests sources frontend/src"
+    "lint": "eslint library.js main.js tests sources utils frontend/src",
+    "lint-fix": "eslint --fix library.js main.js tests sources utils frontend/src"
   },
   "keywords": [
     "game",
