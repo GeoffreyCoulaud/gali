@@ -47,5 +47,4 @@ async function testLibraryScan(sources = Library.sources, displayLibrary = false
 	}
 
 }
-
-module.exports = testLibraryScan;
+testLibraryScan();

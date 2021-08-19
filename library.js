@@ -1,14 +1,14 @@
-const { getDesktopEntryGames } = require("./sources/desktop-entries.js");
-const { getLegendaryGames } = require("./sources/legendary.js");
-const { getRetroarchGames } = require("./sources/retroarch.js");
-const { getCemuGames } = require("./sources/lutris-cemu.js");
-const { getDolphinGames } = require("./sources/dolphin.js");
-const { getLutrisGames } = require("./sources/lutris.js");
-const { getPPSSPPGames } = require("./sources/ppsspp.js");
-const { getHeroicGames } = require("./sources/heroic.js");
-const { getCitraGames } = require("./sources/citra.js");
-const { getSteamGames } = require("./sources/steam.js");
-const { getYuzuGames } = require("./sources/yuzu.js");
+const { DesktopEntryGame, getDesktopEntryGames } = require("./sources/desktop-entries.js");
+const { LegendaryGame, getLegendaryGames } = require("./sources/legendary.js");
+const { RetroarchGame, getRetroarchGames } = require("./sources/retroarch.js");
+const { DolphinGame, getDolphinGames } = require("./sources/dolphin.js");
+const { LutrisGame, getLutrisGames } = require("./sources/lutris.js");
+const { PPSSPPGame, getPPSSPPGames } = require("./sources/ppsspp.js");
+const { HeroicGame, getHeroicGames } = require("./sources/heroic.js");
+const { CitraGame, getCitraGames } = require("./sources/citra.js");
+const { SteamGame, getSteamGames } = require("./sources/steam.js");
+const { YuzuGame, getYuzuGames } = require("./sources/yuzu.js");
+const { CemuGame, getCemuGames } = require("./sources/cemu.js");
 
 /**
  * A representation of a game library.
@@ -23,17 +23,17 @@ class Library{
 	 * A list of available game sources
 	 */
 	static sources = [
-		"steam",
-		"dolphin",
-		"yuzu",
-		"citra",
-		"ppsspp",
-		"lutris",
-		"cemu in lutris",
-		"retroarch",
-		"legendary",
-		"heroic",
-		"desktop entries",
+		DesktopEntryGame.source,
+		RetroarchGame.source,
+		LegendaryGame.source,
+		DolphinGame.source,
+		PPSSPPGame.source,
+		LutrisGame.source,
+		HeroicGame.source,
+		SteamGame.source,
+		CitraGame.source,
+		YuzuGame.source,
+		CemuGame.source,
 	];
 
 	enabledSources = [];
@@ -43,12 +43,12 @@ class Library{
 	
 	/**
 	 * Create a game library.
-	 * @param {string[]} sources - Sources to get games from
+	 * @param {string[]} enabledSources - Sources to get games from
 	 * @param {boolean} preferCache - If true, when available scanning will prefer using a cache
 	 * @param {boolean} warn - If true, additional warnings will be displayed
 	 */
-	constructor(sources = [], preferCache = true, warn = false){
-		this.enabledSources = sources.map(str=>str.toLowerCase());
+	constructor(enabledSources = [], preferCache = true, warn = false){
+		this.enabledSources = enabledSources;
 		this.preferCache = preferCache;
 		this.warn = warn;
 	}
@@ -66,12 +66,12 @@ class Library{
 	async scan(){
 		
 		// Get lutris games
-		if (this.enabledSources.includes("lutris")){
+		if (this.enabledSources.includes(LutrisGame.source)){
 			const lutrisGames = await getLutrisGames(this.warn);
 			this.games.push(...lutrisGames);
 			
 			// Get cemu games
-			if (this.enabledSources.includes("cemu in lutris")){
+			if (this.enabledSources.includes(CemuGame.source)){
 				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
 				if (cemuGame){
 					const cemuGames = await getCemuGames(cemuGame, this.preferCache, this.warn);
@@ -83,31 +83,31 @@ class Library{
 
 		// Get all other straightforward games
 		let promises = []
-		if (this.enabledSources.includes("steam")){
+		if (this.enabledSources.includes(SteamGame.source)){
 			promises.push(getSteamGames(this.warn));
 		}
-		if (this.enabledSources.includes("retroarch")){
+		if (this.enabledSources.includes(RetroarchGame.source)){
 			promises.push(getRetroarchGames(this.warn));
 		}
-		if (this.enabledSources.includes("yuzu")){
+		if (this.enabledSources.includes(YuzuGame.source)){
 			promises.push(getYuzuGames(this.warn));
 		}
-		if (this.enabledSources.includes("dolphin")){
+		if (this.enabledSources.includes(DolphinGame.source)){
 			promises.push(getDolphinGames(this.warn));
 		}
-		if (this.enabledSources.includes("citra")){
+		if (this.enabledSources.includes(CitraGame.source)){
 			promises.push(getCitraGames(this.warn));
 		}
-		if (this.enabledSources.includes("ppsspp")){
+		if (this.enabledSources.includes(PPSSPPGame.source)){
 			promises.push(getPPSSPPGames(this.warn));
 		}
-		if (this.enabledSources.includes("legendary")){
+		if (this.enabledSources.includes(LegendaryGame.source)){
 			promises.push(getLegendaryGames(this.warn));
 		}
-		if (this.enabledSources.includes("heroic")){
+		if (this.enabledSources.includes(HeroicGame.source)){
 			promises.push(getHeroicGames(this.warn));
 		}
-		if (this.enabledSources.includes("desktop entries")){
+		if (this.enabledSources.includes(DesktopEntryGame.source)){
 			promises.push(getDesktopEntryGames(this.warn));
 		}
 

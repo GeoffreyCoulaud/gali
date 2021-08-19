@@ -4,7 +4,7 @@
   "description": "WIP game launcher for linux",
   "main": "main.js",
   "scripts": {
-    "test": "node tests/all.test.js",
+    "test": "sh tests/all.sh",
     "start": "electron .",
     "build": "webpack",
     "build-watch": "webpack --watch",

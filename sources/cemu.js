@@ -1,21 +1,82 @@
 const { dirname: pathDirname, join: pathJoin, basename: pathBasename, resolve: pathResolve } = require("path");
 const { linuxToWine, wineToLinux } = require("../utils/convertPathPlatform.js");
+const { EmulatedGame, getROMs, GameProcessContainer } = require("./common.js");
 const { getUserLocalePreference } = require("../utils/locale.js");
-const { EmulatedGame, getROMs } = require("./common.js");
+const { getLutrisGameStartScript } = require("./lutris.js");
 const { Parser: XMLParser } = require("xml2js");
-const { readFile } = require("fs/promises");
+const { readFile, writeFile } = require("fs/promises");
 const { GameDir } = require("./common.js");
 const { env } = require("process");
 const YAML = require("yaml");
 
-// TODO implement game process container
+/**
+ * Get a start shell script for a cemu game
+ * @param {string} name - The game's name
+ * @param {string} path - The game's ROM path
+ * @param {string} cemuGameSlug - The lutris game slug for cemu
+ * @param {string} scriptBaseName - Name (with extension) for the output script file 
+ * @returns {string} - An absolute path to the script
+ */
+async function getCemuGameStartScript(name, path, cemuGameSlug = "cemu", scriptBaseName = ""){
+
+	// Create the base lutris start script for cemu
+	if (!scriptBaseName) scriptBaseName = `lutris-${cemuGameSlug}-${name}.sh`;
+	const scriptPath = await getLutrisGameStartScript(cemuGameSlug, scriptBaseName);
+
+	// Add the game path argument
+	const fileContents = await readFile(scriptPath, "utf-8");
+	let newFileContents = fileContents.trimEnd();
+	newFileContents += " " + path;
+	await writeFile(scriptPath, newFileContents, "utf-8");
+
+	return scriptPath;
+
+}
+
+/**
+ * A wrapper for cemu game process management
+ */
+class CemuGameProcessContainer extends GameProcessContainer{
+
+	/**
+	 * Create a cemu game process container
+	 * @param {string} name - The game's displayed name
+	 * @param {string} path - A wine path to the game file
+	 */
+	constructor(name, path){
+		super();
+		this.name = name;
+		this.path = path;
+	}
+
+	/**
+	 * Start the game in a sub process.
+	 * @param {string} cemuGameSlug - Optional, a specific lutris game slug for cemu.
+	 */
+	async start(cemuGameSlug = "cemu"){
+		const scriptPath = await getCemuGameStartScript(this.name, this.path, cemuGameSlug);
+		this.process = spawn(
+			"sh",
+			[scriptPath],
+			this.constructor.defaultSpawnOptions
+		);
+		this._bindProcessEvents();
+
+	}
+
+}
 
 /**
  * A class representing a cemu (in lutris) game
  */
 class CemuGame extends EmulatedGame{
+
+	static source = "Cemu in Lutris";
+
 	constructor(name, path){
-		super(name, path, "Cemu in Lutris", "Nintendo - Wii U");
+		super(name, path, "Nintendo - Wii U");
+		this.source = this.constructor.source;
+		this.processContainer = new CemuGameProcessContainer(this.name, this.path);
 	}
 }
 

@@ -24,7 +24,7 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		// Find the right command to use
 		const commandOptions = ["PPSSPPSDL", "PPSSPPQT"];
 		let ppssppCommand;
@@ -53,14 +53,18 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
  * @property {PPSSPPGameProcessContainer} processContainer - The game's process container
  */
 class PPSSPPGame extends EmulatedGame{
+
+	static source = "PPSSPP";
+
 	/**
 	 * Create a ppsspp game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The games' ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "PPSSPP", "Sony - PlayStation Portable");
+		super(name, path, "Sony - PlayStation Portable");
 		this.processContainer = new PPSSPPGameProcessContainer(this.path);
+		this.source = this.constructor.source;
 	}
 }
 

@@ -27,7 +27,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	 * Start the game in a subprocess
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false. 
 	 */
-	start(offline = false){
+	async start(offline = false){
 		const legendaryCommand = "legendary";
 		if (!commandExistsSync(legendaryCommand)){
 			throw new NoCommandError("No legendary command found");
@@ -52,7 +52,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class LegendaryGame extends Game{
 	
-	source = "Legendary";
+	static source = "Legendary";
 	
 	/**
 	 * Create a legendary games launcher game
@@ -61,6 +61,7 @@ class LegendaryGame extends Game{
 	 */
 	constructor(appName, name){
 		super(name);
+		this.source = this.constructor.source;
 		this.appName = appName;
 		this.processContainer = new LegendaryGameProcessContainer(this.appName);
 	}

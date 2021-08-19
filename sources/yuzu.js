@@ -25,7 +25,7 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		const yuzuCommand = "yuzu";
 		if (!commandExistsSync(yuzuCommand)){
 			throw new NoCommandError("No yuzu command found");
@@ -55,13 +55,16 @@ class YuzuGameProcessContainer extends GameProcessContainer{
  */
 class YuzuGame extends EmulatedGame{
 
+	static source = "Yuzu";
+
 	/**
 	 * Create a yuzu game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Yuzu", "Nintendo - Switch");
+		super(name, path, "Nintendo - Switch");
+		this.source = this.constructor.source;
 		this.processContainer = new YuzuGameProcessContainer(this.path);
 	}
 

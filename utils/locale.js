@@ -1,7 +1,7 @@
 const isIterable = require("./isIterable.js");
 const { osLocale } = import("os-locale");
 
-const DEFAULT_PREFERENCE = ["en-US", "ja-JP"];
+const DEFAULT_PREFERENCE = ["en-US"];
 
 /**
  * Get the user's locale preference for game metadata.
@@ -11,26 +11,25 @@ const DEFAULT_PREFERENCE = ["en-US", "ja-JP"];
  */
 async function getUserLocalePreference(onlyLanguageCode = true, fallback = DEFAULT_PREFERENCE){
 	let userLocale;
-	let preferredLocales = [];
+	const preferredLocales = [];
 
 	// Add fallback locales to the list
 	if (isIterable(fallback)){
 		preferredLocales.push(...fallback);
-	} 
-	
-	// Get the user / OS locale
-	try { 
-		userLocale = await osLocale(); 
 	}
-	catch (e){ 
-		userLocale = undefined; 
-	} 
-	if (userLocale) { 
-		preferredLocales.splice(0, 0, userLocale); 
+
+	// Get the user / OS locale
+	try {
+		userLocale = await osLocale();
+	} catch (e){
+		userLocale = undefined;
+	}
+	if (userLocale) {
+		preferredLocales.splice(0, 0, userLocale);
 	}
 
 	// Return locales or language codes
-	if (onlyLanguageCode){ 
+	if (onlyLanguageCode){
 		return preferredLocales.map(l=>(new Intl.Locale(l)).language);
 	} else {
 		return preferredLocales;

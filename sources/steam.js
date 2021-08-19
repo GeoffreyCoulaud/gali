@@ -29,7 +29,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		const steamCommand = "steam";
 		if (!commandExistsSync(steamCommand)){
 			throw new NoCommandError("No steam command found");
@@ -43,29 +43,14 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 		this._bindProcessEvents();
 	}
 
-	/**
-	 * Overwrite the inherited stop method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	stop(){
-		console.warn("Stopping steam games is not supported, please use steam's UI");
-		return false;
-	}
-
-	/**
-	 * Overwrite the inherited kill method to neutralize it
-	 * @returns {boolean} - Always false
-	 */
-	kill(){
-		console.warn("Killing steam games is not supported, please use steam's UI");
-		return false;
-	}
 }
 
 /**
  * Class representing a steam game
  */
 class SteamGame extends Game{
+
+	static source = "Steam";
 
 	/**
 	 * Create a steam game
@@ -74,7 +59,7 @@ class SteamGame extends Game{
 	 */
 	constructor(appId, name){
 		super(name);
-		this.source = "Steam";
+		this.source = this.constructor.source;
 		this.appId = appId;
 		this.processContainer = new SteamGameProcessContainer(this.appId);
 	}

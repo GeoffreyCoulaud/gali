@@ -26,7 +26,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		const retroarchCommand = "retroarch";
 		if (!commandExistsSync(retroarchCommand)){
 			throw new NoCommandError("No retroarch command found");
@@ -47,6 +47,8 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  */
 class RetroarchGame extends EmulatedGame{
 
+	static source = "Retroarch";
+
 	/**
 	 * Create a retroarch game
 	 * @param {string} name - The game's displayed name
@@ -55,8 +57,9 @@ class RetroarchGame extends EmulatedGame{
 	 * @param {string} console - The game's original console
 	 */
 	constructor(name, path, corePath, console){
-		super(name, path, "Retroarch", console);
+		super(name, path, console);
 		this.corePath = corePath;
+		this.source = this.constructor.source;
 		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
 

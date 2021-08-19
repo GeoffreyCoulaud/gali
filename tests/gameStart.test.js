@@ -62,13 +62,13 @@ async function testGameStart(){
 	}
 
 	// Start, wait, kill
-	const MILLIS_BEFORE_KILL = 20000;
+	const MILLIS_BEFORE_KILL = 10000;
 	for (const game of games){
 		console.log(`\nStarting ${game.name} (${game.source})`);
 		game.processContainer.on("error", (error)=>{
 			console.error(`Error emitted by process container : ${error}`);
 		});
-		game.processContainer.start();
+		await game.processContainer.start();
 		await sleep(MILLIS_BEFORE_KILL);
 		if (game.processContainer.isRunning){
 			console.log(`Killing ${game.name} after ${MILLIS_BEFORE_KILL}ms`);
@@ -79,5 +79,4 @@ async function testGameStart(){
 	}
 
 }
-
-module.exports = testGameStart;
+testGameStart();

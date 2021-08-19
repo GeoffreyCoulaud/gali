@@ -81,7 +81,7 @@ class GameProcessContainer extends EventEmitter{
 	 * @throws {NoCommandError} - Can throw in case no known command was found to start the game.
 	 * @abstract
 	 */
-	start(){}
+	async start(){}
 
 	/**
 	 * Send the SIGKILL signal to the game's subprocess.
@@ -184,10 +184,9 @@ class EmulatedGame extends Game{
 	 * @param {string} source - The game's source, generally the emulator's name 
 	 * @param {string} console - The game's original console
 	 */
-	constructor(name, path, source = "Unknown", console = "Unknown"){
+	constructor(name, path, console = "Unknown"){
 		super(name);
 		this.path = path;
-		this.source = source;
 		this.console = console;
 	}
 

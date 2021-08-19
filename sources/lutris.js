@@ -1,7 +1,7 @@
 const { GameProcessContainer, NoCommandError, Game } = require("./common.js");
 const { bragUserLocalData } = require("../utils/directories.js");
 const { sync: commandExistsSync } = require("command-exists");
-const { spawn, exec } = require("child_process");
+const { spawn, execFile } = require("child_process");
 const { join: pathJoin } = require("path");
 const { env } = require("process");
 const { open } = require("sqlite");
@@ -11,11 +11,11 @@ const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
 
 /**
- * A promise version of the child_process exec
+ * A promise version of the child_process execFile
  */
-function execp(command){
+function execFilePromise(command, args = [], options = {}){
 	return new Promise((resolve, reject)=>{
-		exec(command, (error, stdout, stderr)=>{
+		execFile(command, args, options, (error, stdout, stderr)=>{
 			if (error) reject(error);
 			else resolve(stdout, stderr);
 		});
@@ -25,20 +25,22 @@ function execp(command){
 /**
  * Get a start shell script for a lutris game
  * @param {string} gameSlug - The lutris game's slug for which to get a start script
+ * @param {string} scriptBaseName - Name (with extension) for the output script file
  * @returns {string} - An absolute path to the script
  */
-async function getLutrisGameStartScript(gameSlug){
+async function getLutrisGameStartScript(gameSlug, scriptBaseName = ""){
 
+	
 	// Get the start script from lutris
 	const lutrisCommand = "lutris";
 	if (!commandExistsSync(lutrisCommand)){
 		throw new NoCommandError("No lutris command found");
 	}
-
+	
 	// Store the script
-	const scriptBaseName = `lutris-${gameSlug}.sh`;
+	if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
 	const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
-	await execp(`${lutrisCommand} ${gameSlug} --output-script ${scriptPath}`);
+	await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
 
 	return scriptPath;
 
@@ -62,17 +64,14 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
-		getLutrisGameStartScript(this.gameSlug).then((scriptPath)=>{
-			this.process = spawn(
-				"sh",
-				[scriptPath],
-				this.constructor.defaultSpawnOptions
-			);
-			this._bindProcessEvents();
-		}).catch((error)=>{
-			throw new Error(`Error while getting ${this.gameSlug} start script : ${error}`);
-		});
+	async start(){
+		const scriptPath = await getLutrisGameStartScript(this.gameSlug);
+		this.process = spawn(
+			"sh",
+			[scriptPath],
+			this.constructor.defaultSpawnOptions
+		);
+		this._bindProcessEvents();
 	}
 
 }
@@ -86,6 +85,8 @@ class LutrisGameProcessContainer extends GameProcessContainer{
  */
 class LutrisGame extends Game{
 
+	static source = "Lutris";
+
 	/**
 	 * Create a lutris game
 	 * @param {string} gameSlug - A lutris game slug
@@ -95,7 +96,7 @@ class LutrisGame extends Game{
 	 */
 	constructor(gameSlug, name, runner, configPath){
 		super(name);
-		this.source = "Lutris";
+		this.source = this.constructor.source;
 		this.gameSlug = gameSlug;
 		this.configPath = configPath;
 		this.runner = runner;
@@ -164,6 +165,7 @@ async function getLutrisGames(warn = false){
 
 module.exports = {
 	LutrisGameProcessContainer,
+	getLutrisGameStartScript,
 	getLutrisGames,
 	LutrisGame,
 };

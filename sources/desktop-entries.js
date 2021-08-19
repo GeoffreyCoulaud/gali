@@ -30,7 +30,7 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 	 * The exec value of the desktop entry will be used, this is litteraly
 	 * arbitrary code execution, beware !
 	 */
-	start(){
+	async start(){
 		this.process = spawn(
 			this.spawnCommand,
 			this.spawnArgs,
@@ -46,6 +46,8 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
  */
 class DesktopEntryGame extends Game{
 
+	static source = "Desktop entries";
+
 	/**
 	 * Create a desktop entry game
 	 * @param {string} name - The game's displayed name
@@ -55,7 +57,7 @@ class DesktopEntryGame extends Game{
 	constructor(name, icon, exec){
 		super(name);
 		this.icon = icon;
-		this.source = "Desktop entries"; // ? Use a better source name ?
+		this.source = this.constructor.source;
 		this.processContainer = new DesktopEntryGameProcessContainer(exec);
 	}
 
@@ -106,9 +108,10 @@ async function getDesktopEntries(){
 function filterDesktopEntries(data){
 
 	const EXCLUDED_NAMES = [
-		"Citra", "Yuzu", "Dolphin Emulator", "Heroic Games Launcher", "Lutris",
-		"Pegasus", "PPSSPP (Qt)", "PPSSPP (SDL)", "Steam (Runtime)",
-		"Steam (Native)", "yuzu", "RetroArch"
+		"Citra", "Yuzu", "Dolphin Emulator", "Dolphin Triforce Emulator",
+		"Heroic Games Launcher", "Lutris", "Pegasus", "PPSSPP (Qt)",
+		"PPSSPP (SDL)", "Steam (Runtime)", "Steam (Native)", "yuzu",
+		"RetroArch"
 	];
 
 	const EXCLUDED_EXEC_STARTS = [

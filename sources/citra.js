@@ -6,6 +6,8 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const citraSourceName = "Citra";
+
 /**
  * A wrapper for citra game process management
  * @property {string} romPath - The game's ROM path, used to invoke citra
@@ -23,7 +25,7 @@ class CitraGameProcessContainer extends GameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		// Find the right command to use
 		const commandOptions = ["citra", "citra-qt"];
 		let citraCommand;
@@ -53,13 +55,17 @@ class CitraGameProcessContainer extends GameProcessContainer{
  * @property {CitraGameProcessContainer} processContainer - The game's process container
  */
 class CitraGame extends EmulatedGame{
+
+	static source = "Citra";
+
 	/**
 	 * Creat a citra game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Citra", "Nintendo - 3DS");
+		super(name, path, "Nintendo - 3DS");
+		this.source = this.constructor.source;
 		this.processContainer = new CitraGameProcessContainer(this.path);
 	}
 }
@@ -193,4 +199,5 @@ module.exports = {
 	CitraGameProcessContainer,
 	getCitraGames,
 	CitraGame,
+	citraSourceName,
 };

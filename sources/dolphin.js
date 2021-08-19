@@ -24,7 +24,7 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game
 	 */
-	start(noUi = false){
+	async start(noUi = false){
 		const dolphinCommand = "dolphin-emu";
 		if (!commandExistsSync(dolphinCommand)){
 			throw new NoCommandError("No dolphin command found");
@@ -41,13 +41,17 @@ class DolphinGameProcessContainer extends GameProcessContainer{
  * @property {DolphinGameProcessContainer} processContainer - The game's process container
  */
 class DolphinGame extends EmulatedGame{
+
+	static source = "Dolphin";
+
 	/**
 	 * Create a dolphin game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Dolphin", "Nintendo - Wii / GameCube");
+		super(name, path, "Nintendo - Wii / GameCube");
+		this.source = this.constructor.source;
 		this.processContainer = new DolphinGameProcessContainer(this.path);
 	}
 }

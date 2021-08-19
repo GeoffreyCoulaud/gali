@@ -24,7 +24,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 	/**
 	 * Start the game in a subprocess
 	 */
-	start(){
+	async start(){
 		const command = "xdg-open";
 		if (!commandExistsSync(command)){
 			throw new NoCommandError("No xdg-open command found");
@@ -46,7 +46,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class HeroicGame extends Game{
 
-	source = "Heroic";
+	static source = "Heroic";
 
 	/**
 	 * Create a Heroic launcher game
@@ -58,6 +58,7 @@ class HeroicGame extends Game{
 	 */
 	constructor(name, appName, isInstalled, cover, icon){
 		super(name, cover, icon);
+		this.source = this.constructor.source;
 		this.appName = appName;
 		this.isInstalled = isInstalled;
 		this.processContainer = new HeroicGameProcessContainer(appName);
