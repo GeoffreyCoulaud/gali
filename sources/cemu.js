@@ -3,9 +3,10 @@ const { linuxToWine, wineToLinux } = require("../utils/convertPathPlatform.js");
 const { EmulatedGame, getROMs, GameProcessContainer } = require("./common.js");
 const { getUserLocalePreference } = require("../utils/locale.js");
 const { getLutrisGameStartScript } = require("./lutris.js");
-const { Parser: XMLParser } = require("xml2js");
 const { readFile, writeFile } = require("fs/promises");
+const { Parser: XMLParser } = require("xml2js");
 const { GameDir } = require("./common.js");
+const { spawn } = require("child_process");
 const { env } = require("process");
 const YAML = require("yaml");
 
@@ -26,7 +27,7 @@ async function getCemuGameStartScript(name, path, cemuGameSlug = "cemu", scriptB
 	// Add the game path argument
 	const fileContents = await readFile(scriptPath, "utf-8");
 	let newFileContents = fileContents.trimEnd();
-	newFileContents += " " + path;
+	newFileContents += ` --game "${path}"`;
 	await writeFile(scriptPath, newFileContents, "utf-8");
 
 	return scriptPath;

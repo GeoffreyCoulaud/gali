@@ -32,6 +32,10 @@ class KnownGame{
 		return null;
 	}
 
+	toString(){
+		return `${this.name} (${this.source})`;
+	}
+
 }
 
 /**
@@ -47,22 +51,24 @@ async function testGameStart(){
 	// Check presence of known games
 	// (edit depending on your library)
 	const knownGames = [
-		new KnownGame("Cemu", "Lutris"),
+		new KnownGame("MARIO KART 8", "Cemu in Lutris"),
 		/*
 		new KnownGame("Extreme Tux Racer", "Desktop entries"),
 		new KnownGame("Next Up Hero", "Legendary"),
 		new KnownGame("Next Up Hero", "Heroic"),
 		new KnownGame("Sonic Mania", "Steam"),
+		new KnownGame("Cemu", "Lutris"),
 		*/
 	];
 	const games = [];
 	for (const knownGame of knownGames){
 		const game = await knownGame.findIn(library);
 		if (game) games.push(game);
+		else console.log(`Couldn't find ${knownGame.toString()}`);
 	}
 
 	// Start, wait, kill
-	const MILLIS_BEFORE_KILL = 10000;
+	const MILLIS_BEFORE_KILL = 15000;
 	for (const game of games){
 		console.log(`\nStarting ${game.name} (${game.source})`);
 		game.processContainer.on("error", (error)=>{
