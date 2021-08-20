@@ -156,7 +156,7 @@ class YuzuSource extends Source{
 	 */
 	async _getInstalledGames(config){
 
-		// TODO
+		// TODO implement scanning for NAND installed games
 		throw new Error("Not implemented");
 
 	}
@@ -198,7 +198,6 @@ class YuzuSource extends Source{
 
 		// Get installed games
 		let installedGames = [];
-		// TODO implement scanning for installed CIAs
 		if (typeof config !== "undefined"){
 			try {
 				installedGames = await this._getInstalledGames(config);

@@ -142,7 +142,6 @@ class CitraSource extends Source{
 	 */
 	async _getROMs(dirs){
 
-		// TODO test with 3ds files.
 		const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
 		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
 		const games = gamePaths.map(path=>new CitraGame(pathBasename(path), path));
@@ -159,7 +158,7 @@ class CitraSource extends Source{
 	 */
 	async _getInstalledGames(config){
 
-		// TODO
+		// TODO implement scanning for installed CIAs
 		throw new Error("Not implemented");
 
 	}

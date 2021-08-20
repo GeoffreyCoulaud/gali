@@ -89,6 +89,17 @@ class DolphinSource extends Source{
 	}
 
 	/**
+	 * Get dolphin's cached games
+	 * @returns {DolphinGame[]} - An array of found games
+	 * @private
+	 * @todo
+	 */
+	async _getCachedROMs(){
+		// TODO Read dolphin gamelist cache 
+		// $HOME/.cache/dolphin-emu/gamelist.cache
+	}
+
+	/**
 	 * Get dolphin's ROM dirs from its config data
 	 * @param {object} config - Dolphin's config dara
 	 * @returns {GameDir} - The game dirs extracted from dolphin's config
