@@ -1,6 +1,7 @@
 const { GameProcessContainer, NoCommandError, Game, Source } = require("./common.js");
 const { bragUserLocalData } = require("../utils/directories.js");
 const { sync: commandExistsSync } = require("command-exists");
+const { execFilePromise } = require("../utils/process.js");
 const { spawn, execFile } = require("child_process");
 const { join: pathJoin } = require("path");
 const { env } = require("process");
@@ -9,18 +10,6 @@ const sqlite3 = require("sqlite3");
 
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
-
-/**
- * A promise version of the child_process execFile
- */
-function execFilePromise(command, args = [], options = {}){
-	return new Promise((resolve, reject)=>{
-		execFile(command, args, options, (error, stdout, stderr)=>{
-			if (error) reject(error);
-			else resolve(stdout, stderr);
-		});
-	});
-}
 
 /**
  * A wrapper for lutris game process management
