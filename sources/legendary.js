@@ -52,6 +52,9 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class LegendaryGame extends Game{
 	
+	platform = "PC";
+	source = LegendarySource.name;
+	
 	/**
 	 * Create a legendary games launcher game
 	 * @param {string} appName - The game's app name
@@ -60,7 +63,6 @@ class LegendaryGame extends Game{
 	constructor(appName, name){
 		super(name);
 		this.appName = appName;
-		this.source = LegendarySource.name;
 		this.processContainer = new LegendaryGameProcessContainer(this.appName);
 	}
 	

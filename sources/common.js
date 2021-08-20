@@ -145,29 +145,9 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 }
 
 /**
- * Class representing a generic game.
- * You're not supposed to use it directly, instead use a descendent of this class. 
- * @abstract
- */
-class Game{
-	source = "Unknown";
-	
-	processContainer = new GameProcessContainer();
-	isRunning = false;
-	
-	/**
-	 * Create a game
-	 * @param {string} name - The game's display name 
-	 */
-	constructor(name){
-		this.name = name;
-	}
-}
-
-/**
  * Class representing a game directory
  */
-class GameDir {
+ class GameDir {
 	/**
 	 * Create a game directory
 	 * @param {string} path - The local path corresponding to the directory 
@@ -180,8 +160,50 @@ class GameDir {
 }
 
 /**
+ * Class representing a generic game.
+ * You're not supposed to use it directly, instead use a descendent of this class. 
+ * 
+ * @property {string} source - The games's provenance in the system
+ * @property {string} name - The game's displayed (localized) name
+ * @property {string} platform - The game's original platform
+ * @property {boolean} isInstalled - Whether the game is currently installed or not 
+ * @property {string} boxArtImage - URI to the game's box art
+ * @property {string} coverImage - URI to the game's cover
+ * @property {string} iconImage - URI to the game's icon
+ * 
+ * @abstract
+ */
+class Game{
+	
+	// Game metadata props
+	source = undefined;
+	name = undefined;
+	platform = undefined;
+	isInstalled = true;
+	
+	// Images props
+	boxArtImage = undefined; 
+	coverImage = undefined;
+	iconImage = undefined;
+
+	// Game lifecycle
+	processContainer = undefined;
+	
+	/**
+	 * Create a game
+	 * @param {string} name - The game's display name 
+	 */
+	constructor(name){
+		this.name = name;
+	}
+}
+
+/**
  * Class representing an emulated game.
  * You're not supposed to use it directly, instead use a descendent of this class.
+ * 
+ * @property {string} path - The game's path to be started with an emulator
+ * 
  * @abstract
  */
 class EmulatedGame extends Game{
@@ -189,12 +211,10 @@ class EmulatedGame extends Game{
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name 
 	 * @param {string} path - The game's path
-	 * @param {string} console - The game's original console
 	 */
-	constructor(name, path, console = "Unknown"){
+	constructor(name, path){
 		super(name);
 		this.path = path;
-		this.console = console;
 	}
 
 	/**
@@ -202,7 +222,7 @@ class EmulatedGame extends Game{
 	 * @returns {string} - A string representing the game
 	 */
 	toString(){
-		return `${this.name} - ${this.source} (${this.console})`;
+		return `${this.name} - ${this.source} (${this.platform})`;
 	}
 }
 

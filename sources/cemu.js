@@ -72,9 +72,11 @@ class CemuGameProcessContainer extends GameProcessContainer{
  */
 class CemuGame extends EmulatedGame{
 
+	platform = "Nintendo - Wii U";
+	source = CemuSource.name;
+
 	constructor(name, path){
-		super(name, path, CemuSource.name, "Nintendo - Wii U");
-		this.source = CemuSource.name;
+		super(name, path, CemuSource.name);
 		this.processContainer = new CemuGameProcessContainer(this.name, this.path);
 	}
 
@@ -330,6 +332,7 @@ class CemuSource extends Source{
 }
 
 module.exports = {
+	CemuGameProcessContainer,
 	CemuSource,
 	CemuGame,
 };

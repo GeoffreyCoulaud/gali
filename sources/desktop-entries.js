@@ -46,16 +46,16 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
  */
 class DesktopEntryGame extends Game{
 
+	platform = "PC";
+	source = DesktopEntrySource.name;
+
 	/**
 	 * Create a desktop entry game
 	 * @param {string} name - The game's displayed name
-	 * @param {string} icon - A desktop file icon
 	 * @param {string} exec - The exec field of the game's desktop file
 	 */
-	constructor(name, icon, exec){
+	constructor(name, exec){
 		super(name);
-		this.icon = icon;
-		this.source = DesktopEntrySource.name;
 		this.processContainer = new DesktopEntryGameProcessContainer(exec);
 	}
 
@@ -208,11 +208,10 @@ class DesktopEntrySource extends Source{
 
 			// Get needed fields
 			const name = this._getLocalizedName(data, preferredLangs);
-			const icon = data.get("Icon");
 			const exec = data.get("Exec");
 
 			// Add game
-			games.push(new DesktopEntryGame(name, icon, exec));
+			games.push(new DesktopEntryGame(name, exec));
 
 		}
 

@@ -47,17 +47,19 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  */
 class RetroarchGame extends EmulatedGame{
 
+	source = RetroarchSource.name;
+	
 	/**
 	 * Create a retroarch game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 * @param {string} corePath - The game's libretro core path
-	 * @param {string} console - The game's original console
+	 * @param {string} platform - The game's original platform
 	 */
-	constructor(name, path, corePath, console){
-		super(name, path, console);
+	constructor(name, path, corePath, platform){
+		super(name, path);
+		this.platform = platform;
 		this.corePath = corePath;
-		this.source = RetroarchSource.name;
 		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
 
@@ -84,7 +86,7 @@ class RetroarchSource extends Source{
 		const USER_DIR = env["HOME"];
 		const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
 		let playlists = await readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
-		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith("lpl"));
+		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith(".lpl"));
 		playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));
 		return playlists;
 
@@ -104,24 +106,28 @@ class RetroarchSource extends Source{
 
 		// Get playlist console and default playlist core
 		const PLAYLIST_DEFAULT_CORE_PATH = playlist.default_core_path;
-		const PLAYLIST_CONSOLE = pathBasename(playlistPath, ".lpl");
+		const PLAYLIST_PLATFORM = pathBasename(playlistPath, ".lpl");
 
 		// Build games from the given entries
 		const games = [];
 		for (const entry of playlist.items){
 
+			const gamePath = entry.path;
 			let gameName = entry.label;
 			let gameCorePath = entry.corePath;
+			
+			// Validate game data
+			if (!gamePath){
+				continue;
+			}
 			if (!gameName){
-				gameName = pathBasename(entry.path);
+				gameName = pathBasename(gamePath);
 			}
 			if (!gameCorePath || gameCorePath === "DETECT"){
 				gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
 			}
-			const game = new RetroarchGame(gameName, entry.path, gameCorePath, PLAYLIST_CONSOLE);
-
-			// Validate game data
-			if (game.name && game.path && game.corePath && game.console){
+			const game = new RetroarchGame(gameName, gamePath, gameCorePath, PLAYLIST_PLATFORM);
+			if (game.name && game.path && game.corePath && game.platform){
 				games.push(game);
 			}
 
@@ -137,6 +143,7 @@ class RetroarchSource extends Source{
 	 */
 	async scan(warn = false){
 
+		
 		// Get retroarch playlists
 		let playlistPaths = [];
 		try {
@@ -145,18 +152,19 @@ class RetroarchSource extends Source{
 			if (warn) console.warn(`Unable to get retroarch playlists : ${error}`);
 		}
 
+		
 		// Read playlists
 		const games = [];
 		for (const playlistPath of playlistPaths){
-			let tempGames;
+			let playlistGames;
 			try {
-				tempGames = await this._getGamesFromPlaylist(playlistPath);
+				playlistGames = await this._getGamesFromPlaylist(playlistPath);
 			} catch (error) {
 				if (warn) console.warn(`Unable to get retroarch games from ${playlistPath} : ${error}`);
-				tempGames = undefined;
+				playlistGames = undefined;
 			}
-			if (typeof tempGames !== "undefined"){
-				games.push(...tempGames);
+			if (playlistGames){
+				games.push(...playlistGames);
 			}
 		}
 

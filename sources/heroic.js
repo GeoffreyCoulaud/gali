@@ -46,14 +46,16 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class HeroicGame extends Game{
 
+	platform = "PC";
+	source = HeroicSource.name;
+
 	/**
-	 * Create a Heroic launcher game
+	 * Create a Heroic Games Launcher game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} appName - The game's epic store app_name
 	 */
 	constructor(name, appName){
 		super(name);
-		this.source = HeroicSource.name;
 		this.processContainer = new HeroicGameProcessContainer(appName);
 	}
 

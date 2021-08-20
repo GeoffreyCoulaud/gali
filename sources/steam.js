@@ -50,6 +50,9 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class SteamGame extends Game{
 
+	platform = "PC";
+	source = SteamSource.name;
+
 	/**
 	 * Create a steam game
 	 * @param {string} appId - A steam appid
@@ -58,7 +61,6 @@ class SteamGame extends Game{
 	constructor(appId, name){
 		super(name);
 		this.appId = appId;
-		this.source = SteamSource.name;
 		this.processContainer = new SteamGameProcessContainer(this.appId);
 	}
 

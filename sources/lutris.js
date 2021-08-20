@@ -68,24 +68,26 @@ class LutrisGameProcessContainer extends GameProcessContainer{
  * A class representing a Lutris game
  * @property {string} gameSlug - A lutris game slug
  * @property {string} configPath - The game's config path
- * @property {string} runner - The game's runner
+ * @property {boolean} isInstalled - Whether the game is installed or not
  * @property {LutrisGameProcessContainer} processContainer - The game's process container
  */
 class LutrisGame extends Game{
+
+	platform = "PC";
+	source = LutrisSource.name;
 
 	/**
 	 * Create a lutris game
 	 * @param {string} gameSlug - A lutris game slug
 	 * @param {string} name - The game's displayed name
-	 * @param {string} runner - The game's lutris runner
 	 * @param {string} configPath - The games's config path
+	 * @param {boolean} isInstalled - Whether the game is installed or not
 	 */
-	constructor(gameSlug, name, runner, configPath){
+	constructor(gameSlug, name, configPath, isInstalled){
 		super(name);
 		this.gameSlug = gameSlug;
 		this.configPath = configPath;
-		this.runner = runner;
-		this.source = LutrisSource.name;
+		this.isInstalled = isInstalled;
 		this.processContainer = new LutrisGameProcessContainer(this.gameSlug);
 	}
 
@@ -130,18 +132,11 @@ class LutrisSource extends Source{
 		}
 
 		// Get games
-		const DB_REQUEST = "SELECT name, slug, directory, configpath, runner FROM 'games' WHERE NOT hidden";
+		const DB_REQUEST = "SELECT name, slug, configpath, installed FROM 'games' WHERE NOT hidden";
 		const results = await db.all(DB_REQUEST);
 		for (const row of results){
-			// Validate every request row
-			if (
-				row.slug &&
-				row.name &&
-				row.directory &&
-				row.configpath &&
-				row.runner
-			){
-				games.push(new LutrisGame(row.slug, row.name, row.runner, row.configpath));
+			if (row.slug && row.name && row.configpath){
+				games.push(new LutrisGame(row.slug, row.name, row.configpath, row.installed));
 			}
 		}
 

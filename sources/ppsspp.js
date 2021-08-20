@@ -54,14 +54,16 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
  */
 class PPSSPPGame extends EmulatedGame{
 
+	platform = "Sony - PlayStation Portable";
+	source = PPSSPPSource.name;
+
 	/**
 	 * Create a ppsspp game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The games' ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Sony - PlayStation Portable");
-		this.source = PPSSPPSource.name;
+		super(name, path);
 		this.processContainer = new PPSSPPGameProcessContainer(this.path);
 	}
 }

@@ -55,14 +55,16 @@ class YuzuGameProcessContainer extends GameProcessContainer{
  */
 class YuzuGame extends EmulatedGame{
 
+	platform = "Nintendo - Switch";
+	source = YuzuSource.name;
+
 	/**
 	 * Create a yuzu game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Nintendo - Switch");
-		this.source = YuzuSource.name;
+		super(name, path);
 		this.processContainer = new YuzuGameProcessContainer(this.path);
 	}
 

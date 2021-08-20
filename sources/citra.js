@@ -57,14 +57,16 @@ class CitraGameProcessContainer extends GameProcessContainer{
  */
 class CitraGame extends EmulatedGame{
 
+	platform = "Nintendo - 3DS";
+	source = CitraSource.name;
+
 	/**
 	 * Creat a citra game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Nintendo - 3DS");
-		this.source = CitraSource.name;
+		super(name, path);
 		this.processContainer = new CitraGameProcessContainer(this.path);
 	}
 

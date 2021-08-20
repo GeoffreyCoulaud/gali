@@ -42,14 +42,16 @@ class DolphinGameProcessContainer extends GameProcessContainer{
  */
 class DolphinGame extends EmulatedGame{
 
+	platform = "Nintendo - Wii / GameCube";
+	source = DolphinSource.name;
+
 	/**
 	 * Create a dolphin game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's ROM path
 	 */
 	constructor(name, path){
-		super(name, path, "Nintendo - Wii / GameCube");
-		this.source = DolphinSource.name;
+		super(name, path);
 		this.processContainer = new DolphinGameProcessContainer(this.path);
 	}
 }
