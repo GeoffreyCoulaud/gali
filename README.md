@@ -14,8 +14,8 @@ You will have to install other software to manage your games, they will definite
 Name            | Description                                              | Notes
 --------------- | -------------------------------------------------------- | ----------------------------------------------
 Steam           | PC games store                                           | Only installed games
-Lutris          | Open Source gaming platform for Linux                    | Only installed games
 Legendary       | FOSS Epic Games Launcher alternative                     | Only installed games
+Lutris          | Open Source gaming platform for Linux                    | -
 Heroic          | FOSS Epic Games Launcher alternative (GUI for Legendary) | -
 Desktop entries | Regular linux desktop entries                            | -
 Retroarch       | Frontend for the libretro API                            | -
@@ -29,7 +29,7 @@ Cemu            | Nintendo Wii U emulator                                  | Cem
 **Brag is in active development but is just not there yet. Be patient !**
 
 ### Current requirements
-* nodejs
+* node
 * npm
 * (optional) supported sources programs
 
@@ -45,15 +45,14 @@ npm run start
 ## Known issues
 * Games from Steam, Legendary, Heroic can be started but not stopped or killed
 * Dolphin emulator games don't get distinguished between GameCube and Wii
+* Cemu in lutris is a clunky solution, but it's the best we currently have on linux
 * Installed Citra games aren't listed
 * Installed Yuzu games aren't listed
-* Cemu in lutris is a clunky solution, but it's the best we currently have on linux
-* Cemu in lutris games can't be started *yet*
 
 ## TODO
-1. Launcher UI (task to be split up)
-2. Fix game metadata (see dedicated section)
-3. Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
+* Launcher UI (task to be split up)
+* Fix game metadata (see dedicated section)
+* Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 
 ## Fixing game metadata
 ### The problem
