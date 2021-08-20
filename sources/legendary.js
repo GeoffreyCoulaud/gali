@@ -1,4 +1,4 @@
-const { StartOnlyGameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { StartOnlyGameProcessContainer, NoCommandError, Game, Source } = require("./common.js");
 const { sync: commandExistsSync } = require("command-exists");
 const { join: pathJoin } = require("path");
 const { readFile } = require("fs/promises");
@@ -52,8 +52,6 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class LegendaryGame extends Game{
 	
-	static source = "Legendary";
-	
 	/**
 	 * Create a legendary games launcher game
 	 * @param {string} appName - The game's app name
@@ -61,8 +59,8 @@ class LegendaryGame extends Game{
 	 */
 	constructor(appName, name){
 		super(name);
-		this.source = this.constructor.source;
 		this.appName = appName;
+		this.source = LegendarySource.name;
 		this.processContainer = new LegendaryGameProcessContainer(this.appName);
 	}
 	
@@ -73,59 +71,62 @@ class LegendaryGame extends Game{
 	toString(){
 		return `${this.name} - ${this.source} - ${this.appName}`;
 	}
+
 }
 
 /**
- * Get all legendary launcher (also get heroic launcher) **installed** games
- * @param {boolean} warn - Whether to display additional warnings 
- * @returns {LegendaryGame[]} - An array of found games
+ * A class representing a Legendary Games Launcher source
  */
-async function getLegendaryInstalledGames(warn = false){
+class LegendarySource extends Source{
 
-	// Read installed.json file
-	const USER_DIR = env["HOME"];
-	const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config/legendary/installed.json");
-	
-	let installed;
-	try {
-		const fileContents = await readFile(INSTALLED_FILE_PATH, "utf-8");
-		installed = JSON.parse(fileContents);
-	} catch (error){
-		if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);
-		installed = undefined;
+	static name = "Legendary";
+	preferCache = false;
+
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
 	}
 
-	// Build games
-	let installedGames = [];
-	if (installed){
-		for (let key of Object.keys(installed)){
-			let gameData = installed[key];
-			let game = new LegendaryGame(gameData?.app_name, gameData?.title);
-			if (game.appName && game.name){
-				installedGames.push(game);
+	/**
+	 * Get all legendary launcher games
+	 * @param {boolean} warn - Whether to display additional warnings 
+	 * @returns {LegendaryGame[]} - An array of found games
+	 * @todo support non installed games
+	 */
+	async scan(warn = false){
+
+		// Read installed.json file
+		const USER_DIR = env["HOME"];
+		const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config/legendary/installed.json");
+		
+		let installed;
+		try {
+			const fileContents = await readFile(INSTALLED_FILE_PATH, "utf-8");
+			installed = JSON.parse(fileContents);
+		} catch (error){
+			if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);
+			installed = undefined;
+		}
+
+		// Build games
+		let installedGames = [];
+		if (installed){
+			for (let key of Object.keys(installed)){
+				let gameData = installed[key];
+				let game = new LegendaryGame(gameData?.app_name, gameData?.title);
+				if (game.appName && game.name){
+					installedGames.push(game);
+				}
 			}
 		}
+
+		return installedGames;
 	}
-
-	return installedGames;
-}
-
-/**
- * Get all legendary launcher games
- * @param {boolean} warn - Whether to display additional warnings 
- * @returns {LegendaryGame[]} - An array of found games
- * @todo get also non installed games
- */
-async function getLegendaryGames(warn = false){
-
-	// ? Add support for non-installed games ?
-
-	return getLegendaryInstalledGames(warn);
 
 }
 
 module.exports = {
 	LegendaryGameProcessContainer,
-	getLegendaryGames,
+	LegendarySource,
 	LegendaryGame,
 };

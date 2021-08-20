@@ -1,4 +1,4 @@
-const { Game, StartOnlyGameProcessContainer, NoCommandError } = require("./common.js");
+const { Game, StartOnlyGameProcessContainer, NoCommandError, Source } = require("./common.js");
 const { sync: commandExistsSync } = require("command-exists");
 const { readFile } = require("fs/promises");
 const { join: pathJoin } = require("path");
@@ -46,64 +46,68 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
  */
 class HeroicGame extends Game{
 
-	static source = "Heroic";
-
 	/**
 	 * Create a Heroic launcher game
 	 * @param {string} name - The game's displayed name
 	 * @param {string} appName - The game's epic store app_name
-	 * @param {boolean} isInstalled - Whether the game is installed or not
-	 * @param {string} cover - A path or url to the game's cover
-	 * @param {string} icon - A path or url to the game's icon
 	 */
-	constructor(name, appName, isInstalled, cover, icon){
-		super(name, cover, icon);
-		this.source = this.constructor.source;
-		this.appName = appName;
-		this.isInstalled = isInstalled;
+	constructor(name, appName){
+		super(name);
+		this.source = HeroicSource.name;
 		this.processContainer = new HeroicGameProcessContainer(appName);
 	}
 
 }
 
-async function getHeroicGames(warn = false){
+/**
+ * A class representing a Heroic Games Launcher source
+ */
+class HeroicSource extends Source{
 
-	// Read library.json file
-	const USER_DIR = env["HOME"];
-	const LIBRARY_FILE_PATH = pathJoin(USER_DIR, ".config/heroic/store/library.json");
+	static name = "Heroic";
+	preferCache = false;
 
-	let library;
-	try {
-		const fileContents = await readFile(LIBRARY_FILE_PATH, "utf-8");
-		library = JSON.parse(fileContents);
-		library = library?.["library"];
-	} catch (error){
-		if (warn) console.warn(`Unable to read heroic library.json`);
-		library = undefined;
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
 	}
 
-	// Build games
-	let games = [];
-	if (library){
-		for (let entry of library){
-			if (entry?.["is_game"]){
-				games.push(new HeroicGame(
-					entry.title, 
-					entry.app_name, 
-					entry.is_installed,
-					entry.art_cover, 
-					entry.art_square
-				));
+	async scan(warn = false){
+
+		// Read library.json file
+		const USER_DIR = env["HOME"];
+		const LIBRARY_FILE_PATH = pathJoin(USER_DIR, ".config/heroic/store/library.json");
+		let library;
+		try {
+			const fileContents = await readFile(LIBRARY_FILE_PATH, "utf-8");
+			library = JSON.parse(fileContents);
+			library = library?.["library"];
+		} catch (error){
+			if (warn) console.warn(`Unable to read heroic library.json`);
+			library = undefined;
+		}
+	
+		// Build games
+		let games = [];
+		if (library){
+			for (let entry of library){
+				if (entry?.["is_game"]){
+					games.push(new HeroicGame(
+						entry.title, 
+						entry.app_name
+					));
+				}
 			}
 		}
+	
+		return games;
+	
 	}
-
-	return games;
 
 }
 
 module.exports = {
 	HeroicGameProcessContainer,
-	getHeroicGames,
+	HeroicSource,
 	HeroicGame,
 }

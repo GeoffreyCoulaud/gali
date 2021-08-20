@@ -1,4 +1,4 @@
-const { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError } = require("./common.js");
+const { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
 const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
@@ -42,8 +42,6 @@ class DolphinGameProcessContainer extends GameProcessContainer{
  */
 class DolphinGame extends EmulatedGame{
 
-	static source = "Dolphin";
-
 	/**
 	 * Create a dolphin game
 	 * @param {string} name - The game's displayed name
@@ -51,112 +49,127 @@ class DolphinGame extends EmulatedGame{
 	 */
 	constructor(name, path){
 		super(name, path, "Nintendo - Wii / GameCube");
-		this.source = this.constructor.source;
+		this.source = DolphinSource.name;
 		this.processContainer = new DolphinGameProcessContainer(this.path);
 	}
 }
 
-/**
- * Get dolphin's config data
- * @returns {config} - Dolphin's config data
- */
-async function getDolphinConfig(){
+class DolphinSource extends Source{
 
-	const USER_DIR = env["HOME"];
-	const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/dolphin-emu/Dolphin.ini");
-	const configFileContents = await readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8");
-	const config = config2js(configFileContents);
+	static name = "Dolphin";
+	preferCache = false;
 
-	// Check "General -> ISOPaths" value to be numeric
-	const nDirs = parseInt(config["General"].get("ISOPaths"));
-	if ( Number.isNaN(nDirs) ){
-		throw new Error("Non numeric ISOPaths value in config file");
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
 	}
 
-	return config;
+	/**
+	 * Get dolphin's config data
+	 * @returns {config} - Dolphin's config data
+	 * @private
+	 */
+	async _getConfig(){
 
-}
+		const USER_DIR = env["HOME"];
+		const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/dolphin-emu/Dolphin.ini");
+		const configFileContents = await readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8");
+		const config = config2js(configFileContents);
 
-/**
- * Get dolphin's ROM dirs from its config data
- * @param {object} config - Dolphin's config dara
- * @returns {GameDir} - The game dirs extracted from dolphin's config
- */
-async function getDolphinROMDirs(config){
-
-	const dirs = [];
-
-	// Get number of paths and options
-	if (typeof config["General"] === "undefined") { return dirs; }
-	const nDirs = parseInt(config["General"].get("ISOPaths"));
-	const recursive = config["General"].get("RecursiveISOPaths").toString().toLowerCase() === "true";
-
-	// Get paths
-	for (let i = 0; i < nDirs; i++){
-		const path = config["General"].get(`ISOPath${i}`);
-		if (typeof path === "undefined"){ continue; }
-		dirs.push(new GameDir(path, recursive));
-	}
-
-	return dirs;
-
-}
-
-/**
- * Get dolphin ROMs from the given game dirs
- * @param {GameDir[]} dirs - The game dirs to search ROMs into
- * @returns {DolphinGame[]} - An array of found games
- */
-async function getDolphinROMs(dirs){
-
-	// TODO detect games console between GameCube and Wii
-	const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
-	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-	const games = gamePaths.map(path=>new DolphinGame(pathBasename(path), path));
-	return games;
-}
-
-/**
- * Get all dolphin games.
- * @param {boolean} warn - Whether to display additional warnings
- * @returns {DolphinGame[]} - An array of found games
- */
-async function getDolphinGames(warn = false){
-
-	// Get config
-	let config;
-	try {
-		config = await getDolphinConfig();
-	} catch (error) {
-		if (warn) console.warn(`Unable to read dolphin config file : ${error}`);
-	}
-
-	// Get ROM dirs
-	let romDirs = [];
-	if (typeof config !== "undefined"){
-		try {
-			romDirs = await getDolphinROMDirs(config);
-		} catch (error){
-			if (warn) console.warn(`Unable to get dolphin ROM dirs : ${error}`);
+		// Check "General -> ISOPaths" value to be numeric
+		const nDirs = parseInt(config["General"].get("ISOPaths"));
+		if ( Number.isNaN(nDirs) ){
+			throw new Error("Non numeric ISOPaths value in config file");
 		}
+
+		return config;
+
 	}
 
-	// Get ROM games
-	let romGames = [];
-	if (romDirs.length > 0){
+	/**
+	 * Get dolphin's ROM dirs from its config data
+	 * @param {object} config - Dolphin's config dara
+	 * @returns {GameDir} - The game dirs extracted from dolphin's config
+	 * @private
+	 */
+	async _getROMDirs(config){
+
+		const dirs = [];
+
+		// Get number of paths and options
+		if (typeof config["General"] === "undefined") { return dirs; }
+		const nDirs = parseInt(config["General"].get("ISOPaths"));
+		const recursive = config["General"].get("RecursiveISOPaths").toString().toLowerCase() === "true";
+
+		// Get paths
+		for (let i = 0; i < nDirs; i++){
+			const path = config["General"].get(`ISOPath${i}`);
+			if (typeof path === "undefined"){ continue; }
+			dirs.push(new GameDir(path, recursive));
+		}
+
+		return dirs;
+
+	}
+
+	/**
+	 * Get dolphin ROMs from the given game dirs
+	 * @param {GameDir[]} dirs - The game dirs to search ROMs into
+	 * @returns {DolphinGame[]} - An array of found games
+	 * @private
+	 */
+	async _getROMs(dirs){
+		// TODO detect games console between GameCube and Wii
+		const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
+		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
+		const games = gamePaths.map(path=>new DolphinGame(pathBasename(path), path));
+		return games;
+	}
+
+	/**
+	 * Get all dolphin games.
+	 * @param {boolean} warn - Whether to display additional warnings
+	 * @returns {DolphinGame[]} - An array of found games
+	 */
+	async scan(warn = false){
+
+		// Get config
+		let config;
 		try {
-			romGames = await getDolphinROMs(romDirs);
+			config = await this._getConfig();
 		} catch (error) {
-			if (warn) console.warn(`Unable to get dolphin ROMs : ${error}`);
+			if (warn) console.warn(`Unable to read dolphin config file : ${error}`);
 		}
+
+		// Get ROM dirs
+		let romDirs = [];
+		if (typeof config !== "undefined"){
+			try {
+				romDirs = await this._getROMDirs(config);
+			} catch (error){
+				if (warn) console.warn(`Unable to get dolphin ROM dirs : ${error}`);
+			}
+		}
+
+		// Get ROM games
+		let romGames = [];
+		if (romDirs.length > 0){
+			try {
+				romGames = await this._getROMs(romDirs);
+			} catch (error) {
+				if (warn) console.warn(`Unable to get dolphin ROMs : ${error}`);
+			}
+		}
+
+		return romGames;
+
 	}
 
-	return romGames;
 
 }
 
 module.exports = {
 	DolphinGameProcessContainer,
-	getDolphinGames,
+	DolphinSource,
 	DolphinGame,
 };

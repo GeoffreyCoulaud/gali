@@ -1,4 +1,4 @@
-const { GameProcessContainer, NoCommandError, Game } = require("./common.js");
+const { GameProcessContainer, NoCommandError, Game, Source } = require("./common.js");
 const { bragUserLocalData } = require("../utils/directories.js");
 const { sync: commandExistsSync } = require("command-exists");
 const { spawn, execFile } = require("child_process");
@@ -23,30 +23,6 @@ function execFilePromise(command, args = [], options = {}){
 }
 
 /**
- * Get a start shell script for a lutris game
- * @param {string} gameSlug - The lutris game's slug for which to get a start script
- * @param {string} scriptBaseName - Name (with extension) for the output script file
- * @returns {string} - An absolute path to the script
- */
-async function getLutrisGameStartScript(gameSlug, scriptBaseName = ""){
-
-	
-	// Get the start script from lutris
-	const lutrisCommand = "lutris";
-	if (!commandExistsSync(lutrisCommand)){
-		throw new NoCommandError("No lutris command found");
-	}
-	
-	// Store the script
-	if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
-	const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
-	await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
-
-	return scriptPath;
-
-}
-
-/**
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
  */
@@ -62,10 +38,33 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	}
 
 	/**
+	* Get a start script for a lutris game
+	* @param {string} gameSlug - The lutris game's slug for which to get a start script
+	* @param {string} scriptBaseName - Name (with extension) for the output script file
+	* @returns {string} - An absolute path to the script
+	*/
+   static async getStartScript(gameSlug, scriptBaseName = ""){
+   
+	   // Get the start script from lutris
+	   const lutrisCommand = "lutris";
+	   if (!commandExistsSync(lutrisCommand)){
+		   throw new NoCommandError("No lutris command found");
+	   }
+	   
+	   // Store the script
+	   if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
+	   const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
+	   await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
+   
+	   return scriptPath;
+   
+   }
+
+	/**
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const scriptPath = await getLutrisGameStartScript(this.gameSlug);
+		const scriptPath = await this.constructor.getStartScript(this.gameSlug);
 		this.process = spawn(
 			"sh",
 			[scriptPath],
@@ -85,8 +84,6 @@ class LutrisGameProcessContainer extends GameProcessContainer{
  */
 class LutrisGame extends Game{
 
-	static source = "Lutris";
-
 	/**
 	 * Create a lutris game
 	 * @param {string} gameSlug - A lutris game slug
@@ -96,10 +93,10 @@ class LutrisGame extends Game{
 	 */
 	constructor(gameSlug, name, runner, configPath){
 		super(name);
-		this.source = this.constructor.source;
 		this.gameSlug = gameSlug;
 		this.configPath = configPath;
 		this.runner = runner;
+		this.source = LutrisSource.name;
 		this.processContainer = new LutrisGameProcessContainer(this.gameSlug);
 	}
 
@@ -114,58 +111,58 @@ class LutrisGame extends Game{
 }
 
 /**
- * Get all lutris installed games from its SQLite database
- * @param {boolean} warn - Whether to display additional warnings
- * @returns {LutrisGame[]} - An array of found games
+ * A class representing a Lutris source
  */
-async function getLutrisInstalledGames(warn = false){
-	const games = [];
+class LutrisSource extends Source{
 
-	// Open DB
-	let db;
-	try {
-		db = await open({filename: LUTRIS_DB_PATH, driver: sqlite3.cached.Database});
-	} catch(error){
-		if (warn) console.warn(`Could not open lutris DB (${error})`);
+	static name = "Lutris";
+	preferCache = false;
+
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
+	}
+
+	/**
+	 * Get all lutris games
+	 * @param {boolean} warn - Whether to display additional warnings
+	 * @returns {LutrisGame[]} - A list of found games
+	 */
+	async scan(warn = false){
+		const games = [];
+
+		// Open DB
+		let db;
+		try {
+			db = await open({filename: LUTRIS_DB_PATH, driver: sqlite3.cached.Database});
+		} catch(error){
+			if (warn) console.warn(`Could not open lutris DB (${error})`);
+			return games;
+		}
+
+		// Get games
+		const DB_REQUEST = "SELECT name, slug, directory, configpath, runner FROM 'games' WHERE NOT hidden";
+		const results = await db.all(DB_REQUEST);
+		for (const row of results){
+			// Validate every request row
+			if (
+				row.slug &&
+				row.name &&
+				row.directory &&
+				row.configpath &&
+				row.runner
+			){
+				games.push(new LutrisGame(row.slug, row.name, row.runner, row.configpath));
+			}
+		}
+
 		return games;
 	}
-
-	// Get games
-	const DB_REQUEST = "SELECT name, slug, directory, configpath, runner FROM 'games' WHERE installed AND NOT hidden";
-	const results = await db.all(DB_REQUEST);
-	for (const row of results){
-		// Validate every request row
-		if (
-			row.slug &&
-			row.name &&
-			row.directory &&
-			row.configpath &&
-			row.runner
-		){
-			games.push(new LutrisGame(row.slug, row.name, row.runner, row.configpath));
-		}
-	}
-
-	return games;
-}
-
-/**
- * Get all lutris games
- * @param {boolean} warn - Whether to display additional warnings
- * @returns {LutrisGame[]} - A list of found games
- * @todo add support for non installed games
- */
-async function getLutrisGames(warn = false){
-
-	// ? Add support for non-installed games ?
-
-	return getLutrisInstalledGames(warn);
 
 }
 
 module.exports = {
 	LutrisGameProcessContainer,
-	getLutrisGameStartScript,
-	getLutrisGames,
+	LutrisSource,
 	LutrisGame,
 };

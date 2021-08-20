@@ -1,4 +1,4 @@
-const { EmulatedGame, GameProcessContainer, NoCommandError } = require("./common.js");
+const { EmulatedGame, GameProcessContainer, NoCommandError, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename} = require("path");
 const { sync: commandExistsSync } = require("command-exists");
 const { readFile, readdir } = require("fs/promises");
@@ -47,8 +47,6 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  */
 class RetroarchGame extends EmulatedGame{
 
-	static source = "Retroarch";
-
 	/**
 	 * Create a retroarch game
 	 * @param {string} name - The game's displayed name
@@ -59,102 +57,117 @@ class RetroarchGame extends EmulatedGame{
 	constructor(name, path, corePath, console){
 		super(name, path, console);
 		this.corePath = corePath;
-		this.source = this.constructor.source;
+		this.source = RetroarchSource.name;
 		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
 
 }
 
-/**
- * Get the paths to retroarch playlists.
- * Found in $HOME/.config/retroarch/playlists
- * @returns {string[]} - An array of playlist paths
- */
-async function getRetroarchPlaylistPaths(){
+class RetroarchSource extends Source{
 
-	const USER_DIR = env["HOME"];
-	const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
-	let playlists = await readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
-	playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith("lpl"));
-	playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));
-	return playlists;
-}
+	static name = "Retroarch";
+	preferCache = false;
 
-/**
- * Get retroarch games from a playlist path.
- * @param {string} playlistPath - Path to the playlist file to read from
- * @returns {RetroarchGame[]} - An array of found games.
- */
-async function getRetroarchGamesFromPlaylist(playlistPath){
-
-	// Read the playlist file (it's JSON)
-	const fileContents = await readFile(playlistPath, "utf-8");
-	const playlist = JSON.parse(fileContents);
-
-	// Get playlist console and default playlist core
-	const PLAYLIST_DEFAULT_CORE_PATH = playlist.default_core_path;
-	const PLAYLIST_CONSOLE = pathBasename(playlistPath, ".lpl");
-
-	// Build games from the given entries
-	const games = [];
-	for (const entry of playlist.items){
-
-		let gameName = entry.label;
-		let gameCorePath = entry.corePath;
-		if (!gameName){
-			gameName = pathBasename(entry.path);
-		}
-		if (!gameCorePath || gameCorePath === "DETECT"){
-			gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
-		}
-		const game = new RetroarchGame(gameName, entry.path, gameCorePath, PLAYLIST_CONSOLE);
-
-		// Validate game data
-		if (game.name && game.path && game.corePath && game.console){
-			games.push(game);
-		}
-
-	}
-	return games;
-
-}
-
-/**
- * Get all retroarch games
- * @param {boolean} warn - Whether to display additional warnings
- * @returns {RetroarchGame[]} - An array of found games
- */
-async function getRetroarchGames(warn = false){
-
-	// Get retroarch playlists
-	let playlistPaths = [];
-	try {
-		playlistPaths = await getRetroarchPlaylistPaths();
-	} catch (error){
-		if (warn) console.warn(`Unable to get retroarch playlists : ${error}`);
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
 	}
 
-	// Read playlists
-	const games = [];
-	for (const playlistPath of playlistPaths){
-		let tempGames;
+	/**
+	 * Get the paths to retroarch playlists.
+	 * Found in $HOME/.config/retroarch/playlists
+	 * @returns {string[]} - An array of playlist paths
+	 * @private
+	 */
+	async _getPlaylistPaths(){
+
+		const USER_DIR = env["HOME"];
+		const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
+		let playlists = await readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
+		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith("lpl"));
+		playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));
+		return playlists;
+
+	}
+
+	/**
+	 * Get retroarch games from a playlist path.
+	 * @param {string} playlistPath - Path to the playlist file to read from
+	 * @returns {RetroarchGame[]} - An array of found games.
+	 * @private
+	 */
+	async _getGamesFromPlaylist(playlistPath){
+
+		// Read the playlist file (it's JSON)
+		const fileContents = await readFile(playlistPath, "utf-8");
+		const playlist = JSON.parse(fileContents);
+
+		// Get playlist console and default playlist core
+		const PLAYLIST_DEFAULT_CORE_PATH = playlist.default_core_path;
+		const PLAYLIST_CONSOLE = pathBasename(playlistPath, ".lpl");
+
+		// Build games from the given entries
+		const games = [];
+		for (const entry of playlist.items){
+
+			let gameName = entry.label;
+			let gameCorePath = entry.corePath;
+			if (!gameName){
+				gameName = pathBasename(entry.path);
+			}
+			if (!gameCorePath || gameCorePath === "DETECT"){
+				gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
+			}
+			const game = new RetroarchGame(gameName, entry.path, gameCorePath, PLAYLIST_CONSOLE);
+
+			// Validate game data
+			if (game.name && game.path && game.corePath && game.console){
+				games.push(game);
+			}
+
+		}
+		return games;
+
+	}
+
+	/**
+	 * Get all retroarch games
+	 * @param {boolean} warn - Whether to display additional warnings
+	 * @returns {RetroarchGame[]} - An array of found games
+	 */
+	async scan(warn = false){
+
+		// Get retroarch playlists
+		let playlistPaths = [];
 		try {
-			tempGames = await getRetroarchGamesFromPlaylist(playlistPath);
-		} catch (error) {
-			if (warn) console.warn(`Unable to get retroarch games from ${playlistPath} : ${error}`);
-			tempGames = undefined;
+			playlistPaths = await this._getPlaylistPaths();
+		} catch (error){
+			if (warn) console.warn(`Unable to get retroarch playlists : ${error}`);
 		}
-		if (typeof tempGames !== "undefined"){
-			games.push(...tempGames);
-		}
-	}
 
-	return games;
+		// Read playlists
+		const games = [];
+		for (const playlistPath of playlistPaths){
+			let tempGames;
+			try {
+				tempGames = await this._getGamesFromPlaylist(playlistPath);
+			} catch (error) {
+				if (warn) console.warn(`Unable to get retroarch games from ${playlistPath} : ${error}`);
+				tempGames = undefined;
+			}
+			if (typeof tempGames !== "undefined"){
+				games.push(...tempGames);
+			}
+		}
+
+		return games;
+
+	}
 
 }
 
 module.exports = {
 	RetroarchGameProcessContainer,
-	getRetroarchGames,
+	RetroarchSource,
 	RetroarchGame,
 };

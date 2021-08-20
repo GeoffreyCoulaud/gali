@@ -1,4 +1,4 @@
-const { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError } = require("./common.js");
+const { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
 const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
@@ -46,6 +46,7 @@ class CitraGameProcessContainer extends GameProcessContainer{
 		);
 		this._bindProcessEvents();
 	}
+
 }
 
 /**
@@ -56,8 +57,6 @@ class CitraGameProcessContainer extends GameProcessContainer{
  */
 class CitraGame extends EmulatedGame{
 
-	static source = "Citra";
-
 	/**
 	 * Creat a citra game
 	 * @param {string} name - The game's displayed name
@@ -65,139 +64,157 @@ class CitraGame extends EmulatedGame{
 	 */
 	constructor(name, path){
 		super(name, path, "Nintendo - 3DS");
-		this.source = this.constructor.source;
+		this.source = CitraSource.name;
 		this.processContainer = new CitraGameProcessContainer(this.path);
 	}
+
 }
 
 /**
- * Get the citra config data from $HOME/.config/citra-emu/qt-config.ini
- * Found in $HOME/.config/citra-emu/qt-config.ini
- * Validates the config data before returning it.
- * @returns {object} - An object containing citra's config
+ * A class representing a Citra source
  */
-async function getCitraConfig(){
+class CitraSource extends Source{
 
-	const USER_DIR = env["HOME"];
-	const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config/citra-emu/qt-config.ini");
-	const configFileContents = await readFile(CITRA_CONFIG_PATH, "utf-8");
-	const config = config2js(configFileContents);
+	static name = "Citra";
+	preferCache = false;
 
-	// Check "UI > Paths\Gamedirs\size" value in config to be numeric
-	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
-	if (Number.isNaN(nDirs)){
-		throw Error("Non numeric Paths\\gamedirs\\size value in config file");
+	constructor(preferCache = false){
+		super();
+		this.preferCache = preferCache;
 	}
 
-	return config;
-}
+	/**
+	 * Get the citra config data from $HOME/.config/citra-emu/qt-config.ini
+	 * Found in $HOME/.config/citra-emu/qt-config.ini
+	 * Validates the config data before returning it.
+	 * @returns {object} - An object containing citra's config
+	 * @private
+	 */
+	async _getConfig(){
 
-/**
- * Get citra's game dirs from its config data
- * @param {object} config - Citra's config data
- * @returns {GameDir[]} - The game dirs extracted from citra's config
- */
-async function getCitraROMDirs(config){
+		const USER_DIR = env["HOME"];
+		const CITRA_CONFIG_PATH = pathJoin(USER_DIR, ".config/citra-emu/qt-config.ini");
+		const configFileContents = await readFile(CITRA_CONFIG_PATH, "utf-8");
+		const config = config2js(configFileContents);
 
-	const dirs = [];
-
-	// Get number of paths
-	if (typeof config["UI"] === "undefined") { return dirs; }
-	const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
-
-	// Get paths
-	for (let i = 1; i <= nDirs; i++){
-		const recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
-		const path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
-		if (typeof path === "undefined"){ continue; }
-		dirs.push(new GameDir(path, recursive));
-	}
-
-	return dirs;
-
-}
-
-/**
- * Get citra ROM games from given game directories
- * @param {GameDir[]} dirs - The directories in which to search for ROMs
- * @returns {CitraGame[]} - An array of found games
- */
-async function getCitraROMs(dirs){
-
-	// TODO test with 3ds files.
-	const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
-	const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-	const games = gamePaths.map(path=>new CitraGame(pathBasename(path), path));
-	return games;
-
-}
-
-/**
- * Get citra installed games.
- * @throws Will throw a "Not implemented" error on every case, this is not yet supported
- * @param {object} config - Citra's config data
- * @todo
- */
-async function getCitraInstalledGames(config){
-
-	// TODO
-	throw new Error("Not implemented");
-
-}
-
-/**
- * Get all citra games
- * @param {boolean} warn - Whether to display additional warnings
- * @returns {CitraGame[]} - An array of found games
- */
-async function getCitraGames(warn = false){
-
-	// Get config
-	let config;
-	try {
-		config = await getCitraConfig(warn);
-	} catch (error) {
-		if (warn) console.warn(`Unable to read citra config file : ${error}`);
-	}
-
-	// Get ROM dirs
-	let romDirs = [];
-	if (typeof config !== "undefined"){
-		try {
-			romDirs = await getCitraROMDirs(config);
-		} catch (error){
-			if (warn) console.warn(`Unable to get citra ROM dirs : ${error}`);
+		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
+		const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
+		if (Number.isNaN(nDirs)){
+			throw Error("Non numeric Paths\\gamedirs\\size value in config file");
 		}
+
+		return config;
 	}
 
-	// Get ROM games
-	let romGames = [];
-	if (romDirs.length > 0){
+	/**
+	 * Get citra's game dirs from its config data
+	 * @param {object} config - Citra's config data
+	 * @returns {GameDir[]} - The game dirs extracted from citra's config
+	 * @private
+	 */
+	async _getROMDirs(config){
+
+		const dirs = [];
+
+		// Get number of paths
+		if (typeof config["UI"] === "undefined") { return dirs; }
+		const nDirs = parseInt(config["UI"].get("Paths\\gamedirs\\size"));
+
+		// Get paths
+		for (let i = 1; i <= nDirs; i++){
+			const recursive = String(config["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
+			const path       = config["UI"].get(`Paths\\gamedirs\\${i}\\path`);
+			if (typeof path === "undefined"){ continue; }
+			dirs.push(new GameDir(path, recursive));
+		}
+
+		return dirs;
+
+	}
+
+	/**
+	 * Get citra ROM games from given game directories
+	 * @param {GameDir[]} dirs - The directories in which to search for ROMs
+	 * @returns {CitraGame[]} - An array of found games
+	 * @private
+	 */
+	async _getROMs(dirs){
+
+		// TODO test with 3ds files.
+		const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
+		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
+		const games = gamePaths.map(path=>new CitraGame(pathBasename(path), path));
+		return games;
+
+	}
+
+	/**
+	 * Get citra installed games.
+	 * @throws Will throw a "Not implemented" error on every case, this is not yet supported
+	 * @param {object} config - Citra's config data
+	 * @private
+	 * @todo
+	 */
+	async _getInstalledGames(config){
+
+		// TODO
+		throw new Error("Not implemented");
+
+	}
+
+	/**
+	 * Get all citra games
+	 * @param {boolean} warn - Whether to display additional warnings
+	 * @returns {CitraGame[]} - An array of found games
+	 */
+	async scan(warn = false){
+
+		// Get config
+		let config;
 		try {
-			romGames = await getCitraROMs(romDirs);
+			config = await this._getConfig();
 		} catch (error) {
-			if (warn) console.warn(`Unable to get citra ROMs : ${error}`);
+			if (warn) console.warn(`Unable to read citra config file : ${error}`);
 		}
-	}
 
-	// Get installed games
-	let installedGames = [];
-	// TODO implement scanning for installed switch games
-	if (typeof config !== "undefined"){
-		try {
-			installedGames = await getCitraInstalledGames(config);
-		} catch (error){
-			if (warn) console.warn(`Unable to get citra installed games : ${error}`);
+		// Get ROM dirs
+		let romDirs = [];
+		if (typeof config !== "undefined"){
+			try {
+				romDirs = await this._getROMDirs(config);
+			} catch (error){
+				if (warn) console.warn(`Unable to get citra ROM dirs : ${error}`);
+			}
 		}
-	}
 
-	return [...romGames, ...installedGames];
+		// Get ROM games
+		let romGames = [];
+		if (romDirs.length > 0){
+			try {
+				romGames = await this._getROMs(romDirs);
+			} catch (error) {
+				if (warn) console.warn(`Unable to get citra ROMs : ${error}`);
+			}
+		}
+
+		// Get installed games
+		let installedGames = [];
+		if (typeof config !== "undefined"){
+			try {
+				installedGames = await this._getInstalledGames(config);
+			} catch (error){
+				if (warn) console.warn(`Unable to get citra installed games : ${error}`);
+			}
+		}
+
+		return [...romGames, ...installedGames];
+
+	}	
 
 }
 
 module.exports = {
 	CitraGameProcessContainer,
-	getCitraGames,
+	CitraSource,
 	CitraGame,
-	citraSourceName,
 };

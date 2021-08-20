@@ -44,7 +44,7 @@ class KnownGame{
 async function testGameStart(){
 
 	// Scan library
-	const library = new Library(Library.sources, true, true);
+	const library = new Library(Library.availableSources, true, true);
 	await library.scan();
 	await library.sort("name", 1);
 

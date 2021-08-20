@@ -12,6 +12,7 @@ class NoCommandError extends Error{}
  * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
  * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
  * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler. 
+ * @abstract
  */
 class GameProcessContainer extends EventEmitter{
 	
@@ -110,6 +111,15 @@ class GameProcessContainer extends EventEmitter{
 
 }
 
+/**
+ * A wrapper for game process management that doesn't handle stop and kill actions
+ * @property {ChildProcess|undefined} process - A reference to the game process
+ * @property {boolean} isRunning - Whether the game is running or not
+ * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
+ * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
+ * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler. 
+ * @abstract
+ */
 class StartOnlyGameProcessContainer extends GameProcessContainer{
 
 	static defaultSpawnOptions = GameProcessContainer.doNotWaitSpawnOptions;
@@ -137,6 +147,7 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 /**
  * Class representing a generic game.
  * You're not supposed to use it directly, instead use a descendent of this class. 
+ * @abstract
  */
 class Game{
 	source = "Unknown";
@@ -147,13 +158,9 @@ class Game{
 	/**
 	 * Create a game
 	 * @param {string} name - The game's display name 
-	 * @param {string} cover - A path or url to the game's cover
-	 * @param {string} icon - A path or url to the game's icon 
 	 */
-	constructor(name, cover = undefined, icon = undefined){
+	constructor(name){
 		this.name = name;
-		this.cover = cover;
-		this.icon = icon;
 	}
 }
 
@@ -175,13 +182,13 @@ class GameDir {
 /**
  * Class representing an emulated game.
  * You're not supposed to use it directly, instead use a descendent of this class.
+ * @abstract
  */
 class EmulatedGame extends Game{
 	/**
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name 
 	 * @param {string} path - The game's path
-	 * @param {string} source - The game's source, generally the emulator's name 
 	 * @param {string} console - The game's original console
 	 */
 	constructor(name, path, console = "Unknown"){
@@ -233,6 +240,30 @@ async function getROMs(dirs, filesRegex, warn = false){
 
 }
 
+/**
+ * A class representing a source of games.
+ * This is not supposed to be used directly, use one of the derived classes.
+ * @property {string} name - The displayed name for this source
+ * @property {Class} gameClass - The class for games of this source
+ * @property {boolean} preferCache - Whether the source should prefer cached options when scanning
+ * @abstract
+ */
+class Source{
+
+	gameClass = undefined;
+	preferCache = false;
+	name = undefined;
+
+	/**
+	 * Scan for games of this class.
+	 * @param {boolean} warn - Whether to display additional warnings
+	 * @returns {Game[]} - An array of found games
+	 * @virtual
+	 * @async
+	 */
+	async scan(warn = false){}
+}
+
 module.exports = {
 	StartOnlyGameProcessContainer,
 	GameProcessContainer,
@@ -240,5 +271,6 @@ module.exports = {
 	EmulatedGame,
 	GameDir,
 	getROMs,
+	Source,
 	Game,
 };
