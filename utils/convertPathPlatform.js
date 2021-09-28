@@ -1,21 +1,48 @@
-// TODO Find a way to not rely on Z: path
+const { resolve: pathResolve } = require("path");
+
+// TODO test paths outside Z:
 
 /**
- * Convert an absolute (Z:\) wine path into a linux path.
- * Changes "\" into "/" and the "Z:\" into "/" (fs root).
- * @param {string} winePath - An absolute wine path (windows style)
+ * Convert an absolute wine path into a linux path.
+ * Needs a prefix path given for paths outside of Z:
+ * @param {string} winePath - Absolute wine path (windows style)
+ * @param {string|undefined} prefixPath - Optional, absolute path to relevant prefix
  * @returns {string} - The same path converted into a linux path
  */
-function wineToLinux(winePath){
+function wineToLinux(winePath, prefixPath){
 
 	if (typeof winePath !== "string"){
 		throw new TypeError("path must be a string");
 	}
-	if (!winePath.startsWith("Z:\\")){
-		throw new Error("path must be in the Z: drive");
+
+	const driveLetterRegex = /^(?<driveLetter>[A-Z]):\\(?<rest>.*)/;
+	let drivePath;
+
+	if (!prefixPath){
+
+		// If no prefix is given, path must be in Z drive
+		if (!winePath.startsWith("Z:\\")){
+			throw new Error("path must be in the Z: drive");
+		}
+		drivePath = "/";
+
+	} else {
+
+		// Prefix exists, accept other drives
+		const driveLetterMatch = winePath.match(driveLetterRegex);
+		if (!driveLetterMatch) {
+			throw new Error("Path doesn't match format");
+		}
+		const driveLetter = driveLetterMatch.groups?.driveLetter;
+		if (!driveLetter){
+			throw new Error("Path doesn't start with a drive letter");
+		}
+		drivePath = `${prefixPath}/dosdevices/${driveLetter.toLowerCase()}:`;
+		drivePath = pathResolve(drivePath);
+
 	}
 
-	let linuxPath = winePath.replace("Z:\\", "/");
+	let linuxPath = winePath.replace(/^([A-Z]:\\)/, drivePath);
 	linuxPath = linuxPath.replaceAll("\\", "/");
 	return linuxPath;
 
