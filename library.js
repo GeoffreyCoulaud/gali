@@ -61,28 +61,34 @@ class Library{
 	 * Scan library's sources for games
 	 */
 	async scan(){
-		
-		// TODO Maybe remove the dependency between those two ?
+
+		let promises = [];
+		let results = [];
+
 		// Get lutris games
 		if (this.enabledSources.includes(LutrisSource.name)){
 			const lutris = new LutrisSource();
 			const lutrisGames = await lutris.scan(this.warn);
 			this.games.push(...lutrisGames);
-			
+
 			// Get cemu games
 			if (this.enabledSources.includes(CemuSource.name)){
 				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
 				if (cemuGame){
 					const cemu = new CemuSource(cemuGame, false);
-					const cemuGames = await cemu.scan(this.warn);
-					this.games.push(...cemuGames);
+					promises.push(cemu.scan(this.warn));
 				}
 			}
 
+			results = await Promise.all(promises);
+			results = results.flat();
+			this.games.push(...results);
+
 		}
 
+		
 		// Get games from straightforward sources
-		const EASY_SOURCE_CLASSES = [
+		const SOURCE_CLASSES = [
 			DesktopEntrySource,
 			RetroarchSource,
 			LegendarySource,
@@ -93,14 +99,14 @@ class Library{
 			CitraSource,
 			YuzuSource,
 		];
-		let promises = []
-		for (let sourceClass of EASY_SOURCE_CLASSES){
+		promises.length = 0;
+		for (let sourceClass of SOURCE_CLASSES){
 			if (this.enabledSources.includes(sourceClass.name)){
 				const sourceInstance = new sourceClass();
 				promises.push(sourceInstance.scan(this.warn));
 			}
 		} 
-		let results = await Promise.all(promises);
+		results = await Promise.all(promises);
 		results = results.flat();
 		this.games.push(...results);
 

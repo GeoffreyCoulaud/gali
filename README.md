@@ -11,19 +11,19 @@ this is not the intended purpose of Brag. This project is for *brag*ging, showin
 You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
-Name            | Description                                              | Notes
---------------- | -------------------------------------------------------- | ----------------------------------------------
-Steam           | PC games store                                           | Only installed games
-Legendary       | FOSS Epic Games Launcher alternative                     | Only installed games
-Lutris          | Open Source gaming platform for Linux                    | -
-Heroic          | FOSS Epic Games Launcher alternative (GUI for Legendary) | -
-Desktop entries | Regular linux desktop entries                            | -
-Retroarch       | Frontend for the libretro API                            | -
-Dolphin         | Nintendo Wii / GameCube emulator                         | -
-Citra           | Nintendo 3DS emulator                                    | -
-Yuzu            | Nintendo Switch emulator                                 | -
-PPSSPP          | Sony PSP emulator                                        | -
-Cemu            | Nintendo Wii U emulator                                  | Cemu installed from lutris
+Name            | Description                                | Notes
+--------------- | ------------------------------------------ | -----------------
+Steam           | PC games store                             | Installed games
+Legendary       | FOSS Epic Games Launcher alternative (CLI) | Installed games
+Lutris          | Open Source gaming platform for Linux      | -
+Heroic          | FOSS Epic Games Launcher alternative (GUI) | -
+Desktop entries | Regular linux desktop entries              | -
+Retroarch       | Frontend for the libretro API              | -
+Dolphin         | Nintendo Wii / GameCube emulator           | -
+Citra           | Nintendo 3DS emulator                      | -
+Yuzu            | Nintendo Switch emulator                   | -
+PPSSPP          | Sony PSP emulator                          | -
+Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
@@ -38,7 +38,6 @@ Cemu            | Nintendo Wii U emulator                                  | Cem
 git clone https://github.com/GeoffreyCoulaud/brag-launcher.git
 cd brag-launcher
 npm install
-npm run build
 npm run start
 ```
 
@@ -50,7 +49,18 @@ npm run start
 * Installed Yuzu games aren't listed
 
 ## TODO
-* Launcher UI (task to be split up)
+* Make UI with Combalache
+* Add interactivity to the UI
+* Move `commandExistsSync` calls into a method of `GameProcessContainer`
+* Add a better way to handle nested sources (event on add)
+* Additional sources
+	* itch.io
+	* Retroarch (in Steam)
+	* Bethesda launcher (in Lutris)
+	* Origin (in Lutris)
+	* Battle_net (in Lutris)
+	* Uplay (in Lutris)
+	* Teknoparrot (in Lutris)(create installer first)
 * Fix game metadata (see dedicated section)
 * Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
 

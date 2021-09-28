@@ -156,7 +156,7 @@ class YuzuSource extends Source{
 	 */
 	async _getInstalledGames(config){
 
-		// TODO implement scanning for NAND installed games
+		// TODO implement scanning for installed games
 		throw new Error("Not implemented");
 
 	}

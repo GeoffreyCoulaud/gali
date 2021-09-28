@@ -158,7 +158,7 @@ class CitraSource extends Source{
 	 */
 	async _getInstalledGames(config){
 
-		// TODO implement scanning for installed CIAs
+		// TODO implement scanning for installed games
 		throw new Error("Not implemented");
 
 	}

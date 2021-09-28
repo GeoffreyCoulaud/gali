@@ -282,6 +282,7 @@ class Source{
 	 * @async
 	 */
 	async scan(warn = false){}
+
 }
 
 module.exports = {
