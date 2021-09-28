@@ -2,13 +2,22 @@ const { dirname: pathDirname, join: pathJoin, basename: pathBasename, resolve: p
 const { EmulatedGame, getROMs, GameProcessContainer, Source } = require("./common.js");
 const { linuxToWine, wineToLinux } = require("../utils/convertPathPlatform.js");
 const { getUserLocalePreference } = require("../utils/locale.js");
+const { LutrisGameProcessContainer } = require("./lutris.js");
 const { readFile, writeFile } = require("fs/promises");
 const { Parser: XMLParser } = require("xml2js");
-const { LutrisSource, LutrisGameProcessContainer } = require("./lutris.js");
 const { GameDir } = require("./common.js");
 const { spawn } = require("child_process");
 const { env } = require("process");
 const YAML = require("yaml");
+
+/**
+ * Sanitize a string to be used in a filename
+ * @param {string} str - The string to sanitize
+ * @returns {string} - A string suitable for safe and clean filenames
+ */
+function sanitizeStringFilename(str){
+	return String(str).toLowerCase().replaceAll(/[^a-z0-9_\-]/g, "-");
+}
 
 /**
  * A wrapper for cemu game process management
@@ -37,7 +46,11 @@ class CemuGameProcessContainer extends GameProcessContainer{
 	static async getStartScript(name, path, cemuGameSlug = "cemu", scriptBaseName = ""){
 
 		// Create the base lutris start script for cemu
-		if (!scriptBaseName) scriptBaseName = `lutris-${cemuGameSlug}-${name}.sh`;
+		if (!scriptBaseName){
+			const safeSlug = sanitizeStringFilename(cemuGameSlug);
+			const safeName = sanitizeStringFilename(name);
+			scriptBaseName = `lutris-${safeSlug}-${safeName}.sh`;
+		}
 		const scriptPath = await LutrisGameProcessContainer.getStartScript(cemuGameSlug, scriptBaseName);
 
 		// Add the game path argument
