@@ -28,18 +28,21 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
 
-### Current requirements
-* node
-* npm
-* (optional) supported sources programs
+### Dependencies
+* Main app 
+	* `node` 
+	* `npm`
+* Node-Gtk ([refer to the docs](https://github.com/romgrk/node-gtk#installing-and-building)) : 
+	* `git`
+	* `python2` (for `node-gyp`)
+	* a C compiler (`gcc`≥8 or `clang`)
+* Supported sources programs (optional)
 
 ### Dev usage
-```sh
-git clone https://github.com/GeoffreyCoulaud/brag-launcher.git
-cd brag-launcher
-npm install
-npm run start
-```
+1. Install the dependencies mentionned above.
+2. Clone this repo and `cd` into it.  
+3. Install NPM dependencies `npm i`
+4. Start `npm run start`
 
 ## Known issues
 * Games from Steam, Legendary, Heroic can be started but not stopped or killed
@@ -52,7 +55,8 @@ npm run start
 * Make UI with Combalache
 * Add interactivity to the UI
 * Move `commandExistsSync` calls into a method of `GameProcessContainer`
-* Add a better way to handle nested sources (event on add)
+* Add option in Dolphin to read cached games
+* Add a better way to handle nested sources (event on game push)
 * Additional sources
 	* itch.io
 	* Retroarch (in Steam)
