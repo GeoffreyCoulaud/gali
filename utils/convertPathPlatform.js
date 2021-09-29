@@ -5,6 +5,7 @@ const { resolve: pathResolve } = require("path");
 /**
  * Convert an absolute wine path into a linux path.
  * Needs a prefix path given for paths outside of Z:
+ * Path does not need to exist or be accessible.
  * @param {string} winePath - Absolute wine path (windows style)
  * @param {string|undefined} prefixPath - Optional, absolute path to relevant prefix
  * @returns {string} - The same path converted into a linux path
@@ -37,8 +38,7 @@ function wineToLinux(winePath, prefixPath){
 		if (!driveLetter){
 			throw new Error("Path doesn't start with a drive letter");
 		}
-		drivePath = `${prefixPath}/dosdevices/${driveLetter.toLowerCase()}:`;
-		drivePath = pathResolve(drivePath);
+		drivePath = `${prefixPath}/dosdevices/${driveLetter.toLowerCase()}:/`;
 
 	}
 
