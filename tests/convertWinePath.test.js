@@ -3,7 +3,7 @@ const process = require("process");
 const Test = require("./test.js");
 
 const tests = [
-	
+
 	// Tests that should succeed
 	new Test(
 		"Easy wine to linux (Z drive)",
@@ -29,7 +29,7 @@ const tests = [
 	),
 	new Test(
 		"Non Z: wine to linux without prefix",
-		ltw, ["C:\\testfile.txt"], undefined, Test.STATE_THROW, 
+		ltw, ["C:\\testfile.txt"], undefined, Test.STATE_THROW,
 	),
 
 ];

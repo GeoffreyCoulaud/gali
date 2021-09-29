@@ -1,7 +1,3 @@
-const { resolve: pathResolve } = require("path");
-
-// TODO test paths outside Z:
-
 /**
  * Convert an absolute wine path into a linux path.
  * Needs a prefix path given for paths outside of Z:

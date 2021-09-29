@@ -10,6 +10,7 @@
         "ecmaVersion": 12
     },
     "rules": {
+        "no-useless-escape": "warn",
         "no-prototype-builtins": "warn",
         "max-lines-per-function": ["warn", { "max": 60, "skipBlankLines": true, "skipComments": true }],
         "no-trailing-spaces": "warn",
