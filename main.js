@@ -2,12 +2,66 @@ const gi = require("node-gtk");
 const Gtk = gi.require("Gtk", "4.0");
 const GLib = gi.require("GLib", "2.0");
 const { widgetHandleEvent } = require("./UI/gtkUtils.js");
+const Library = require("./library.js");
 
-let GtkLoop = undefined;
-let GtkApp = undefined;
+// TODO create empty user prefs. if nonexistant
+// TODO read user prefs. to select scanned sources and cache preference
+const selectedSources = Library.availableSources;
+const preferCache = false;
+
+// Define main components
+const GtkLoop = GLib.MainLoop.new(null, false);
+const GtkApp = new Gtk.Application("brag-launcher", 0);
+GtkApp.on("activate", onActivate);
+const library = new Library(selectedSources, preferCache, true);
+
+// Scan the library then run app
+library.scan(selectedSources).then(()=>{
+	console.log("Library scanned and found", library.games.length, "games");
+	const status = GtkApp.run([]);
+	console.log("Exiting with status :", status);
+});
+
+// -----------------------------------------------------------------------------
+// Event handlers
+// -----------------------------------------------------------------------------
+
+// TODO Implement these handlers
+/*
+refresh button triggers
+	- library scan
+	- grid refresh
+
+filter button triggers
+	- toggle sources menu under it
+
+source menu box tick triggers
+	- partial library scan
+	- grid refresh
+
+source menu box untick triggers
+	- grid refresh (keep games in library)
+
+search bar type triggers
+	- grid refresh (keep games in library)
+
+clicking on a game in grid triggers
+	- updates info-bar's data
+	- shows info-bar
+
+game start triggers
+	- stop and kill button show (if not startOnly)
+	- start button hide
+	- game highlight in grid
+
+game stop (or kill) triggers
+	- stop and kill button hide
+	- start button show
+	- removes highlight in grid
+*/
 
 /**
- * Event handler for the game life cycle buttons
+ * Handlers for game life cycle buttons
  */
 function onStartButtonClicked(){
 	console.log("Start button clicked");
@@ -23,11 +77,9 @@ function onKillButtonClicked(){
  * Handle application close request
  */
 function onCloseRequest(){
-
 	GtkLoop.quit();
 	GtkApp.quit();
 	return false;
-
 }
 
 /**
@@ -52,10 +104,3 @@ function onActivate(){
 	GtkLoop.run();
 
 }
-
-// Start the app
-GtkLoop = GLib.MainLoop.new(null, false);
-GtkApp = new Gtk.Application("brag-launcher", 0);
-GtkApp.on("activate", onActivate);
-const status = GtkApp.run([]);
-console.log("Exiting with status :", status);
