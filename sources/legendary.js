@@ -1,5 +1,4 @@
-const { StartOnlyGameProcessContainer, NoCommandError, Game, Source } = require("./common.js");
-const { sync: commandExistsSync } = require("command-exists");
+const { StartOnlyGameProcessContainer, Game, Source } = require("./common.js");
 const { join: pathJoin } = require("path");
 const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
@@ -11,6 +10,9 @@ const { env } = require("process");
  * @property {string} appName - The epic games store app name, used to start the game
  */
 class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
+	
+	commandOptions = ["legendary"];
+	
 	/**
 	 * Create a legendary game process container
 	 * @param {string} appName - The epic games store app name 
@@ -28,14 +30,11 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false. 
 	 */
 	async start(offline = false){
-		const legendaryCommand = "legendary";
-		if (!commandExistsSync(legendaryCommand)){
-			throw new NoCommandError("No legendary command found");
-		}
+		const command = this._selectCommand();
 		let args = ["launch", this.appName];
 		if (offline) args.splice(1,0,"--offline");
 		this.process = spawn(
-			legendaryCommand, 
+			command, 
 			args, 
 			this.constructor.defaultSpawnOptions
 		);

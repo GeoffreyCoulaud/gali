@@ -1,6 +1,5 @@
-const { EmulatedGame, GameProcessContainer, NoCommandError, Source } = require("./common.js");
+const { EmulatedGame, GameProcessContainer, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename} = require("path");
-const { sync: commandExistsSync } = require("command-exists");
 const { readFile, readdir } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
@@ -11,6 +10,8 @@ const { env } = require("process");
  * @property {string} corePath - The games's libretro core path, used to invoke retroarch
  */
 class RetroarchGameProcessContainer extends GameProcessContainer{
+
+	commandOptions = ["retroarch"];
 
 	/**
 	 * Create a retroarch game process container
@@ -27,12 +28,9 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const retroarchCommand = "retroarch";
-		if (!commandExistsSync(retroarchCommand)){
-			throw new NoCommandError("No retroarch command found");
-		}
+		const command = this._selectCommand();
 		this.process = spawn(
-			"retroarch",
+			command,
 			["--libretro", this.corePath, this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);

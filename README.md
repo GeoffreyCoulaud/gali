@@ -54,7 +54,6 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 ## TODO
 * Make UI with Combalache
 * Add interactivity to the UI
-* Move `commandExistsSync` calls into a method of `GameProcessContainer`
 * Add option in Dolphin to read cached games
 * Add a better way to handle nested sources (event on game push)
 * Additional sources

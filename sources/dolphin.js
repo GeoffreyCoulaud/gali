@@ -1,6 +1,5 @@
-const { EmulatedGame, GameProcessContainer, GameDir, getROMs, NoCommandError, Source } = require("./common.js");
+const { EmulatedGame, GameProcessContainer, GameDir, getROMs, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
-const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
@@ -11,6 +10,9 @@ const { env } = require("process");
  * @property {string} romPath - The game's ROM path, used to invoke dolphin
  */
 class DolphinGameProcessContainer extends GameProcessContainer{
+	
+	commandOptions = ["dolphin-emu"];
+	
 	/**
 	 * Create a dolphin game process container.
 	 * @param {string} romPath - The game's ROM path
@@ -25,13 +27,10 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game
 	 */
 	async start(noUi = false){
-		const dolphinCommand = "dolphin-emu";
-		if (!commandExistsSync(dolphinCommand)){
-			throw new NoCommandError("No dolphin command found");
-		}
+		const command = this._selectCommand();
 		const args = ["-e", this.romPath];
 		if (noUi) args.splice(0, 0, "-b");
-		this.process = spawn(dolphinCommand, args, GameProcessContainer.defaultSpawnOptions);
+		this.process = spawn(command, args, GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
 }

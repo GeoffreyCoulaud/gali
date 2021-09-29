@@ -1,6 +1,5 @@
-const { getROMs, EmulatedGame, GameProcessContainer, NoCommandError, Source } = require("./common.js");
+const { getROMs, EmulatedGame, GameProcessContainer, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
-const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
 const { GameDir } = require("./common.js");
@@ -12,6 +11,8 @@ const { env } = require("process");
  * @property {string} romPath - The game's ROM path, used to invoke yuzu
  */
 class YuzuGameProcessContainer extends GameProcessContainer{
+
+	commandOptions = ["yuzu"];
 
 	/**
 	 * Create a yuzu game process container
@@ -26,12 +27,9 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const yuzuCommand = "yuzu";
-		if (!commandExistsSync(yuzuCommand)){
-			throw new NoCommandError("No yuzu command found");
-		}
+		const command = this._selectCommand();
 		this.process = spawn(
-			yuzuCommand,
+			command,
 			[this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);

@@ -1,5 +1,4 @@
-const { Game, StartOnlyGameProcessContainer, NoCommandError, Source } = require("./common.js");
-const { sync: commandExistsSync } = require("command-exists");
+const { Game, StartOnlyGameProcessContainer, Source } = require("./common.js");
 const { readFile } = require("fs/promises");
 const { join: pathJoin } = require("path");
 const { spawn } = require("child_process");
@@ -12,6 +11,8 @@ const { env } = require("process");
  */
 class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 	
+	commandOptions = ["xdg-open"];
+
 	/**
 	 * Create a legendary game process container
 	 * @param {string} appName - The epic games store app name 
@@ -25,10 +26,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const command = "xdg-open";
-		if (!commandExistsSync(command)){
-			throw new NoCommandError("No xdg-open command found");
-		}
+		const command = this._selectCommand();
 		let args = [`heroic://launch/${this.appName}`];
 		this.process = spawn(
 			command, 

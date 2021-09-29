@@ -1,4 +1,4 @@
-const { GameDir, EmulatedGame, getROMs, GameProcessContainer, NoCommandError, Source } = require("./common.js");
+const { GameDir, EmulatedGame, getROMs, GameProcessContainer, Source } = require("./common.js");
 const { basename: pathBasename, join: pathJoin } = require("path");
 const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
@@ -11,6 +11,8 @@ const { env } = require("process");
  * @property {string} romPath - The game's ROM path, used to invoke ppsspp
  */
 class PPSSPPGameProcessContainer extends GameProcessContainer{
+
+	commandOptions = ["PPSSPPSDL", "PPSSPPQt"];
 
 	/**
 	 * Create a ppsspp game container
@@ -25,21 +27,9 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		// Find the right command to use
-		const commandOptions = ["PPSSPPSDL", "PPSSPPQT"];
-		let ppssppCommand;
-		for (const option of commandOptions){
-			if (commandExistsSync(option)){
-				ppssppCommand = option;
-				break;
-			}
-		}
-		if (!ppssppCommand){
-			throw new NoCommandError("No ppsspp command found");
-		}
-		// Start the game
+		const command = this._selectCommand();
 		this.process = spawn(
-			ppssppCommand,
+			command,
 			[this.romPath],
 			GameProcessContainer.defaultSpawnOptions
 		);

@@ -1,3 +1,4 @@
+const { sync: commandExistsSync } = require("command-exists");
 const { readdirAsync } = require("readdir-enhanced");
 const { EventEmitter } = require("events");
 const { join: pathJoin } = require("path");
@@ -7,6 +8,7 @@ class NoCommandError extends Error{}
 
 /**
  * A wrapper for game process management
+ * @property {string[]} commandOptions - Commands that the process can launch, favorite first
  * @property {ChildProcess|undefined} process - A reference to the game process
  * @property {boolean} isRunning - Whether the game is running or not
  * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
@@ -33,8 +35,30 @@ class GameProcessContainer extends EventEmitter{
 		stdio: "ignore",
 	}
 
+	commandOptions = [];
 	process = undefined;
 	isRunning = false;
+
+	/**
+	 * Select a command from the command options.
+	 * @throws {NoCommandError} on no available command found on the system
+	 * @returns The best command found in options
+	 * @access protected
+	 */
+	_selectCommand(){
+		let command;
+		for (const option of this.commandOptions){
+			if (commandExistsSync(option)){
+				command = option;
+				break;
+			}
+		}
+		if (typeof command === "undefined"){
+			throw new NoCommandError("No command found");
+		} else {
+			return command;
+		}
+	}
 
 	/**
 	 * Update isRunning on process events and bubble these events up.

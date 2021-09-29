@@ -17,6 +17,8 @@ const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
  */
 class LutrisGameProcessContainer extends GameProcessContainer{
 
+	commandOptions = ["sh", "zsh", "bash"];
+
 	/**
 	 * Create a lutris game process container
 	 * @param {string} gameSlug - A lutris game slug
@@ -54,8 +56,9 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	 */
 	async start(){
 		const scriptPath = await this.constructor.getStartScript(this.gameSlug);
+		const command = this._selectCommand();
 		this.process = spawn(
-			"sh",
+			command,
 			[scriptPath],
 			this.constructor.defaultSpawnOptions
 		);

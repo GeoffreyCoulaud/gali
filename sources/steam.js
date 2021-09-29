@@ -1,5 +1,4 @@
-const { StartOnlyGameProcessContainer, NoCommandError, GameDir, Game, Source } = require("./common.js");
-const { sync: commandExistsSync } = require("command-exists");
+const { StartOnlyGameProcessContainer, GameDir, Game, Source } = require("./common.js");
 const { readdir, readFile } = require("fs/promises");
 const { parse: parseVDF} = require("vdf-parser");
 const { join: pathJoin } = require("path");
@@ -14,6 +13,8 @@ const USER_DIR = env["HOME"];
  * @property {string} appId - A steam appid, used to invoke steam
  */
 class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
+
+	commandOptions = ["steam"];
 
 	/**
 	 * Create a steam game process container
@@ -30,12 +31,9 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const steamCommand = "steam";
-		if (!commandExistsSync(steamCommand)){
-			throw new NoCommandError("No steam command found");
-		}
+		const command = this._selectCommand();
 		this.process = spawn(
-			steamCommand,
+			command,
 			[`steam://rungameid/${this.appId}`],
 			this.constructor.defaultSpawnOptions
 		);

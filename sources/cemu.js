@@ -24,6 +24,8 @@ function sanitizeStringFilename(str){
  */
 class CemuGameProcessContainer extends GameProcessContainer{
 
+	commandOptions = ["sh", "zsh", "bash"];
+
 	/**
 	 * Create a cemu game process container
 	 * @param {string} name - The game's displayed name
@@ -68,9 +70,10 @@ class CemuGameProcessContainer extends GameProcessContainer{
 	 * @param {string} cemuGameSlug - Optional, a specific lutris game slug for cemu.
 	 */
 	async start(cemuGameSlug = "cemu"){
+		const command = this._selectCommand();
 		const scriptPath = await this.constructor.getStartScript(this.name, this.path, cemuGameSlug);
 		this.process = spawn(
-			"sh",
+			command,
 			[scriptPath],
 			this.constructor.defaultSpawnOptions
 		);
