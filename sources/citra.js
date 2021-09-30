@@ -1,4 +1,4 @@
-const { GameDir, getROMs, EmulatedGame, GameProcessContainer, NoCommandError, Source } = require("./common.js");
+const { GameDir, getROMs, EmulatedGame, GameProcessContainer, Source, NotImplementedError } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
 const { config2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
@@ -141,7 +141,7 @@ class CitraSource extends Source{
 
 	/**
 	 * Get citra installed games.
-	 * @throws Will throw a "Not implemented" error on every case, this is not yet supported
+	 * @throws {NotImplementedError} - This is not yet supported
 	 * @param {object} config - Citra's config data
 	 * @private
 	 * @todo
@@ -149,7 +149,7 @@ class CitraSource extends Source{
 	async _getInstalledGames(config){
 
 		// TODO implement scanning for installed games
-		throw new Error("Not implemented");
+		throw new NotImplementedError("Scanning for installed citra games is not implemented");
 
 	}
 

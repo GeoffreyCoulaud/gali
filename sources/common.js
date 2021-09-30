@@ -5,6 +5,7 @@ const { join: pathJoin } = require("path");
 const { kill } = require("process");
 
 class NoCommandError extends Error{}
+class NotImplementedError extends Error{}
 
 /**
  * A wrapper for game process management
@@ -312,6 +313,7 @@ class Source{
 module.exports = {
 	StartOnlyGameProcessContainer,
 	GameProcessContainer,
+	NotImplementedError,
 	NoCommandError,
 	EmulatedGame,
 	GameDir,

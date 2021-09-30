@@ -1,4 +1,4 @@
-const { getROMs, EmulatedGame, GameProcessContainer, Source } = require("./common.js");
+const { getROMs, EmulatedGame, GameProcessContainer, Source, NotImplementedError } = require("./common.js");
 const { join: pathJoin, basename: pathBasename } = require("path");
 const { config2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
@@ -147,7 +147,7 @@ class YuzuSource extends Source{
 
 	/**
 	 * Get yuzu installed games.
-	 * @throws Will throw a "Not implemented" error on every case, this is not yet supported
+	 * @throws {NotImplementedError} - Will throw a "Not implemented" error on every case, this is not yet supported
 	 * @param {object} config - Yuzu's config data
 	 * @private
 	 * @todo
@@ -155,7 +155,7 @@ class YuzuSource extends Source{
 	async _getInstalledGames(config){
 
 		// TODO implement scanning for installed games
-		throw new Error("Not implemented");
+		throw new NotImplementedError("Scanning for installed yuzu games is not implemented");
 
 	}
 
