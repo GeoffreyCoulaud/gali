@@ -1,14 +1,14 @@
-const { DesktopEntrySource } = require("./sources/desktop-entries.js");
-const { LegendarySource } = require("./sources/legendary.js");
-const { RetroarchSource } = require("./sources/retroarch.js");
-const { DolphinSource } = require("./sources/dolphin.js");
-const { PPSSPPSource } = require("./sources/ppsspp.js");
-const { HeroicSource } = require("./sources/heroic.js");
-const { LutrisSource } = require("./sources/lutris.js");
-const { SteamSource } = require("./sources/steam.js");
-const { CitraSource } = require("./sources/citra.js");
-const { YuzuSource } = require("./sources/yuzu.js");
 const { CemuSource } = require("./sources/cemu.js");
+const { CitraSource } = require("./sources/citra.js");
+const { DesktopEntrySource } = require("./sources/desktop-entries.js");
+const { DolphinSource } = require("./sources/dolphin.js");
+const { HeroicSource } = require("./sources/heroic.js");
+const { LegendarySource } = require("./sources/legendary.js");
+const { LutrisSource } = require("./sources/lutris.js");
+const { PPSSPPSource } = require("./sources/ppsspp.js");
+const { RetroarchSource } = require("./sources/retroarch.js");
+const { SteamSource } = require("./sources/steam.js");
+const { YuzuSource } = require("./sources/yuzu.js");
 
 /**
  * A representation of a game library.
@@ -20,16 +20,16 @@ const { CemuSource } = require("./sources/cemu.js");
 class Library{	
 
 	static availableSources = [
+		CemuSource.name,
+		CitraSource.name,
 		DesktopEntrySource.name,
-		RetroarchSource.name,
-		LegendarySource.name,
 		DolphinSource.name,
 		HeroicSource.name,
+		LegendarySource.name,
 		LutrisSource.name,
 		PPSSPPSource.name,
+		RetroarchSource.name,
 		SteamSource.name,
-		CitraSource.name,
-		CemuSource.name,
 		YuzuSource.name,
 	];
 

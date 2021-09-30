@@ -43,7 +43,7 @@ class GameProcessContainer extends EventEmitter{
 	/**
 	 * Select a command from the command options.
 	 * @throws {NoCommandError} on no available command found on the system
-	 * @returns The best command found in options
+	 * @returns {string} The best command found in options
 	 * @access protected
 	 */
 	_selectCommand(){
