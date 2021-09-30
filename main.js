@@ -3,20 +3,23 @@ const Gtk = gi.require("Gtk", "4.0");
 const GLib = gi.require("GLib", "2.0");
 const { widgetHandleEvent } = require("./UI/gtkUtils.js");
 const Library = require("./library.js");
+const { PrefUtils } = require("./utils/preferences.js");
 
-// TODO create empty user prefs. if nonexistant
-// TODO read user prefs. to select scanned sources and cache preference
-const selectedSources = Library.availableSources;
-const preferCache = false;
+// Get user preferences from disk
+const prefs = PrefUtils.readUserFileSafe();
 
 // Define main components
 const GtkLoop = GLib.MainLoop.new(null, false);
-const GtkApp = new Gtk.Application("brag-launcher", 0);
+const GtkApp = new Gtk.Application("brag", 0);
 GtkApp.on("activate", onActivate);
-const library = new Library(selectedSources, preferCache, true);
+const library = new Library(
+	prefs.scan.enabledSources,
+	prefs.scan.preferCache,
+	prefs.scan.warnings
+);
 
 // Scan the library then run app
-library.scan(selectedSources).then(()=>{
+library.scan().then(()=>{
 	console.log("Library scanned and found", library.games.length, "games");
 	const status = GtkApp.run([]);
 	console.log("Exiting with status :", status);

@@ -11,7 +11,11 @@
         <property name="orientation">vertical</property>
         <property name="overflow">hidden</property>
         <child>
-          <object class="GtkHeaderBar"/>
+          <object class="GtkHeaderBar">
+            <child>
+              <object class="GtkSearchBar" id="searchGamesInput"/>
+            </child>
+          </object>
         </child>
         <child>
           <object class="GtkScrolledWindow">
@@ -27,21 +31,25 @@
           </object>
         </child>
         <child>
-          <object class="GtkRevealer">
+          <object class="GtkRevealer" id="gameInfo">
             <property name="reveal-child">True</property>
             <property name="valign">end</property>
             <child>
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
+                <property name="margin-bottom">6</property>
+                <property name="margin-end">6</property>
+                <property name="margin-start">6</property>
+                <property name="margin-top">6</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="gameInfoTitle">
                     <property name="justify">center</property>
                     <property name="label">Game title</property>
                     <property name="halign">center</property>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="gameInfoPlatform">
                     <property name="label">Hardware / Platform</property>
                     <property name="halign">center</property>
                   </object>
