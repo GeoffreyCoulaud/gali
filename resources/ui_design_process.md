@@ -8,9 +8,9 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 [MockupImage2]: https://github.com/GeoffreyCoulaud/brag-launcher/blob/main/resources/mockup2.png "Scanning view replacing the default view"
 [MockupImage3]: https://github.com/GeoffreyCoulaud/brag-launcher/blob/main/resources/mockup3.png "Game info popover with a start button"
 [MockupImage4]: https://github.com/GeoffreyCoulaud/brag-launcher/blob/main/resources/mockup4.png "Game info popover with a stop and kill button"
-|                           |                           |
-| ------------------------- | -----------------------   |
-| Games grid                | Scanning view             |
-| <img src="resources/mockup1.png"> | <img src="resources/mockup2.png"> |
-| Game info before starting | Game info while running   |
-| <img src="resources/mockup3.png"> | <img src="resources/mockup4.png"> |
+|     |     |
+| --- | --- |
+| Games grid, default view | Scanning view, replacing the default view |
+| <img src="mockup1.png"> | <img src="mockup2.png"> |
+| Game info popover with a start button | Game info with a stop and kill button |
+| <img src="mockup3.png"> | <img src="mockup4.png"> |
