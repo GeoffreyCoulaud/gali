@@ -11,6 +11,6 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 |                           |                           |
 | ------------------------- | -----------------------   |
 | Games grid                | Scanning view             |
-| ![Mockup 1][MockupImage1] | ![Mockup 2][MockupImage2] |
+| <img src="resources/mockup1.png"> | <img src="resources/mockup2.png"> |
 | Game info before starting | Game info while running   |
-| ![Mockup 3][MockupImage3] | ![Mockup 4][MockupImage4] |
+| <img src="resources/mockup3.png"> | <img src="resources/mockup4.png"> |
