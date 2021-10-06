@@ -1,0 +1,16 @@
+# Brag's UI
+## Mockups
+These images were made to give a rough idea of what the UI should look like.  
+I used [Pencil](https://pencil.evolus.vn/) to make these mockups, although I don't recommend using it since the project seems to be inactive for quite some months.  
+I took inspiration from [Lutris](https://github.com/lutris/lutris).  
+
+[MockupImage1]: ./mockup1.png "Games grid, default view"
+[MockupImage2]: ./mockup2.png "Scanning view replacing the default view"
+[MockupImage3]: ./mockup3.png "Game info popover with a start button"
+[MockupImage4]: ./mockup4.png "Game info popover with a stop and kill button"
+|                           |                           |
+| ------------------------- | -----------------------   |
+| Games grid                | Scanning view             |
+| ![Mockup 1][MockupImage1] | ![Mockup 2][MockupImage2] |
+| Game info before starting | Game info while running   |
+| ![Mockup 3][MockupImage3] | ![Mockup 4][MockupImage4] |
