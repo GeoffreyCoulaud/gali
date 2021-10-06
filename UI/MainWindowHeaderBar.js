@@ -14,11 +14,12 @@ class MainWindowHeaderBar extends Gtk.HeaderBar {
 		this.packStart(search);
 
 		// Right button box
-		const IMAGES_PATH = "UI/icons"; // ? Relative to what ?
+		// TODO Support light and dark variants
+		const IMAGES_PATH = "UI/icons/black"; // ? Relative to what ?
 		const buttonBox = new Gtk.Box();
-		const scanButton = new ImageButton(`${IMAGES_PATH}/refresh_black_24dp.svg`);
-		const sourcesButton = new ImageButton(`${IMAGES_PATH}/filter_alt_black_24dp.svg`);
-		const settingsButton = new ImageButton(`${IMAGES_PATH}/menu_black_24dp.svg`);
+		const scanButton = new ImageButton(`${IMAGES_PATH}/refresh.svg`);
+		const sourcesButton = new ImageButton(`${IMAGES_PATH}/filter.svg`);
+		const settingsButton = new ImageButton(`${IMAGES_PATH}/menu.svg`);
 		buttonBox.append(scanButton);
 		buttonBox.append(sourcesButton);
 		buttonBox.append(settingsButton);
