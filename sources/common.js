@@ -14,11 +14,11 @@ class NotImplementedError extends Error{}
  * @property {boolean} isRunning - Whether the game is running or not
  * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
  * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
- * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler. 
+ * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
  * @abstract
  */
 class GameProcessContainer extends EventEmitter{
-	
+
 	/**
 	 * Default spawn options to pass to child_process.spawn
 	 */
@@ -28,8 +28,8 @@ class GameProcessContainer extends EventEmitter{
 
 	/**
 	 * Spawn options to pass to child_process.spawn.
-	 * Usually, spawn is followed by unref, this is to allow parent to exit 
-	 * before the subprocess. 
+	 * Usually, spawn is followed by unref, this is to allow parent to exit
+	 * before the subprocess.
 	 */
 	static doNotWaitSpawnOptions = {
 		detached: true,
@@ -82,7 +82,7 @@ class GameProcessContainer extends EventEmitter{
 
 	/**
 	 * Send a signal to the game's subprocess
-	 * @param {string} signal - kill signal to send to the game's subprocess 
+	 * @param {string} signal - kill signal to send to the game's subprocess
 	 * @param {boolean} wholeGroup - Whether to send the signal to the process PID only or also to its group
 	 * @returns {boolean} - True on success, else false
 	 */
@@ -101,7 +101,7 @@ class GameProcessContainer extends EventEmitter{
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Start the game in a subprocess.
 	 * @throws {NoCommandError} - Can throw in case no known command was found to start the game.
@@ -119,9 +119,9 @@ class GameProcessContainer extends EventEmitter{
 		const hasKilled = this.sendSignal("SIGKILL", true);
 		if (hasKilled) this.isRunning = false;
 		return hasKilled;
-		
+
 	}
-	
+
 	/**
 	 * Send the SIGTERM signal to the game's subprocess.
 	 * Will do nothing if the game is not running.
@@ -142,7 +142,7 @@ class GameProcessContainer extends EventEmitter{
  * @property {boolean} isRunning - Whether the game is running or not
  * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
  * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
- * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler. 
+ * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
  * @abstract
  */
 class StartOnlyGameProcessContainer extends GameProcessContainer{
@@ -172,11 +172,11 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 /**
  * Class representing a game directory
  */
- class GameDir {
+class GameDir {
 	/**
 	 * Create a game directory
-	 * @param {string} path - The local path corresponding to the directory 
-	 * @param {boolean} recursive - Whether to search games into the directory subdirs 
+	 * @param {string} path - The local path corresponding to the directory
+	 * @param {boolean} recursive - Whether to search games into the directory subdirs
 	 */
 	constructor(path, recursive = false) {
 		this.path = path;
@@ -186,37 +186,37 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 
 /**
  * Class representing a generic game.
- * You're not supposed to use it directly, instead use a descendent of this class. 
- * 
+ * You're not supposed to use it directly, instead use a descendent of this class.
+ *
  * @property {string} source - The games's provenance in the system
  * @property {string} name - The game's displayed (localized) name
  * @property {string} platform - The game's original platform
- * @property {boolean} isInstalled - Whether the game is currently installed or not 
+ * @property {boolean} isInstalled - Whether the game is currently installed or not
  * @property {string} boxArtImage - URI to the game's box art
  * @property {string} coverImage - URI to the game's cover
  * @property {string} iconImage - URI to the game's icon
- * 
+ *
  * @abstract
  */
 class Game{
-	
+
 	// Game metadata props
 	source = undefined;
 	name = undefined;
 	platform = undefined;
 	isInstalled = true;
-	
+
 	// Images props
-	boxArtImage = undefined; 
+	boxArtImage = undefined;
 	coverImage = undefined;
 	iconImage = undefined;
 
 	// Game lifecycle
 	processContainer = undefined;
-	
+
 	/**
 	 * Create a game
-	 * @param {string} name - The game's display name 
+	 * @param {string} name - The game's display name
 	 */
 	constructor(name){
 		this.name = name;
@@ -226,15 +226,15 @@ class Game{
 /**
  * Class representing an emulated game.
  * You're not supposed to use it directly, instead use a descendent of this class.
- * 
+ *
  * @property {string} path - The game's path to be started with an emulator
- * 
+ *
  * @abstract
  */
 class EmulatedGame extends Game{
 	/**
 	 * Create an emulated game
-	 * @param {string} name - The game's displayed name 
+	 * @param {string} name - The game's displayed name
 	 * @param {string} path - The game's path
 	 */
 	constructor(name, path){
@@ -254,16 +254,16 @@ class EmulatedGame extends Game{
 /**
  * Get the ROMs (emulation games) inside of some game dirs
  * @param {GameDir} dirs - The game dirs to scan
- * @param {RegExp} filesRegex - The regular expression to match rom files against 
- * @param {boolean} warn - Whether to display additional warnings 
- * @returns {string[]} - A list of path to game ROMs 
+ * @param {RegExp} filesRegex - The regular expression to match rom files against
+ * @param {boolean} warn - Whether to display additional warnings
+ * @returns {string[]} - A list of path to game ROMs
  */
 async function getROMs(dirs, filesRegex, warn = false){
-	let paths = [];
+	const paths = [];
 
 	// Get roms
-	for (let dir of dirs){
-		
+	for (const dir of dirs){
+
 		// Get all the files in dir recursively
 		let filePaths;
 		try {
@@ -274,8 +274,8 @@ async function getROMs(dirs, filesRegex, warn = false){
 		}
 
 		// Add games
-		for (let file of filePaths){
-			let fileAbsPath = pathJoin(dir.path, file);
+		for (const file of filePaths){
+			const fileAbsPath = pathJoin(dir.path, file);
 			paths.push(fileAbsPath);
 		}
 

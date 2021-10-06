@@ -1,5 +1,6 @@
 const sleep = require("../utils/sleep.js");
 const Library = require("../library.js");
+const { DEFAULT_PREFERENCES } = require("../utils/preferences.js");
 
 /**
  * A class representing a known game
@@ -44,20 +45,21 @@ class KnownGame{
 async function testGameStart(){
 
 	// Scan library
-	const library = new Library(Library.availableSources, true, true);
+	const sources = DEFAULT_PREFERENCES.scan.enabledSources;
+	const library = new Library(sources, true, true);
 	await library.scan();
 	await library.sort("name", 1);
 
 	// Check presence of known games
 	// (edit depending on your library)
 	const knownGames = [
-		new KnownGame("MARIO KART 8", "Cemu in Lutris"),
-		/*
 		new KnownGame("Extreme Tux Racer", "Desktop entries"),
+		new KnownGame("Cemu", "Lutris"),
+		/*
+		new KnownGame("MARIO KART 8", "Cemu in Lutris"),
 		new KnownGame("Next Up Hero", "Legendary"),
 		new KnownGame("Next Up Hero", "Heroic"),
 		new KnownGame("Sonic Mania", "Steam"),
-		new KnownGame("Cemu", "Lutris"),
 		*/
 	];
 	const games = [];

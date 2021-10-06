@@ -73,79 +73,71 @@ const DEFAULT_PREFERENCES = {
 };
 
 /**
- * A utility class to work on preferences
+ * Check if the user has a config file
  */
-class PrefUtils{
+function doesUserFileExist(){
+	return existsSync(CONFIG_PATH);
+}
 
-	/**
-	 * Check if the user has a config file
-	 */
-	static doesUserFileExist(){
-		return existsSync(CONFIG_PATH);
-	}
+/**
+ * Create a default config file for the current user.
+ * This will also create the needed directories before.
+ * @throws {Error} - On write fail
+ */
+function createUserFile(){
+	if (!existsSync(CONFIG_DIR)) mkdirSync(CONFIG_DIR, {recursive: true});
+	return writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES), "utf-8");
+}
 
-	/**
-	 * Create a default config file for the current user.
-	 * This will also create the needed directories before.
-	 * @throws {Error} - On write fail
-	 */
-	static createUserFile(){
-		if (!existsSync(CONFIG_DIR)) mkdirSync(CONFIG_DIR, {recursive: true});
-		return writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES), "utf-8");
-	}
+/**
+ * (UNSAFE) Get config data from a user file.
+ * Beware, this will throw on unreadable file or invalid json
+ * @throws {SyntaxError} - On invalid JSON
+ * @throws {Error} - On unreadable file
+ * @returns {object} - Parsed user data
+ */
+function readUserFile(){
+	const contents = readFileSync(CONFIG_PATH, "utf-8");
+	const parsed = JSON.parse(contents);
+	return parsed;
+}
 
-	/**
-	 * (UNSAFE) Get config data from a user file.
-	 * Beware, this will throw on unreadable file or invalid json
-	 * @throws {SyntaxError} - On invalid JSON
-	 * @throws {Error} - On unreadable file
-	 * @returns {object} - Parsed user data
-	 */
-	static readUserFile(){
-		const contents = readFileSync(CONFIG_PATH, "utf-8");
-		const parsed = JSON.parse(contents);
-		return parsed;
-	}
+/**
+ * Get user preferences safely
+ * - Creates a default file (and dir) if missing
+ * - Falls back on default preferences on invalid file
+ * @returns {object} - A preference object
+ */
+function readUserFileSafe(){
 
-	/**
-	 * Get the default preferences object
-	 * @returns {object} - The default preferences object
-	 */
-	static getDefault(){
-		return DEFAULT_PREFERENCES;
-	}
-
-	/**
-	 * Get user preferences safely
-	 * - Creates a default file (and dir) if missing
-	 * - Falls back on default preferences on invalid file
-	 * @returns {object} - A preference object
-	 */
-	static readUserFileSafe(){
-
-		let prefs;
-		if (!PrefUtils.doesUserFileExist()){
-			console.log(`Created default config file "${CONFIG_PATH}`);
-			PrefUtils.createUserFile();
-			prefs = PrefUtils.getDefault();
-		} else {
-			try {
-				prefs = PrefUtils.readUserFile();
-			} catch (error){
-				console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
-				console.error("\tError : ", error.toString());
-				prefs = PrefUtils.getDefault();
-			}
+	let prefs;
+	if (!doesUserFileExist()){
+		console.log(`Created default config file "${CONFIG_PATH}`);
+		createUserFile();
+		prefs = DEFAULT_PREFERENCES;
+	} else {
+		try {
+			prefs = readUserFile();
+		} catch (error){
+			console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
+			console.error("\tError : ", error.toString());
+			prefs = DEFAULT_PREFERENCES;
 		}
-		return prefs;
-
 	}
+	return prefs;
 
 }
 
 module.exports = {
+
 	CONFIG_DIR,
 	CONFIG_FILENAME,
 	CONFIG_PATH,
-	PrefUtils,
+	DEFAULT_PREFERENCES,
+
+	doesUserFileExist,
+	createUserFile,
+	readUserFile,
+	readUserFileSafe,
+
 };

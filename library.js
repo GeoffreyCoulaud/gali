@@ -10,34 +10,22 @@ const { RetroarchSource } = require("./sources/retroarch.js");
 const { SteamSource } = require("./sources/steam.js");
 const { YuzuSource } = require("./sources/yuzu.js");
 
+// TODO implement gameAdd (for UI and for nested sources triggering)
+
 /**
  * A representation of a game library.
  * @property {Game[]} games - An array of games in the library
  * @property {boolean} preferCache - Whether to prefer cache while scanning. Defaults to true
  * @property {boolean} warn - Whether to display additional warnings (especially during scan)
- * @property {string[]} enabledSources - Names of the sources to scan for games. Defaults to none   
+ * @property {string[]} enabledSources - Names of the sources to scan for games. Defaults to none
  */
-class Library{	
-
-	static availableSources = [
-		CemuSource.name,
-		CitraSource.name,
-		DesktopEntrySource.name,
-		DolphinSource.name,
-		HeroicSource.name,
-		LegendarySource.name,
-		LutrisSource.name,
-		PPSSPPSource.name,
-		RetroarchSource.name,
-		SteamSource.name,
-		YuzuSource.name,
-	];
+class Library{
 
 	enabledSources = [];
 	preferCache = true;
 	warn = false;
 	games = [];
-	
+
 	/**
 	 * Create a game library.
 	 * @param {string[]} enabledSources - Sources to get games from
@@ -62,7 +50,7 @@ class Library{
 	 */
 	async scan(){
 
-		let promises = [];
+		const promises = [];
 		let results = [];
 
 		// Get lutris games
@@ -86,7 +74,7 @@ class Library{
 
 		}
 
-		
+
 		// Get games from straightforward sources
 		const SOURCE_CLASSES = [
 			DesktopEntrySource,
@@ -100,12 +88,12 @@ class Library{
 			YuzuSource,
 		];
 		promises.length = 0;
-		for (let sourceClass of SOURCE_CLASSES){
+		for (const sourceClass of SOURCE_CLASSES){
 			if (this.enabledSources.includes(sourceClass.name)){
 				const sourceInstance = new sourceClass();
 				promises.push(sourceInstance.scan(this.warn));
 			}
-		} 
+		}
 		results = await Promise.all(promises);
 		results = results.flat();
 		this.games.push(...results);
@@ -114,19 +102,19 @@ class Library{
 
 	/**
 	 * Sort library's games by a criteria
-	 * @param {string} criteria - The game property to sort games by 
+	 * @param {string} criteria - The game property to sort games by
 	 * @param {number} order - Either 1 (normal order) or -1 (reverse order)
 	 */
 	async sort(criteria = "name", order = 1){
 		this.games.sort((gameA, gameB)=>{
-			let a = String(gameA[criteria]).toLowerCase(); 
-			let b = String(gameB[criteria]).toLowerCase(); 
+			const a = String(gameA[criteria]).toLowerCase();
+			const b = String(gameB[criteria]).toLowerCase();
 			if (a < b){
-				return order * -1
+				return order * -1;
 			} else if (a === b){
-				return 0
+				return 0;
 			} else {
-				return order * 1
+				return order * 1;
 			}
 		});
 	}
@@ -135,8 +123,8 @@ class Library{
 	 * Display library's games in the console
 	 */
 	displayInConsole(){
-		for (let game of this.games){
-			let string = "● " + game.toString();
+		for (const game of this.games){
+			const string = "● " + game.toString();
 			console.log(string);
 		}
 	}

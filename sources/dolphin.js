@@ -10,9 +10,9 @@ const { env } = require("process");
  * @property {string} romPath - The game's ROM path, used to invoke dolphin
  */
 class DolphinGameProcessContainer extends GameProcessContainer{
-	
+
 	commandOptions = ["dolphin-emu"];
-	
+
 	/**
 	 * Create a dolphin game process container.
 	 * @param {string} romPath - The game's ROM path
@@ -94,7 +94,7 @@ class DolphinSource extends Source{
 	 * @todo
 	 */
 	async _getCachedROMs(){
-		// TODO Read dolphin gamelist cache 
+		// TODO Read dolphin gamelist cache
 		// $HOME/.cache/dolphin-emu/gamelist.cache
 	}
 

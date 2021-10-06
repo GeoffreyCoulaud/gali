@@ -5,14 +5,12 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
-const citraSourceName = "Citra";
-
 /**
  * A wrapper for citra game process management
  * @property {string} romPath - The game's ROM path, used to invoke citra
  */
 class CitraGameProcessContainer extends GameProcessContainer{
-	
+
 	commandOptions = ["citra", "citra-qt"];
 
 	/**
@@ -200,7 +198,7 @@ class CitraSource extends Source{
 
 		return [...romGames, ...installedGames];
 
-	}	
+	}
 
 }
 

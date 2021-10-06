@@ -1,12 +1,14 @@
 const Library = require("../library.js");
+const { DEFAULT_PREFERENCES } = require("../utils/preferences.js");
 
 /**
  * Run the library scan test
  * @param {boolean} displayLibrary - Whether to display the game list or not
  */
-async function testLibraryScan(sources = Library.availableSources, displayLibrary = false){
+async function testLibraryScan(displayLibrary = false){
 
 	// Scan for games, sort them and display the list
+	const sources = DEFAULT_PREFERENCES.scan.enabledSources;
 	const library = new Library(sources, true, true);
 	await library.scan();
 	await library.sort("name", 1);

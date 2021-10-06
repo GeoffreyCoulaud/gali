@@ -46,7 +46,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 class RetroarchGame extends EmulatedGame{
 
 	source = RetroarchSource.name;
-	
+
 	/**
 	 * Create a retroarch game
 	 * @param {string} name - The game's displayed name
@@ -113,7 +113,7 @@ class RetroarchSource extends Source{
 			const gamePath = entry.path;
 			let gameName = entry.label;
 			let gameCorePath = entry.corePath;
-			
+
 			// Validate game data
 			if (!gamePath){
 				continue;
@@ -141,7 +141,7 @@ class RetroarchSource extends Source{
 	 */
 	async scan(warn = false){
 
-		
+
 		// Get retroarch playlists
 		let playlistPaths = [];
 		try {
@@ -150,7 +150,7 @@ class RetroarchSource extends Source{
 			if (warn) console.warn(`Unable to get retroarch playlists : ${error}`);
 		}
 
-		
+
 		// Read playlists
 		const games = [];
 		for (const playlistPath of playlistPaths){

@@ -9,7 +9,7 @@ function config2js(config){
 
 	const obj = new Object();
 	let currentKey = undefined;
-	const sectionRegex = /\[(?<sectionName>[^\[\]]+)\]/;
+	const sectionRegex = /\[(?<sectionName>[^[\]]+)\]/;
 	const propertyRegex = /(?<propertyName>\S+)\s?=\s?(?<propertyValue>.*)/i;
 
 	for (const line of config.split("\n")){
@@ -55,7 +55,7 @@ function desktop2js(desktopEntry){
 
 	const obj = new Object();
 	let currentKey = undefined;
-	const groupName = /\[(?<groupName>[^\[\]]+)\]/;
+	const groupName = /\[(?<groupName>[^[\]]+)\]/;
 	const propertyRegex = /(?<propertyName>[^=]+)=(?<propertyValue>.*)/;
 
 	for (const line of desktopEntry.split("\n")){

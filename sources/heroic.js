@@ -10,27 +10,27 @@ const { env } = require("process");
  * @property {string} appName - The epic games store app name, used to start the game
  */
 class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
-	
+
 	commandOptions = ["xdg-open"];
 
 	/**
 	 * Create a legendary game process container
-	 * @param {string} appName - The epic games store app name 
+	 * @param {string} appName - The epic games store app name
 	 */
 	constructor(appName){
 		super();
 		this.appName = appName;
 	}
-	
+
 	/**
 	 * Start the game in a subprocess
 	 */
 	async start(){
 		const command = this._selectCommand();
-		let args = [`heroic://launch/${this.appName}`];
+		const args = [`heroic://launch/${this.appName}`];
 		this.process = spawn(
-			command, 
-			args, 
+			command,
+			args,
 			this.constructor.defaultSpawnOptions
 		);
 		this.process.unref();
@@ -83,25 +83,25 @@ class HeroicSource extends Source{
 			library = JSON.parse(fileContents);
 			library = library?.["library"];
 		} catch (error){
-			if (warn) console.warn(`Unable to read heroic library.json`);
+			if (warn) console.warn("Unable to read heroic library.json");
 			library = undefined;
 		}
-	
+
 		// Build games
-		let games = [];
+		const games = [];
 		if (library){
-			for (let entry of library){
+			for (const entry of library){
 				if (entry?.["is_game"]){
 					games.push(new HeroicGame(
-						entry.title, 
+						entry.title,
 						entry.app_name
 					));
 				}
 			}
 		}
-	
+
 		return games;
-	
+
 	}
 
 }
@@ -110,4 +110,4 @@ module.exports = {
 	HeroicGameProcessContainer,
 	HeroicSource,
 	HeroicGame,
-}
+};

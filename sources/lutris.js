@@ -2,7 +2,7 @@ const { GameProcessContainer, NoCommandError, Game, Source } = require("./common
 const { bragUserLocalData } = require("../utils/directories.js");
 const { sync: commandExistsSync } = require("command-exists");
 const { execFilePromise } = require("../utils/process.js");
-const { spawn, execFile } = require("child_process");
+const { spawn } = require("child_process");
 const { join: pathJoin } = require("path");
 const { env } = require("process");
 const { open } = require("sqlite");
@@ -34,22 +34,22 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 	* @param {string} scriptBaseName - Name (with extension) for the output script file
 	* @returns {string} - An absolute path to the script
 	*/
-   static async getStartScript(gameSlug, scriptBaseName = ""){
-   
-	   // Get the start script from lutris
-	   const lutrisCommand = "lutris";
-	   if (!commandExistsSync(lutrisCommand)){
-		   throw new NoCommandError("No lutris command found");
-	   }
-	   
-	   // Store the script
-	   if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
-	   const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
-	   await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
-   
-	   return scriptPath;
-   
-   }
+	static async getStartScript(gameSlug, scriptBaseName = ""){
+
+		// Get the start script from lutris
+		const lutrisCommand = "lutris";
+		if (!commandExistsSync(lutrisCommand)){
+			throw new NoCommandError("No lutris command found");
+		}
+
+		// Store the script
+		if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
+		const scriptPath = pathJoin(bragUserLocalData, "start-scripts", scriptBaseName);
+		await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
+
+		return scriptPath;
+
+	}
 
 	/**
 	 * Start the game in a subprocess

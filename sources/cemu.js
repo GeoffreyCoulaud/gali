@@ -16,7 +16,7 @@ const YAML = require("yaml");
  * @returns {string} - A string suitable for safe and clean filenames
  */
 function sanitizeStringFilename(str){
-	return String(str).toLowerCase().replaceAll(/[^a-z0-9_\-]/g, "-");
+	return String(str).toLowerCase().replaceAll(/[^a-z0-9_-]/g, "-");
 }
 
 /**
@@ -42,7 +42,7 @@ class CemuGameProcessContainer extends GameProcessContainer{
 	 * @param {string} name - The game's name
 	 * @param {string} path - The game's ROM path
 	 * @param {string} cemuGameSlug - The lutris game slug for cemu
-	 * @param {string} scriptBaseName - Name (with extension) for the output script file 
+	 * @param {string} scriptBaseName - Name (with extension) for the output script file
 	 * @returns {string} - An absolute path to the script
 	 */
 	static async getStartScript(name, path, cemuGameSlug = "cemu", scriptBaseName = ""){
@@ -100,7 +100,7 @@ class CemuGame extends EmulatedGame{
 	 * Create a string representation of the game
 	 * @returns {string} - A string representing the game
 	 */
-	 toString(){
+	toString(){
 		return `${this.name} - ${this.source}`;
 	}
 
@@ -110,7 +110,7 @@ class CemuGame extends EmulatedGame{
  * A class representing a Cemu source
  */
 class CemuSource extends Source{
-	
+
 	static name = "Cemu in Lutris";
 	cemuLutrisGame = undefined;
 	preferCache = false;

@@ -1,6 +1,5 @@
 const { GameDir, EmulatedGame, getROMs, GameProcessContainer, Source } = require("./common.js");
 const { basename: pathBasename, join: pathJoin } = require("path");
-const { sync: commandExistsSync } = require("command-exists");
 const { config2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");

@@ -5,7 +5,7 @@ const { readdirAsync } = require("readdir-enhanced");
 const { desktop2js } = require("../utils/config.js");
 const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
-const { join: pathJoin, extname } = require("path");
+const { join: pathJoin } = require("path");
 const { env } = require("process");
 
 /**

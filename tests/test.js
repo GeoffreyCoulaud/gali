@@ -1,7 +1,7 @@
 class Test{
 
 	static STATE_THROW = 0;
-	static STATE_SUCCESS = 1; 
+	static STATE_SUCCESS = 1;
 	static STATE_ANY = 2;
 
 	/**
@@ -21,7 +21,7 @@ class Test{
 	 * @returns {boolean} True on full success, else false
 	 */
 	static batchRun(tests){
-		
+
 		// Run the tests
 		let nPassing = 0;
 		for (let i = 0; i < tests.length; i++){
@@ -30,7 +30,7 @@ class Test{
 		}
 
 		// General report
-		const allPassing = nPassing === tests.length; 
+		const allPassing = nPassing === tests.length;
 		if (allPassing){
 			console.log(`✅ all ${tests.length} tests passing !`);
 		} else {
@@ -58,11 +58,11 @@ class Test{
 
 	/**
 	 * Run the test
-	 * @param {boolean} doCompare - Whether to compare visually on fail 
+	 * @param {boolean} doCompare - Whether to compare visually on fail
 	 * @returns {boolean} - True on success, false on fail
 	 */
 	run(doCompare = true){
-		
+
 		let error = undefined;
 		let result = undefined;
 		let status = Test.STATE_SUCCESS;
@@ -74,12 +74,12 @@ class Test{
 			status = Test.STATE_THROW;
 			error = e;
 		}
-		
+
 		// Evaluate verdict
-		let isStatusGood = (this.expectedStatus === Test.STATE_ANY) || (status === this.expectedStatus);
-		let isResultGood = (result === this.expectedResult);
-		let isGood = isStatusGood && isResultGood;		
-		
+		const isStatusGood = (this.expectedStatus === Test.STATE_ANY) || (status === this.expectedStatus);
+		const isResultGood = (result === this.expectedResult);
+		const isGood = isStatusGood && isResultGood;
+
 		// Inform via console
 		if (!isGood){
 			console.warn(`Test "${this.displayedName}" failed`);
@@ -89,7 +89,7 @@ class Test{
 				console.warn(`  Expected status : ${Test.statusToText(this.expectedStatus)}`);
 				console.warn(`  Real status     : ${Test.statusToText(status)}`);
 				if (typeof error !== "undefined"){
-				console.warn(`  Message         : "${error}"`);
+					console.warn(`  Message         : "${error}"`);
 				}
 			} else if (!isResultGood){
 				console.warn(`    Expected result : ${this.expectedResult}`);
@@ -99,7 +99,7 @@ class Test{
 
 		// Pass verdict
 		return isGood;
-		
+
 	}
 
 }
