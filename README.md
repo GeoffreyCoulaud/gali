@@ -52,7 +52,6 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 * Installed Yuzu games aren't listed
 
 ## TODO
-* Make UI with Combalache
 * Add interactivity to the UI
 * Add option in Dolphin to read cached games
 * Add a better way to handle nested sources (event on game push)
