@@ -32,7 +32,7 @@ class MainWindow extends Gtk.ApplicationWindow{
 		/*
 		const sampleGridElems = [];
 		for (let i = 0; i < 10; i++){
-			const sampleGridElem = new GameGridElement("UI/sample/doom_eternal_steam_boxart.jpg", "Doom Eternal");
+			const sampleGridElem = new GameGridElement("UI/sample/stk_boxart.jpg", "Super Tux Kart");
 			sampleGridElems.push(sampleGridElem);
 			gamesGrid.insert(sampleGridElem, i);
 		}

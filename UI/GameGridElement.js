@@ -12,7 +12,8 @@ class GameGridElement extends Gtk.Box{
 		imageWidget.setKeepAspectRatio(true);
 
 		// Text title
-		const titleWidget = new Gtk.Label(title);
+		const titleWidget = new Gtk.Label();
+		titleWidget.setLabel(title);
 
 		this.setOrientation(Gtk.Orientation.VERTICAL);
 		this.append(imageWidget);
