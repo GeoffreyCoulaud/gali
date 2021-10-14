@@ -10,3 +10,22 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 | <img src="mockup1.png"> | <img src="mockup2.png"> |
 | Game info popover with a start button | Game info with a stop and kill button |
 | <img src="mockup3.png"> | <img src="mockup4.png"> |
+
+## Choices
+* To use a XML file and build the UI from it
+* Choose a dynamic grid option
+	* Fixed icon size : On grid resize, update the number of columns
+	* Fixed number of columns : On grid resize, share the width between the columns
+
+## TODO
+* Create the view change for scanning
+* Make app startup trigger a library scan
+* Make scan button trigger a library scan
+* Bind libary content to the game grid
+* Bind the grid resize to its option
+* Create the popup menus
+	* Source filtering (+ installed filtering)
+	* Settings
+* HeaderBar buttons toggle the corresponding menus
+* Bind the game life cycle buttons to their game methods
+* Bind source filtering to the game grid

@@ -1,56 +1,85 @@
 const gi = require("node-gtk");
 const Gtk = gi.require("Gtk", "4.0");
+const Gdk = gi.require("Gdk", "3.0");
 
+const GameGrid = require("./GameGrid.js");
 const GameGridElement = require("./GameGridElement.js");
 const MainWindowHeaderBar = require("./MainWindowHeaderBar.js");
 const MainWindowInfoRevealer = require("./MainWindowInfoRevealer.js");
 
 class MainWindow extends Gtk.ApplicationWindow{
+
+	gamesScrolledWindow = undefined;
+	infoRevealer = undefined;
+	gamesGrid = undefined;
+	headerBar = undefined;
+	mainBox = undefined;
+
 	constructor(app){
 		super(app);
 
+		// Widgets
+		this.gamesScrolledWindow = new Gtk.ScrolledWindow();
+		this.infoRevealer = new MainWindowInfoRevealer();
+		this.headerBar = new MainWindowHeaderBar();
+		this.gamesGrid = new GameGrid();
+		this.mainBox = new Gtk.Box();
+
 		// Custom header bar
-		const headerBar = new MainWindowHeaderBar();
-		this.setTitlebar(headerBar);
+		this.setTitlebar(this.headerBar);
 
 		// Bottom info revealer
-		const infoRevealer = new MainWindowInfoRevealer();
-		infoRevealer.setRevealChild(true);
+		this.infoRevealer.setRevealChild(true);
 
+		// TODO Set the number of columns dynamically with the available width
 		// Games grid
 		const GRID_GAP = 4;
-		const gamesGrid = new Gtk.FlowBox();
-		gamesGrid.setRowSpacing(GRID_GAP);
-		gamesGrid.setColumnSpacing(GRID_GAP);
-
-		// TODO Fix the grid element sizing.
-		// Elements in the grid should be the width of their picture ± gap.
-		// They must not have random padding ! It's better to space them out 
-		// with margins.
+		const COLUMNS = 5;
+		this.gamesGrid.setGap(GRID_GAP);
+		this.gamesGrid.setColumns(COLUMNS);
 
 		// ! TEST - Sample game grid items
-		/*
 		const sampleGridElems = [];
 		for (let i = 0; i < 10; i++){
 			const sampleGridElem = new GameGridElement("UI/sample/stk_boxart.jpg", "Super Tux Kart");
 			sampleGridElems.push(sampleGridElem);
-			gamesGrid.insert(sampleGridElem, i);
+			this.gamesGrid.insert(sampleGridElem, i);
 		}
-		*/
 
 		// Games scrolled window
-		const gamesScrolledWindow = new Gtk.ScrolledWindow();
-		gamesScrolledWindow.setHasFrame(false);
-		gamesScrolledWindow.setChild(gamesGrid);
-		gamesScrolledWindow.setVexpand(true);
-
+		this.gamesScrolledWindow.setHasFrame(false);
+		this.gamesScrolledWindow.setChild(this.gamesGrid);
+		this.gamesScrolledWindow.setVexpand(true);
+		this.gamesScrolledWindow.setPolicy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC);
 
 		// Wrap all elements and add to window
-		const mainBox = new Gtk.Box();
-		mainBox.setOrientation(Gtk.Orientation.VERTICAL);
-		mainBox.append(gamesScrolledWindow);
-		mainBox.append(infoRevealer);
-		this.setChild(mainBox);
+		this.mainBox.setOrientation(Gtk.Orientation.VERTICAL);
+		this.mainBox.append(this.gamesScrolledWindow);
+		this.mainBox.append(this.infoRevealer);
+
+		// Bind event handlers
+		this.bindEvents();
+
+		this.setChild(this.mainBox);
+	}
+
+	/**
+	 * Bind event handlers to child widgets
+	 */
+	bindEvents(){
+		// TODO find a way to detect grid resize (better event)
+		this.gamesGrid.on("child-activated", this.onGridResize.bind(this));
+	}
+
+	/**
+	 * On resize, change the number of columns
+	 */
+	onGridResize(){
+		const gridWidth = this.gamesGrid.getAllocatedWidth();
+		const elemWidth = 256; // TODO determine a proper value
+		const cols = Math.floor(gridWidth / elemWidth);
+		this.gamesGrid.setColumns(cols);
+		console.log("grid resize handler");
 	}
 }
 

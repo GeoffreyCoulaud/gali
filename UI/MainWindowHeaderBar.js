@@ -23,6 +23,12 @@ class MainWindowHeaderBar extends Gtk.HeaderBar {
 		buttonBox.append(scanButton);
 		buttonBox.append(sourcesButton);
 		buttonBox.append(settingsButton);
+
+		// Title
+		const titleWidget = new Gtk.Label();
+		titleWidget.setLabel("Brag");
+		this.setTitleWidget(titleWidget);
+
 		this.packEnd(buttonBox);
 	}
 
