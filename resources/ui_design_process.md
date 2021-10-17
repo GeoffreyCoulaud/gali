@@ -11,13 +11,9 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 | Game info popover with a start button | Game info with a stop and kill button |
 | <img src="mockup3.png"> | <img src="mockup4.png"> |
 
-## Choices
-* To use a XML file and build the UI from it
-* Choose a dynamic grid option
-	* Fixed icon size : On grid resize, update the number of columns
-	* Fixed number of columns : On grid resize, share the width between the columns
-
 ## TODO
+* ✅ ~~Use XML to describe the UI~~ (XML in JS, it's a compromise with `node-gtk` at the moment)
+* Grid with a fixed number of columns
 * Create the view change for scanning
 * Make app startup trigger a library scan
 * Make scan button trigger a library scan
