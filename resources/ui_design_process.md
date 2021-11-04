@@ -11,9 +11,19 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 | Game info popover with a start button | Game info with a stop and kill button |
 | <img src="mockup3.png"> | <img src="mockup4.png"> |
 
+## Current state
+I'm battling grid picture sizing. I'm trying to split the grid's available size between the grid elements equally to fill it (OK) and make the pictures take their element's full width (not OK yet) and overflow vertically if needed (not OK yet). 
+
+| Current (wrong) grid spacing | Expected spacing (overflowing verttically) |
+| - | - |
+| <img src="WIP-bad-sizing-04-11-2021.png"> | <img src="WIP-good-sizing-04-11-2021.png"> |
+
 ## TODO
-* ✅ ~~Use XML to describe the UI~~ (XML in JS, it's a compromise with `node-gtk` at the moment)
-* Grid with a fixed number of columns
+* ✅ ~~Use XML to describe the UI~~ (XML in JS, it's a compromise with `node-gtk`, see [issue 316](https://github.com/romgrk/node-gtk/issues/316))
+* 🔶 Grid with a fixed number of columns  
+	The images should always take up ~1/5 the width if there's 5 elements per row.  
+	I tried setting `can-shrink` to `false` but this just makes the `Picture`s their natural width.  
+	Find a way to make the `FlowBoxChild`s share equally the total width then make the `Picture`s fill their immediate parent.
 * Create the view change for scanning
 * Make app startup trigger a library scan
 * Make scan button trigger a library scan

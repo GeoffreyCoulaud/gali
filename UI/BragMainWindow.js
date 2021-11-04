@@ -51,11 +51,11 @@ const ROOT_UI = `
 	<object class="GtkBox" id="root">
 		<property name="orientation">vertical</property>
 		<child>
-			<object class="GtkScrolledWindow">
+			<object class="GtkScrolledWindow" id="gameGridScrolledWindow">
 				<property name="has-frame">false</property>
 				<property name="vexpand">true</property>
 				<child>
-					<object class="GtkFlowBox" id="gameGrid">
+					<object class="GtkFlowBox" id="gameGridFlowBox">
 						<property name="row-spacing">4</property>
 						<property name="column-spacing">4</property>
 						<property name="min-children-per-line">5</property>
@@ -65,7 +65,7 @@ const ROOT_UI = `
 			</object>
 		</child>
 		<child>
-			<object class="GtkRevealer" id="revealer">
+			<object class="GtkRevealer" id="gameInfoRevealer">
 				<child>
 					<object class="GtkBox">
 						<property name="margin-bottom">4</property>
@@ -126,6 +126,18 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 
 	static GTypeName = "BragMainWindow"
 
+	static EXPOSED_CHILDREN_IDS = [
+		"gameSearch",
+		"scanButton",
+		"filterButton",
+		"settingsButton",
+		"gameGridScrolledWindow",
+		"gameGridFlowBox",
+		"gameInfoRevealer",
+		"gameInfoTitle",
+		"gameInfoPlatform",
+	];
+
 	constructor(app){
 		super(app);
 
@@ -133,17 +145,28 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 		const builder = new Gtk.Builder();
 		builder.addFromString(HEADER_BAR_UI, HEADER_BAR_UI.length);
 		builder.addFromString(ROOT_UI, ROOT_UI.length);
+
+		// Add header bar
 		const headerBar = builder.getObject("headerBar");
-		const root = builder.getObject("root");
-
-		// TODO remove later, this is temporary
-		const revealer = builder.getObject("revealer");
-		revealer.setRevealChild(true); 
-
-		// Strap it all up
 		this.setTitlebar(headerBar);
 		this.setTitle("Brag");
+
+		// Add content root
+		const root = builder.getObject("root");
 		this.setChild(root);
+
+		// Set game grid ScrolledWindow policy
+		const scrolledWindow = builder.getObject("gameGridScrolledWindow");
+		scrolledWindow.setPolicy(
+			Gtk.PolicyType.NEVER, // No horizontal scrollbar
+			Gtk.PolicyType.AUTOMATIC // Auto vertical scrollbar
+		);
+
+		// Expose children widgets, prefixing them as gjs does
+		// See https://gjs.guide/guides/gtk/3/14-templates.html#loading-the-template
+		for (const id of BragMainWindow.EXPOSED_CHILDREN_IDS){
+			this["_"+id] = builder.getObject(id);
+		}
 	}
 
 }

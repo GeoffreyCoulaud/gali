@@ -6,6 +6,7 @@ const Library = require("./library.js");
 
 // Import custom widgets
 const BragMainWindow = require("./UI/BragMainWindow.js");
+const BragGameGridElement = require("./UI/BragGameGridElement.js");
 
 // Get user preferences from disk
 const prefs = readUserFileSafe();
@@ -51,6 +52,23 @@ function onActivate(){
 	mainWindow.on("close-request", onCloseRequest);
 	mainWindow.show();
 	mainWindow.present();
+
+	// TODO Remove later, temporary for testing
+	// -------------------------------------------------------------------------
+
+	// Show game info revealer
+	mainWindow._gameInfoRevealer.setRevealChild(true);
+
+	// Add dummy games
+	for (let i = 0; i < 15; i++){
+		const dummyGridItem = new BragGameGridElement(
+			"UI/sample/stk_boxart.jpg",
+			"Super Tux Kart"
+		);
+		mainWindow._gameGridFlowBox.insert(dummyGridItem, 0);
+	}
+
+	// -------------------------------------------------------------------------
 
 	gi.startLoop();
 	GtkLoop.run();
