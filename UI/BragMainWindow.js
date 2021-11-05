@@ -159,7 +159,7 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 		const scrolledWindow = builder.getObject("gameGridScrolledWindow");
 		scrolledWindow.setPolicy(
 			Gtk.PolicyType.NEVER, // No horizontal scrollbar
-			Gtk.PolicyType.AUTOMATIC // Auto vertical scrollbar
+			Gtk.PolicyType.ALWAYS // Auto vertical scrollbar
 		);
 
 		// Expose children widgets, prefixing them as gjs does
