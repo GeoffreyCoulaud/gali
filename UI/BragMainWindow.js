@@ -55,11 +55,15 @@ const ROOT_UI = `
 				<property name="has-frame">false</property>
 				<property name="vexpand">true</property>
 				<child>
-					<object class="GtkFlowBox" id="gameGridFlowBox">
-						<property name="row-spacing">4</property>
-						<property name="column-spacing">4</property>
-						<property name="min-children-per-line">5</property>
-						<property name="max-children-per-line">5</property>
+					<object class="GtkViewport" id="gameGridViewport">
+						<child>
+							<object class="GtkFlowBox" id="gameGridFlowBox">
+								<property name="valign">start</property>
+								<property name="halign">start</property>
+								<property name="min-children-per-line">5</property>
+								<property name="max-children-per-line">5</property>
+							</object>
+						</child>
 					</object>
 				</child>
 			</object>
@@ -132,6 +136,7 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 		"filterButton",
 		"settingsButton",
 		"gameGridScrolledWindow",
+		"gameGridViewport",
 		"gameGridFlowBox",
 		"gameInfoRevealer",
 		"gameInfoTitle",

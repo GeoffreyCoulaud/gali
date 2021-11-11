@@ -23,7 +23,9 @@ I'm battling grid picture sizing. I'm trying to split the grid's available size 
 * 🔶 Grid with a fixed number of columns  
 	The images should always take up ~1/5 the width if there's 5 elements per row.  
 	I tried setting `can-shrink` to `false` but this just makes the `Picture`s their natural width.  
-	Find a way to make the `FlowBoxChild`s share equally the total width then make the `Picture`s fill their immediate parent.
+	Find a way to make the `FlowBoxChild`s share equally the total width then make the `Picture`s fill their immediate parent.  
+	**Update** : I asked [on Gnome's discourse forum](https://discourse.gnome.org/t/how-to-make-an-image-fill-the-width-of-a-box-and-keep-aspect-ratio/7980/4) and **no-fucking-body** knows how to do this.  
+	I'm considering a fixed image width à-la Lutris. It's been 6 days of me banging my head on this, I'll let it sit for now. 
 * Create the view change for scanning
 * Make app startup trigger a library scan
 * Make scan button trigger a library scan
