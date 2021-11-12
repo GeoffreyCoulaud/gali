@@ -16,10 +16,11 @@ async function testLibraryScan(displayLibrary = false){
 		console.log("");
 		library.displayInConsole();
 	}
+	const nInstalled = library.games.filter(g=>g.isInstalled===true).length;
 
-	// Display total number of games
+	// Display total number of games (and installed status)
 	console.log();
-	console.log(`Library contains ${library.games.length} games in total`);
+	console.log(`Library contains ${library.games.length} games (${nInstalled} installed)`);
 
 	// Count games per source
 	const counts = new Object();

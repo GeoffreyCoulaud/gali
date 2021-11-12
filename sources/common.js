@@ -191,7 +191,8 @@ class GameDir {
  * @property {string} source - The games's provenance in the system
  * @property {string} name - The game's displayed (localized) name
  * @property {string} platform - The game's original platform
- * @property {boolean} isInstalled - Whether the game is currently installed or not
+ * @property {undefined|boolean} isInstalled - Whether the game is currently installed or not.
+ *                                             Undefined if this is not implemented for the current source.
  * @property {string} boxArtImage - URI to the game's box art
  * @property {string} coverImage - URI to the game's cover
  * @property {string} iconImage - URI to the game's icon
@@ -204,7 +205,7 @@ class Game{
 	source = undefined;
 	name = undefined;
 	platform = undefined;
-	isInstalled = true;
+	isInstalled = undefined;
 
 	// Images props
 	boxArtImage = undefined;

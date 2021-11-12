@@ -53,6 +53,7 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 * Cemu in lutris is a clunky solution, but it's the best we currently have on linux
 
 ## TODO
+* Add installed state to more sources
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
 * Add option in Dolphin to read cached games
 * Add a better way to handle nested sources (event on game push)

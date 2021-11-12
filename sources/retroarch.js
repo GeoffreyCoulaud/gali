@@ -2,6 +2,7 @@ const { EmulatedGame, GameProcessContainer, Source } = require("./common.js");
 const { join: pathJoin, basename: pathBasename} = require("path");
 const { readFile, readdir } = require("fs/promises");
 const { spawn } = require("child_process");
+const { existsSync } = require("fs");
 const { env } = require("process");
 
 const RETROARCH_SOURCE_NAME = "Retroarch";
@@ -55,11 +56,13 @@ class RetroarchGame extends EmulatedGame{
 	 * @param {string} path - The game's ROM path
 	 * @param {string} corePath - The game's libretro core path
 	 * @param {string} platform - The game's original platform
+	 * @param {boolean} isInstalled - Whether the game is installed (found on disk)
 	 */
-	constructor(name, path, corePath, platform){
+	constructor(name, path, corePath, platform, isInstalled = false){
 		super(name, path);
 		this.platform = platform;
 		this.corePath = corePath;
+		this.isInstalled = isInstalled;
 		this.processContainer = new RetroarchGameProcessContainer(this.path, this.corePath);
 	}
 
@@ -113,22 +116,33 @@ class RetroarchSource extends Source{
 		for (const entry of playlist.items){
 
 			const gamePath = entry.path;
+			if (!gamePath){
+				continue;
+			}
+
+			const gameIsInstalled = existsSync(gamePath);
 			let gameName = entry.label;
 			let gameCorePath = entry.corePath;
 
 			// Validate game data
-			if (!gamePath){
-				continue;
-			}
 			if (!gameName){
 				gameName = pathBasename(gamePath);
 			}
 			if (!gameCorePath || gameCorePath === "DETECT"){
 				gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
 			}
-			const game = new RetroarchGame(gameName, gamePath, gameCorePath, PLAYLIST_PLATFORM);
+			const game = new RetroarchGame(
+				gameName,
+				gamePath,
+				gameCorePath,
+				PLAYLIST_PLATFORM,
+				gameIsInstalled
+			);
 			if (game.name && game.path && game.corePath && game.platform){
 				games.push(game);
+			} else {
+				// Debug info
+				// console.log(game.name, game.path, game.corePath, game.platform);
 			}
 
 		}
