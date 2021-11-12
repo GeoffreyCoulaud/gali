@@ -4,6 +4,8 @@ const { join: pathJoin } = require("path");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const HEROIC_SOURCE_NAME = "Heroic";
+
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
@@ -45,7 +47,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 class HeroicGame extends Game{
 
 	platform = "PC";
-	source = HeroicSource.name;
+	source = HEROIC_SOURCE_NAME;
 
 	/**
 	 * Create a Heroic Games Launcher game
@@ -64,7 +66,7 @@ class HeroicGame extends Game{
  */
 class HeroicSource extends Source{
 
-	static name = "Heroic";
+	static name = HEROIC_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

@@ -4,6 +4,8 @@ const { readFile, readdir } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const RETROARCH_SOURCE_NAME = "Retroarch";
+
 /**
  * A wrapper for retroarch game process management
  * @property {string} romPath - The game's ROM path, used to invoke retroarch
@@ -45,7 +47,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  */
 class RetroarchGame extends EmulatedGame{
 
-	source = RetroarchSource.name;
+	source = RETROARCH_SOURCE_NAME;
 
 	/**
 	 * Create a retroarch game
@@ -65,7 +67,7 @@ class RetroarchGame extends EmulatedGame{
 
 class RetroarchSource extends Source{
 
-	static name = "Retroarch";
+	static name = RETROARCH_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

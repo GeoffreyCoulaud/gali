@@ -8,6 +8,8 @@ const { spawn } = require("child_process");
 const { join: pathJoin } = require("path");
 const { env } = require("process");
 
+const DESKTOP_ENTRIES_SOURCE_NAME = "Desktop entries";
+
 /**
  * A wrapper for desktop entry game process management
  * @property {string} exec - The exec value of the desktop entry file,
@@ -47,7 +49,7 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 class DesktopEntryGame extends Game{
 
 	platform = "PC";
-	source = DesktopEntrySource.name;
+	source = DESKTOP_ENTRIES_SOURCE_NAME;
 
 	/**
 	 * Create a desktop entry game
@@ -70,7 +72,7 @@ class DesktopEntryGame extends Game{
  */
 class DesktopEntrySource extends Source{
 
-	static name = "Desktop entries";
+	static name = DESKTOP_ENTRIES_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

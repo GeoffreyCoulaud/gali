@@ -5,6 +5,8 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const DOLPHIN_SOURCE_NAME = "Dolphin";
+
 /**
  * A wrapper for dolphin game management
  * @property {string} romPath - The game's ROM path, used to invoke dolphin
@@ -42,7 +44,7 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 class DolphinGame extends EmulatedGame{
 
 	platform = "Nintendo - Wii / GameCube";
-	source = DolphinSource.name;
+	source = DOLPHIN_SOURCE_NAME;
 
 	/**
 	 * Create a dolphin game
@@ -57,7 +59,7 @@ class DolphinGame extends EmulatedGame{
 
 class DolphinSource extends Source{
 
-	static name = "Dolphin";
+	static name = DOLPHIN_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

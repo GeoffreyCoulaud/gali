@@ -24,7 +24,7 @@ async function testLibraryScan(displayLibrary = false){
 	// Count games per source
 	const counts = new Object();
 	for (const game of library.games){
-		if (!counts.hasOwnProperty(game.source)){
+		if (!Object.prototype.hasOwnProperty.call(counts, game.source)){
 			counts[game.source] = 1;
 		} else {
 			counts[game.source]++;

@@ -11,6 +11,8 @@ const sqlite3 = require("sqlite3");
 const USER_DIR = env["HOME"];
 const LUTRIS_DB_PATH = pathJoin(USER_DIR, ".local/share/lutris/pga.db");
 
+const LUTRIS_SOURCE_NAME = "Lutris";
+
 /**
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
@@ -77,7 +79,7 @@ class LutrisGameProcessContainer extends GameProcessContainer{
 class LutrisGame extends Game{
 
 	platform = "PC";
-	source = LutrisSource.name;
+	source = LUTRIS_SOURCE_NAME;
 
 	/**
 	 * Create a lutris game
@@ -109,7 +111,7 @@ class LutrisGame extends Game{
  */
 class LutrisSource extends Source{
 
-	static name = "Lutris";
+	static name = LUTRIS_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

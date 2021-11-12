@@ -5,6 +5,8 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const PPSSPP_SOURCE_NAME = "PPSSPP";
+
 /**
  * A wrapper for ppsspp game process management
  * @property {string} romPath - The game's ROM path, used to invoke ppsspp
@@ -44,7 +46,7 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 class PPSSPPGame extends EmulatedGame{
 
 	platform = "Sony - PlayStation Portable";
-	source = PPSSPPSource.name;
+	source = PPSSPP_SOURCE_NAME;
 
 	/**
 	 * Create a ppsspp game
@@ -62,7 +64,7 @@ class PPSSPPGame extends EmulatedGame{
  */
 class PPSSPPSource extends Source{
 
-	static name = "PPSSPP";
+	static name = PPSSPP_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

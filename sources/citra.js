@@ -5,6 +5,8 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const CITRA_SOURCE_NAME = "Citra";
+
 /**
  * A wrapper for citra game process management
  * @property {string} romPath - The game's ROM path, used to invoke citra
@@ -46,7 +48,7 @@ class CitraGameProcessContainer extends GameProcessContainer{
 class CitraGame extends EmulatedGame{
 
 	platform = "Nintendo - 3DS";
-	source = CitraSource.name;
+	source = CITRA_SOURCE_NAME;
 
 	/**
 	 * Creat a citra game
@@ -65,7 +67,7 @@ class CitraGame extends EmulatedGame{
  */
 class CitraSource extends Source{
 
-	static name = "Citra";
+	static name = CITRA_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

@@ -4,6 +4,8 @@ const { readFile } = require("fs/promises");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const LEGENDARY_SOURCE_NAME = "Legendary";
+
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
@@ -52,7 +54,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 class LegendaryGame extends Game{
 
 	platform = "PC";
-	source = LegendarySource.name;
+	source = LEGENDARY_SOURCE_NAME;
 
 	/**
 	 * Create a legendary games launcher game
@@ -80,7 +82,7 @@ class LegendaryGame extends Game{
  */
 class LegendarySource extends Source{
 
-	static name = "Legendary";
+	static name = LEGENDARY_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

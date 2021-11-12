@@ -8,6 +8,8 @@ const { env } = require("process");
 
 const USER_DIR = env["HOME"];
 
+const STEAM_SOURCE_NAME = "Steam";
+
 /**
  * A wrapper for steam game process management
  * @property {string} appId - A steam appid, used to invoke steam
@@ -49,7 +51,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 class SteamGame extends Game{
 
 	platform = "PC";
-	source = SteamSource.name;
+	source = STEAM_SOURCE_NAME;
 
 	/**
 	 * Create a steam game
@@ -73,7 +75,7 @@ class SteamGame extends Game{
 
 class SteamSource extends Source{
 
-	static name = "Steam";
+	static name = STEAM_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

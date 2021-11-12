@@ -11,7 +11,7 @@ function deepMergeObjects(objects){
 			// If the key doesn't exist, simply copy.
 			// If the key exists and is not an object, copy to overwrite it.
 			// If the key exists and is an object, recurse into it.
-			if (!merged.hasOwnProperty(key) || typeof merged[key] !== "object"){
+			if (!Object.prototype.hasOwnProperty.call(merged, key) || typeof merged[key] !== "object"){
 				merged[key] = object[key];
 			} else {
 				merged[key] = deepMergeObjects([merged[key], object[key]]);

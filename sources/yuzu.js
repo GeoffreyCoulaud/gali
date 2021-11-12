@@ -6,6 +6,8 @@ const { GameDir } = require("./common.js");
 const { spawn } = require("child_process");
 const { env } = require("process");
 
+const YUZU_SOURCE_NAME = "Yuzu";
+
 /**
  * A wrapper for yuzu game process management
  * @property {string} romPath - The game's ROM path, used to invoke yuzu
@@ -54,7 +56,7 @@ class YuzuGameProcessContainer extends GameProcessContainer{
 class YuzuGame extends EmulatedGame{
 
 	platform = "Nintendo - Switch";
-	source = YuzuSource.name;
+	source = YUZU_SOURCE_NAME;
 
 	/**
 	 * Create a yuzu game
@@ -70,7 +72,7 @@ class YuzuGame extends EmulatedGame{
 
 class YuzuSource extends Source{
 
-	static name = "Yuzu";
+	static name = YUZU_SOURCE_NAME;
 	preferCache = false;
 
 	constructor(preferCache = false){

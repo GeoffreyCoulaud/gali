@@ -10,6 +10,8 @@ const { spawn } = require("child_process");
 const { env } = require("process");
 const YAML = require("yaml");
 
+const CEMU_SOURCE_NAME = "Cemu in Lutris";
+
 /**
  * Sanitize a string to be used in a filename
  * @param {string} str - The string to sanitize
@@ -89,7 +91,7 @@ class CemuGameProcessContainer extends GameProcessContainer{
 class CemuGame extends EmulatedGame{
 
 	platform = "Nintendo - Wii U";
-	source = CemuSource.name;
+	source = CEMU_SOURCE_NAME;
 
 	constructor(name, path){
 		super(name, path, CemuSource.name);
@@ -111,7 +113,7 @@ class CemuGame extends EmulatedGame{
  */
 class CemuSource extends Source{
 
-	static name = "Cemu in Lutris";
+	static name = CEMU_SOURCE_NAME;
 	cemuLutrisGame = undefined;
 	preferCache = false;
 
