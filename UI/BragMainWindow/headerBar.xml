@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+	<object class="GtkHeaderBar" id="headerBar">
+		<child type="start">
+			<object class="GtkSearchEntry" id="gameSearch">
+				<property name="placeholder-text">Search games</property>
+			</object>
+		</child>
+		<child type="end">
+			<object class="GtkBox">
+				<child>
+					<object class="GtkButton" id="scanButton">
+						<child>
+							<object class="GtkImage">
+								<property name="file">UI/icons/black/refresh.svg</property>
+							</object>
+						</child>
+					</object>
+				</child>
+				<child>
+					<object class="GtkButton" id="filterButton">
+						<child>
+							<object class="GtkImage">
+								<property name="file">UI/icons/black/filter.svg</property>
+							</object>
+						</child>
+					</object>
+				</child>
+				<child>
+					<object class="GtkButton" id="settingsButton">
+						<child>
+							<object class="GtkImage">
+								<property name="file">UI/icons/black/menu.svg</property>
+							</object>
+						</child>
+					</object>
+				</child>
+			</object>
+		</child>
+	</object>
+</interface>

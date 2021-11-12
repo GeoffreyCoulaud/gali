@@ -29,6 +29,7 @@ I'm battling grid picture sizing. I'm trying to split the grid's available size 
 * Create the view change for scanning
 * Make app startup trigger a library scan
 * Make scan button trigger a library scan
+* Bind grid element selection to the revealer (visible state + content)
 * Bind libary content to the game grid
 * Bind the grid resize to its option
 * Create the popup menus

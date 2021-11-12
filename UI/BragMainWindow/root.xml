@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+	
+	<object class="GtkStack" id="viewStack">
+		<property name="transition-type">crossfade</property>
+		
+		<!-- Library view -->
+		<child>
+			<object class="GtkStackPage">
+				<property name="name">libraryView</property>
+				<property name="child">
+					
+					<!-- Root of library view -->
+					<object class="GtkBox" id="libraryRoot">
+						<property name="orientation">vertical</property>
+						
+						<!-- Game grid -->
+						<child>
+							<object class="GtkScrolledWindow" id="gameGridScrolledWindow">
+								<property name="has-frame">false</property>
+								<property name="vexpand">true</property>
+								<child>
+									<object class="GtkViewport" id="gameGridViewport">
+										<child>
+											<object class="GtkFlowBox" id="gameGridFlowBox">
+												<property name="valign">start</property>
+												<property name="halign">start</property>
+												<property name="min-children-per-line">5</property>
+												<property name="max-children-per-line">5</property>
+											</object>
+										</child>
+									</object>
+								</child>
+							</object>
+						</child>
+						<!-- End of game grid -->
+
+						<!-- Bottom information & life cycle panel  -->
+						<child>
+							<object class="GtkRevealer" id="gameInfoRevealer">
+								<child>
+									<object class="GtkBox">
+										<property name="margin-bottom">4</property>
+										<property name="margin-start">4</property>
+										<property name="margin-end">4</property>
+										<property name="orientation">vertical</property>
+										<child>
+											<object class="GtkLabel" id="gameInfoTitle">
+												<property name="label">Super Tux Kart</property>
+											</object>
+										</child>
+										<child>
+											<object class="GtkLabel" id="gameInfoPlatform">
+												<property name="label">PC / Desktop entries</property>
+											</object>
+										</child>
+										<child>
+											<object class="GtkBox">
+												<property name="halign">center</property>
+												<child>
+													<object class="GtkButton">
+														<child>
+															<object class="GtkImage">
+																<property name="file">UI/icons/black/play_arrow.svg</property>
+															</object>
+														</child>
+													</object>
+												</child>
+												<child>
+													<object class="GtkButton">
+														<child>
+															<object class="GtkImage">
+																<property name="file">UI/icons/black/stop.svg</property>
+															</object>
+														</child>
+													</object>
+												</child>
+												<child>
+													<object class="GtkButton">
+														<child>
+															<object class="GtkImage">
+																<property name="file">UI/icons/black/dangerous.svg</property>
+															</object>
+														</child>
+													</object>
+												</child>
+											</object>
+										</child>
+									</object>
+								</child>
+							</object>
+						</child>
+						<!-- End of bottom panel -->
+
+					</object>
+					<!-- End of library root -->
+
+				</property>
+			</object>
+		</child>
+		<!-- End of library view -->
+
+		<!-- Loading view -->
+		<child>
+			<object class="GtkStackPage">
+				<property name="name">loadingView</property>
+				<property name="child">
+					
+					<!-- Loading view root -->
+					<object class="GtkSpinner">
+						<property name="spinning">true</property>
+					</object>
+					<!-- End of loading view root -->
+
+				</property>
+			</object>
+		</child>
+		<!-- End of loading view -->
+
+	</object>
+</interface>
