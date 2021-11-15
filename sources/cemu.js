@@ -223,16 +223,17 @@ class CemuSource extends Source{
 	/**
 	 * Get cemu's game dirs from its config data
 	 * @param {object} config - Cemu's config data
+	 * @param {string} prefix - Cemu's wine prefix absolute path
 	 * @returns {GameDir[]} - The game dirs extracted from cemu's config
 	 * @private
 	 */
-	async _getROMDirs(config){
+	async _getROMDirs(config, prefix){
 
 		// Search into config for ROM dirs
 		const wineGamePaths = config?.content?.GamePaths?.[0]?.Entry;
 
 		// Convert wine paths into linux paths
-		const linuxGamePaths = wineGamePaths.map(winePath=>wineToLinux(winePath));
+		const linuxGamePaths = wineGamePaths.map(winePath=>wineToLinux(winePath, prefix));
 
 		// Convert paths into gameDirs
 		const gameDirs = linuxGamePaths.map(path=>new GameDir(path, true));
@@ -288,11 +289,12 @@ class CemuSource extends Source{
 		// Read lutris config for cemu (to get cemu's exe path)
 		const USER_DIR = env["HOME"];
 		const lutrisConfigPath = pathJoin(USER_DIR, ".config", "lutris", "games", `${this.cemuLutrisGame.configPath}.yml`);
-		let cemuExePath;
+		let cemuExePath, cemuPrefixPath;
 		try {
 			const lutrisConfigContents = await readFile(lutrisConfigPath, "utf-8");
 			const parsedLutrisConfig = YAML.parse(lutrisConfigContents);
 			cemuExePath = parsedLutrisConfig.game.exe;
+			cemuPrefixPath = parsedLutrisConfig.game.prefix;
 		} catch (error) {
 			if (warn) console.warn(`Unable to read lutris's game config file for cemu : ${error}`);
 		}
@@ -312,12 +314,12 @@ class CemuSource extends Source{
 		let romGames = [];
 		if (typeof config !== "undefined"){
 
-			if (!this.preferCache){
+			if (!this.preferCache && typeof cemuPrefixPath !== "undefined"){
 
 				// Get cemu's ROM dirs
 				let romDirs;
 				try {
-					romDirs = await this._getROMDirs(config);
+					romDirs = await this._getROMDirs(config, cemuPrefixPath);
 				} catch (error){
 					if (warn) console.warn(`Unable to get cemu ROM dirs : ${error}`);
 				}
