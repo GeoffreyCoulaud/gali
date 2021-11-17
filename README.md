@@ -47,13 +47,11 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 ## Known issues
 * Games from Steam, Legendary, Heroic can be started but not stopped or killed
 * Dolphin emulator games don't get distinguished between GameCube and Wii
-* Retroarch source doesn't check for rom presence (installed state)
 * Installed Citra games aren't listed
 * Installed Yuzu games aren't listed
 * Cemu in lutris is a clunky solution, but it's the best we currently have on linux
 
 ## TODO
-* Add installed state to more sources
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
 * Add option in Dolphin to read cached games
 * Add a better way to handle nested sources (event on game push)
