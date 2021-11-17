@@ -25,7 +25,6 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 	}
 
 	// ! There is no way (AFAIK) to control a legendary game's life cycle from the launcher.
-	// TODO Try to launch directly from wine
 
 	/**
 	 * Start the game in a subprocess
@@ -55,6 +54,7 @@ class LegendaryGame extends Game{
 
 	platform = "PC";
 	source = LEGENDARY_SOURCE_NAME;
+	isInstalled = true; // Legendary only exposes installed games
 
 	/**
 	 * Create a legendary games launcher game
@@ -102,28 +102,30 @@ class LegendarySource extends Source{
 		const USER_DIR = env["HOME"];
 		const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config/legendary/installed.json");
 
-		let installed;
+		let data;
 		try {
 			const fileContents = await readFile(INSTALLED_FILE_PATH, "utf-8");
-			installed = JSON.parse(fileContents);
+			data = JSON.parse(fileContents);
 		} catch (error){
 			if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);
-			installed = undefined;
+			data = undefined;
 		}
 
 		// Build games
-		const installedGames = [];
-		if (installed){
-			for (const key of Object.keys(installed)){
-				const gameData = installed[key];
-				const game = new LegendaryGame(gameData?.app_name, gameData?.title);
-				if (game.appName && game.name){
-					installedGames.push(game);
+		const games = [];
+		if (data){
+			for (const key of Object.keys(data)){
+				const gameData = data[key];
+				const gameName = gameData?.app_name;
+				const gameTitle = gameData?.title;
+				if (gameName && gameTitle){
+					const game = new LegendaryGame(gameData?.app_name, gameData?.title);
+					games.push(game);
 				}
 			}
 		}
 
-		return installedGames;
+		return games;
 	}
 
 }

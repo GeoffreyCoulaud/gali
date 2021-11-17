@@ -34,12 +34,7 @@ async function testLibraryScan(){
 
 	let DO_DISPLAY_GAMES_LIST = false;
 
-	// Get cli args
-	const indexOfDisplayArg = process.argv.indexOf("--display");
-	if (indexOfDisplayArg !== -1){
-		process.argv.pop(indexOfDisplayArg);
-		DO_DISPLAY_GAMES_LIST = true;
-	}
+	// Help cli argument
 	const indexOfHelpArg = process.argv.indexOf("--help");
 	if (indexOfHelpArg !== -1){
 		process.argv.pop(indexOfHelpArg);
@@ -55,6 +50,13 @@ Parameters
 `
 		);
 		return;
+	}
+
+	// Display cli argument
+	const indexOfDisplayArg = process.argv.indexOf("--display");
+	if (indexOfDisplayArg !== -1){
+		process.argv.pop(indexOfDisplayArg);
+		DO_DISPLAY_GAMES_LIST = true;
 	}
 
 	// Define sources to scan

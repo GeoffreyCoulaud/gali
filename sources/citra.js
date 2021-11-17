@@ -134,7 +134,12 @@ class CitraSource extends Source{
 
 		const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
 		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-		const games = gamePaths.map(path=>new CitraGame(pathBasename(path), path));
+		const games = [];
+		for (const path of gamePaths){
+			const game = new CitraGame(pathBasename(path), path);
+			game.isInstalled = true;
+			games.push(game);
+		}
 		return games;
 
 	}

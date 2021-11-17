@@ -142,7 +142,12 @@ class YuzuSource extends Source{
 
 		const GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
 		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-		const games = gamePaths.map(path=>new YuzuGame(pathBasename(path), path));
+		const games = [];
+		for (const path of gamePaths){
+			const game = new YuzuGame(pathBasename(path), path);
+			game.isInstalled = true;
+			games.push(game);
+		}
 		return games;
 
 	}

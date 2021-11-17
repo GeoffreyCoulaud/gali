@@ -67,9 +67,8 @@ class PPSSPPSource extends Source{
 	static name = PPSSPP_SOURCE_NAME;
 	preferCache = false;
 
-	constructor(preferCache = false){
+	constructor(){
 		super();
-		this.preferCache = preferCache;
 	}
 
 	/**
@@ -114,7 +113,13 @@ class PPSSPPSource extends Source{
 
 		const GAME_FILES_REGEX = /.+\.(iso|cso)/i;
 		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-		const games = gamePaths.map(path=>new PPSSPPGame(pathBasename(path), path));
+		const games = [];
+		for (const path of gamePaths){
+			const game = new PPSSPPGame(pathBasename(path), path);
+			game.isInstalled = true;
+			games.push(game);
+		}
+
 		return games;
 
 	}

@@ -50,6 +50,7 @@ class DesktopEntryGame extends Game{
 
 	platform = "PC";
 	source = DESKTOP_ENTRIES_SOURCE_NAME;
+	isInstalled = true; // All desktop entries games are considered installed
 
 	/**
 	 * Create a desktop entry game

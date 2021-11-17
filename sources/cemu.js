@@ -7,6 +7,7 @@ const { readFile, writeFile } = require("fs/promises");
 const { Parser: XMLParser } = require("xml2js");
 const { GameDir } = require("./common.js");
 const { spawn } = require("child_process");
+const { existsSync } = require("fs");
 const { env } = require("process");
 const YAML = require("yaml");
 
@@ -135,7 +136,7 @@ class CemuSource extends Source{
 		let meta;
 		try {
 			const gameDir = pathDirname(linuxGamePath);
-			const metaPath = pathResolve(pathJoin(gameDir, "..", "meta", "meta.xml"));
+			const metaPath = pathResolve(pathJoin(gameDir, "../meta/meta.xml"));
 			const metaFileContents = await readFile(metaPath, "utf-8");
 			const parser = new XMLParser();
 			meta = await parser.parseStringPromise(metaFileContents);
@@ -184,10 +185,11 @@ class CemuSource extends Source{
 	/**
 	 * Get cemu's cached games from its config data
 	 * @param {object} config - Cemu's config data
+	 * @param {string} prefix - Cemu's wine prefix absolute path
 	 * @returns {CemuGame[]} - An array of found cached games
 	 * @private
 	 */
-	async _getCachedROMs(config){
+	async _getCachedROMs(config, prefix){
 
 		// Search into config for cached games
 		const games = [];
@@ -195,10 +197,11 @@ class CemuSource extends Source{
 		const gameCache = config?.content?.GameCache?.[0]?.Entry;
 		if (typeof gameCache !== "undefined"){
 			for (const game of gameCache){
+
+				// Get game name
 				const customName = game?.custom_name?.[0];
 				const defaultName = game?.name?.[0];
-				const path = game?.path?.[0];
-				let name;
+				let name = undefined;
 				for (let candidate of [customName, defaultName]){
 					if (typeof candidate !== "string"){ continue; }
 					candidate = candidate.trim();
@@ -207,11 +210,20 @@ class CemuSource extends Source{
 						break;
 					}
 				}
+
+				// Get game path and installed state
+				const path = game?.path?.[0];
+				const linuxPath = wineToLinux(path, prefix);
+				const isInstalled = existsSync(linuxPath);
+
+				// Build game
 				if (
 					typeof name !== "undefined" &&
 					typeof path !== "undefined"
 				){
-					games.push(new CemuGame(name, path));
+					const game = new CemuGame(name, path);
+					game.isInstalled = isInstalled;
+					games.push(game);
 				}
 			}
 		}
@@ -271,7 +283,9 @@ class CemuSource extends Source{
 			}
 
 			// Build game
-			return new CemuGame(name, winePath);
+			const game = new CemuGame(name, winePath);
+			game.isInstalled = true;
+			return game;
 		});
 		const romGames = await Promise.all(romGamesPromises);
 
@@ -288,7 +302,7 @@ class CemuSource extends Source{
 
 		// Read lutris config for cemu (to get cemu's exe path)
 		const USER_DIR = env["HOME"];
-		const lutrisConfigPath = pathJoin(USER_DIR, ".config", "lutris", "games", `${this.cemuLutrisGame.configPath}.yml`);
+		const lutrisConfigPath = pathJoin(USER_DIR, ".config/lutris/games", `${this.cemuLutrisGame.configPath}.yml`);
 		let cemuExePath, cemuPrefixPath;
 		try {
 			const lutrisConfigContents = await readFile(lutrisConfigPath, "utf-8");
@@ -312,9 +326,9 @@ class CemuSource extends Source{
 		// If (scan) : scan cemu's game paths for games and ignore cemu's game cache
 		// Else      : trust cemu's game cache
 		let romGames = [];
-		if (typeof config !== "undefined"){
+		if (typeof config !== "undefined" && typeof cemuPrefixPath !== "undefined"){
 
-			if (!this.preferCache && typeof cemuPrefixPath !== "undefined"){
+			if (!this.preferCache){
 
 				// Get cemu's ROM dirs
 				let romDirs;
@@ -337,7 +351,7 @@ class CemuSource extends Source{
 
 				// Get cemu's cached ROM games
 				try {
-					romGames = await this._getCachedROMs(config);
+					romGames = await this._getCachedROMs(config, cemuPrefixPath);
 				} catch (error){
 					if (warn) console.warn(`Unable to get cemu cached ROMs : ${error}`);
 				}

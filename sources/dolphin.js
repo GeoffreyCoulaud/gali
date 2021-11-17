@@ -136,7 +136,12 @@ class DolphinSource extends Source{
 		// TODO detect games console between GameCube and Wii
 		const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
 		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
-		const games = gamePaths.map(path=>new DolphinGame(pathBasename(path), path));
+		const games = [];
+		for (const path of gamePaths){
+			const game = new DolphinGame(pathBasename(path), path);
+			game.isInstalled = true;
+			games.push(game);
+		}
 		return games;
 	}
 

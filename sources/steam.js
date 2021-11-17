@@ -136,6 +136,11 @@ class SteamSource extends Source{
 	 */
 	async _getInstalledGames(dirs){
 
+		const IGNORED_ENTRIES_APPIDS = [
+			"221410",  // Steam for Linux
+			"228980",  // Steamworks Common Redistributables
+			"1070560", // Steam Linux Runtime
+		];
 		const IGNORED_ENTRIES_REGEXES = [
 			/^Steamworks.*/,
 			/^(S|s)team ?(L|l)inux ?(R|r)untime.*/,
@@ -147,18 +152,38 @@ class SteamSource extends Source{
 		for (const dir of dirs){
 
 			// Get all games manifests of dir
-			const manifestsDir = pathJoin(dir.path, "steamapps");
+			const manDir = pathJoin(dir.path, "steamapps");
 			let entries = [];
-			try { entries = await readdir(manifestsDir); } catch (err) { continue; }
+			try { entries = await readdir(manDir); } catch (err) { continue; }
 			const manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 
 			// Get info from manifests
-			for (const manifest of manifests){
+			for (const manName of manifests){
 
-				const manifestPath = pathJoin(manifestsDir, manifest);
-				const manifestContent = await readFile(manifestPath, {encoding: "utf-8"});
-				const manifestParsedContent = parseVDF(manifestContent);
-				const game = new SteamGame(manifestParsedContent?.AppState?.appid, manifestParsedContent?.AppState?.name);
+				const manPath = pathJoin(manDir, manName);
+				const manContent = await readFile(manPath, {encoding: "utf-8"});
+				const manData = parseVDF(manContent);
+
+				// Skip non-game apps
+				const appid = manData?.AppState?.appid;
+				const name = manData?.AppState?.name;
+				if (
+					typeof appid === "undefined" ||
+					typeof name === "undefined" ||
+					IGNORED_ENTRIES_APPIDS.includes(appid)
+				){
+					continue;
+				}
+
+				const game = new SteamGame(appid, name);
+
+				// Get installed state of game
+				// See https://github.com/lutris/lutris/blob/master/docs/steam.rst
+				const stateFlags = manData?.AppState?.StateFlags;
+				if (typeof stateFlags !== "undefined"){
+					const installedMask = 4;
+					game.isInstalled = stateFlags & installedMask;
+				}
 
 				// Ignore some non-games entries
 				let ignored = false;

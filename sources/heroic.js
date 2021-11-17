@@ -94,10 +94,9 @@ class HeroicSource extends Source{
 		if (library){
 			for (const entry of library){
 				if (entry?.["is_game"]){
-					games.push(new HeroicGame(
-						entry.title,
-						entry.app_name
-					));
+					const game = new HeroicGame(entry.title, entry.app_name);
+					game.isInstalled = entry?.is_installed;
+					games.push(game);
 				}
 			}
 		}
