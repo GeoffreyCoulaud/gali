@@ -1,110 +1,59 @@
-const gi = require("node-gtk");
-const Gtk = gi.require("Gtk", "4.0");
-const GLib = gi.require("GLib", "2.0");
-const { join: pathJoin } = require("path");
 const { readUserFileSafe } = require("./utils/preferences.js");
+const child_process = require("child_process");
 const Library = require("./library.js");
-const BragMainWindow = require("./UI/BragMainWindow/widget.js");
-const BragGameGridChild = require("./UI/BragGameGridChild/widget.js");
+const IPC = require("./utils/ipc.js");
 
-// Get user preferences from disk
-const prefs = readUserFileSafe();
-
-// Define main components
-let mainWindow = undefined;
-const GtkLoop = GLib.MainLoop.new(null, false);
-const application = new Gtk.Application("brag", 0);
-application.on("activate", onActivate);
+// Main components
+const preferences = readUserFileSafe();
 const library = new Library(
-	prefs.scan.enabledSources,
-	prefs.scan.preferCache,
-	prefs.scan.warnings
+	preferences.scan.enabledSources,
+	preferences.scan.preferCache,
+	preferences.scan.warnings
 );
 
-// -----------------------------------------------------------------------------
-// Event handlers
-// -----------------------------------------------------------------------------
+// Create view child process
+let child_view = child_process.fork(`${__dirname}/view.js`, [], {});
+child_view.on("message", handleViewMessage);
+child_view.on("exit", handleViewExit);
 
 /**
- * Handle application activation
+ * Handle messages sent from the view process
+ * @param {IPC.Message} message - A message object passed from the child process
  */
-function onActivate(){
-
-	// Create main window
-	mainWindow = new BragMainWindow(application);
-	mainWindow.on("close-request", onCloseRequest);
-	mainWindow.show();
-	mainWindow.present();
-
-	// Trigger library scan on startup
-	triggerScan();
-
-	// TODO Remove later, temporary for testing
-	// mainWindow._viewStack.setVisibleChildName("loadingView");
-	// mainWindow._gameInfoRevealer.setRevealChild(true);
-
-	gi.startLoop();
-	GtkLoop.run();
-
-}
-
-/**
- * A function to trigger a library scan and update the view along the way.
- */
-function triggerScan(){
-
-	// !temp
-	console.log("triggerscan started");
-
-	// Show the loading view
-	mainWindow._viewStack.setVisibleChildName("loadingView");
-
-	// Clear game grid
-	const grid = mainWindow._gameGridFlowBox;
-	let currentChild = grid.getChildAtIndex(0);
-	while (currentChild){
-		grid.remove(currentChild);
-		currentChild = grid.getChildAtIndex(0);
+function handleViewMessage(message){
+	console.log(`main ← view ${message.type.name}`);
+	switch (message.type.name){
+	// View child process requests a library scan
+	case IPC.MessageType.RequestScan.name:
+		onScanRequest();
 	}
-
-	// Scan the library
-	library.empty();
-	library.scan().then(()=>{
-
-		// TODO this code is not reached before the app closes.
-		// See https://github.com/romgrk/node-gtk/issues/289
-		// This is because the event loop is interrupted when
-		// GLib's loop is running.
-
-		// Add game to the grid
-		// !temp
-		console.log("Library scanned and found", library.games.length, "games");
-		const dummyImage = pathJoin(__dirname, "./UI/sample/stk_boxart.jpg");
-		const dummyName = "Super Tux Kart";
-		for (let i = 0; i < 5; i++){
-			const childWidget = new BragGameGridChild(dummyImage, dummyName);
-			mainWindow._gameGridFlowBox.insert(childWidget, -1);
-		}
-
-		// Show library view
-		mainWindow._viewStack.setVisibleChildName("libraryView");
-	});
-
 }
 
 /**
- * Handle application close request
+ * Handle the exit of the view process
+ * @param {number} code - The child's exit code
+ * @param {string} signal - The signal that terminated the child
  */
-function onCloseRequest(){
-
-	GtkLoop.quit();
-	application.quit();
-	return false;
-
+function handleViewExit(code, signal){
+	if (code !== null){
+		console.log("View process exited with code", code);
+	} else {
+		console.log("View process exited due to signal", signal);
+	}
+	child_view = null;
 }
 
-// -----------------------------------------------------------------------------
-
-// Start the application
-const status = application.run([]);
-console.log("Exiting with status :", status);
+/**
+ * Handle library scan requests from the view process
+ */
+function onScanRequest(){
+	library.scan().then(()=>{
+		child_view.send(new IPC.Message(IPC.MessageType.ScanHasEnded), (error)=>{
+			if (error === null){
+				console.log("\tScanHasEnded was sent successfully");
+			} else {
+				console.log("\tScanHasEnded could not be sent  :", error);
+			}
+		});
+	});
+}
