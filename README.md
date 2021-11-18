@@ -1,8 +1,8 @@
 # Brag
 A game launcher for **linux** where your library is the star of the show.
 
-## Why, how ?
-> I'm so tired of interfaces that inlude 9 out 10 of my games. I want it all in one, pretty, place ! 
+## Why ?
+> I'm so tired of interfaces that include 9 out 10 of my games. I want it all in one, pretty, place ! 
 
 If you think alike, I believe Brag is for you. 
 
