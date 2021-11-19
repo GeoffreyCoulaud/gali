@@ -16,10 +16,7 @@ let app = null;
  * Handle application close request
  */
 function handleCloseRequest(){
-	// TODO Figure out why the window doesn't close and freezes
-	loop.quit();
-	app.quit();
-	return false;
+	process.exit(0);
 }
 
 /**
