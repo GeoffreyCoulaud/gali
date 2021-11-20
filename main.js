@@ -1,63 +1,94 @@
-const { readUserFileSafe } = require("./utils/preferences.js");
-const child_process = require("child_process");
-const Library = require("./library.js");
-const IPC = require("./utils/ipc.js");
-const process = require("process");
+const gi          = require("node-gtk");
+const GLib        = gi.require("GLib", "2.0");
+const Gtk         = gi.require("Gtk", "4.0");
+const preferences = require("./utils/preferences.js");
+const Library     = require("./library.js");
+const process     = require("process");
+const BragMainWindow    = require("./UI/BragMainWindow/widget.js");
+const BragGameGridChild = require("./UI/BragGameGridChild/widget.js");
 
-// Main components
-const preferences = readUserFileSafe();
+// Main UI components
+let mainWindow = null;
+let loop = null;
+let app = null;
+
+// Main logic components
+const userPreferences = preferences.readUserFileSafe();
 const library = new Library(
-	preferences.scan.enabledSources,
-	preferences.scan.preferCache,
-	preferences.scan.warnings
+	userPreferences.scan.enabledSources,
+	userPreferences.scan.preferCache,
+	userPreferences.scan.warnings
 );
 
-// Create view child process
-let child_view = child_process.fork(`${__dirname}/view.js`, [], {});
-child_view.on("message", handleViewMessage);
-child_view.on("exit", handleViewExit);
-
 /**
- * Handle messages sent from the view process
- * @param {IPC.Message} message - A message object passed from the child process
+ * Function called by the UI to start a scan and refresh the games shown
  */
-function handleViewMessage(message){
-	console.log(`main ← view ${message.type.name}`);
-	switch (message.type.name){
-	// View child process requests a library scan
-	case IPC.MessageType.RequestScan.name:
-		onScanRequest();
-	}
+function libraryScanUpdateUI(){
+
+	// Show loading view
+	mainWindow._viewStack.setVisibleChildName("loadingView");
+
+	// Scan
+	library.scan().then(()=>{
+
+		// Clear game grid
+		const grid = mainWindow._gameGridFlowBox;
+		let currentChild = grid.getChildAtIndex(0);
+		while (currentChild){
+			grid.remove(currentChild);
+			currentChild = grid.getChildAtIndex(0);
+		}
+
+		// Show library view
+		mainWindow._viewStack.setVisibleChildName("libraryView");
+
+		// TODO Add games to the grid
+		// Temporary for testing : add dummy games
+		for (let i = 0; i < 15; i++){
+			const gameGridChild = new BragGameGridChild(
+				`${__dirname}/UI/sample/stk_boxart.jpg`,
+				"Super Tux Kart"
+			);
+			mainWindow._gameGridFlowBox.insert(gameGridChild, -1);
+		}
+
+	});
 }
 
 /**
- * Handle the exit of the view process
- * @param {number} code - The child's exit code
- * @param {string} signal - The signal that terminated the child
+ * Function called when the main window does a close request
  */
-function handleViewExit(code, signal){
-	if (code !== null){
-		console.log("View process exited with code", code);
-	} else {
-		console.log("View process exited due to signal", signal);
-	}
-	child_view = null;
-
-	// End the main process
+function onWindowCloseRequest(){
 	process.exit(0);
 }
 
 /**
- * Handle library scan requests from the view process
+ * Function called when the app is activated
  */
-function onScanRequest(){
-	library.scan().then(()=>{
-		child_view.send(new IPC.Message(IPC.MessageType.ScanHasEnded), (error)=>{
-			if (error === null){
-				console.log("\tScanHasEnded was sent successfully");
-			} else {
-				console.log("\tScanHasEnded could not be sent  :", error);
-			}
-		});
-	});
+function onAppActivate(){
+	// Create the main window
+	mainWindow = new BragMainWindow(app);
+	mainWindow.on("close-request", onWindowCloseRequest);
+	mainWindow.show();
+
+	// Trigger library scan on startup
+	libraryScanUpdateUI();
+
+	gi.startLoop();
+	loop.run();
 }
+
+
+// Start the app
+loop = GLib.MainLoop.new(null, false);
+app = new Gtk.Application("brag", 0);
+app.on("activate", onAppActivate);
+
+// Hack to not break the event loop because of node-gtk
+setTimeout(
+	()=>setImmediate(
+		()=>{
+			app.run();
+		}
+	)
+);
