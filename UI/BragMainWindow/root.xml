@@ -21,6 +21,7 @@
 								<property name="vexpand">true</property>
 								<child>
 									<object class="GtkViewport" id="gameGridViewport">
+										<property name="vscroll-policy">natural</property>
 										<child>
 											<object class="GtkFlowBox" id="gameGridFlowBox">
 												<property name="valign">start</property>

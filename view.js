@@ -45,6 +45,15 @@ function handleScanHasEnded(){
 
 	// TODO Request games
 
+	// ! Temporary for testing : add dummy games
+	for (let i = 0; i < 15; i++){
+		const gameGridChild = new BragGameGridChild(
+			`${__dirname}/UI/sample/stk_boxart.jpg`,
+			"Super Tux Kart"
+		);
+		mainWindow._gameGridFlowBox.insert(gameGridChild, -1);
+	}
+
 }
 
 /**
@@ -79,4 +88,12 @@ app.on("activate", ()=>{
 	loop.run();
 
 });
-app.run();
+
+// Hack to not break the event loop because of node-gtk
+setTimeout(
+	()=>setImmediate(
+		()=>{
+			app.run();
+		}
+	)
+);

@@ -2,6 +2,7 @@ const { readUserFileSafe } = require("./utils/preferences.js");
 const child_process = require("child_process");
 const Library = require("./library.js");
 const IPC = require("./utils/ipc.js");
+const process = require("process");
 
 // Main components
 const preferences = readUserFileSafe();
@@ -41,6 +42,9 @@ function handleViewExit(code, signal){
 		console.log("View process exited due to signal", signal);
 	}
 	child_view = null;
+
+	// End the main process
+	process.exit(0);
 }
 
 /**
