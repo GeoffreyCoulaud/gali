@@ -86,7 +86,7 @@ function doesUserFileExist(){
  */
 function createUserFile(){
 	if (!existsSync(CONFIG_DIR)) mkdirSync(CONFIG_DIR, {recursive: true});
-	return writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES), "utf-8");
+	return writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES, null, "\t"), "utf-8");
 }
 
 /**
