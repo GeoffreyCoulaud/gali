@@ -1,20 +1,33 @@
-const { StartOnlyGameProcessContainer, GameDir, Game, Source } = require("./common.js");
-const { readdir, readFile } = require("fs/promises");
-const { parse: parseVDF} = require("vdf-parser");
-const { join: pathJoin } = require("path");
-const { spawn } = require("child_process");
-const { existsSync } = require("fs");
-const { env } = require("process");
+const vdfParser     = require("vdf-parser");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const fs            = require("fs");
+const fsp           = require("fs/promises");
+const process       = require("process");
 
-const USER_DIR = env["HOME"];
-
+const USER_DIR = process.env["HOME"];
 const STEAM_SOURCE_NAME = "Steam";
+
+/**
+ * Checks if a string matches any of the passed regular expressions
+ * @param {string} str - The string to test
+ * @param {RegExp} regexes - The regexes to test
+ * @returns {boolean} - True on match, else false
+ */
+function strMatchAny(str, regexes){
+	for (const regex of regexes){
+		if (str.match(regex)){
+			return true;
+		}
+	}
+	return false;
+}
 
 /**
  * A wrapper for steam game process management
  * @property {string} appId - A steam appid, used to invoke steam
  */
-class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
+class SteamGameProcessContainer extends common.StartOnlyGameProcessContainer{
 
 	commandOptions = ["steam"];
 
@@ -34,7 +47,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 	 */
 	async start(){
 		const command = this._selectCommand();
-		this.process = spawn(
+		this.process = child_process.spawn(
 			command,
 			[`steam://rungameid/${this.appId}`],
 			this.constructor.defaultSpawnOptions
@@ -48,7 +61,7 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer{
 /**
  * Class representing a steam game
  */
-class SteamGame extends Game{
+class SteamGame extends common.Game{
 
 	platform = "PC";
 	source = STEAM_SOURCE_NAME;
@@ -57,10 +70,12 @@ class SteamGame extends Game{
 	 * Create a steam game
 	 * @param {string} appId - A steam appid
 	 * @param {string} name - The game's displayed name
+	 * @param {boolean} isInstalled - The game's installed state
 	 */
-	constructor(appId, name){
+	constructor(appId, name, isInstalled = undefined){
 		super(name);
 		this.appId = appId;
+		this.isInstalled = isInstalled;
 		this.processContainer = new SteamGameProcessContainer(this.appId);
 	}
 
@@ -73,7 +88,7 @@ class SteamGame extends Game{
 	}
 }
 
-class SteamSource extends Source{
+class SteamSource extends common.Source{
 
 	static name = STEAM_SOURCE_NAME;
 	preferCache = false;
@@ -90,9 +105,9 @@ class SteamSource extends Source{
 	 */
 	async _getConfig(){
 
-		const STEAM_INSTALL_DIRS_PATH =  pathJoin(USER_DIR, ".steam/root/config/libraryfolders.vdf");
-		const fileContents = await readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
-		const config = parseVDF(fileContents);
+		const STEAM_INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
+		const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
+		const config = vdfParser.parse(fileContents);
 
 		// Validate
 		if (typeof config.libraryfolders === "undefined"){
@@ -113,19 +128,54 @@ class SteamSource extends Source{
 		const dirs = [];
 
 		// Read default steam install directory
-		const STEAM_DEFAULT_INSTALL_DIR = pathJoin(USER_DIR, ".steam/root");
-		if (existsSync(STEAM_DEFAULT_INSTALL_DIR)){
-			dirs.push(new GameDir(STEAM_DEFAULT_INSTALL_DIR));
+		const STEAM_DEFAULT_INSTALL_DIR = `${USER_DIR}/.steam/root`;
+		if (fs.existsSync(STEAM_DEFAULT_INSTALL_DIR)){
+			dirs.push(new common.GameDir(STEAM_DEFAULT_INSTALL_DIR));
 		}
 
 		// Read user specified steam install directories
 		const libraryfolders = config.libraryfolders;
 		const keys = Object.keys(libraryfolders);
 		for (let i = 0; i < keys.length-1; i++){
-			dirs.push(new GameDir(libraryfolders[keys[i]].path));
+			dirs.push(new common.GameDir(libraryfolders[keys[i]].path));
 		}
 
 		return dirs;
+	}
+
+	/**
+	 * Optional step, adding images to a game
+	 * @param {SteamGame} game - The game to add images to
+	 * @private
+	 */
+	_getGameImages(game){
+		const STEAM_IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
+		const images = {
+			boxArtImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
+			coverImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
+			iconImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_icon.jpg`,
+		};
+		for (const [key, value] of Object.entries(images)){
+			const imageExists = fs.existsSync(value);
+			if (imageExists){
+				game[key] = value;
+			}
+		}
+	}
+
+	/**
+	 * Optional step, adding the installed state to a game
+	 * @param {Steamgame} game - The game to get the installed state
+	 * @param {object} manifestData - The game's manifest
+	 * @see https://github.com/lutris/lutris/blob/master/docs/steam.rst
+	 * @private
+	 */
+	_getGameIsInstalled(game, manifestData){
+		const stateFlags = manifestData?.AppState?.StateFlags;
+		if (typeof stateFlags !== "undefined"){
+			const installedMask = 4;
+			game.isInstalled = stateFlags & installedMask;
+		}
 	}
 
 	/**
@@ -152,54 +202,52 @@ class SteamSource extends Source{
 		for (const dir of dirs){
 
 			// Get all games manifests of dir
-			const manDir = pathJoin(dir.path, "steamapps");
+			const manDir = `${dir.path}/steamapps`;
 			let entries = [];
-			try { entries = await readdir(manDir); } catch (err) { continue; }
+			try { entries = await fsp.readdir(manDir); } catch (err) { continue; }
 			const manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
 
 			// Get info from manifests
 			for (const manName of manifests){
 
-				const manPath = pathJoin(manDir, manName);
-				const manContent = await readFile(manPath, {encoding: "utf-8"});
-				const manData = parseVDF(manContent);
+				const INSTALLED_MASK = 4;
+				const manPath = `${manDir}/${manName}`;
+				const manContent = await fsp.readFile(manPath, {encoding: "utf-8"});
+				const manData = vdfParser.parse(manContent);
+				const stateFlags = manData?.AppState?.StateFlags ?? 0;
 
-				// Skip non-game apps
 				const appid = manData?.AppState?.appid;
 				const name = manData?.AppState?.name;
+				const isInstalled = stateFlags & INSTALLED_MASK;
+
+				// Skip duplicate games, except if the installed state of the
+				// existing duplicate is worse.
+				const dupIndex = games.findIndex(g=>g.appId === appid);
+				if (dupIndex !== -1){
+					const dupGame = games[dupIndex];
+					const isDupWorse = !dupGame.isInstalled && isInstalled;
+					if (isDupWorse){
+						games.splice(dupIndex, 1);
+					} else {
+						continue;
+					}
+				}
+
+				// Skip explicitly excluded manifests
 				if (
-					typeof appid === "undefined" ||
-					typeof name === "undefined" ||
-					IGNORED_ENTRIES_APPIDS.includes(appid)
+					!name ||
+					!appid ||
+					IGNORED_ENTRIES_APPIDS.includes(appid) ||
+					strMatchAny(name, IGNORED_ENTRIES_REGEXES)
 				){
 					continue;
 				}
 
-				const game = new SteamGame(appid, name);
-
-				// Get installed state of game
-				// See https://github.com/lutris/lutris/blob/master/docs/steam.rst
-				const stateFlags = manData?.AppState?.StateFlags;
-				if (typeof stateFlags !== "undefined"){
-					const installedMask = 4;
-					game.isInstalled = stateFlags & installedMask;
-				}
-
-				// Ignore some non-games entries
-				let ignored = false;
-				if (typeof game.appId === "undefined" || typeof game.name === "undefined"){
-					ignored = true;
-				} else {
-					for (const regex of IGNORED_ENTRIES_REGEXES){
-						if (game.name.match(regex)){
-							ignored = true;
-							break;
-						}
-					}
-				}
-				if (!ignored){
-					games.push(game);
-				}
+				// Build game
+				const game = new SteamGame(appid, name, isInstalled);
+				this._getGameIsInstalled(game, manData);
+				this._getGameImages(game);
+				games.push(game);
 
 			}
 		}
