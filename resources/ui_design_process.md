@@ -16,13 +16,13 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 * ✅ Grid with a fixed number of columns
 * ✅ Create the view change for scanning
 * ✅ Make app startup trigger a library scan
-* Make scan button trigger a library scan
-* Bind grid element selection to the revealer (visible state + content)
-* Bind libary content to the game grid
-* Bind the grid resize to its option
+* ✅ Make scan button trigger a library scan
+* ✅ Bind libary content to the game grid
+* ✅ Bind grid element selection to the revealer (visible state + content)
 * Create the popup menus
 	* Source filtering (+ installed filtering)
 	* Settings
+* Bind the grid resize to its option
 * HeaderBar buttons toggle the corresponding menus
 * Bind the game life cycle buttons to their game methods
 * Bind source filtering to the game grid
