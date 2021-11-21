@@ -12,14 +12,8 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 | <img src="mockup3.png"> | <img src="mockup4.png"> |
 
 ## TODO
-* ✅ ~~Use XML to describe the UI~~
-* ✅ Grid with a fixed number of columns  
-	The images should always take up ~1/5 the width if there's 5 elements per row.  
-	I tried setting `can-shrink` to `false` but this just makes the `Picture`s their natural width.  
-	Find a way to make the `FlowBoxChild`s share equally the total width then make the `Picture`s fill their immediate parent.  
-	**Update** : I asked [on Gnome's discourse forum](https://discourse.gnome.org/t/how-to-make-an-image-fill-the-width-of-a-box-and-keep-aspect-ratio/7980/4) and **no-fucking-body** knows how to do this.  
-	I'm considering a fixed image width à-la Lutris. It's been 6 days of me banging my head on this, I'll let it sit for now.  
-    **Update 2** : Marco Melorio answered back with the solution on the discourse, Hooray !
+* ✅ Use XML to describe the UI
+* ✅ Grid with a fixed number of columns
 * ✅ Create the view change for scanning
 * ✅ Make app startup trigger a library scan
 * Make scan button trigger a library scan
@@ -35,9 +29,18 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 
 ## Help and workarounds
 
+### The game grid
+[gnome_discourse_grid]: https://discourse.gnome.org/t/how-to-make-an-image-fill-the-width-of-a-box-and-keep-aspect-ratio/7980/6?u=geoffreycoulaud 
+After quite some time, I've figured out how to make the cover images expand to 
+fill the grid's width. This was thanks to **Marco Melorio** 
+[on Gnome's discourse forum](gnome_discourse_grid).  
+I'll pass the details but it almost made me ditch the fixed number of columns 
+design choice.
+
+
 ### The event loop
-At the moment, `node-gtk` doesn't have a way to make GLib's event loop and Node's
-run simultaneously. This broke my UI code in some places.  
+At the moment, `node-gtk` doesn't have a way to make GLib's event loop and 
+Node's run simultaneously. This broke my UI code in some places.  
 On the dedicated discord server, `NathanaelA#3774` found a solution and gave an 
 example that uses a separate UI process and inter process messaging.
 
