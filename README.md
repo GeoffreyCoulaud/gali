@@ -1,4 +1,8 @@
 # Brag
+
+![GitHub](https://img.shields.io/github/license/GeoffreyCoulaud/brag-launcher?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/GeoffreyCoulaud/brag-launcher?style=for-the-badge)
+
 A game launcher for **linux** where your library is the star of the show.
 
 ## Why ?
@@ -11,19 +15,24 @@ this is not the intended purpose of Brag. This project is for *brag*ging, showin
 You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
-Name            | Description                                | Notes
---------------- | ------------------------------------------ | -----------------
-Steam           | PC games store                             | Installed games
-Legendary       | FOSS Epic Games Launcher alternative (CLI) | Installed games
-Lutris          | Open Source gaming platform for Linux      | -
-Heroic          | FOSS Epic Games Launcher alternative (GUI) | -
-Desktop entries | Regular linux desktop entries              | -
-Retroarch       | Frontend for the libretro API              | -
-Dolphin         | Nintendo Wii / GameCube emulator           | -
-Citra           | Nintendo 3DS emulator                      | -
-Yuzu            | Nintendo Switch emulator                   | -
-PPSSPP          | Sony PSP emulator                          | -
-Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
+As of 21/11/2021
+
+Status | Name            | Description                                
+------ |---------------- | ------------------------------------------
+🔶 (1) | Steam           | PC games store                             
+🔶 (1) | Legendary       | FOSS Epic Games Launcher alternative (CLI) 
+✅     | Lutris          | Open Source gaming platform for Linux      
+🔶 (1) | Heroic          | FOSS Epic Games Launcher alternative (GUI) 
+✅     | Desktop entries | Regular linux desktop entries              
+✅     | Retroarch       | Frontend for the libretro API              
+✅     | Dolphin         | Nintendo Wii / GameCube emulator           
+🔶 (2) | Citra           | Nintendo 3DS emulator                      
+🔶 (2) | Yuzu            | Nintendo Switch emulator                   
+✅     | PPSSPP          | Sony PSP emulator                          
+✅     | Cemu            | Nintendo Wii U emulator                    
+
+1. **Steam**, **Legendary** and **Heroic** only allow starting games, not stopping or killing them
+2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
 
 ## Usage
 **Brag is in active development but is just not there yet. Be patient !**
@@ -46,15 +55,15 @@ Cemu            | Nintendo Wii U emulator                    | Cemu from lutris
 
 ## Known issues
 * Games from Steam, Legendary, Heroic can be started but not stopped or killed
-* Dolphin emulator games don't get distinguished between GameCube and Wii
-* Installed Citra games aren't listed
-* Installed Yuzu games aren't listed
 * Cemu in lutris is a clunky solution, but it's the best we currently have on linux
 
 ## TODO
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
-* Add option in Dolphin to read cached games
-* Add a better way to handle nested sources (event on game push)
+* Dolphin : Scan cached games
+* Dolphin : Differenciate between Gamecube and Wii games
+* Yuzu : Scan installed games
+* Citra : Scan installed games
+* Add a better way to handle nested sources
 * Better installation instructions
 * Additional sources
 	* itch.io
