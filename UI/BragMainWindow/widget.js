@@ -1,9 +1,8 @@
 const gi = require("node-gtk");
 const Gtk = gi.require("Gtk", "4.0");
-const { join: pathJoin } = require("path");
 
-const headerBarUI = pathJoin(__dirname, "./headerBar.xml");
-const rootUI = pathJoin(__dirname, "./root.xml");
+const headerBarUI = `${__dirname}/headerBar.xml`;
+const rootUI = `${__dirname}/root.xml`;
 
 class BragMainWindow extends Gtk.ApplicationWindow{
 

@@ -28,6 +28,8 @@
 												<property name="halign">start</property>
 												<property name="min-children-per-line">5</property>
 												<property name="max-children-per-line">5</property>
+												<property name="selection-mode">single</property>
+												<property name="homogeneous">true</property>
 											</object>
 										</child>
 									</object>
@@ -62,7 +64,7 @@
 													<object class="GtkButton">
 														<child>
 															<object class="GtkImage">
-																<property name="file">UI/icons/black/play_arrow.svg</property>
+																<property name="file">UI/icons/white/play_arrow.svg</property>
 															</object>
 														</child>
 													</object>
@@ -71,7 +73,7 @@
 													<object class="GtkButton">
 														<child>
 															<object class="GtkImage">
-																<property name="file">UI/icons/black/stop.svg</property>
+																<property name="file">UI/icons/white/stop.svg</property>
 															</object>
 														</child>
 													</object>
@@ -80,7 +82,7 @@
 													<object class="GtkButton">
 														<child>
 															<object class="GtkImage">
-																<property name="file">UI/icons/black/dangerous.svg</property>
+																<property name="file">UI/icons/white/dangerous.svg</property>
 															</object>
 														</child>
 													</object>

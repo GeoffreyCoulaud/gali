@@ -4,6 +4,7 @@ const Gtk         = gi.require("Gtk", "4.0");
 const preferences = require("./utils/preferences.js");
 const Library     = require("./library.js");
 const process     = require("process");
+const fs          = require("fs");
 const BragMainWindow    = require("./UI/BragMainWindow/widget.js");
 const BragGameGridChild = require("./UI/BragGameGridChild/widget.js");
 
@@ -23,7 +24,7 @@ const library = new Library(
 /**
  * Function called by the UI to start a scan and refresh the games shown
  */
-function libraryScanUpdateUI(){
+function onScanRequest(){
 
 	// Show loading view
 	mainWindow._viewStack.setVisibleChildName("loadingView");
@@ -42,17 +43,39 @@ function libraryScanUpdateUI(){
 		// Show library view
 		mainWindow._viewStack.setVisibleChildName("libraryView");
 
-		// TODO Add games to the grid
-		// Temporary for testing : add dummy games
-		for (let i = 0; i < 15; i++){
-			const gameGridChild = new BragGameGridChild(
-				`${__dirname}/UI/sample/stk_boxart.jpg`,
-				"Super Tux Kart"
-			);
+		// Add games to the grid
+		const games = library.games;
+		games.forEach((game, i)=>{
+			let image = `${__dirname}/UI/icons/white/image_not_found.svg`;
+			if (fs.existsSync(game.boxArtImage)){
+				image = game.boxArtImage;
+			}
+			const gameGridChild = new BragGameGridChild(i, image, game.name);
 			mainWindow._gameGridFlowBox.insert(gameGridChild, -1);
-		}
+		});
 
 	});
+}
+
+/**
+ * Function called when the game grid's selected elements changes.
+ * Please note that there is at most one selected child.
+ */
+function onGridSelectedChildChanged(){
+	const selectedElements = mainWindow._gameGridFlowBox.getSelectedChildren();
+	// Toggle info panel
+	const isInfoPaneVisible = selectedElements.length > 0;
+	mainWindow._gameInfoRevealer.setRevealChild(isInfoPaneVisible);
+	// Update info panel data
+	if (isInfoPaneVisible){
+		const game = library.games?.[selectedElements[0].libraryIndex];
+		if (game){
+			mainWindow._gameInfoTitle.setLabel(game.name);
+			mainWindow._gameInfoPlatform.setLabel(`${game.source} / ${game.platform}`);
+		} else {
+			console.warn("Info panel could not be updated, game isn't present in the library");
+		}
+	}
 }
 
 /**
@@ -63,16 +86,25 @@ function onWindowCloseRequest(){
 }
 
 /**
+ * Function called when the main window is created to bind GTK signals (events)
+ */
+function bindMainWindowSignals(){
+	mainWindow.on("close-request", onWindowCloseRequest);
+	mainWindow._scanButton.on("clicked", onScanRequest);
+	mainWindow._gameGridFlowBox.on("selected-children-changed", onGridSelectedChildChanged);
+}
+
+/**
  * Function called when the app is activated
  */
 function onAppActivate(){
 	// Create the main window
 	mainWindow = new BragMainWindow(app);
-	mainWindow.on("close-request", onWindowCloseRequest);
+	bindMainWindowSignals();
 	mainWindow.show();
 
 	// Trigger library scan on startup
-	libraryScanUpdateUI();
+	onScanRequest();
 
 	gi.startLoop();
 	loop.run();

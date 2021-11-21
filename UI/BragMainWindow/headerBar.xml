@@ -12,7 +12,7 @@
 					<object class="GtkButton" id="scanButton">
 						<child>
 							<object class="GtkImage">
-								<property name="file">UI/icons/black/refresh.svg</property>
+								<property name="file">UI/icons/white/refresh.svg</property>
 							</object>
 						</child>
 					</object>
@@ -21,7 +21,7 @@
 					<object class="GtkButton" id="filterButton">
 						<child>
 							<object class="GtkImage">
-								<property name="file">UI/icons/black/filter.svg</property>
+								<property name="file">UI/icons/white/filter.svg</property>
 							</object>
 						</child>
 					</object>
@@ -30,7 +30,7 @@
 					<object class="GtkButton" id="settingsButton">
 						<child>
 							<object class="GtkImage">
-								<property name="file">UI/icons/black/menu.svg</property>
+								<property name="file">UI/icons/white/menu.svg</property>
 							</object>
 						</child>
 					</object>
