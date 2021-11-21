@@ -50,7 +50,9 @@ class Library{
 	 */
 	async scan(){
 
-		const promises = [];
+		this.empty();
+
+		let promises = [];
 		let results = [];
 
 		// Get lutris games
@@ -87,7 +89,7 @@ class Library{
 			CitraSource,
 			YuzuSource,
 		];
-		promises.length = 0;
+		promises = [];
 		for (const sourceClass of SOURCE_CLASSES){
 			if (this.enabledSources.includes(sourceClass.name)){
 				const sourceInstance = new sourceClass();
