@@ -33,7 +33,7 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 [gnome_discourse_grid]: https://discourse.gnome.org/t/how-to-make-an-image-fill-the-width-of-a-box-and-keep-aspect-ratio/7980/6?u=geoffreycoulaud 
 After quite some time, I've figured out how to make the cover images expand to 
 fill the grid's width. This was thanks to **Marco Melorio** 
-[on Gnome's discourse forum](gnome_discourse_grid).  
+[on Gnome's discourse forum](gnome_discourse_grid).
 I'll pass the details but it almost made me ditch the fixed number of columns 
 design choice.
 
