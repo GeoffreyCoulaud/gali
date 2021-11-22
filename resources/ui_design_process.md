@@ -24,7 +24,7 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 	* Settings
 * Bind the grid resize to its option
 * HeaderBar buttons toggle the corresponding menus
-* Bind the game life cycle buttons to their game methods
+* ✅ Bind the game life cycle buttons to their game methods
 * Bind source filtering to the game grid
 * Support light theme
 * Detect images for all sources (and maybe change preferred aspect ratio)
