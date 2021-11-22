@@ -92,12 +92,12 @@ class DolphinSource extends Source{
 	/**
 	 * Get dolphin's cached games
 	 * @returns {DolphinGame[]} - An array of found games
+	 * @see https://github.com/dolphin-emu/dolphin/blob/d5b917a6c2d25926c5aa057fdaf8fce5debb3182/Source/Core/UICommon/GameFile.h#L140
 	 * @private
-	 * @todo
 	 */
 	async _getCachedROMs(){
 		// TODO Read dolphin gamelist cache
-		// $HOME/.cache/dolphin-emu/gamelist.cache
+		// Cache path : $HOME/.cache/dolphin-emu/gamelist.cache
 	}
 
 	/**

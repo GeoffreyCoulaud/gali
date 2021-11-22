@@ -1,13 +1,14 @@
 {
   "name": "game-launcher",
   "version": "1.0.0",
-  "description": "WIP game launcher for linux",
+  "description": "A game launcher for linux",
   "main": "main.js",
   "scripts": {
-    "test": "sh tests/all.sh",
     "start": "node main.js",
     "lint": "eslint library.js main.js tests sources utils UI --format stylish",
-    "lint-fix": "eslint --fix library.js main.js tests sources utils UI --format stylish"
+    "lint (auto fix)": "eslint --fix library.js main.js tests sources utils UI --format stylish",
+    "test library scan": "node tests/libraryScan.test.js",
+    "test path conversion": "node tests/convertWinePath.test.js"
   },
   "keywords": [
     "game",
@@ -16,7 +17,7 @@
     "GUI"
   ],
   "author": "Geoffrey Coulaud",
-  "license": "GPL-2.0-only",
+  "license": "GPL-3.0",
   "dependencies": {
     "command-exists": "^1.2.9",
     "node-gtk": "^0.10.0",

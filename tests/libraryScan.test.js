@@ -1,6 +1,7 @@
 const process = require("process");
 const Library = require("../library.js");
-const { DEFAULT_PREFERENCES } = require("../utils/preferences.js");
+const preferences = require("../utils/preferences.js");
+const cli = require("./cli.js");
 
 class SourceStat{
 
@@ -27,47 +28,42 @@ function genericSortNumber(a, b){
 	else return -1;
 }
 
+function help(){
+	console.log(
+		// eslint-disable-next-line indent
+`Tests the library scanning process.
+This will read the user sources preferences, scan the library and report on its
+content.
+
+Usage
+	node libraryScanTest.test.js [-d]
+
+Options
+	-d    Also display the game list in stdout
+`
+	);
+}
+
 /**
  * Run the library scan test
  */
 async function testLibraryScan(){
 
-	let DO_DISPLAY_GAMES_LIST = false;
-
-	// Help cli argument
-	const indexOfHelpArg = process.argv.indexOf("--help");
-	if (indexOfHelpArg !== -1){
-		process.argv.pop(indexOfHelpArg);
-		console.log(
-			// eslint-disable-next-line indent
-`Usage
-	node libraryScanTest.test.js [--display] [--help] [...sources]
-	
-Parameters
-	--help    : (optional) Displays this help and exits
-	--display : (optional) Also display the game list in stdout
-	sources   : (optional) Names of sources to scan, space separated. If absent, the default config will be used.
-`
-		);
-		return;
+	// CLI arguments
+	if (cli.getPopBoolArgv("--help")){
+		help();
+		return 0;
 	}
-
-	// Display cli argument
-	const indexOfDisplayArg = process.argv.indexOf("--display");
-	if (indexOfDisplayArg !== -1){
-		process.argv.pop(indexOfDisplayArg);
-		DO_DISPLAY_GAMES_LIST = true;
-	}
-
-	// Define sources to scan
-	let sources = DEFAULT_PREFERENCES.scan.enabledSources;
-	if (process.argv.length > 2){
-		sources = process.argv.slice(2);
-	}
-	console.log(`Scanning ${sources.join(", ")}`);
+	const DO_DISPLAY_GAMES_LIST = cli.getPopBoolArgv("-d");
 
 	// Scan and sort library
-	const library = new Library(sources, true, true);
+	const USER_PREFERENCES = preferences.readUserFileSafe();
+	const library = new Library(
+		USER_PREFERENCES.scan.enabledSources,
+		USER_PREFERENCES.scan.preferCache,
+		true
+	);
+	console.log(`Scanning ${USER_PREFERENCES.scan.enabledSources.join(", ")}`);
 	await library.scan();
 	await library.sort("name", 1);
 
@@ -82,7 +78,7 @@ Parameters
 
 	// Per source stats
 	const sourcesStats = {};
-	for (const sourceName of sources){
+	for (const sourceName of USER_PREFERENCES.scan.enabledSources){
 		sourcesStats[sourceName] = new SourceStat(sourceName);
 	}
 	for (const game of library.games){
@@ -97,6 +93,12 @@ Parameters
 	const sourcesStatsArray = Object.values(sourcesStats);
 	sourcesStatsArray.sort((a, b)=>genericSortNumber(a.nGames, b.nGames));
 	console.table(sourcesStatsArray, ["name", "nInstalledGames", "nGames"]);
+	return 0;
 
 }
-testLibraryScan();
+
+testLibraryScan().then(()=>{
+	process.exit(0);
+}).catch(code=>{
+	process.exit(code);
+});

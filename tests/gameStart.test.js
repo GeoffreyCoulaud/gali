@@ -1,90 +1,104 @@
 const sleep = require("../utils/sleep.js");
 const Library = require("../library.js");
-const { DEFAULT_PREFERENCES } = require("../utils/preferences.js");
+const preferences = require("../utils/preferences.js");
+const cli = require("./cli.js");
 
-/**
- * A class representing a known game
- * @property {string} name - The known game's exact name
- * @property {string} source - The known game's source
- */
-class KnownGame{
+function help(){
+	console.log(
+		// eslint-disable-next-line indent
+`Tests the life cycle functions of a game.
+This will read the user sources preferences, scan the library and try to start
+then stop a matching game.
 
-	/**
-	 * Create a known game
-	 * @param {string} name - The game's name
-	 * @param {string} source - The game's source
-	 */
-	constructor(name, source){
-		this.name = name;
-		this.source = source;
-	}
+Usage 
+	node gameStart.test.js [-k] [-t] <game-source-name-pair>
 
-	/**
-	 * Search for the known game in a given library
-	 * @param {Library} library - The game library to find the game in
-	 * @returns {null|Game} - The corresponding game or null in case it's not present
-	 */
-	async findIn(library){
-		for (const game of library.games){
-			if (game.name === this.name && game.source === this.source){
-				return game;
+Options
+	-t    Specify a timeout in seconds after which the game will be stopped. 
+	      Default is 10 seconds.
+	-k    If present, the game will be killed and not stopped
+
+Examples
+	node gameStart.test.js "Cemu" "Lutris"
+	node gameStart.test.js -t 5 "Cemu" "Lutris"
+	node gameStart.test.js -k -t 30 "Cemu" "Lutris"
+`
+	);
+}
+
+function testGameStart(){
+	return new Promise((resolve, reject)=>{
+
+		// CLI arguments
+		if (cli.getPopBoolArgv("--help")){
+			help();
+			resolve(0);
+		}
+		const FORCE_KILL = cli.getPopBoolArgv("-k");
+		let TIMEOUT_SECONDS = cli.getPopValuesArgv("-t", 1)[0];
+		TIMEOUT_SECONDS = (TIMEOUT_SECONDS) ? parseInt(TIMEOUT_SECONDS) : 10;
+
+		// Game name and source
+		if (process.argv.length < 4){
+			console.error("Not enough arguments. Use --help for usage.");
+			reject(1);
+		}
+		const gameName = process.argv[2];
+		const gameSourceName = process.argv[3];
+
+		// Scan library
+		const USER_PREFERENCES = preferences.readUserFileSafe();
+		const library = new Library(
+			USER_PREFERENCES.scan.enabledSources,
+			USER_PREFERENCES.scan.preferCache,
+			true
+		);
+		library.scan().then(()=>{
+
+			// Find the game
+			const game = library.games.find(x=>(x.name === gameName && x.source === gameSourceName));
+			if (!game){
+				console.log("No matching game found");
+				reject(2);
 			}
-		}
-		return null;
-	}
 
-	toString(){
-		return `${this.name} (${this.source})`;
-	}
-
-}
-
-/**
- * Run the game start test
- */
-async function testGameStart(){
-
-	// Scan library
-	const sources = DEFAULT_PREFERENCES.scan.enabledSources;
-	const library = new Library(sources, true, true);
-	await library.scan();
-	await library.sort("name", 1);
-
-	// Check presence of known games
-	// (edit depending on your library)
-	const knownGames = [
-		new KnownGame("Extreme Tux Racer", "Desktop entries"),
-		new KnownGame("Cemu", "Lutris"),
-		/*
-		new KnownGame("MARIO KART 8", "Cemu in Lutris"),
-		new KnownGame("Next Up Hero", "Legendary"),
-		new KnownGame("Next Up Hero", "Heroic"),
-		new KnownGame("Sonic Mania", "Steam"),
-		*/
-	];
-	const games = [];
-	for (const knownGame of knownGames){
-		const game = await knownGame.findIn(library);
-		if (game) games.push(game);
-		else console.log(`Couldn't find ${knownGame.toString()}`);
-	}
-
-	// Start, wait, kill
-	const MILLIS_BEFORE_KILL = 15000;
-	for (const game of games){
-		console.log(`\nStarting ${game.name} (${game.source})`);
-		game.processContainer.on("error", (error)=>{
-			console.error(`Error emitted by process container : ${error}`);
+			// Start, wait, stop
+			const TIMEOUT_MILLIS = TIMEOUT_SECONDS * 1000;
+			game.processContainer.on("error", (error)=>{
+				console.error(`Error while starting child process : ${error}`);
+				reject(3);
+			});
+			game.processContainer.on("exit", (code)=>{
+				if (code){
+					console.warn(`Child process exited with code ${code}`);
+					reject(4);
+				} else {
+					resolve(0);
+				}
+			});
+			game.processContainer.start()
+				.then(()=>sleep(TIMEOUT_MILLIS))
+				.then(()=>{
+					if (game.processContainer.isRunning){
+						let message = "";
+						if (FORCE_KILL){
+							game.processContainer.kill();
+							message += "Killing";
+						} else {
+							game.processContainer.stop();
+							message += "Stopping";
+						}
+						message += ` ${game.name} after ${TIMEOUT_SECONDS}s`;
+						console.log(message);
+					}
+					resolve(0);
+				});
 		});
-		await game.processContainer.start();
-		await sleep(MILLIS_BEFORE_KILL);
-		if (game.processContainer.isRunning){
-			console.log(`Killing ${game.name} after ${MILLIS_BEFORE_KILL}ms`);
-			game.processContainer.kill();
-		} else {
-			console.log("Game has already exited, not killing");
-		}
-	}
-
+	});
 }
-testGameStart();
+
+testGameStart().then(()=>{
+	process.exit(0);
+}).catch((code)=>{
+	process.exit(code);
+});

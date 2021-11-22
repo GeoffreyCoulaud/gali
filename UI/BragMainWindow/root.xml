@@ -61,7 +61,7 @@
 											<object class="GtkBox">
 												<property name="halign">center</property>
 												<child>
-													<object class="GtkButton">
+													<object class="GtkButton" id="gameStartButton">
 														<child>
 															<object class="GtkImage">
 																<property name="file">UI/icons/white/play_arrow.svg</property>
@@ -70,7 +70,7 @@
 													</object>
 												</child>
 												<child>
-													<object class="GtkButton">
+													<object class="GtkButton" id="gameStopButton">
 														<child>
 															<object class="GtkImage">
 																<property name="file">UI/icons/white/stop.svg</property>
@@ -79,7 +79,7 @@
 													</object>
 												</child>
 												<child>
-													<object class="GtkButton">
+													<object class="GtkButton" id="gameKillButton">
 														<child>
 															<object class="GtkImage">
 																<property name="file">UI/icons/white/dangerous.svg</property>

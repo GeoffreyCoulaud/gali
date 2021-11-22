@@ -26,10 +26,10 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 		"gameInfoRevealer",
 		"gameInfoTitle",
 		"gameInfoPlatform",
+		"gameStartButton",
+		"gameStopButton",
+		"gameKillButton",
 	];
-
-	#libraryUI = undefined;
-	#loadingUI = undefined;
 
 	constructor(app){
 		super(app);
