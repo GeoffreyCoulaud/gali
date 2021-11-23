@@ -30,9 +30,9 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 </details>
 
 ## Second mockups
-These mockups were made using [Figma](https://figma.com).
-They are higher fidelity, but not final yet. I tried to better visualize the
-different app states.
+These mockups were made using [Figma](https://figma.com).  
+They are higher fidelity, but not final yet.  
+I tried to better visualize the different app states.  
 You can take a look at the project file [here](https://www.figma.com/file/YcTUGVEvarxrgpq01VkieN/Brag-launcher---Second-mockups).
 
 <details>
