@@ -1,15 +1,61 @@
 # Brag's UI
-## Mockups
+
+## First mockups
 These images were made to give a rough idea of what the UI should look like.  
-I used [Pencil](https://pencil.evolus.vn/) to make these mockups, although I don't recommend using it since the project seems to be inactive for quite some months.  
+I used [Pencil](https://pencil.evolus.vn/) to make these mockups, although I 
+don't recommend using it since the project seems to be inactive for quite some 
+months.  
 I took inspiration from [Lutris](https://github.com/lutris/lutris).  
 
-|   |   |
-| - | - |
-| Games grid, default view | Scanning view, replacing the default view |
-| <img src="mockup1.png"> | <img src="mockup2.png"> |
-| Game info popover with a start button | Game info with a stop and kill button |
-| <img src="mockup3.png"> | <img src="mockup4.png"> |
+<details>
+    <summary>show images</summary>
+    <table>
+        <tr>
+            <th>Games grid, default view</th>
+            <th>Scanning view, replacing the default view</th>
+        </tr>
+        <tr>
+            <td><img src="mockup1.png"></td>
+            <td><img src="mockup2.png"></td>
+        </tr>
+        <tr>
+            <th>Game info popover with a start button</th>
+            <th>Game info with a stop and kill button</th>
+        </tr>
+        <tr>
+            <td><img src="mockup3.png"></td>
+            <td><img src="mockup4.png"></td>
+        </tr>
+    </table>
+</details>
+
+## Second mockups
+These mockups were made using [Figma](https://figma.com).
+They are higher fidelity, but not final yet. I tried to better visualize the
+different app states.
+You can take a look at the project file [here](https://www.figma.com/file/YcTUGVEvarxrgpq01VkieN/Brag-launcher---Second-mockups).
+
+<details>
+    <summary>show images</summary>
+    <table>
+        <tr>
+            <th>Browsing view</th>
+            <th>Scanning view</th>
+        </tr>
+        <tr>
+            <td><img src="mockup5-browsing-view.png"></td>
+            <td><img src="mockup6-scanning-view.png"></td>
+        </tr>
+        <tr>
+            <th>Selection view</th>
+            <th>Life cycle view</th>
+        </tr>
+        <tr>
+            <td><img src="mockup7-selection-view.png"></td>
+            <td><img src="mockup8-life-cycle-view.png"></td>
+        </tr>
+    </table>
+</details>
 
 ## TODO
 * ✅ Use XML to describe the UI
