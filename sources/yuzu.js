@@ -39,6 +39,7 @@ class YuzuGameProcessContainer extends common.GameProcessContainer{
 			common.GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
+		return;
 	}
 
 	/**
@@ -64,11 +65,11 @@ class YuzuGame extends common.EmulatedGame{
 	/**
 	 * Create a yuzu game
 	 * @param {string} name - The game's displayed name
-	 * @param {string} romPath - The game's ROM path
+	 * @param {string} path - The game's ROM path
 	 */
-	constructor(name, romPath){
-		super(name, romPath);
-		this.processContainer = new YuzuGameProcessContainer(this.romPath);
+	constructor(name, path){
+		super(name, path);
+		this.processContainer = new YuzuGameProcessContainer(this.path);
 	}
 
 }
@@ -141,10 +142,10 @@ class YuzuSource extends common.Source{
 	 */
 	async _getROMs(dirs){
 
-		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
+		const roms = await common.getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
-		for (const gamePath of gamePaths){
-			const game = new YuzuGame(path.basename(gamePath), gamePath);
+		for (const rom of roms){
+			const game = new YuzuGame(path.basename(rom), rom);
 			game.isInstalled = true;
 			games.push(game);
 		}
