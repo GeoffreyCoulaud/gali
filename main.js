@@ -19,29 +19,43 @@ const BragGameGridChild = require("./UI/BragGameGridChild/widget.js");
 const EXIT_OK = 0;
 const EXIT_UNKNOWN_CURRENT_UI_STATE = 1;
 const EXIT_UNKNOWN_NEW_UI_STATE = 2;
-const EXIT_NO_SELECTED_GAME = 3;
+
+const FALLBACK_IMAGE_BOXART = `${__dirname}/icons/white/image_not_found.svg`;
+const FALLBACK_IMAGE_COVER = FALLBACK_IMAGE_BOXART; // TODO add another image
 
 /**
- * A class mimicking an enum for UI states
+ * Get a fallback for an file path in case it's unreadable / missing.
+ * @param {string|undefined} file - The file to try to get.
+ *                                  Undefined is handled.
+ * @returns {string} Final file path
  */
-class UIState extends Symbol{
-	static ScanningLibrary = new UIState("ScanningLibrary");
-	static BrowsingLibrary = new UIState("BrowsingLibrary");
-	static GameSelected = new UIState("GameSelected");
-	static GameLifeCycle = new UIState("GameLifeCycle");
 
-	constructor(name){
-		super(name);
+function fileWithFallback(file, fallback){
+	if (file){
+		if (fs.existsSync(file)){
+			return file;
+		}
 	}
+	return fallback;
 }
-
 
 /**
  * A class representing the app's UI
  */
 class UI extends events.EventEmitter{
 
-	state = UIState.BrowsingLibrary;
+	/**
+	 * A class mimicking an enum for UI states
+	 * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol
+	 */
+	static State = class extends Symbol{
+		static LibraryScan = Symbol("ScanningLibrary");
+		static LibraryBrowsing = Symbol("LibraryBrowsing");
+		static LibraryGameSelected = Symbol("LibraryGameSelected");
+		static GameRunning = Symbol("GameRunning");
+	}
+
+	state = UI.State.LibraryBrowsing;
 	loop = undefined;
 	app = undefined;
 	mw = undefined;
@@ -69,84 +83,71 @@ class UI extends events.EventEmitter{
 	}
 
 	/**
-	 * Hide or show the main window headerBar controls
-	 * @param {boolean} isVisible - True for shown, else false
-	 */
-	#toggleHeaderBarControls(isVisible){
-		const ids = [
-			"_gameSearch",
-			"_scanButton",
-			"_filterButton",
-			"_settingsButton",
-		];
-		for (const id of ids){
-			this.mw[id].setVisible(isVisible);
-		}
-	}
-
-	/**
 	 * Change the current state to the default one.
-	 * Default state is UIState.BrowsingLibrary.
+	 * Default state is UI.State.LibraryBrowsing.
 	 * @private
 	 */
 	#resetState(){
 		// Go into browsing state
 		switch (this.state){
-		case UIState.ScanningLibrary:
-			this.#toggleHeaderBarControls(true);
-			this.mw._viewStack.setVisibleChildName("libraryView");
+		case UI.State.LibraryScan:
+			this.mw.toggleHeaderBarControls(true);
+			this.mw.setLibraryView();
 			break;
-		case UIState.GameLifeCycle:
-			this.#toggleHeaderBarControls(true);
-			this.mw._viewStack.setVisibleChildName("libraryView");
+		case UI.State.GameRunning:
+			this.mw.toggleHeaderBarControls(true);
+			this.mw.setLibraryView();
 			break;
-		case UIState.BrowsingLibrary:
+		case UI.State.LibraryBrowsing:
 			break;
-		case UIState.GameSelected:
-			this.mw._gameInfoRevealer.setRevealChild(false);
+		case UI.State.LibraryGameSelected:
+			this.mw.toggleInfoPanel(false);
 			break;
 		default:
 			console.error(`Unexpected current UI state "${this.state.toString()}"`);
 			process.exit(EXIT_UNKNOWN_CURRENT_UI_STATE);
-			break;
+			return;
 		}
+		this.state = UI.State.LibraryBrowsing;
 	}
 
 	/**
 	 * Change the current state to a new state from the default one.
-	 * Default state is UIState.BrowsingLibrary.
+	 * Default state is UI.State.LibraryBrowsing.
 	 * @private
 	 */
 	#changeStateTo(newState){
 		switch (newState){
-		case UIState.ScanningLibrary:
-			this.#toggleHeaderBarControls(false);
-			this.mw._viewStack.setVisibleChildName("scanningView");
+		case UI.State.LibraryScan:
+			this.mw.toggleHeaderBarControls(false);
+			this.mw.setScanningView();
 			break;
-		case UIState.GameLifeCycle:
-			this.#toggleHeaderBarControls(false);
-			this.mw._viewStack.setVisibleChildName("lifeCycleView");
+		case UI.State.GameRunning:
+			this.mw.toggleHeaderBarControls(false);
+			this.mw.setGameRunningView();
 			break;
-		case UIState.GameSelected:
-			this.mainWindow._gameInfoRevealer.setRevealChild(true);
+		case UI.State.LibraryGameSelected:
+			this.mw.toggleInfoPanel(true);
 			break;
-		case UIState.BrowsingLibrary:
+		case UI.State.LibraryBrowsing:
 			break;
 		default:
 			console.error(`Unexpected new UI state "${newState.toString()}"`);
 			process.exit(EXIT_UNKNOWN_NEW_UI_STATE);
-			break;
+			return;
 		}
+		this.state = newState;
 	}
 
 	/**
 	 * Change the UI's state
-	 * @param {UIState} newState - The new UI state to go into
+	 * @param {UI.State} newState - The new UI state to go into
 	 */
 	changeState(newState){
-		if (this.state.name === newState.name){
+		if (this.state === newState){
 			return;
 		}
+		console.log(`Changing state : ${this.state.toString()} → ${newState.toString()}`);
 		this.#resetState();
 		this.#changeStateTo(newState);
 	}
@@ -154,12 +155,8 @@ class UI extends events.EventEmitter{
 	/**
 	 * Clear the games grid
 	 */
-	clearGrid(){
-		let currentChild = this.mw._gameGridFlowBox.getChildAtIndex(0);
-		while (currentChild){
-			this.mw._gameGridFlowBox.remove(currentChild);
-			currentChild = this.mw._gameGridFlowBox.getChildAtIndex(0);
-		}
+	clearGamesGrid(){
+		this.mw.clearGamesGrid();
 	}
 
 	/**
@@ -168,8 +165,8 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to add to the grid
 	 */
 	addGameToGrid(index, game){
-		const gameGridChild = new BragGameGridChild(index, game);
-		this.mw._gameGridFlowBox.insert(gameGridChild, -1);
+		const widget = new BragGameGridChild(index, game);
+		this.mw.addGameGridChild(widget);
 	}
 
 	/**
@@ -177,16 +174,19 @@ class UI extends events.EventEmitter{
 	 * @returns {number|undefined} - The selected game's index. Undefined if none.
 	 */
 	getSelectedGameIndex(){
-		const selectedElements = this.mainWindow._gameGridFlowBox.getSelectedChildren();
-		if (!selectedElements){ return undefined; }
-		return selectedElements[0].libraryIndex;
+		const widget = this.mw.getSelectedGameWidget();
+		if (!widget){
+			return undefined;
+		} else {
+			return widget.libraryIndex;
+		}
 	}
 
 	/**
 	 * Deselect the selected game
 	 */
 	deselectGame(){
-		this.mw._gameGridFlowBox.unselectAll();
+		this.mw.deselectGame();
 	}
 
 	/**
@@ -194,29 +194,24 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to get info from
 	 */
 	updateInfoPanel(game){
-		this.mw._gameInfoTitle.setLabel(game.name);
-		this.mw._gameInfoPlatform.setLabel(`${game.source} / ${game.platform}`);
+		const image = fileWithFallback(game.coverImage, FALLBACK_IMAGE_COVER);
+		this.mw.updateInfoPanel(image, game.name, `${game.source} / ${game.platform}`);
 	}
 
 	/**
-	 * Updated the life cycle panel game info
+	 * Updates the game running panel game info
 	 * @param {Game} game - The game to get info from
 	 */
-	updateLifeCyclePanel(game){
-		let image = `${__dirname}/icons/white/image_not_found.svg`;
-		if (fs.existsSync(game.coverImage)){
-			image = game.coverImage;
-		}
-		this.mw._lifeCycleInfoPicture.setFilename(image);
-		this.mw._lifeCycleInfoTitle.setLabel(game.name);
-		this.mw._lifeCycleInfoPlatform.setLabel(`${game.source} / ${game.platform}`);
+	updateGameRunningPanel(game){
+		const image = fileWithFallback(game.coverImage, FALLBACK_IMAGE_COVER);
+		this.mw.updateGameRunningPanel(image, game.name, `${game.source} / ${game.platform}`);
 	}
 
 }
 
 class BragApp{
 
-	ui = new UI();
+	UI = new UI();
 	#selectedGame = undefined;
 	preferences = undefined;
 	library = undefined;
@@ -245,7 +240,8 @@ class BragApp{
 	}
 
 	/**
-	 * Bind UI signals to their handlers
+	 * Bind UI signals to their handlers.
+	 * Must run after the UI activates, since it references children widgets.
 	 * @private
 	 */
 	#bindUISignals(){
@@ -286,13 +282,13 @@ class BragApp{
 	 * @private
 	 */
 	#scan(){
-		this.UI.changeState(UIState.ScanningLibrary);
+		this.UI.changeState(UI.State.LibraryScan);
 		this.library.scan().then(()=>{
-			this.UI.clearGrid();
+			this.UI.clearGamesGrid();
 			this.library.games.forEach((game, i)=>{
 				this.UI.addGameToGrid(i, game);
 			});
-			this.UI.changeState(UIState.BrowsingLibrary);
+			this.UI.changeState(UI.State.LibraryBrowsing);
 		});
 	}
 
@@ -303,19 +299,18 @@ class BragApp{
 	 * @private
 	 */
 	#onSelectedGameChange = ()=>{
-		const index = this.UI.getActiveGameIndex();
+		const index = this.UI.getSelectedGameIndex();
 		const game = this.library.games[index];
 		if (typeof index === "undefined"){
 			// No game selected
-			this.UI.changeState(UIState.BrowsingLibrary);
-		} else if (!game){
+			this.UI.changeState(UI.State.LibraryBrowsing);
+		} else if (typeof game === "undefined"){
 			// An invalid game is selected
 			console.error("Selected game is broken");
-			this.UI.changeState(UIState.BrowsingLibrary);
 			this.UI.deselectGame();
 		} else {
 			// A valid game is selected
-			this.UI.changeState(UIState.GameSelected);
+			this.UI.changeState(UI.State.LibraryGameSelected);
 			this.UI.updateInfoPanel(game);
 		}
 		this.#selectedGame = game;
@@ -326,7 +321,16 @@ class BragApp{
 	 * @private
 	 */
 	#onScanRequest = ()=>{
-		this.#scan();
+		// TODO Fix : can freeze the app sometimes (clicked too early, too fast)
+		const forbiddenStates = [
+			UI.State.LibraryScan,
+			UI.State.GameRunning,
+		];
+		if (forbiddenStates.includes(this.UI.state)){
+			return;
+		} else {
+			this.#scan();
+		}
 	}
 
 	/**
@@ -343,15 +347,18 @@ class BragApp{
 	 */
 	#onStartGameRequest = ()=>{
 		if (!this.#selectedGame){
-			console.error("This is not supposed to happen... You can't start \"nothing\" !");
-			process.exit(EXIT_NO_SELECTED_GAME);
+			// Can happen if there's a transition set for the revealer.
+			// 1. User selects a game, the state changes and the panel is shown
+			// 2. User deselects, the panel starts to hide
+			// 3. User clicks on start before the panel is hidden
+			console.error("Tried to start undefined game");
+			return;
 		}
-		console.log(`Starting ${this.#selectedGame.name}`);
 
 		// Handle start outcomes
 		const onSpawn = ()=>{
-			this.UI.updateLifeCyclePanel(this.#selectedGame);
-			this.UI.changeState(UIState.GameLifeCycle);
+			this.UI.updateGameRunningPanel(this.#selectedGame);
+			this.UI.changeState(UI.State.GameRunning);
 		};
 		const onError = (message)=>{
 			console.error(`Game start error : ${message}`);
@@ -363,13 +370,14 @@ class BragApp{
 				console.log("Game child process exited");
 			}
 			this.#selectedGame.processContainer.off("error", onError);
-			this.UI.changeState(UIState.GameSelected);
+			this.UI.changeState(UI.State.LibraryGameSelected);
 		};
 		this.#selectedGame.processContainer.once("spawn", onSpawn);
 		this.#selectedGame.processContainer.once("exit", onExit);
 		this.#selectedGame.processContainer.on("error", onError);
 
 		// Start the game
+		console.log(`Starting ${this.#selectedGame.name}`);
 		this.#selectedGame.processContainer.start();
 	}
 

@@ -40,7 +40,7 @@
 
 						<!-- Bottom information & life cycle panel  -->
 						<child>
-							<object class="GtkRevealer" id="gameInfoRevealer">
+							<object class="GtkRevealer" id="infoPanelRevealer">
 								<child>
 									<object class="GtkBox">
 										<property name="margin-bottom">4</property>
@@ -48,12 +48,12 @@
 										<property name="margin-end">4</property>
 										<property name="orientation">vertical</property>
 										<child>
-											<object class="GtkLabel" id="gameInfoTitle">
+											<object class="GtkLabel" id="infoPanelTitle">
 												<property name="label">Super Tux Kart</property>
 											</object>
 										</child>
 										<child>
-											<object class="GtkLabel" id="gameInfoPlatform">
+											<object class="GtkLabel" id="infoPanelPlatform">
 												<property name="label">PC / Desktop entries</property>
 											</object>
 										</child>
@@ -105,27 +105,24 @@
 		<!-- Life cycle view -->
 		<child>
 			<object class="GtkStackPage">
-				<property name="name">lifeCycleView</property>
+				<property name="name">gameRunningView</property>
 				<property name="child">
 					
 					<!-- Life cycle view root -->
-					<object class="GtkLabel">
-						<property name="label">Life cycle view</property>
-					</object>
 					<object class="GtkBox">
 						<property name="orientation">vertical</property>
 						<child>
-							<object class="GtkPicture" id="lifeCycleInfoPicture">
+							<object class="GtkPicture" id="gameRunningPanelPicture">
 								<property name="can-shrink">true</property>
 								<property name="keep-aspect-ratio">true</property>
 							</object>
 						</child>
 						<child>
-							<object class="GtkLabel" id="lifeCycleInfoTitle">
+							<object class="GtkLabel" id="gameRunningPanelTitle">
 							</object>
 						</child>
 						<child>
-							<object class="GtkLabel" id="lifeCycleInfoPlatform">
+							<object class="GtkLabel" id="gameRunningPanelPlatform">
 							</object>
 						</child>
 						<child>

@@ -7,7 +7,7 @@
 			</object>
 		</child>
 		<child type="end">
-			<object class="GtkBox">
+			<object class="GtkBox" id="headerBarButtonsBox">
 				<child>
 					<object class="GtkButton" id="scanButton">
 						<child>
