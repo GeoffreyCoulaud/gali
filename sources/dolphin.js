@@ -1,17 +1,21 @@
-const { EmulatedGame, GameProcessContainer, GameDir, getROMs, Source } = require("./common.js");
-const { join: pathJoin, basename: pathBasename } = require("path");
-const { config2js } = require("../utils/config.js");
-const { readFile } = require("fs/promises");
-const { spawn } = require("child_process");
-const { env } = require("process");
+const config        = require("../utils/configFormats.js");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const fsp           = require("fs/promises");
+const process       = require("process");
+const path          = require("path");
 
 const DOLPHIN_SOURCE_NAME = "Dolphin";
+
+const USER_DIR = process.env["HOME"];
+const DOLPHIN_INSTALL_DIRS_PATH = `${USER_DIR}/.config/dolphin-emu/Dolphin.ini`;
+const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
 
 /**
  * A wrapper for dolphin game management
  * @property {string} romPath - The game's ROM path, used to invoke dolphin
  */
-class DolphinGameProcessContainer extends GameProcessContainer{
+class DolphinGameProcessContainer extends common.GameProcessContainer{
 
 	commandOptions = ["dolphin-emu"];
 
@@ -32,7 +36,7 @@ class DolphinGameProcessContainer extends GameProcessContainer{
 		const command = this._selectCommand();
 		const args = ["-e", this.romPath];
 		if (noUi) args.splice(0, 0, "-b");
-		this.process = spawn(command, args, GameProcessContainer.defaultSpawnOptions);
+		this.process = child_process.spawn(command, args, common.GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
 	}
 }
@@ -41,7 +45,7 @@ class DolphinGameProcessContainer extends GameProcessContainer{
  * Class representing a dolphin game
  * @property {DolphinGameProcessContainer} processContainer - The game's process container
  */
-class DolphinGame extends EmulatedGame{
+class DolphinGame extends common.EmulatedGame{
 
 	platform = "Nintendo - Wii / GameCube";
 	source = DOLPHIN_SOURCE_NAME;
@@ -57,7 +61,7 @@ class DolphinGame extends EmulatedGame{
 	}
 }
 
-class DolphinSource extends Source{
+class DolphinSource extends common.Source{
 
 	static name = DOLPHIN_SOURCE_NAME;
 	preferCache = false;
@@ -74,18 +78,16 @@ class DolphinSource extends Source{
 	 */
 	async _getConfig(){
 
-		const USER_DIR = env["HOME"];
-		const DOLPHIN_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/dolphin-emu/Dolphin.ini");
-		const configFileContents = await readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8");
-		const config = config2js(configFileContents);
+		const configFileContents = await fsp.readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8");
+		const configData = config.config2js(configFileContents);
 
 		// Check "General -> ISOPaths" value to be numeric
-		const nDirs = parseInt(config["General"].get("ISOPaths"));
+		const nDirs = parseInt(configData["General"].get("ISOPaths"));
 		if ( Number.isNaN(nDirs) ){
 			throw new Error("Non numeric ISOPaths value in config file");
 		}
 
-		return config;
+		return configData;
 
 	}
 
@@ -117,9 +119,9 @@ class DolphinSource extends Source{
 
 		// Get paths
 		for (let i = 0; i < nDirs; i++){
-			const path = config["General"].get(`ISOPath${i}`);
-			if (typeof path === "undefined"){ continue; }
-			dirs.push(new GameDir(path, recursive));
+			const dir = config["General"].get(`ISOPath${i}`);
+			if (typeof dir === "undefined"){ continue; }
+			dirs.push(new common.GameDir(dir, recursive));
 		}
 
 		return dirs;
@@ -134,11 +136,10 @@ class DolphinSource extends Source{
 	 */
 	async _getROMs(dirs){
 		// TODO detect games console between GameCube and Wii
-		const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
-		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
-		for (const path of gamePaths){
-			const game = new DolphinGame(pathBasename(path), path);
+		for (const gamePath of gamePaths){
+			const game = new DolphinGame(path.basename(gamePath), gamePath);
 			game.isInstalled = true;
 			games.push(game);
 		}

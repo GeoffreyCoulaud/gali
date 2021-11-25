@@ -1,21 +1,20 @@
-const { writeFileSync, readFileSync, mkdirSync } = require("fs");
-const { existsSync } = require("fs");
-const { env } = require("process");
+const process = require("process");
+const fs = require("fs");
 
-const { CemuSource } = require("../sources/cemu.js");
-const { CitraSource } = require("../sources/citra.js");
 const { DesktopEntrySource } = require("../sources/desktop-entries.js");
-const { DolphinSource } = require("../sources/dolphin.js");
-const { HeroicSource } = require("../sources/heroic.js");
-const { LegendarySource } = require("../sources/legendary.js");
-const { LutrisSource } = require("../sources/lutris.js");
-const { PPSSPPSource } = require("../sources/ppsspp.js");
-const { RetroarchSource } = require("../sources/retroarch.js");
-const { SteamSource } = require("../sources/steam.js");
-const { YuzuSource } = require("../sources/yuzu.js");
+const { LegendarySource }    = require("../sources/legendary.js");
+const { RetroarchSource }    = require("../sources/retroarch.js");
+const { DolphinSource }      = require("../sources/dolphin.js");
+const { HeroicSource }       = require("../sources/heroic.js");
+const { LutrisSource }       = require("../sources/lutris.js");
+const { PPSSPPSource }       = require("../sources/ppsspp.js");
+const { CitraSource }        = require("../sources/citra.js");
+const { SteamSource }        = require("../sources/steam.js");
+const { CemuSource }         = require("../sources/cemu.js");
+const { YuzuSource }         = require("../sources/yuzu.js");
 
-const CONFIG_DIR = (env["XDG_CONFIG_DIR"] ?? (env["HOME"] + "/.config")) + "/brag";
 const CONFIG_FILENAME = "preferences.json";
+const CONFIG_DIR = (process.env["XDG_CONFIG_DIR"] ?? (process.env["HOME"] + "/.config")) + "/brag";
 const CONFIG_PATH = `${CONFIG_DIR}/${CONFIG_FILENAME}`;
 
 const DEFAULT_PREFERRED_SHELL_COMMAND = ["sh", "zsh", "bash"];
@@ -76,7 +75,7 @@ const DEFAULT_PREFERENCES = {
  * Check if the user has a config file
  */
 function doesUserFileExist(){
-	return existsSync(CONFIG_PATH);
+	return fs.existsSync(CONFIG_PATH);
 }
 
 /**
@@ -85,8 +84,8 @@ function doesUserFileExist(){
  * @throws {Error} - On write fail
  */
 function createUserFile(){
-	if (!existsSync(CONFIG_DIR)) mkdirSync(CONFIG_DIR, {recursive: true});
-	return writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES, null, "\t"), "utf-8");
+	if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, {recursive: true});
+	return fs.writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES, null, "\t"), "utf-8");
 }
 
 /**
@@ -97,7 +96,7 @@ function createUserFile(){
  * @returns {object} - Parsed user data
  */
 function readUserFile(){
-	const contents = readFileSync(CONFIG_PATH, "utf-8");
+	const contents = fs.readFileSync(CONFIG_PATH, "utf-8");
 	const parsed = JSON.parse(contents);
 	return parsed;
 }

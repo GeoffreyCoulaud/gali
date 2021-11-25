@@ -1,12 +1,14 @@
-const vdfParser     = require("vdf-parser");
 const common        = require("./common.js");
 const child_process = require("child_process");
-const fs            = require("fs");
 const fsp           = require("fs/promises");
+const vdfParser     = require("vdf-parser"); // ? reimplement
 const process       = require("process");
+const fs            = require("fs");
+
+const STEAM_SOURCE_NAME = "Steam";
 
 const USER_DIR = process.env["HOME"];
-const STEAM_SOURCE_NAME = "Steam";
+const STEAM_INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
 
 /**
  * Checks if a string matches any of the passed regular expressions
@@ -105,7 +107,6 @@ class SteamSource extends common.Source{
 	 */
 	async _getConfig(){
 
-		const STEAM_INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
 		const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, {encoding: "utf-8"});
 		const config = vdfParser.parse(fileContents);
 

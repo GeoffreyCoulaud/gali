@@ -1,17 +1,21 @@
-const { GameDir, EmulatedGame, getROMs, GameProcessContainer, Source } = require("./common.js");
-const { basename: pathBasename, join: pathJoin } = require("path");
-const { config2js } = require("../utils/config.js");
-const { readFile } = require("fs/promises");
-const { spawn } = require("child_process");
-const { env } = require("process");
+const config        = require("../utils/configFormats.js");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const fsp           = require("fs/promises");
+const process       = require("process");
+const path          = require("path");
 
 const PPSSPP_SOURCE_NAME = "PPSSPP";
+
+const USER_DIR = process.env["HOME"];
+const PPSSPP_INSTALL_DIRS_PATH = `${USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini`;
+const GAME_FILES_REGEX = /.+\.(iso|cso)/i;
 
 /**
  * A wrapper for ppsspp game process management
  * @property {string} romPath - The game's ROM path, used to invoke ppsspp
  */
-class PPSSPPGameProcessContainer extends GameProcessContainer{
+class PPSSPPGameProcessContainer extends common.GameProcessContainer{
 
 	commandOptions = ["PPSSPPSDL", "PPSSPPQt"];
 
@@ -29,10 +33,10 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
 	 */
 	async start(){
 		const command = this._selectCommand();
-		this.process = spawn(
+		this.process = child_process.spawn(
 			command,
 			[this.romPath],
-			GameProcessContainer.defaultSpawnOptions
+			common.GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
 	}
@@ -43,7 +47,7 @@ class PPSSPPGameProcessContainer extends GameProcessContainer{
  * A class representing a ppsspp game
  * @property {PPSSPPGameProcessContainer} processContainer - The game's process container
  */
-class PPSSPPGame extends EmulatedGame{
+class PPSSPPGame extends common.EmulatedGame{
 
 	platform = "Sony - PlayStation Portable";
 	source = PPSSPP_SOURCE_NAME;
@@ -62,7 +66,7 @@ class PPSSPPGame extends EmulatedGame{
 /**
  * A class representing a PPSSPP source
  */
-class PPSSPPSource extends Source{
+class PPSSPPSource extends common.Source{
 
 	static name = PPSSPP_SOURCE_NAME;
 	preferCache = false;
@@ -77,26 +81,24 @@ class PPSSPPSource extends Source{
 	 */
 	async _getConfig(){
 
-		const USER_DIR = env["HOME"];
-		const PPSSPP_INSTALL_DIRS_PATH = pathJoin(USER_DIR, ".config/ppsspp/PSP/SYSTEM/ppsspp.ini");
-		const configFileContents = await readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8");
-		const config = config2js(configFileContents);
-		return config;
+		const configFileContents = await fsp.readFile(PPSSPP_INSTALL_DIRS_PATH, "utf-8");
+		const configData = config.config2js(configFileContents);
+		return configData;
 
 	}
 
 	/**
 	 * Get ppsspp ROM dirs from its config data (pinned paths)
-	 * @param {object} config - ppsspp config data
+	 * @param {object} configData - ppsspp config data
 	 * @returns {GameDir[]} - The game dirs extracted from ppsspp's config data
 	 * @private
 	 */
-	async _getRomDirs(config){
+	async _getRomDirs(configData){
 
 		const dirs = [];
-		const paths = config?.["PinnedPaths"].values();
-		for (const path of paths){
-			dirs.push(new GameDir(path, false));
+		const paths = configData?.["PinnedPaths"].values();
+		for (const dirPath of paths){
+			dirs.push(new common.GameDir(dirPath, false));
 		}
 
 		return dirs;
@@ -111,11 +113,10 @@ class PPSSPPSource extends Source{
 	 */
 	async _getRoms(dirs){
 
-		const GAME_FILES_REGEX = /.+\.(iso|cso)/i;
-		const gamePaths = await getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
-		for (const path of gamePaths){
-			const game = new PPSSPPGame(pathBasename(path), path);
+		for (const gamePath of gamePaths){
+			const game = new PPSSPPGame(path.basename(gamePath), gamePath);
 			game.isInstalled = true;
 			games.push(game);
 		}
@@ -132,18 +133,18 @@ class PPSSPPSource extends Source{
 	async scan(warn = false){
 
 		// Get config
-		let config;
+		let configData;
 		try {
-			config = await this._getConfig();
+			configData = await this._getConfig();
 		} catch (error){
 			if (warn) console.warn(`Unable to get PPSSPP config : ${error}`);
 		}
 
 		// Get rom dirs
 		let romDirs = [];
-		if (typeof config !== "undefined"){
+		if (typeof configData !== "undefined"){
 			try {
-				romDirs = await this._getRomDirs(config);
+				romDirs = await this._getRomDirs(configData);
 			} catch (error){
 				if (warn) console.warn(`Unable to get PPSSPP rom dirs : ${error}`);
 			}

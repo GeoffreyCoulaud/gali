@@ -1,17 +1,19 @@
-const { StartOnlyGameProcessContainer, Game, Source } = require("./common.js");
-const { join: pathJoin } = require("path");
-const { readFile } = require("fs/promises");
-const { spawn } = require("child_process");
-const { env } = require("process");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const process       = require("process");
+const fsp           = require("fs/promises");
 
 const LEGENDARY_SOURCE_NAME = "Legendary";
+
+const USER_DIR = process.env["HOME"];
+const INSTALLED_FILE_PATH = `${USER_DIR}/.config/legendary/installed.json`;
 
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
  * @property {string} appName - The epic games store app name, used to start the game
  */
-class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
+class LegendaryGameProcessContainer extends common.StartOnlyGameProcessContainer{
 
 	commandOptions = ["legendary"];
 
@@ -34,7 +36,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
 		const command = this._selectCommand();
 		const args = ["launch", this.appName];
 		if (offline) args.splice(1, 0, "--offline");
-		this.process = spawn(
+		this.process = child_process.spawn(
 			command,
 			args,
 			this.constructor.defaultSpawnOptions
@@ -50,7 +52,7 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer{
  * @property {string} appName - The game's epic games launcher app name
  * @property {LegendaryGameProcessContainer} processContainer - The game's process container
  */
-class LegendaryGame extends Game{
+class LegendaryGame extends common.Game{
 
 	platform = "PC";
 	source = LEGENDARY_SOURCE_NAME;
@@ -80,7 +82,7 @@ class LegendaryGame extends Game{
 /**
  * A class representing a Legendary Games Launcher source
  */
-class LegendarySource extends Source{
+class LegendarySource extends common.Source{
 
 	static name = LEGENDARY_SOURCE_NAME;
 	preferCache = false;
@@ -99,12 +101,9 @@ class LegendarySource extends Source{
 	async scan(warn = false){
 
 		// Read installed.json file
-		const USER_DIR = env["HOME"];
-		const INSTALLED_FILE_PATH = pathJoin(USER_DIR, ".config/legendary/installed.json");
-
 		let data;
 		try {
-			const fileContents = await readFile(INSTALLED_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(INSTALLED_FILE_PATH, "utf-8");
 			data = JSON.parse(fileContents);
 		} catch (error){
 			if (warn) console.warn(`Unable to read legendary installed.json : ${error}`);

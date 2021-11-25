@@ -1,12 +1,11 @@
-const { Game, GameDir, GameProcessContainer, Source } = require("./common.js");
-const { getUserLocalePreference } = require("../utils/locale.js");
-const { splitDesktopExec } = require("../utils/xdg.js");
-const { readdirAsync } = require("readdir-enhanced");
-const { desktop2js } = require("../utils/config.js");
-const { readFile } = require("fs/promises");
-const { spawn } = require("child_process");
-const { join: pathJoin } = require("path");
-const { env } = require("process");
+const config        = require("../utils/configFormats.js");
+const locale        = require("../utils/locale.js");
+const xdg           = require("../utils/xdg.js");
+const common        = require("./common.js");
+const readdirpp     = require("readdir-enhanced"); // ? reimplement
+const child_process = require("child_process");
+const fsp           = require("fs/promises");
+const process       = require("process");
 
 const DESKTOP_ENTRIES_SOURCE_NAME = "Desktop entries";
 
@@ -15,7 +14,7 @@ const DESKTOP_ENTRIES_SOURCE_NAME = "Desktop entries";
  * @property {string} exec - The exec value of the desktop entry file,
  *                           used to start the game in a subprocess.
  */
-class DesktopEntryGameProcessContainer extends GameProcessContainer{
+class DesktopEntryGameProcessContainer extends common.GameProcessContainer{
 
 	/**
 	 * Create a desktop entry game process container
@@ -23,7 +22,7 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 	 */
 	constructor(exec){
 		super();
-		this.spawnArgs = splitDesktopExec(exec);
+		this.spawnArgs = xdg.splitDesktopExec(exec);
 		this.spawnCommand = this.spawnArgs.shift();
 	}
 
@@ -33,10 +32,10 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 	 * arbitrary code execution, beware !
 	 */
 	async start(){
-		this.process = spawn(
+		this.process = child_process.spawn(
 			this.spawnCommand,
 			this.spawnArgs,
-			GameProcessContainer.defaultSpawnOptions
+			common.GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
 	}
@@ -46,7 +45,7 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer{
 /**
  * A class representing a game found via its desktop entry
  */
-class DesktopEntryGame extends Game{
+class DesktopEntryGame extends common.Game{
 
 	platform = "PC";
 	source = DESKTOP_ENTRIES_SOURCE_NAME;
@@ -71,7 +70,7 @@ class DesktopEntryGame extends Game{
 /**
  * A class representing a Desktop Entries source
  */
-class DesktopEntrySource extends Source{
+class DesktopEntrySource extends common.Source{
 
 	static name = DESKTOP_ENTRIES_SOURCE_NAME;
 	preferCache = false;
@@ -88,12 +87,12 @@ class DesktopEntrySource extends Source{
 	 */
 	async _getDesktopEntries(){
 
-		const USER_DIR = env["HOME"];
-		const XDG_DATA_DIR = env["XDG_DATA_HOME"] ?? pathJoin(USER_DIR, ".local/share/applications");
+		const USER_DIR = process.env["HOME"];
+		const XDG_DATA_DIR = process.env["XDG_DATA_HOME"] ?? `${USER_DIR}/.local/share/applications`;
 		const dirs = [
-			new GameDir(XDG_DATA_DIR, true),
-			new GameDir("/usr/share/applications", true),
-			new GameDir("/usr/local/share/applications", true),
+			new common.GameDir(XDG_DATA_DIR, true),
+			new common.GameDir("/usr/share/applications", true),
+			new common.GameDir("/usr/local/share/applications", true),
 		];
 
 		// Find all .desktop files in dirs
@@ -102,10 +101,10 @@ class DesktopEntrySource extends Source{
 		for (const dir of dirs){
 			let filePaths;
 			try {
-				filePaths = await readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
+				filePaths = await readdirpp.readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
 			} catch (error){ continue; }
 			for (const file of filePaths){
-				const fileAbsPath = pathJoin(dir.path, file);
+				const fileAbsPath = `${dir.path}/${file}`;
 				paths.push(fileAbsPath);
 			}
 		}
@@ -196,13 +195,13 @@ class DesktopEntrySource extends Source{
 		const paths = await this._getDesktopEntries(warn);
 
 		// Read each of the entries to decide of its fate
-		const preferredLangs = await getUserLocalePreference(true);
+		const preferredLangs = await locale.getUserLocalePreference(true);
 		const games = [];
-		for (const path of paths){
+		for (const gamePath of paths){
 
 			// Get desktop entry data
-			const contents = await readFile(path, "utf-8");
-			let data = desktop2js(contents);
+			const contents = await fsp.readFile(gamePath, "utf-8");
+			let data = config.desktop2js(contents);
 			data = data?.["Desktop Entry"];
 			if (!data) continue;
 

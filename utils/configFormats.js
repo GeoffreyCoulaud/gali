@@ -1,3 +1,5 @@
+const xml2js_module = require("xml2js");
+
 /**
  * Convert a config file text into a JS readable object
  * @param {string} config - A config file contents
@@ -99,7 +101,17 @@ function desktop2js(desktopEntry){
 
 }
 
+/**
+ * Convert a XML text into a JS readable object
+ * @param {string} config - A XML file contents
+ * @returns {object} An object representing the XML data
+ */
+function xml2js(config){
+	return xml2js_module.parseString(config);
+}
+
 module.exports = {
 	config2js,
 	desktop2js,
+	xml2js,
 };

@@ -1,17 +1,19 @@
-const { Game, StartOnlyGameProcessContainer, Source } = require("./common.js");
-const { readFile } = require("fs/promises");
-const { join: pathJoin } = require("path");
-const { spawn } = require("child_process");
-const { env } = require("process");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const fsp           = require("fs/promises");
+const process       = require("process");
 
 const HEROIC_SOURCE_NAME = "Heroic";
+
+const USER_DIR = process.env["HOME"];
+const LIBRARY_FILE_PATH = `${USER_DIR}/.config/heroic/store/library.json`;
 
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
  * @property {string} appName - The epic games store app name, used to start the game
  */
-class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
+class HeroicGameProcessContainer extends common.StartOnlyGameProcessContainer{
 
 	commandOptions = ["xdg-open"];
 
@@ -30,7 +32,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 	async start(){
 		const command = this._selectCommand();
 		const args = [`heroic://launch/${this.appName}`];
-		this.process = spawn(
+		this.process = child_process.spawn(
 			command,
 			args,
 			this.constructor.defaultSpawnOptions
@@ -44,7 +46,7 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer{
 /**
  * A class representing a Heroic launcher game
  */
-class HeroicGame extends Game{
+class HeroicGame extends common.Game{
 
 	platform = "PC";
 	source = HEROIC_SOURCE_NAME;
@@ -64,7 +66,7 @@ class HeroicGame extends Game{
 /**
  * A class representing a Heroic Games Launcher source
  */
-class HeroicSource extends Source{
+class HeroicSource extends common.Source{
 
 	static name = HEROIC_SOURCE_NAME;
 	preferCache = false;
@@ -77,11 +79,9 @@ class HeroicSource extends Source{
 	async scan(warn = false){
 
 		// Read library.json file
-		const USER_DIR = env["HOME"];
-		const LIBRARY_FILE_PATH = pathJoin(USER_DIR, ".config/heroic/store/library.json");
 		let library;
 		try {
-			const fileContents = await readFile(LIBRARY_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(LIBRARY_FILE_PATH, "utf-8");
 			library = JSON.parse(fileContents);
 			library = library?.["library"];
 		} catch (error){

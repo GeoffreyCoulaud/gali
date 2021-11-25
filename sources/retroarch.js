@@ -1,18 +1,21 @@
-const { EmulatedGame, GameProcessContainer, Source } = require("./common.js");
-const { join: pathJoin, basename: pathBasename} = require("path");
-const { readFile, readdir } = require("fs/promises");
-const { spawn } = require("child_process");
-const { existsSync } = require("fs");
-const { env } = require("process");
+const common        = require("./common.js");
+const child_process = require("child_process");
+const fsp           = require("fs/promises");
+const process       = require("process");
+const path          = require("path");
+const fs            = require("fs");
 
 const RETROARCH_SOURCE_NAME = "Retroarch";
+
+const USER_DIR = process.env["HOME"];
+const PLAYLISTS_PATH = `${USER_DIR}/.config/retroarch/playlists`;
 
 /**
  * A wrapper for retroarch game process management
  * @property {string} romPath - The game's ROM path, used to invoke retroarch
  * @property {string} corePath - The games's libretro core path, used to invoke retroarch
  */
-class RetroarchGameProcessContainer extends GameProcessContainer{
+class RetroarchGameProcessContainer extends common.GameProcessContainer{
 
 	commandOptions = ["retroarch"];
 
@@ -32,10 +35,10 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
 	 */
 	async start(){
 		const command = this._selectCommand();
-		this.process = spawn(
+		this.process = child_process.spawn(
 			command,
 			["--libretro", this.corePath, this.romPath],
-			GameProcessContainer.defaultSpawnOptions
+			common.GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
 	}
@@ -46,7 +49,7 @@ class RetroarchGameProcessContainer extends GameProcessContainer{
  * @property {string} corePath - The game's libretro core path
  * @property {RetroarchGameProcessContainer} processContainer - The game's process container
  */
-class RetroarchGame extends EmulatedGame{
+class RetroarchGame extends common.EmulatedGame{
 
 	source = RETROARCH_SOURCE_NAME;
 
@@ -68,7 +71,7 @@ class RetroarchGame extends EmulatedGame{
 
 }
 
-class RetroarchSource extends Source{
+class RetroarchSource extends common.Source{
 
 	static name = RETROARCH_SOURCE_NAME;
 	preferCache = false;
@@ -86,11 +89,9 @@ class RetroarchSource extends Source{
 	 */
 	async _getPlaylistPaths(){
 
-		const USER_DIR = env["HOME"];
-		const PLAYLISTS_PATH = pathJoin(USER_DIR, ".config/retroarch/playlists");
-		let playlists = await readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
+		let playlists = await fsp.readdir(PLAYLISTS_PATH, {encoding: "utf-8", withFileTypes: true});
 		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith(".lpl"));
-		playlists = playlists.map(dirent=>pathJoin(PLAYLISTS_PATH, dirent.name));
+		playlists = playlists.map(dirent=>`${PLAYLISTS_PATH}/${dirent.name}`);
 		return playlists;
 
 	}
@@ -104,12 +105,12 @@ class RetroarchSource extends Source{
 	async _getGamesFromPlaylist(playlistPath){
 
 		// Read the playlist file (it's JSON)
-		const fileContents = await readFile(playlistPath, "utf-8");
+		const fileContents = await fsp.readFile(playlistPath, "utf-8");
 		const playlist = JSON.parse(fileContents);
 
 		// Get playlist console and default playlist core
 		const PLAYLIST_DEFAULT_CORE_PATH = playlist.default_core_path;
-		const PLAYLIST_PLATFORM = pathBasename(playlistPath, ".lpl");
+		const PLAYLIST_PLATFORM = path.basename(playlistPath, ".lpl");
 
 		// Build games from the given entries
 		const games = [];
@@ -120,13 +121,13 @@ class RetroarchSource extends Source{
 				continue;
 			}
 
-			const gameIsInstalled = existsSync(gamePath);
+			const gameIsInstalled = fs.existsSync(gamePath);
 			let gameName = entry.label;
 			let gameCorePath = entry.corePath;
 
 			// Validate game data
 			if (!gameName){
-				gameName = pathBasename(gamePath);
+				gameName = path.basename(gamePath);
 			}
 			if (!gameCorePath || gameCorePath === "DETECT"){
 				gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;

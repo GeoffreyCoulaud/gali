@@ -1,8 +1,7 @@
-const { sync: commandExistsSync } = require("command-exists");
-const { readdirAsync } = require("readdir-enhanced");
-const { EventEmitter } = require("events");
-const { join: pathJoin } = require("path");
-const { kill } = require("process");
+const commandExists = require("command-exists"); // ? reimplement
+const readdirpp = require("readdir-enhanced");
+const process = require("process");
+const events = require("events");
 
 class NoCommandError extends Error{}
 class NotImplementedError extends Error{}
@@ -17,7 +16,7 @@ class NotImplementedError extends Error{}
  * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
  * @abstract
  */
-class GameProcessContainer extends EventEmitter{
+class GameProcessContainer extends events.EventEmitter{
 
 	/**
 	 * Default spawn options to pass to child_process.spawn
@@ -51,7 +50,7 @@ class GameProcessContainer extends EventEmitter{
 	_selectCommand(){
 		let command;
 		for (const option of this.commandOptions){
-			if (commandExistsSync(option)){
+			if (commandExists.sync(option)){
 				command = option;
 				break;
 			}
@@ -96,7 +95,7 @@ class GameProcessContainer extends EventEmitter{
 		try {
 			let pidToKill = this.process.pid;
 			if (wholeGroup) pidToKill *= -1; // negative PID means send to all process in group
-			kill(pidToKill, signal);
+			process.kill(pidToKill, signal);
 		} catch (error){
 			console.error(`Error while signaling ${this.process.pid}${wholeGroup?" (group)":""} ${signal} : ${error}`);
 			return false;
@@ -180,11 +179,11 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 class GameDir {
 	/**
 	 * Create a game directory
-	 * @param {string} path - The local path corresponding to the directory
+	 * @param {string} dirPath - The local path corresponding to the directory
 	 * @param {boolean} recursive - Whether to search games into the directory subdirs
 	 */
-	constructor(path, recursive = false) {
-		this.path = path;
+	constructor(dirPath, recursive = false) {
+		this.path = dirPath;
 		this.recursive = recursive;
 	}
 }
@@ -241,11 +240,11 @@ class EmulatedGame extends Game{
 	/**
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name
-	 * @param {string} path - The game's path
+	 * @param {string} gamePath - The game's path
 	 */
-	constructor(name, path){
+	constructor(name, gamePath){
 		super(name);
-		this.path = path;
+		this.path = gamePath;
 	}
 
 	/**
@@ -273,15 +272,15 @@ async function getROMs(dirs, filesRegex, warn = false){
 		// Get all the files in dir recursively
 		let filePaths;
 		try {
-			filePaths = await readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
+			filePaths = await readdirpp.readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
 		} catch (error){
 			if (warn) console.warn(`Skipping directory ${dir.path} (${error})`);
 			continue;
 		}
 
 		// Add games
-		for (const file of filePaths){
-			const fileAbsPath = pathJoin(dir.path, file);
+		for (const filePath of filePaths){
+			const fileAbsPath = `${dir.path}/${filePath}`;
 			paths.push(fileAbsPath);
 		}
 
