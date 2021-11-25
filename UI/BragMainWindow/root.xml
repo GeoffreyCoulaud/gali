@@ -69,24 +69,6 @@
 														</child>
 													</object>
 												</child>
-												<child>
-													<object class="GtkButton" id="gameStopButton">
-														<child>
-															<object class="GtkImage">
-																<property name="file">UI/icons/white/stop.svg</property>
-															</object>
-														</child>
-													</object>
-												</child>
-												<child>
-													<object class="GtkButton" id="gameKillButton">
-														<child>
-															<object class="GtkImage">
-																<property name="file">UI/icons/white/dangerous.svg</property>
-															</object>
-														</child>
-													</object>
-												</child>
 											</object>
 										</child>
 									</object>
@@ -106,7 +88,7 @@
 		<!-- Loading view -->
 		<child>
 			<object class="GtkStackPage">
-				<property name="name">loadingView</property>
+				<property name="name">scanningView</property>
 				<property name="child">
 					
 					<!-- Loading view root -->
@@ -119,6 +101,62 @@
 			</object>
 		</child>
 		<!-- End of loading view -->
+
+		<!-- Life cycle view -->
+		<child>
+			<object class="GtkStackPage">
+				<property name="name">lifeCycleView</property>
+				<property name="child">
+					
+					<!-- Life cycle view root -->
+					<object class="GtkLabel">
+						<property name="label">Life cycle view</property>
+					</object>
+					<object class="GtkBox">
+						<property name="orientation">vertical</property>
+						<child>
+							<object class="GtkPicture" id="lifeCycleInfoPicture">
+								<property name="can-shrink">true</property>
+								<property name="keep-aspect-ratio">true</property>
+							</object>
+						</child>
+						<child>
+							<object class="GtkLabel" id="lifeCycleInfoTitle">
+							</object>
+						</child>
+						<child>
+							<object class="GtkLabel" id="lifeCycleInfoPlatform">
+							</object>
+						</child>
+						<child>
+							<object class="GtkBox">
+								<child>
+									<object class="GtkButton" id="gameStopButton">
+										<child>
+											<object class="GtkImage">
+												<property name="file">UI/icons/white/stop.svg</property>
+											</object>
+										</child>
+									</object>
+								</child>
+								<child>
+									<object class="GtkButton" id="gameKillButton">
+										<child>
+											<object class="GtkImage">
+												<property name="file">UI/icons/white/dangerous.svg</property>
+											</object>
+										</child>
+									</object>
+								</child>
+							</object>
+						</child>
+					</object>
+					<!-- End of Life cycle view root -->
+
+				</property>
+			</object>
+		</child>
+		<!-- End of Life cycle view -->
 
 	</object>
 </interface>

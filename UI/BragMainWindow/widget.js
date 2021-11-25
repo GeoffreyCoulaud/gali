@@ -23,10 +23,17 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 		"gameGridScrolledWindow",
 		"gameGridViewport",
 		"gameGridFlowBox",
-		"gameInfoRevealer",
-		"gameInfoTitle",
-		"gameInfoPlatform",
+
+		// Selected game view IDs
+		"selectedInfoRevealer",
+		"selectedInfoTitle",
+		"selectedInfoPlatform",
 		"gameStartButton",
+
+		// Life cycle view IDs
+		"lifeCycleInfoPicture",
+		"lifeCycleInfoTitle",
+		"lifeCycleInfoPlatform",
 		"gameStopButton",
 		"gameKillButton",
 	];
