@@ -1,9 +1,3 @@
-// TODO -----------------------------
-// Hehe check if any of this works :D
-// I'm so fucking tired right now
-// Ok byeeeeeeeeee
-// ----------------------------------
-
 const gi          = require("node-gtk");
 const GLib        = gi.require("GLib", "2.0");
 const Gtk         = gi.require("Gtk", "4.0");
