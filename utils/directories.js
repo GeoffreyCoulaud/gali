@@ -1,25 +1,24 @@
-const { join: pathJoin } = require("path");
-const { mkdir } = require("fs/promises");
-const { existsSync } = require("fs");
-const { env } = require("process");
+const fsp     = require("fs/promises");
+const fs      = require("fs");
+const process = require("process");
 
-const USER_DIR = env["HOME"];
-const bragUserLocalData = pathJoin(USER_DIR, ".local/share/brag");
-const bragUserConfig = pathJoin(USER_DIR, ".config/brag");
+const USER_DIR = process.env["HOME"];
+const bragUserConfig       = `${USER_DIR}/.config/brag`;
+const bragUserLocalData    = `${USER_DIR}/.local/share/brag`;
+const bragUserStartScripts = `${bragUserLocalData}/start-scripts`;
 
 async function createBragDirs(){
 	const dirs = [
 		bragUserLocalData,
 		bragUserConfig,
-		pathJoin(bragUserLocalData, "start-scripts"),
+		bragUserStartScripts,
 	];
 	for (const key of Object.keys(dirs)){
-		const path = dirs[key];
-		if (path && !existsSync(path)){
-			await mkdir(path);
+		const dirPath = dirs[key];
+		if (dirPath && !fs.existsSync(dirPath)){
+			await fsp.mkdir(dirPath);
 		}
 	}
-
 }
 
 module.exports = {
