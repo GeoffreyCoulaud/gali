@@ -56,6 +56,7 @@ class SteamGameProcessContainer extends common.StartOnlyGameProcessContainer{
 		);
 		this.process.unref();
 		this._bindProcessEvents();
+		return;
 	}
 
 }

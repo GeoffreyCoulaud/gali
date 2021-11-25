@@ -41,6 +41,7 @@ class RetroarchGameProcessContainer extends common.GameProcessContainer{
 			common.GameProcessContainer.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
+		return;
 	}
 }
 

@@ -75,6 +75,7 @@ class LutrisGameProcessContainer extends common.GameProcessContainer{
 			this.constructor.defaultSpawnOptions
 		);
 		this._bindProcessEvents();
+		return;
 	}
 
 }

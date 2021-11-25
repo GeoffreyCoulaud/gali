@@ -38,6 +38,7 @@ class DolphinGameProcessContainer extends common.GameProcessContainer{
 		if (noUi) args.splice(0, 0, "-b");
 		this.process = child_process.spawn(command, args, common.GameProcessContainer.defaultSpawnOptions);
 		this._bindProcessEvents();
+		return;
 	}
 }
 
