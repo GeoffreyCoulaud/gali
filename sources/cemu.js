@@ -73,16 +73,25 @@ class CemuGameProcessContainer extends common.GameProcessContainer{
 	 * Start the game in a sub process.
 	 * @param {string} cemuGameSlug - Optional, a specific lutris game slug for cemu.
 	 */
-	async start(cemuGameSlug = "cemu"){
-		const command = this._selectCommand();
-		const scriptPath = await this.constructor.getStartScript(this.name, this.path, cemuGameSlug);
-		this.process = child_process.spawn(
-			command,
-			[scriptPath],
-			this.constructor.defaultSpawnOptions
-		);
-		this._bindProcessEvents();
-
+	start(cemuGameSlug = "cemu"){
+		return new Promise((resolve, reject)=>{
+			const command = this._selectCommand();
+			this.constructor.getStartScript(
+				this.name,
+				this.path,
+				cemuGameSlug
+			).then(scriptPath=>{
+				this.process = child_process.spawn(
+					command,
+					[scriptPath],
+					this.constructor.defaultSpawnOptions
+				);
+				this._bindProcessEvents();
+				resolve();
+			}).catch(error=>{
+				reject(error);
+			});
+		});
 	}
 
 }
@@ -96,7 +105,7 @@ class CemuGame extends common.EmulatedGame{
 	source = CEMU_SOURCE_NAME;
 
 	constructor(name, path){
-		super(name, path, CemuSource.name);
+		super(name, path);
 		this.processContainer = new CemuGameProcessContainer(this.name, this.path);
 	}
 
@@ -139,7 +148,7 @@ class CemuSource extends common.Source{
 			const gameDir = path.dirname(linuxGamePath);
 			const metaPath = path.resolve(path.join(gameDir, "../meta/meta.xml"));
 			const metaFileContents = await fsp.readFile(metaPath, "utf-8");
-			meta = config.xml2js(metaFileContents);
+			meta = await config.xml2js(metaFileContents);
 		} catch (error){
 			return undefined;
 		}
@@ -178,7 +187,7 @@ class CemuSource extends common.Source{
 		const configDir = path.dirname(cemuExePath);
 		const configFilePath = `${configDir}/settings.xml`;
 		const configFileContents = await fsp.readFile(configFilePath, "utf-8");
-		const configData = config.xml2js(configFileContents);
+		const configData = await config.xml2js(configFileContents);
 		return configData;
 
 	}
@@ -243,13 +252,9 @@ class CemuSource extends common.Source{
 	async _getROMDirs(configData, prefix){
 
 		// Search into config for ROM dirs
-		const wineGamePaths = configData?.content?.GamePaths?.[0]?.Entry;
-
-		// Convert wine paths into linux paths
-		const linuxGamePaths = wineGamePaths.map(winePath=>convertPath.wineToLinux(winePath, prefix));
-
-		// Convert paths into gameDirs
-		const gameDirs = linuxGamePaths.map(path=>new common.GameDir(path, true));
+		const wPaths = configData?.content?.GamePaths?.[0]?.Entry;
+		const lPaths = wPaths.map(wPath=>convertPath.wineToLinux(wPath, prefix));
+		const gameDirs = lPaths.map(lPath=>new common.GameDir(lPath, true));
 		return gameDirs;
 
 	}
@@ -331,7 +336,7 @@ class CemuSource extends common.Source{
 			if (!this.preferCache){
 
 				// Get cemu's ROM dirs
-				let romDirs;
+				let romDirs = [];
 				try {
 					romDirs = await this._getROMDirs(configData, cemuPrefixPath);
 				} catch (error){

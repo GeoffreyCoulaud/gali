@@ -106,8 +106,8 @@ function desktop2js(desktopEntry){
  * @param {string} config - A XML file contents
  * @returns {object} An object representing the XML data
  */
-function xml2js(config){
-	return xml2js_module.parseString(config);
+async function xml2js(config){
+	return xml2js_module.parseStringPromise(config);
 }
 
 module.exports = {
