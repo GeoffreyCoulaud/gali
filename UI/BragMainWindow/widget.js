@@ -157,11 +157,15 @@ class BragMainWindow extends Gtk.ApplicationWindow{
 	 * @param {string} image - Path to the game cover image to display
 	 * @param {string} title - Title (name) to display
 	 * @param {string} platform - Platform to display
+	 * @param {boolean} isStopVisible - Whether or not to show the stop button
+	 * @param {boolean} isKillVisible - Whether or not to show the kill button
 	 */
-	updateGameRunningPanel(image, title, platform){
+	updateGameRunningPanel(image, title, platform, isStopVisible, isKillVisible){
 		this._gameRunningPanelPicture.setFilename(image);
 		this._gameRunningPanelTitle.setLabel(title);
 		this._gameRunningPanelPlatform.setLabel(platform);
+		this._gameStopButton.setVisible(isStopVisible);
+		this._gameKillButton.setVisible(isKillVisible);
 	}
 
 }

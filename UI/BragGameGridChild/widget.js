@@ -1,4 +1,3 @@
-const fs  = require("fs");
 const gi  = require("node-gtk");
 const Gtk = gi.require("Gtk", "4.0");
 
@@ -13,24 +12,18 @@ class BragGameGridChild extends Gtk.FlowBoxChild {
 	/**
 	 * Create a game grid child widget
 	 * @param {number} libraryIndex - The game index in the library
-	 * @param {Game} game - The game to create a grid child from
+	 * @param {string} image - Absolute path to the game's image
+	 * @param {string} name - The game's displayed name
 	 */
-	constructor(libraryIndex, game){
+	constructor(libraryIndex, image, name){
 		super();
-
 		this.libraryIndex = libraryIndex;
-
 		const builder = Gtk.Builder.newFromFile(rootUI);
 		const imageWidget = builder.getObject("image");
 		const nameWidget = builder.getObject("name");
 		const rootWidget = builder.getObject("root");
-
-		let image = `${__dirname}/icons/white/image_not_found.svg`;
-		if (fs.existsSync(game.boxArtImage)){
-			image = game.boxArtImage;
-		}
 		imageWidget.setFilename(image);
-		nameWidget.setLabel(game.name);
+		nameWidget.setLabel(name);
 		this.setChild(rootWidget);
 	}
 }

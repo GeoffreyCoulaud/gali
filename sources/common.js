@@ -39,6 +39,8 @@ class GameProcessContainer extends EventEmitter{
 	commandOptions = [];
 	process = undefined;
 	isRunning = false;
+	isKillable = true;
+	isStoppable = true;
 
 	/**
 	 * Select a command from the command options.
@@ -149,12 +151,15 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 
 	static defaultSpawnOptions = GameProcessContainer.doNotWaitSpawnOptions;
 
+	isStoppable = false;
+	isKillable = false;
+
 	/**
 	 * Overwrite the inherited stop method to neutralize it
 	 * @returns {boolean} - Always false
 	 */
 	stop(){
-		console.warn(`${this.constructor} does not implement stopping`);
+		console.warn(`${this.constructor.name} does not implement stopping`);
 		return false;
 	}
 
@@ -163,7 +168,7 @@ class StartOnlyGameProcessContainer extends GameProcessContainer{
 	 * @returns {boolean} - Always false
 	 */
 	kill(){
-		console.warn(`${this.constructor} does not implement killing`);
+		console.warn(`${this.constructor.name} does not implement killing`);
 		return false;
 	}
 

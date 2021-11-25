@@ -14,8 +14,8 @@ const EXIT_OK = 0;
 const EXIT_UNKNOWN_CURRENT_UI_STATE = 1;
 const EXIT_UNKNOWN_NEW_UI_STATE = 2;
 
-const FALLBACK_IMAGE_BOXART = `${__dirname}/icons/white/image_not_found.svg`;
-const FALLBACK_IMAGE_COVER = FALLBACK_IMAGE_BOXART; // TODO add another image
+const FB_BOXART = `${__dirname}/UI/icons/white/image_not_found.svg`;
+const FB_COVER  = `${__dirname}/UI/icons/white/image_not_found_wide.svg`;
 
 /**
  * Get a fallback for an file path in case it's unreadable / missing.
@@ -159,7 +159,8 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to add to the grid
 	 */
 	addGameToGrid(index, game){
-		const widget = new BragGameGridChild(index, game);
+		const image = fileWithFallback(game.boxArtImage, FB_BOXART);
+		const widget = new BragGameGridChild(index, image, game.name);
 		this.mw.addGameGridChild(widget);
 	}
 
@@ -188,7 +189,7 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to get info from
 	 */
 	updateInfoPanel(game){
-		const image = fileWithFallback(game.coverImage, FALLBACK_IMAGE_COVER);
+		const image = fileWithFallback(game.coverImage, FB_COVER);
 		this.mw.updateInfoPanel(image, game.name, `${game.source} / ${game.platform}`);
 	}
 
@@ -197,8 +198,14 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to get info from
 	 */
 	updateGameRunningPanel(game){
-		const image = fileWithFallback(game.coverImage, FALLBACK_IMAGE_COVER);
-		this.mw.updateGameRunningPanel(image, game.name, `${game.source} / ${game.platform}`);
+		const image = fileWithFallback(game.coverImage, FB_COVER);
+		this.mw.updateGameRunningPanel(
+			image,
+			game.name,
+			`${game.source} / ${game.platform}`,
+			game.processContainer.isStoppable,
+			game.processContainer.isKillable
+		);
 	}
 
 }
@@ -350,14 +357,14 @@ class BragApp{
 		}
 
 		// Handle start outcomes
-		const onSpawn = ()=>{
-			this.UI.updateGameRunningPanel(this.#selectedGame);
-			this.UI.changeState(UI.State.GameRunning);
-		};
 		const onError = (message)=>{
 			console.error(`Game start error : ${message}`);
 		};
-		const onExit = (code, signal)=>{
+		const onStoppableSpawn = ()=>{
+			this.UI.updateGameRunningPanel(this.#selectedGame);
+			this.UI.changeState(UI.State.GameRunning);
+		};
+		const onStoppableExit = (code, signal)=>{
 			if (code){
 				console.warn("Game child process exited with code", code);
 			} else {
@@ -366,8 +373,18 @@ class BragApp{
 			this.#selectedGame.processContainer.off("error", onError);
 			this.UI.changeState(UI.State.LibraryGameSelected);
 		};
-		this.#selectedGame.processContainer.once("spawn", onSpawn);
-		this.#selectedGame.processContainer.once("exit", onExit);
+		if (
+			this.#selectedGame.processContainer.isStoppable ||
+			this.#selectedGame.processContainer.isKillable
+		){
+			/*
+			- Spawn is handled only to show the "game running" view, which is
+			useless since we can't stop nor kill the game child process.
+			- Exit is handled only to exit of said view.
+			*/
+			this.#selectedGame.processContainer.once("spawn", onStoppableSpawn);
+			this.#selectedGame.processContainer.once("exit", onStoppableExit);
+		}
 		this.#selectedGame.processContainer.on("error", onError);
 
 		// Start the game
