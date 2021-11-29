@@ -155,18 +155,23 @@ class CemuSource extends common.Source{
 		}
 
 		// Get user locale for game name
-		const preferredLangs = await locale.getUserLocalePreference(true);
+		const preferredLangs = locale.getUserLocalePreference(true);
 
 		// Get longname lang key from available lang options
-		const longnameLangOptions = Object.keys(meta?.menu)
-			.filter(key=>key.startsWith("longname_"))
-			.map(key=>key.replace("longname_", ""));
+		const keys = Object.entries(meta.menu)
+			.filter(([key, value])=>key.startsWith("longname_") && value)
+			.map(([key, value])=>key.replace("longname_", ""));
+
+		// Select a longname according to user locale
 		let longnameKey;
 		for (const lang of preferredLangs){
-			if (longnameLangOptions.includes(lang)){
+			if (keys.includes(lang)){
 				longnameKey = `longname_${lang}`;
 				break;
 			}
+		}
+		if (!longnameKey){
+			return undefined;
 		}
 
 		// Get longname in config
@@ -299,6 +304,7 @@ class CemuSource extends common.Source{
 					name = gameName;
 				}
 			}
+			console.log(basename, name); //!temp
 
 			// Build game
 			const game = new CemuGame(name, winePath);
