@@ -1,4 +1,4 @@
-const xml2js_module = require("xml2js");
+const xml = require("fast-xml-parser");
 
 /**
  * Convert a config file text into a JS readable object
@@ -107,7 +107,8 @@ function desktop2js(desktopEntry){
  * @returns {object} An object representing the XML data
  */
 async function xml2js(config){
-	return xml2js_module.parseStringPromise(config);
+	const parser = new xml.XMLParser();
+	return parser.parse(config);
 }
 
 module.exports = {

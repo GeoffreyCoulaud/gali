@@ -4,6 +4,7 @@ const locale        = require("../utils/locale.js");
 const common        = require("./common.js");
 const lutris        = require("./lutris.js");
 const child_process = require("child_process");
+const htmlEntites   = require("html-entities");
 const fsp           = require("fs/promises");
 const process       = require("process");
 const YAML          = require("yaml");
@@ -146,7 +147,7 @@ class CemuSource extends common.Source{
 		let meta;
 		try {
 			const gameDir = path.dirname(linuxGamePath);
-			const metaPath = path.resolve(path.join(gameDir, "../meta/meta.xml"));
+			const metaPath = path.resolve(`${gameDir}/../meta/meta.xml`);
 			const metaFileContents = await fsp.readFile(metaPath, "utf-8");
 			meta = await config.xml2js(metaFileContents);
 		} catch (error){
@@ -169,7 +170,8 @@ class CemuSource extends common.Source{
 		}
 
 		// Get longname in config
-		let longname = meta?.menu?.[longnameKey]?.[0]?.["_"];
+		let longname = meta?.menu?.[longnameKey];
+		longname = htmlEntites.decode(longname, {level: "xml", scope: "strict"});
 		longname = longname.replaceAll("\n", " - ");
 
 		return longname;
@@ -252,7 +254,17 @@ class CemuSource extends common.Source{
 	async _getROMDirs(configData, prefix){
 
 		// Search into config for ROM dirs
-		const wPaths = configData?.content?.GamePaths?.[0]?.Entry;
+		//const wPaths = configData?.content?.GamePaths?.[0]?.Entry;
+		const wPaths = [];
+		const entries = configData?.content?.GamePaths?.Entry;
+		if (!entries){
+			return [];
+		}
+		if (Array.isArray(entries)){
+			wPaths.push(...entries);
+		} else {
+			wPaths.push(entries);
+		}
 		const lPaths = wPaths.map(wPath=>convertPath.wineToLinux(wPath, prefix));
 		const gameDirs = lPaths.map(lPath=>new common.GameDir(lPath, true));
 		return gameDirs;
@@ -273,6 +285,7 @@ class CemuSource extends common.Source{
 
 		// Convert found paths into cemu games
 		const romGamesPromises = gameRomPaths.map(async linuxPath=>{
+
 			// Get base info
 			const winePath = convertPath.linuxToWine(linuxPath);
 
@@ -281,6 +294,7 @@ class CemuSource extends common.Source{
 			const extname = path.extname(linuxPath).toLowerCase();
 			let name = basename;
 			if (extname === ".rpx"){
+				console.log("here");
 				const gameName = await this.getRPXGameName(linuxPath);
 				if (typeof gameName !== "undefined"){
 					name = gameName;
