@@ -9,6 +9,7 @@ const STEAM_SOURCE_NAME = "Steam";
 
 const USER_DIR = process.env["HOME"];
 const STEAM_INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
+const STEAM_IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
 
 /**
  * Checks if a string matches any of the passed regular expressions
@@ -151,7 +152,6 @@ class SteamSource extends common.Source{
 	 * @private
 	 */
 	_getGameImages(game){
-		const STEAM_IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
 		const images = {
 			boxArtImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
 			coverImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
