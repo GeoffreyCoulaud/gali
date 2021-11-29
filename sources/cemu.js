@@ -294,7 +294,6 @@ class CemuSource extends common.Source{
 			const extname = path.extname(linuxPath).toLowerCase();
 			let name = basename;
 			if (extname === ".rpx"){
-				console.log("here");
 				const gameName = await this.getRPXGameName(linuxPath);
 				if (typeof gameName !== "undefined"){
 					name = gameName;
