@@ -14,8 +14,12 @@ const EXIT_OK = 0;
 const EXIT_UNKNOWN_CURRENT_UI_STATE = 1;
 const EXIT_UNKNOWN_NEW_UI_STATE = 2;
 
+// eslint-disable-next-line no-unused-vars
 const FB_BOXART = `${__dirname}/UI/icons/white/image_not_found.svg`;
+// eslint-disable-next-line no-unused-vars
 const FB_COVER  = `${__dirname}/UI/icons/white/image_not_found_wide.svg`;
+// eslint-disable-next-line no-unused-vars
+const FB_ICON   = `${__dirname}/UI/icons/white/image_not_found_square.svg`;
 
 /**
  * Get a fallback for an file path in case it's unreadable / missing.
@@ -159,7 +163,7 @@ class UI extends events.EventEmitter{
 	 * @param {Game} game - The game to add to the grid
 	 */
 	addGameToGrid(index, game){
-		const image = fileWithFallback(game.boxArtImage, FB_BOXART);
+		const image = fileWithFallback(game.iconImage, FB_ICON);
 		const widget = new BragGameGridChild(index, image, game.name);
 		this.mw.addGameGridChild(widget);
 	}
@@ -386,6 +390,9 @@ class BragApp{
 			this.#selectedGame.processContainer.once("exit", onStoppableExit);
 		}
 		this.#selectedGame.processContainer.on("error", onError);
+
+		// TODO Games from Steam, Heroic & Legendary freeze the UI.
+		// ? Check StartOnlyGameProcessContainer, it's the common denominator
 
 		// Start the game
 		console.log(`Starting ${this.#selectedGame.name}`);
