@@ -221,27 +221,31 @@ class BragApp{
 	preferences = undefined;
 	library = undefined;
 
-	constructor(){
-		this.preferences = preferences.readUserFileSafe();
-		this.library = new Library(
-			this.preferences.scan.enabledSources,
-			this.preferences.scan.preferCache,
-			this.preferences.scan.warnings
-		);
-	}
-
 	// ---------------------------- Regular methods ----------------------------
 
 	/**
 	 * Start the app
 	 * @public
 	 */
-	start(){
+	start = async ()=>{
+
+		// Get user preferences
+		this.preferences = await preferences.readUserFileSafe();
+
+		// Create library
+		this.library = new Library(
+			this.preferences.scan.enabledSources,
+			this.preferences.scan.preferCache,
+			this.preferences.scan.warnings
+		);
+
+		// Start UI
 		this.UI.start();
 		this.UI.on("activate", ()=>{
 			this.#bindUISignals();
 			this.#scan();
 		});
+
 	}
 
 	/**

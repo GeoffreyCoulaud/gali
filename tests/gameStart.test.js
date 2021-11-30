@@ -47,7 +47,7 @@ function testGameStart(){
 		const gameSourceName = process.argv[3];
 
 		// Scan library
-		const USER_PREFERENCES = preferences.readUserFileSafe();
+		const USER_PREFERENCES = preferences.readUserFileSafeSync();
 		const library = new Library(
 			USER_PREFERENCES.scan.enabledSources,
 			USER_PREFERENCES.scan.preferCache,

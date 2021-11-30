@@ -1,4 +1,5 @@
 const process = require("process");
+const fsp = require("fs/promises");
 const fs = require("fs");
 
 const { DesktopEntrySource } = require("../sources/desktop-entries.js");
@@ -74,7 +75,7 @@ const DEFAULT_PREFERENCES = {
 /**
  * Check if the user has a config file
  */
-function doesUserFileExist(){
+function userFileExistsSync(){
 	return fs.existsSync(CONFIG_PATH);
 }
 
@@ -83,9 +84,20 @@ function doesUserFileExist(){
  * This will also create the needed directories before.
  * @throws {Error} - On write fail
  */
-function createUserFile(){
+function createUserFileSync(){
 	if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, {recursive: true});
 	return fs.writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES, null, "\t"), "utf-8");
+}
+
+async function createUserFile(){
+	if (!fs.existsSync(CONFIG_DIR)){
+		await fsp.mkdir(CONFIG_DIR, {recursive: true});
+	}
+	await fsp.writeFile(
+		CONFIG_PATH,
+		JSON.stringify(DEFAULT_PREFERENCES, null, "\t"),
+		"utf-8"
+	);
 }
 
 /**
@@ -95,8 +107,14 @@ function createUserFile(){
  * @throws {Error} - On unreadable file
  * @returns {object} - Parsed user data
  */
-function readUserFile(){
+function readUserFileSync(){
 	const contents = fs.readFileSync(CONFIG_PATH, "utf-8");
+	const parsed = JSON.parse(contents);
+	return parsed;
+}
+
+async function readUserFile(){
+	const contents = await fsp.readFile(CONFIG_PATH, "utf-8");
 	const parsed = JSON.parse(contents);
 	return parsed;
 }
@@ -107,16 +125,36 @@ function readUserFile(){
  * - Falls back on default preferences on invalid file
  * @returns {object} - A preference object
  */
-function readUserFileSafe(){
+function readUserFileSafeSync(){
 
 	let prefs;
-	if (!doesUserFileExist()){
+	if (!userFileExistsSync()){
 		console.log(`Created default config file "${CONFIG_PATH}`);
 		createUserFile();
 		prefs = DEFAULT_PREFERENCES;
 	} else {
 		try {
 			prefs = readUserFile();
+		} catch (error){
+			console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
+			console.error("\tError : ", error.toString());
+			prefs = DEFAULT_PREFERENCES;
+		}
+	}
+	return prefs;
+
+}
+
+async function readUserFileSafe(){
+
+	let prefs;
+	if (!userFileExistsSync()){
+		console.log(`Created default config file "${CONFIG_PATH}`);
+		await createUserFile();
+		prefs = DEFAULT_PREFERENCES;
+	} else {
+		try {
+			prefs = await readUserFile();
 		} catch (error){
 			console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
 			console.error("\tError : ", error.toString());
@@ -134,9 +172,14 @@ module.exports = {
 	CONFIG_PATH,
 	DEFAULT_PREFERENCES,
 
-	doesUserFileExist,
+	userFileExistsSync,
+
 	createUserFile,
 	readUserFile,
 	readUserFileSafe,
+
+	createUserFileSync,
+	readUserFileSync,
+	readUserFileSafeSync,
 
 };
