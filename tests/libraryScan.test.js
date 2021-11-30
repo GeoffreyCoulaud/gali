@@ -57,7 +57,7 @@ async function testLibraryScan(){
 	const DO_DISPLAY_GAMES_LIST = cli.getPopBoolArgv("-d");
 
 	// Scan and sort library
-	const USER_PREFERENCES = preferences.readUserFileSafeSync();
+	const USER_PREFERENCES = await preferences.readUserFileSafe();
 	const library = new Library(
 		USER_PREFERENCES.scan.enabledSources,
 		USER_PREFERENCES.scan.preferCache,

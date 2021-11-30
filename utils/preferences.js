@@ -1,6 +1,6 @@
-const process = require("process");
+const ad  = require("./appDirectories.js");
 const fsp = require("fs/promises");
-const fs = require("fs");
+const fs  = require("fs");
 
 const { DesktopEntrySource } = require("../sources/desktop-entries.js");
 const { LegendarySource }    = require("../sources/legendary.js");
@@ -13,10 +13,6 @@ const { CitraSource }        = require("../sources/citra.js");
 const { SteamSource }        = require("../sources/steam.js");
 const { CemuSource }         = require("../sources/cemu.js");
 const { YuzuSource }         = require("../sources/yuzu.js");
-
-const CONFIG_FILENAME = "preferences.json";
-const CONFIG_DIR = (process.env["XDG_CONFIG_DIR"] ?? (process.env["HOME"] + "/.config")) + "/brag";
-const CONFIG_PATH = `${CONFIG_DIR}/${CONFIG_FILENAME}`;
 
 const DEFAULT_PREFERRED_SHELL_COMMAND = ["sh", "zsh", "bash"];
 const DEFAULT_PREFERENCES = {
@@ -73,10 +69,19 @@ const DEFAULT_PREFERENCES = {
 };
 
 /**
- * Check if the user has a config file
+ * Check if the user has a brag config file
+ * @returns {boolean} - True if exists, else false
  */
 function userFileExistsSync(){
-	return fs.existsSync(CONFIG_PATH);
+	return fs.existsSync(ad.BRAG_CONFIG_PATH);
+}
+
+/**
+ * Checks if the user has a brag config dir
+ * @returns {boolean} - True if exists, else false
+ */
+function userDirExistsSync(){
+	return fs.existsSync(ad.BRAG_CONFIG_DIR);
 }
 
 /**
@@ -84,17 +89,12 @@ function userFileExistsSync(){
  * This will also create the needed directories before.
  * @throws {Error} - On write fail
  */
-function createUserFileSync(){
-	if (!fs.existsSync(CONFIG_DIR)) fs.mkdirSync(CONFIG_DIR, {recursive: true});
-	return fs.writeFileSync(CONFIG_PATH, JSON.stringify(DEFAULT_PREFERENCES, null, "\t"), "utf-8");
-}
-
 async function createUserFile(){
-	if (!fs.existsSync(CONFIG_DIR)){
-		await fsp.mkdir(CONFIG_DIR, {recursive: true});
+	if (!userDirExistsSync()){
+		await fsp.mkdir(ad.BRAG_CONFIG_DIR, {recursive: true});
 	}
 	await fsp.writeFile(
-		CONFIG_PATH,
+		ad.BRAG_CONFIG_PATH,
 		JSON.stringify(DEFAULT_PREFERENCES, null, "\t"),
 		"utf-8"
 	);
@@ -107,14 +107,8 @@ async function createUserFile(){
  * @throws {Error} - On unreadable file
  * @returns {object} - Parsed user data
  */
-function readUserFileSync(){
-	const contents = fs.readFileSync(CONFIG_PATH, "utf-8");
-	const parsed = JSON.parse(contents);
-	return parsed;
-}
-
 async function readUserFile(){
-	const contents = await fsp.readFile(CONFIG_PATH, "utf-8");
+	const contents = await fsp.readFile(ad.BRAG_CONFIG_PATH, "utf-8");
 	const parsed = JSON.parse(contents);
 	return parsed;
 }
@@ -125,38 +119,18 @@ async function readUserFile(){
  * - Falls back on default preferences on invalid file
  * @returns {object} - A preference object
  */
-function readUserFileSafeSync(){
-
-	let prefs;
-	if (!userFileExistsSync()){
-		console.log(`Created default config file "${CONFIG_PATH}`);
-		createUserFile();
-		prefs = DEFAULT_PREFERENCES;
-	} else {
-		try {
-			prefs = readUserFile();
-		} catch (error){
-			console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
-			console.error("\tError : ", error.toString());
-			prefs = DEFAULT_PREFERENCES;
-		}
-	}
-	return prefs;
-
-}
-
 async function readUserFileSafe(){
 
 	let prefs;
 	if (!userFileExistsSync()){
-		console.log(`Created default config file "${CONFIG_PATH}`);
+		console.log(`Created default config file "${ad.BRAG_CONFIG_PATH}`);
 		await createUserFile();
 		prefs = DEFAULT_PREFERENCES;
 	} else {
 		try {
 			prefs = await readUserFile();
 		} catch (error){
-			console.error(`Invalid config file, delete or edit "${CONFIG_PATH}"`);
+			console.error(`Invalid config file, delete or edit "${ad.BRAG_CONFIG_PATH}"`);
 			console.error("\tError : ", error.toString());
 			prefs = DEFAULT_PREFERENCES;
 		}
@@ -166,20 +140,10 @@ async function readUserFileSafe(){
 }
 
 module.exports = {
-
-	CONFIG_DIR,
-	CONFIG_FILENAME,
-	CONFIG_PATH,
 	DEFAULT_PREFERENCES,
-
 	userFileExistsSync,
-
+	userDirExistsSync,
 	createUserFile,
 	readUserFile,
 	readUserFileSafe,
-
-	createUserFileSync,
-	readUserFileSync,
-	readUserFileSafeSync,
-
 };

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 const sleep = require("../utils/sleep.js");
 const Library = require("../library.js");
 const preferences = require("../utils/preferences.js");
@@ -47,13 +48,15 @@ function testGameStart(){
 		const gameSourceName = process.argv[3];
 
 		// Scan library
-		const USER_PREFERENCES = preferences.readUserFileSafeSync();
-		const library = new Library(
-			USER_PREFERENCES.scan.enabledSources,
-			USER_PREFERENCES.scan.preferCache,
-			true
-		);
-		library.scan().then(()=>{
+		let library;
+		preferences.readUserFileSafe().then(p=>{
+			library = new Library(
+				p.scan.enabledSources,
+				p.scan.preferCache,
+				true
+			);
+			return library.scan();
+		}).then(()=>{
 
 			// Find the game
 			const game = library.games.find(x=>(x.name === gameName && x.source === gameSourceName));

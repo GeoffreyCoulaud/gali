@@ -1,4 +1,4 @@
-const dirs          = require("../utils/directories.js");
+const ad           = require("../utils/appDirectories.js");
 const common        = require("./common.js");
 const commandExists = require("command-exists"); // ? reimplement
 const child_process = require("child_process");
@@ -59,7 +59,7 @@ class LutrisGameProcessContainer extends common.GameProcessContainer{
 
 		// Store the script
 		if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
-		const scriptPath = `${dirs.bragUserLocalData}/start-scripts/${scriptBaseName}`;
+		const scriptPath = `${ad.BRAG_START_SCRIPTS_PATH}/${scriptBaseName}`;
 		await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
 
 		return scriptPath;
