@@ -30,7 +30,7 @@ class HeroicGameProcessContainer extends common.StartOnlyGameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		const args = [`heroic://launch/${this.appName}`];
 		this.process = child_process.spawn(
 			command,

@@ -33,7 +33,7 @@ class DolphinGameProcessContainer extends common.GameProcessContainer{
 	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game
 	 */
 	async start(noUi = false){
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		const args = ["-e", this.romPath];
 		if (noUi) args.splice(0, 0, "-b");
 		this.process = child_process.spawn(command, args, common.GameProcessContainer.defaultSpawnOptions);

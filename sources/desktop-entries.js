@@ -1,8 +1,8 @@
 const config        = require("../utils/configFormats.js");
+const deepReaddir   = require("../utils/deepReaddir.js");
 const locale        = require("../utils/locale.js");
 const xdg           = require("../utils/xdg.js");
 const common        = require("./common.js");
-const readdirpp     = require("readdir-enhanced"); // ? reimplement
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
 const process       = require("process");
@@ -102,7 +102,7 @@ class DesktopEntrySource extends common.Source{
 		for (const dir of dirs){
 			let filePaths;
 			try {
-				filePaths = await readdirpp.readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
+				filePaths = await deepReaddir(dir.path, Infinity, (p)=>filesRegex.test(p) );
 			} catch (error){ continue; }
 			for (const file of filePaths){
 				const fileAbsPath = `${dir.path}/${file}`;

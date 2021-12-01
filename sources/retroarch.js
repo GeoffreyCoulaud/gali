@@ -34,7 +34,7 @@ class RetroarchGameProcessContainer extends common.GameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		this.process = child_process.spawn(
 			command,
 			["--libretro", this.corePath, this.romPath],

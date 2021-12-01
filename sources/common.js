@@ -1,5 +1,5 @@
+const commandExists = require("../utils/commandExists.js");
 const deepReaddir   = require("../utils/deepReaddir.js");
-const commandExists = require("command-exists");   // ? reimplement
 const process       = require("process");
 const events        = require("events");
 
@@ -47,10 +47,10 @@ class GameProcessContainer extends events.EventEmitter{
 	 * @returns {string} The best command found in options
 	 * @access protected
 	 */
-	_selectCommand(){
+	async _selectCommand(){
 		let command;
 		for (const option of this.commandOptions){
-			if (commandExists.sync(option)){
+			if (await commandExists(option)){
 				command = option;
 				break;
 			}
@@ -278,10 +278,7 @@ async function getROMs(dirs, filesRegex, warn = false){
 		}
 
 		// Add games
-		for (const filePath of filePaths){
-			const fileAbsPath = `${dir.path}/${filePath}`;
-			paths.push(fileAbsPath);
-		}
+		paths.push(...filePaths);
 
 	}
 

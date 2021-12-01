@@ -33,7 +33,7 @@ class LegendaryGameProcessContainer extends common.StartOnlyGameProcessContainer
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false.
 	 */
 	async start(offline = false){
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		const args = ["launch", this.appName];
 		if (offline) args.splice(1, 0, "--offline");
 		this.process = child_process.spawn(

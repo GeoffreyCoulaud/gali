@@ -1,6 +1,6 @@
-const ad           = require("../utils/appDirectories.js");
+const ad            = require("../utils/appDirectories.js");
+const commandExists = require("../utils/commandExists.js");
 const common        = require("./common.js");
-const commandExists = require("command-exists"); // ? reimplement
 const child_process = require("child_process");
 const process       = require("process");
 const sqlite3       = require("sqlite3");
@@ -53,13 +53,14 @@ class LutrisGameProcessContainer extends common.GameProcessContainer{
 
 		// Get the start script from lutris
 		const lutrisCommand = "lutris";
-		if (!commandExists.sync(lutrisCommand)){
+		const doesCommandExist = await commandExists(lutrisCommand);
+		if (!doesCommandExist){
 			throw new common.NoCommandError("No lutris command found");
 		}
 
 		// Store the script
 		if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
-		const scriptPath = `${ad.BRAG_START_SCRIPTS_PATH}/${scriptBaseName}`;
+		const scriptPath = `${ad.BRAG_START_SCRIPTS_DIR}/${scriptBaseName}`;
 		await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
 
 		return scriptPath;
@@ -71,7 +72,7 @@ class LutrisGameProcessContainer extends common.GameProcessContainer{
 	 */
 	async start(){
 		const scriptPath = await this.constructor.getStartScript(this.gameSlug);
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		this.process = child_process.spawn(
 			command,
 			[scriptPath],

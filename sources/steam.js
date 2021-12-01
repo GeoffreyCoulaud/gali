@@ -49,7 +49,7 @@ class SteamGameProcessContainer extends common.StartOnlyGameProcessContainer{
 	 * Start the game in a subprocess
 	 */
 	async start(){
-		const command = this._selectCommand();
+		const command = await this._selectCommand();
 		this.process = child_process.spawn(
 			command,
 			[`steam://rungameid/${this.appId}`],

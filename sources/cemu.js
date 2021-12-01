@@ -74,25 +74,15 @@ class CemuGameProcessContainer extends common.GameProcessContainer{
 	 * Start the game in a sub process.
 	 * @param {string} cemuGameSlug - Optional, a specific lutris game slug for cemu.
 	 */
-	start(cemuGameSlug = "cemu"){
-		return new Promise((resolve, reject)=>{
-			const command = this._selectCommand();
-			this.constructor.getStartScript(
-				this.name,
-				this.path,
-				cemuGameSlug
-			).then(scriptPath=>{
-				this.process = child_process.spawn(
-					command,
-					[scriptPath],
-					this.constructor.defaultSpawnOptions
-				);
-				this._bindProcessEvents();
-				resolve();
-			}).catch(error=>{
-				reject(error);
-			});
-		});
+	async start(cemuGameSlug = "cemu"){
+		const command = await this._selectCommand();
+		const scriptPath = await this.constructor.getStartScript(this.name, this.path, cemuGameSlug);
+		this.process = child_process.spawn(
+			command,
+			[scriptPath],
+			this.constructor.defaultSpawnOptions
+		);
+		this._bindProcessEvents();
 	}
 
 }
@@ -304,7 +294,6 @@ class CemuSource extends common.Source{
 					name = gameName;
 				}
 			}
-			console.log(basename, name); //!temp
 
 			// Build game
 			const game = new CemuGame(name, winePath);
