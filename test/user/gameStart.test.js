@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-const sleep = require("../utils/sleep.js");
-const Library = require("../library.js");
-const preferences = require("../utils/preferences.js");
+const sleep = require("../../utils/sleep.js");
+const Library = require("../../library.js");
+const preferences = require("../../utils/preferences.js");
 const cli = require("./cli.js");
 
 function help(){

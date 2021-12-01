@@ -7,8 +7,7 @@
     "start": "node main.js",
     "lint": "eslint library.js main.js tests sources utils UI --format stylish",
     "lint (auto fix)": "eslint --fix library.js main.js tests sources utils UI --format stylish",
-    "test library scan": "node tests/libraryScan.test.js",
-    "test path conversion": "node tests/convertWinePath.test.js"
+    "test": "mocha"
   },
   "keywords": [
     "game",
@@ -32,6 +31,8 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "eslint": "^7.32.0"
+    "chai": "^4.3.4",
+    "eslint": "^7.32.0",
+    "mocha": "^9.1.3"
   }
 }

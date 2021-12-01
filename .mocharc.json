@@ -1,0 +1,5 @@
+{
+	"spec": [
+		"test/mocha/*.test.js"
+	]
+}
