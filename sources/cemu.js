@@ -11,7 +11,6 @@ const path          = require("path");
 const fs            = require("fs");
 
 const CEMU_SOURCE_NAME = "Cemu in Lutris";
-
 const GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
 
 /**
@@ -60,9 +59,10 @@ class CemuGameProcessContainer extends common.GameProcessContainer{
 		const scriptPath = await lutris.LutrisGameProcessContainer.getStartScript(cemuGameSlug, scriptBaseName);
 
 		// Add the game path argument
+		const winePath = convertPath.linuxToWine(path);
 		const fileContents = await fsp.readFile(scriptPath, "utf-8");
 		let newFileContents = fileContents.trimEnd();
-		newFileContents += ` --game "${path}"`;
+		newFileContents += ` --game "${winePath}"`;
 		await fsp.writeFile(scriptPath, newFileContents, "utf-8");
 
 		return scriptPath;
@@ -124,53 +124,87 @@ class CemuSource extends common.Source{
 		this.preferCache = preferCache;
 	}
 
+	// --------------------------- RPX Roms methods ----------------------------
+
 	/**
-	 * Get a game's name from its rpx ROM path
-	 * @param {string} linuxGamePath - A linux path to a rpx Wii U game
-	 * @returns {string} - The localized (if available) game name
-	 * @todo generalize for all rpx metadata
+	 * Get a RPX game's meta.xml data
+	 * @param {CemuGame} game - A game to get metadata from
+	 * @returns {object|undefined} - The game's metadata
+	 * @private
 	 */
-	async getRPXGameName(linuxGamePath){
+	async _getRPXGameMetadata(game){
+		const filePath = path.resolve(`${game.path}/../../meta/meta.xml`);
+		const fileContents = await fsp.readFile(filePath, "utf-8");
+		const metadata = await config.xml2js(fileContents);
+		return metadata;
+	}
 
-		// Read meta.xml
-		let meta;
-		try {
-			const gameDir = path.dirname(linuxGamePath);
-			const metaPath = path.resolve(`${gameDir}/../meta/meta.xml`);
-			const metaFileContents = await fsp.readFile(metaPath, "utf-8");
-			meta = await config.xml2js(metaFileContents);
-		} catch (error){
-			return undefined;
-		}
-
-		// Get user locale for game name
-		const preferredLangs = locale.getUserLocalePreference(true);
+	/**
+	 * Add a better name to a game
+	 * @param {CemuGame} game - The game to add a longname to
+	 * @param {object} metadata - The game's metadata
+	 * @param {string[]} langs - An array of preferred language codes
+	 * @private
+	 */
+	_getRPXGameLongname(game, metadata, langs){
 
 		// Get longname lang key from available lang options
-		const keys = Object.entries(meta.menu)
+		const keys = Object.entries(metadata.menu)
 			.filter(([key, value])=>key.startsWith("longname_") && value)
 			.map(([key, value])=>key.replace("longname_", ""));
 
 		// Select a longname according to user locale
 		let longnameKey;
-		for (const lang of preferredLangs){
+		for (const lang of langs){
 			if (keys.includes(lang)){
 				longnameKey = `longname_${lang}`;
 				break;
 			}
 		}
 		if (!longnameKey){
-			return undefined;
+			return;
 		}
 
 		// Get longname in config
-		let longname = meta?.menu?.[longnameKey];
+		let longname = metadata.menu[longnameKey];
 		longname = config.xmlDecodeSpecialChars(longname);
 		longname = longname.replaceAll("\n", " - ");
-
-		return longname;
-
+		game.name = longname;
 	}
+
+	/**
+	 * Add images to a game
+	 * @param {CemuGame} game - The game to add images to
+	 * @private
+	 */
+	_getRPXGameImages(game){
+		const gameMetaDir = path.resolve(`${game.path}/../../meta`);
+		const images = {
+			coverImage: `${gameMetaDir}/bootTvTex.tga`,
+			iconImage: `${gameMetaDir}/iconTex.tga`,
+		};
+		for (const [key, value] of Object.entries(images)){
+			const imageExists = fs.existsSync(value);
+			if (imageExists){
+				game[key] = value;
+			}
+		}
+	}
+
+	/**
+	 * Optional step, Precise RPX game properties
+	 * This will add a better name, iconImage and coverImage.
+	 * @param {CemuGame} game - The game to add metadata to
+	 * @private
+	 */
+	async _getRPXGameProps(game){
+		const preferredLangs = locale.getUserLocalePreference(true);
+		const metadata = await this._getRPXGameMetadata(game);
+		this._getRPXGameLongname(game, metadata, preferredLangs);
+		this._getRPXGameImages(game);
+	}
+
+	// --------------------------- General scanning ----------------------------
 
 	/**
 	 * Get cemu's config data
@@ -179,13 +213,11 @@ class CemuSource extends common.Source{
 	 * @private
 	 */
 	async _getConfig(cemuExePath){
-
 		const configDir = path.dirname(cemuExePath);
 		const configFilePath = `${configDir}/settings.xml`;
 		const configFileContents = await fsp.readFile(configFilePath, "utf-8");
 		const configData = await config.xml2js(configFileContents);
 		return configData;
-
 	}
 
 	/**
@@ -200,38 +232,48 @@ class CemuSource extends common.Source{
 		// Search into config for cached games
 		const games = [];
 
-		const gameCache = configData?.content?.GameCache?.[0]?.Entry;
-		if (typeof gameCache !== "undefined"){
-			for (const game of gameCache){
+		const gameCache = configData?.content?.GameCache?.Entry;
+		if (typeof gameCache === "undefined"){
+			return;
+		}
+		for (const item of gameCache){
 
-				// Get game name
-				const customName = game?.custom_name?.[0];
-				const defaultName = game?.name?.[0];
-				let name = undefined;
-				for (let candidate of [customName, defaultName]){
-					if (typeof candidate !== "string"){ continue; }
-					candidate = candidate.trim();
-					if (candidate.length > 0){
-						name = candidate;
-						break;
-					}
+			// Get game name
+			const customName = item?.custom_name?.[0];
+			const defaultName = item?.name?.[0];
+			let name = undefined;
+			for (let candidate of [customName, defaultName]){
+				if (typeof candidate !== "string"){
+					continue;
 				}
-
-				// Get game path and installed state
-				const gamePath = game?.path?.[0];
-				const linuxPath = convertPath.wineToLinux(gamePath, prefix);
-				const isInstalled = fs.existsSync(linuxPath);
-
-				// Build game
-				if (
-					typeof name !== "undefined" &&
-					typeof gamePath !== "undefined"
-				){
-					const game = new CemuGame(name, gamePath);
-					game.isInstalled = isInstalled;
-					games.push(game);
+				candidate = candidate.trim();
+				if (candidate.length > 0){
+					name = candidate;
+					break;
 				}
 			}
+			if (!name){
+				continue;
+			}
+
+			// Get game path
+			const winePath = item?.path;
+			if (!winePath){
+				continue;
+			}
+
+			// Build game
+			const linuxPath = convertPath.wineToLinux(winePath, prefix);
+			const isInstalled = fs.existsSync(linuxPath);
+			const game = new CemuGame(name, linuxPath);
+			game.isInstalled = isInstalled;
+
+			// Get more info
+			if (isInstalled && path.extname(linuxPath) === ".rpx"){
+				this._getRPXGameProps(game);
+			}
+
+			games.push(game);
 		}
 
 		return games;
@@ -278,31 +320,24 @@ class CemuSource extends common.Source{
 		const gameRomPaths = await common.getROMs(dirs, GAME_FILES_REGEX, warn);
 
 		// Convert found paths into cemu games
-		const romGamesPromises = gameRomPaths.map(async linuxPath=>{
+		const romGamesPromises = gameRomPaths.map(async romPath=>{
 
 			// Get base info
-			const winePath = convertPath.linuxToWine(linuxPath);
+			const basename = path.basename(romPath);
+			const game = new CemuGame(basename, romPath);
+			game.isInstalled = true;
 
-			// Try to get game real name
-			const basename = path.basename(linuxPath);
-			const extname = path.extname(linuxPath).toLowerCase();
-			let name = basename;
+			// Precise game info
+			const extname = path.extname(romPath).toLowerCase();
 			if (extname === ".rpx"){
-				const gameName = await this.getRPXGameName(linuxPath);
-				if (typeof gameName !== "undefined"){
-					name = gameName;
-				}
+				await this._getRPXGameProps(game);
 			}
 
-			// Build game
-			const game = new CemuGame(name, winePath);
-			game.isInstalled = true;
 			return game;
 		});
+
 		const romGames = await Promise.all(romGamesPromises);
-
 		return romGames;
-
 	}
 
 	/**
