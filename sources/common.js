@@ -1,7 +1,7 @@
-const commandExists = require("command-exists"); // ? reimplement
-const readdirpp = require("readdir-enhanced");
-const process = require("process");
-const events = require("events");
+const deepReaddir   = require("../utils/deepReaddir.js");
+const commandExists = require("command-exists");   // ? reimplement
+const process       = require("process");
+const events        = require("events");
 
 class NoCommandError extends Error{}
 class NotImplementedError extends Error{}
@@ -138,12 +138,7 @@ class GameProcessContainer extends events.EventEmitter{
 }
 
 /**
- * A wrapper for game process management that doesn't handle stop and kill actions
- * @property {ChildProcess|undefined} process - A reference to the game process
- * @property {boolean} isRunning - Whether the game is running or not
- * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
- * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
- * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
+ * A GameProcessContainer that doesn't handle stop and kill actions
  * @abstract
  */
 class StartOnlyGameProcessContainer extends GameProcessContainer{
@@ -272,7 +267,11 @@ async function getROMs(dirs, filesRegex, warn = false){
 		// Get all the files in dir recursively
 		let filePaths;
 		try {
-			filePaths = await readdirpp.readdirAsync(dir.path, {filter: filesRegex, deep: dir.recursive});
+			filePaths = await deepReaddir(
+				dir.path,
+				Infinity,
+				(p)=>filesRegex.test(p)
+			);
 		} catch (error){
 			if (warn) console.warn(`Skipping directory ${dir.path} (${error})`);
 			continue;
