@@ -4,7 +4,6 @@ const locale        = require("../utils/locale.js");
 const common        = require("./common.js");
 const lutris        = require("./lutris.js");
 const child_process = require("child_process");
-const htmlEntites   = require("html-entities");
 const fsp           = require("fs/promises");
 const process       = require("process");
 const YAML          = require("yaml");
@@ -166,7 +165,7 @@ class CemuSource extends common.Source{
 
 		// Get longname in config
 		let longname = meta?.menu?.[longnameKey];
-		longname = htmlEntites.decode(longname, {level: "xml", scope: "strict"});
+		longname = config.xmlDecodeSpecialChars(longname);
 		longname = longname.replaceAll("\n", " - ");
 
 		return longname;

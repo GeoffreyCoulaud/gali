@@ -111,8 +111,41 @@ async function xml2js(config){
 	return parser.parse(config);
 }
 
+/**
+ * A class representing a XML encoded value and the corresponding character
+ * @property {string} code - The XML encoded value (ex: &amp;)
+ * @property {string} char - The equivalent character (ex: &)
+ */
+class XMLSpecialChar{
+	constructor(code, char){
+		this.code = code;
+		this.char = char;
+	}
+}
+
+/**
+ * Parse xml-encoded special characters in a text (like &amp; becoming &)
+ * @param {string} text - The text containing xml-encoded characters
+ * @returns {string} - The parsed text
+ */
+function xmlDecodeSpecialChars(text){
+	const pairs = [
+		new XMLSpecialChar("lt", "<"),
+		new XMLSpecialChar("gt", ">"),
+		new XMLSpecialChar("quot", "\""),
+		new XMLSpecialChar("apos", "'"),
+		new XMLSpecialChar("amp", "&")
+	];
+	for (const pair of pairs){
+		const regex = new RegExp(`&${pair.code};`, "g");
+		text = text.replace(regex, pair.char);
+	}
+	return text;
+}
+
 module.exports = {
 	config2js,
 	desktop2js,
 	xml2js,
+	xmlDecodeSpecialChars,
 };
