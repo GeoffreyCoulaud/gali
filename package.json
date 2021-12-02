@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
-    "lint": "eslint library.js main.js tests sources utils UI --format stylish",
-    "lint (auto fix)": "eslint --fix library.js main.js tests sources utils UI --format stylish",
+    "lint": "eslint library.js main.js test sources utils UI --format stylish",
+    "lint (auto fix)": "eslint --fix library.js main.js test sources utils UI --format stylish",
     "test": "mocha"
   },
   "keywords": [
