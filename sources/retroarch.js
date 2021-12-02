@@ -1,3 +1,4 @@
+const emulation     = require("./emulation.js");
 const common        = require("./common.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
@@ -50,7 +51,7 @@ class RetroarchGameProcessContainer extends common.GameProcessContainer{
  * @property {string} corePath - The game's libretro core path
  * @property {RetroarchGameProcessContainer} processContainer - The game's process container
  */
-class RetroarchGame extends common.EmulatedGame{
+class RetroarchGame extends emulation.EmulationGame{
 
 	source = RETROARCH_SOURCE_NAME;
 

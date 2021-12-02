@@ -1,4 +1,5 @@
 const config        = require("../utils/configFormats.js");
+const emulation     = require("./emulation.js");
 const common        = require("./common.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
@@ -48,7 +49,7 @@ class PPSSPPGameProcessContainer extends common.GameProcessContainer{
  * A class representing a ppsspp game
  * @property {PPSSPPGameProcessContainer} processContainer - The game's process container
  */
-class PPSSPPGame extends common.EmulatedGame{
+class PPSSPPGame extends emulation.EmulationGame{
 
 	platform = "Sony - PlayStation Portable";
 	source = PPSSPP_SOURCE_NAME;
@@ -67,7 +68,7 @@ class PPSSPPGame extends common.EmulatedGame{
 /**
  * A class representing a PPSSPP source
  */
-class PPSSPPSource extends common.Source{
+class PPSSPPSource extends emulation.EmulationSource{
 
 	static name = PPSSPP_SOURCE_NAME;
 	preferCache = false;
@@ -94,7 +95,7 @@ class PPSSPPSource extends common.Source{
 	 * @returns {GameDir[]} - The game dirs extracted from ppsspp's config data
 	 * @private
 	 */
-	async _getRomDirs(configData){
+	async _getROMDirs(configData){
 
 		const dirs = [];
 		const paths = configData?.["PinnedPaths"].values();
@@ -112,9 +113,9 @@ class PPSSPPSource extends common.Source{
 	 * @returns {PPSSPPGame[]} - An array of found games
 	 * @private
 	 */
-	async _getRoms(dirs){
+	async _getROMGames(dirs){
 
-		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
 		for (const gamePath of gamePaths){
 			const game = new PPSSPPGame(path.basename(gamePath), gamePath);
@@ -145,7 +146,7 @@ class PPSSPPSource extends common.Source{
 		let romDirs = [];
 		if (typeof configData !== "undefined"){
 			try {
-				romDirs = await this._getRomDirs(configData);
+				romDirs = await this._getROMDirs(configData);
 			} catch (error){
 				if (warn) console.warn(`Unable to get PPSSPP rom dirs : ${error}`);
 			}
@@ -155,7 +156,7 @@ class PPSSPPSource extends common.Source{
 		let romGames = [];
 		if (romDirs.length > 0){
 			try {
-				romGames = await this._getRoms(romDirs);
+				romGames = await this._getROMGames(romDirs);
 			} catch (error){
 				if (warn) console.warn(`Unable to get PPSSPP roms : ${error}`);
 			}

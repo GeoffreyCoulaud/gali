@@ -1,4 +1,5 @@
 const config        = require("../utils/configFormats.js");
+const emulation     = require("./emulation.js");
 const common        = require("./common.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
@@ -46,7 +47,7 @@ class DolphinGameProcessContainer extends common.GameProcessContainer{
  * Class representing a dolphin game
  * @property {DolphinGameProcessContainer} processContainer - The game's process container
  */
-class DolphinGame extends common.EmulatedGame{
+class DolphinGame extends emulation.EmulationGame{
 
 	platform = "Nintendo - Wii / GameCube";
 	source = DOLPHIN_SOURCE_NAME;
@@ -62,7 +63,7 @@ class DolphinGame extends common.EmulatedGame{
 	}
 }
 
-class DolphinSource extends common.Source{
+class DolphinSource extends emulation.EmulationSource{
 
 	static name = DOLPHIN_SOURCE_NAME;
 	preferCache = false;
@@ -135,9 +136,9 @@ class DolphinSource extends common.Source{
 	 * @returns {DolphinGame[]} - An array of found games
 	 * @private
 	 */
-	async _getROMs(dirs){
+	async _getROMGames(dirs){
 		// TODO detect games console between GameCube and Wii
-		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
 		for (const gamePath of gamePaths){
 			const game = new DolphinGame(path.basename(gamePath), gamePath);
@@ -176,7 +177,7 @@ class DolphinSource extends common.Source{
 		let romGames = [];
 		if (romDirs.length > 0){
 			try {
-				romGames = await this._getROMs(romDirs);
+				romGames = await this._getROMGames(romDirs);
 			} catch (error) {
 				if (warn) console.warn(`Unable to get dolphin ROMs : ${error}`);
 			}
@@ -185,7 +186,6 @@ class DolphinSource extends common.Source{
 		return romGames;
 
 	}
-
 
 }
 

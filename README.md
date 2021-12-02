@@ -67,6 +67,8 @@ Status | Name            | Description
 * Better installation instructions
 * Additional sources
 	* itch.io
+	* Decaf
+	* Ryujinx
 	* Retroarch (in Steam)
 	* Bethesda launcher (in Lutris)
 	* Origin (in Lutris)

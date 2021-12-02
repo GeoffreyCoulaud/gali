@@ -1,8 +1,8 @@
 const convertPath   = require("../utils/convertPathPlatform.js");
 const config        = require("../utils/configFormats.js");
-const locale        = require("../utils/locale.js");
 const common        = require("./common.js");
 const lutris        = require("./lutris.js");
+const wiiu          = require("./wiiu.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
 const process       = require("process");
@@ -89,9 +89,8 @@ class CemuGameProcessContainer extends common.GameProcessContainer{
 /**
  * A class representing a cemu (in lutris) game
  */
-class CemuGame extends common.EmulatedGame{
+class CemuGame extends wiiu.WiiUEmulationGame{
 
-	platform = "Nintendo - Wii U";
 	source = CEMU_SOURCE_NAME;
 
 	constructor(name, path){
@@ -112,7 +111,7 @@ class CemuGame extends common.EmulatedGame{
 /**
  * A class representing a Cemu source
  */
-class CemuSource extends common.Source{
+class CemuSource extends wiiu.WiiUEmulationSource{
 
 	static name = CEMU_SOURCE_NAME;
 	cemuLutrisGame = undefined;
@@ -123,88 +122,6 @@ class CemuSource extends common.Source{
 		this.cemuLutrisGame = cemuLutrisGame;
 		this.preferCache = preferCache;
 	}
-
-	// --------------------------- RPX Roms methods ----------------------------
-
-	/**
-	 * Get a RPX game's meta.xml data
-	 * @param {CemuGame} game - A game to get metadata from
-	 * @returns {object|undefined} - The game's metadata
-	 * @private
-	 */
-	async _getRPXGameMetadata(game){
-		const filePath = path.resolve(`${game.path}/../../meta/meta.xml`);
-		const fileContents = await fsp.readFile(filePath, "utf-8");
-		const metadata = await config.xml2js(fileContents);
-		return metadata;
-	}
-
-	/**
-	 * Add a better name to a game
-	 * @param {CemuGame} game - The game to add a longname to
-	 * @param {object} metadata - The game's metadata
-	 * @param {string[]} langs - An array of preferred language codes
-	 * @private
-	 */
-	_getRPXGameLongname(game, metadata, langs){
-
-		// Get longname lang key from available lang options
-		const keys = Object.entries(metadata.menu)
-			.filter(([key, value])=>key.startsWith("longname_") && value)
-			.map(([key, value])=>key.replace("longname_", ""));
-
-		// Select a longname according to user locale
-		let longnameKey;
-		for (const lang of langs){
-			if (keys.includes(lang)){
-				longnameKey = `longname_${lang}`;
-				break;
-			}
-		}
-		if (!longnameKey){
-			return;
-		}
-
-		// Get longname in config
-		let longname = metadata.menu[longnameKey];
-		longname = config.xmlDecodeSpecialChars(longname);
-		longname = longname.replaceAll("\n", " - ");
-		game.name = longname;
-	}
-
-	/**
-	 * Add images to a game
-	 * @param {CemuGame} game - The game to add images to
-	 * @private
-	 */
-	_getRPXGameImages(game){
-		const gameMetaDir = path.resolve(`${game.path}/../../meta`);
-		const images = {
-			coverImage: `${gameMetaDir}/bootTvTex.tga`,
-			iconImage: `${gameMetaDir}/iconTex.tga`,
-		};
-		for (const [key, value] of Object.entries(images)){
-			const imageExists = fs.existsSync(value);
-			if (imageExists){
-				game[key] = value;
-			}
-		}
-	}
-
-	/**
-	 * Optional step, Precise RPX game properties
-	 * This will add a better name, iconImage and coverImage.
-	 * @param {CemuGame} game - The game to add metadata to
-	 * @private
-	 */
-	async _getRPXGameProps(game){
-		const preferredLangs = locale.getUserLocalePreference(true);
-		const metadata = await this._getRPXGameMetadata(game);
-		this._getRPXGameLongname(game, metadata, preferredLangs);
-		this._getRPXGameImages(game);
-	}
-
-	// --------------------------- General scanning ----------------------------
 
 	/**
 	 * Get cemu's config data
@@ -314,10 +231,10 @@ class CemuSource extends common.Source{
 	 * @returns {CemuGame[]} - An array of found games
 	 * @private
 	 */
-	async _getROMs(dirs, warn = false){
+	async _getROMGames(dirs, warn = false){
 
 		// Scan cemu dirs
-		const gameRomPaths = await common.getROMs(dirs, GAME_FILES_REGEX, warn);
+		const gameRomPaths = await this._getROMs(dirs, GAME_FILES_REGEX, warn);
 
 		// Convert found paths into cemu games
 		const romGamesPromises = gameRomPaths.map(async romPath=>{
@@ -388,7 +305,7 @@ class CemuSource extends common.Source{
 				// Scan ROMDirs for ROMs
 				if (romDirs.length > 0){
 					try {
-						romGames = await this._getROMs(romDirs, warn);
+						romGames = await this._getROMGames(romDirs, warn);
 					} catch (error){
 						if (warn) console.warn(`Unable to get cemu ROMs : ${error}`);
 					}

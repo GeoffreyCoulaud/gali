@@ -1,6 +1,7 @@
 const config        = require("../utils/configFormats.js");
-const child_process = require("child_process");
+const emulation     = require("./emulation.js");
 const common        = require("./common.js");
+const child_process = require("child_process");
 const fsp           = require("fs/promises");
 const process       = require("process");
 const path          = require("path");
@@ -50,7 +51,7 @@ class CitraGameProcessContainer extends common.GameProcessContainer{
  * @property {string} path - The game's ROM path
  * @property {CitraGameProcessContainer} processContainer - The game's process container
  */
-class CitraGame extends common.EmulatedGame{
+class CitraGame extends emulation.EmulationGame{
 
 	platform = "Nintendo - 3DS";
 	source = CITRA_SOURCE_NAME;
@@ -70,7 +71,7 @@ class CitraGame extends common.EmulatedGame{
 /**
  * A class representing a Citra source
  */
-class CitraSource extends common.Source{
+class CitraSource extends emulation.EmulationSource{
 
 	static name = CITRA_SOURCE_NAME;
 	preferCache = false;
@@ -133,9 +134,9 @@ class CitraSource extends common.Source{
 	 * @returns {CitraGame[]} - An array of found games
 	 * @private
 	 */
-	async _getROMs(dirs){
+	async _getROMGames(dirs){
 
-		const gamePaths = await common.getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
 		for (const gamePath of gamePaths){
 			const game = new CitraGame(path.basename(gamePath), gamePath);
@@ -189,7 +190,7 @@ class CitraSource extends common.Source{
 		let romGames = [];
 		if (romDirs.length > 0){
 			try {
-				romGames = await this._getROMs(romDirs);
+				romGames = await this._getROMGames(romDirs);
 			} catch (error) {
 				if (warn) console.warn(`Unable to get citra ROMs : ${error}`);
 			}

@@ -1,5 +1,6 @@
 const config        = require("../utils/configFormats.js");
 const common        = require("./common.js");
+const nswitch       = require("./switch.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
 const process       = require("process");
@@ -57,9 +58,8 @@ class YuzuGameProcessContainer extends common.GameProcessContainer{
  * A class representing a yuzu game
  * @property {YuzuGameProcessContainer} processContainer - The game's process container
  */
-class YuzuGame extends common.EmulatedGame{
+class YuzuGame extends nswitch.SwitchEmulationGame{
 
-	platform = "Nintendo - Switch";
 	source = YUZU_SOURCE_NAME;
 
 	/**
@@ -74,7 +74,10 @@ class YuzuGame extends common.EmulatedGame{
 
 }
 
-class YuzuSource extends common.Source{
+/**
+ * A class representing a Yuzu source
+ */
+class YuzuSource extends nswitch.SwitchEmulationSource{
 
 	static name = YUZU_SOURCE_NAME;
 	preferCache = false;
@@ -140,9 +143,9 @@ class YuzuSource extends common.Source{
 	 * @returns {YuzuGame[]} - An array of found games
 	 * @private
 	 */
-	async _getROMs(dirs){
+	async _getROMGames(dirs){
 
-		const roms = await common.getROMs(dirs, GAME_FILES_REGEX);
+		const roms = await this._getROMs(dirs, GAME_FILES_REGEX);
 		const games = [];
 		for (const rom of roms){
 			const game = new YuzuGame(path.basename(rom), rom);
@@ -196,7 +199,7 @@ class YuzuSource extends common.Source{
 		let romGames = [];
 		if (romDirs.length > 0){
 			try {
-				romGames = await this._getROMs(romDirs);
+				romGames = await this._getROMGames(romDirs);
 			} catch (error) {
 				if (warn) console.warn(`Unable to get yuzu ROMs : ${error}`);
 			}
