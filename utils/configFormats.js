@@ -46,21 +46,22 @@ function config2js(config){
 	return obj;
 }
 
+// ? maybe use a stream instead if a text content for this
 /**
- * Convert a desktop entry text into a JS readable object
- * @param {string} desktopEntry - A desktop entry contents
+ * Convert a XDG file text into a JS readable object
+ * @param {string} fileContents - A XDG file contents
  * @returns {object} - The entry's equivalent as a JS object.
  *                     groups are the object's keys,
  *                     key/values pairs are stored in their section's maps
  */
-function desktop2js(desktopEntry){
+function xdg2js(fileContents){
 
 	const obj = new Object();
 	let currentKey = undefined;
 	const groupName = /\[(?<groupName>[^[\]]+)\]/;
 	const propertyRegex = /(?<propertyName>[^=]+)=(?<propertyValue>.*)/;
 
-	for (const line of desktopEntry.split("\n")){
+	for (const line of fileContents.split("\n")){
 
 		const lineMatchProperty = line.match(propertyRegex);
 
@@ -78,7 +79,7 @@ function desktop2js(desktopEntry){
 
 			// Section start
 			currentKey = line.match(groupName).groups["groupName"];
-			if (typeof currentKey === "undefined") {
+			if (!currentKey) {
 				continue;
 			}
 			if (typeof obj[currentKey] === "undefined"){
@@ -99,6 +100,28 @@ function desktop2js(desktopEntry){
 
 	return obj;
 
+}
+
+/**
+ * Convert a desktop entry text into a JS readable object
+ * @param {string} desktopEntryContents - A desktop entry text
+ * @returns {object} - The entry's equivalent as a JS object.
+ *                     groups are the object's keys,
+ *                     key/values pairs are stored in their section's maps
+ */
+function desktop2js(desktopEntryContents){
+	return xdg2js(desktopEntryContents);
+}
+
+/**
+ * Convert an icon theme's text into a JS readable object
+ * @param {string} desktopEntryContents - An icon theme's text
+ * @returns {object} - The entry's equivalent as a JS object.
+ *                     groups are the object's keys,
+ *                     key/values pairs are stored in their section's maps
+ */
+function theme2js(themeFileContents){
+	return xdg2js(themeFileContents);
 }
 
 /**
@@ -146,6 +169,7 @@ function xmlDecodeSpecialChars(text){
 module.exports = {
 	config2js,
 	desktop2js,
+	theme2js,
 	xml2js,
 	xmlDecodeSpecialChars,
 };
