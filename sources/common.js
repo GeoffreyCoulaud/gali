@@ -25,16 +25,6 @@ class GameProcessContainer extends events.EventEmitter{
 		detached: true,
 	}
 
-	/**
-	 * Spawn options to pass to child_process.spawn.
-	 * Usually, spawn is followed by unref, this is to allow parent to exit
-	 * before the subprocess.
-	 */
-	static doNotWaitSpawnOptions = {
-		detached: true,
-		stdio: "ignore",
-	}
-
 	commandOptions = [];
 	process = undefined;
 	isRunning = false;
@@ -142,8 +132,6 @@ class GameProcessContainer extends events.EventEmitter{
  * @abstract
  */
 class StartOnlyGameProcessContainer extends GameProcessContainer{
-
-	static defaultSpawnOptions = GameProcessContainer.doNotWaitSpawnOptions;
 
 	isStoppable = false;
 	isKillable = false;

@@ -395,9 +395,6 @@ class BragApp{
 		}
 		this.#selectedGame.processContainer.on("error", onError);
 
-		// TODO Games from Steam, Heroic & Legendary freeze the UI.
-		// ? Check StartOnlyGameProcessContainer, it's the common denominator
-
 		// Start the game
 		console.log(`Starting ${this.#selectedGame.name}`);
 		this.#selectedGame.processContainer.start();
