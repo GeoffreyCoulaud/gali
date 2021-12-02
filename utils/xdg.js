@@ -90,7 +90,7 @@ function lookupIcon(icon, size, scale, theme){
 	return undefined;
 }
 
-function findIconHelper(icon, size, scale, theme){
+function getIconHelper(icon, size, scale, theme){
 	// eslint-disable-next-line prefer-const
 	let filename = lookupIcon(icon, size, scale, theme);
 	if (filename){
@@ -120,22 +120,22 @@ function findIconHelper(icon, size, scale, theme){
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#icon_lookup
  */
 // TODO write tests
-async function findIcon(icon, size, scale, userThemeName, themes){
+async function getIcon(icon, size, scale, userThemeName, themes){
 	let filename;
 	const userTheme = themes.get(userThemeName);
 	const defaultTheme = themes.get("hicolor");
 	if (userTheme){
-		filename = findIconHelper(icon, size, scale, userTheme);
+		filename = getIconHelper(icon, size, scale, userTheme);
 		if (filename) return filename;
 	}
 	if (defaultTheme){
-		filename = findIconHelper(icon, size, scale, defaultTheme);
+		filename = getIconHelper(icon, size, scale, defaultTheme);
 		if (filename) return filename;
 	}
 	return undefined;
 }
 
-function findIconThemeDirs(){
+function getIconThemeDirs(){
 	const USER_DIR = process.env["HOME"];
 	const XDG_DATA_DIRS = process.env["XDG_DATA_DIRS"];
 	const dirs = [];
@@ -153,7 +153,7 @@ function findIconThemeDirs(){
 	return dirs;
 }
 
-async function findIconThemesInDirs(dirs){
+async function getIconThemesInDirs(dirs){
 	const themes = new Map();
 	for (const dir of dirs){
 		const dirents = await fsp.readdir(dir, {withFileTypes: true});
@@ -186,10 +186,23 @@ async function findIconThemesInDirs(dirs){
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
  */
 // TODO write tests
-async function findIconThemes(){
-	const dirs = findIconThemeDirs();
-	const themes = await findIconThemesInDirs(dirs);
+async function getIconThemes(){
+	const dirs = getIconThemeDirs();
+	const themes = await getIconThemesInDirs(dirs);
 	return themes;
+}
+
+/**
+ * Get the current user's icon theme name
+ * @returns {string|undefined} The user's icon theme name
+ */
+async function getUserIconThemeName(){
+	// TODO implement for all linux desktops
+	/*
+		--- For gnome
+		gsettings set org.gnome.desktop.interface icon-theme
+	*/
+	return undefined;
 }
 
 /**
@@ -206,6 +219,7 @@ function splitDesktopExec(exec){
 
 module.exports = {
 	splitDesktopExec,
-	findIconThemes,
-	findIcon,
+	getUserIconThemeName,
+	getIconThemes,
+	getIcon,
 };
