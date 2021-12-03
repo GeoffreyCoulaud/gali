@@ -1,14 +1,14 @@
-const { CemuSource } = require("./sources/cemu.js");
-const { CitraSource } = require("./sources/citra.js");
 const { DesktopEntrySource } = require("./sources/desktop-entries.js");
-const { DolphinSource } = require("./sources/dolphin.js");
-const { HeroicSource } = require("./sources/heroic.js");
-const { LegendarySource } = require("./sources/legendary.js");
-const { LutrisSource } = require("./sources/lutris.js");
-const { PPSSPPSource } = require("./sources/ppsspp.js");
-const { RetroarchSource } = require("./sources/retroarch.js");
-const { SteamSource } = require("./sources/steam.js");
-const { YuzuSource } = require("./sources/yuzu.js");
+const { LegendarySource }    = require("./sources/legendary.js");
+const { RetroarchSource }    = require("./sources/retroarch.js");
+const { DolphinSource }      = require("./sources/dolphin.js");
+const { HeroicSource }       = require("./sources/heroic.js");
+const { LutrisSource }       = require("./sources/lutris.js");
+const { PPSSPPSource }       = require("./sources/ppsspp.js");
+const { CitraSource }        = require("./sources/citra.js");
+const { SteamSource }        = require("./sources/steam.js");
+const { CemuSource }         = require("./sources/cemu.js");
+const { YuzuSource }         = require("./sources/yuzu.js");
 
 // TODO implement gameAdd (for UI and for nested sources triggering)
 
@@ -78,6 +78,8 @@ class Library{
 
 
 		// Get games from straightforward sources
+		// ? create instances once and add / delete when this.enabledSources changes
+		// ? have a sourceByName method
 		const SOURCE_CLASSES = [
 			DesktopEntrySource,
 			RetroarchSource,

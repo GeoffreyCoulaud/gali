@@ -23,10 +23,8 @@ async function testGetIconThemes(){
 
 	// Display theme names and location
 	const displayed = [];
-	for (const themeKey of Object.keys(iconThemes)){
-		const theme = iconThemes[themeKey];
+	for (const theme of iconThemes){
 		displayed.push({
-			key: themeKey,
 			name : theme["Icon Theme"]["Name"],
 			path: theme._path
 		});

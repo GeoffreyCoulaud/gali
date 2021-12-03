@@ -6,6 +6,7 @@ const common        = require("./common.js");
 const child_process = require("child_process");
 const fsp           = require("fs/promises");
 const process       = require("process");
+const fs            = require("fs");
 
 const DESKTOP_ENTRIES_SOURCE_NAME = "Desktop entries";
 
@@ -185,6 +186,31 @@ class DesktopEntrySource extends common.Source{
 	}
 
 	/**
+	 * Optional step, adding images to a game
+	 * @param {DesktopEntryGame} game - The game to add images to
+	 * @param {string} icon - The desktop entry icon field
+	 * @param {string} themeName - The name of the user's xdg icon theme
+	 * @param {Object[]} themes - An arry of cached xdg icon themes
+	 */
+	async _getGameImages(game, icon, themeName, themes){
+		let p;
+		if (!icon){
+			return;
+		} else if (icon.startsWith("/") && fs.existsSync(icon)){
+			p = icon;
+		} else {
+			const size = 512;
+			const scale = 1;
+			try {
+				p = await xdg.getIcon(icon, size, scale, themeName, themes);
+			} catch (error){
+				p = undefined;
+			}
+		}
+		game.iconImage = p;
+	}
+
+	/**
 	 * Get all games that have a desktop entry
 	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {DesktopEntryGame[]} - An array of found games
@@ -193,6 +219,17 @@ class DesktopEntrySource extends common.Source{
 
 		// Get entries paths
 		const paths = await this._getDesktopEntries(warn);
+
+		// Read XDG icon themes
+		let themes;
+		try {
+			themes = await xdg.getIconThemes();
+		} catch (error){
+			themes = [];
+		}
+
+		// TODO Get user XDG icon theme name
+		const userThemeName = "hicolor";
 
 		// Read each of the entries to decide of its fate
 		const preferredLangs = await locale.getUserLocalePreference(true);
@@ -208,12 +245,14 @@ class DesktopEntrySource extends common.Source{
 			// Filter entry by its data
 			if (!this._filter(data)) continue;
 
-			// Get needed fields
+			// Build game
 			const name = this._getLocalizedName(data, preferredLangs);
 			const exec = data["Exec"];
+			const icon = data["Icon"];
+			const game = new DesktopEntryGame(name, exec);
+			await this._getGameImages(game, icon, userThemeName, themes);
 
-			// Add game
-			games.push(new DesktopEntryGame(name, exec));
+			games.push(game);
 
 		}
 

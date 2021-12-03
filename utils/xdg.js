@@ -57,13 +57,10 @@ function directoryMatchesSize(subdir, iconSize, iconScale){
 }
 
 function lookupIcon(icon, size, scale, theme){
-	const exts = ["png", "svg", "xpm"];
+	const exts = ["svg", "png", "xpm"];
 	let iconPath;
-	const subdirnames = theme["Icon Theme"]["Directories"].split(",");
+	const subdirnames = theme["Icon Theme"]["Directories"].split(",").filter(x=>!!x);
 	for (const subdirname of subdirnames){
-		if (!subdirname){
-			continue;
-		}
 		const subdir = theme[subdirname];
 		if (!directoryMatchesSize(subdir, size, scale)){
 			continue;
@@ -100,6 +97,7 @@ function getIconHelper(icon, size, scale, theme){
 	if (filename){
 		return filename;
 	}
+	// TODO search through parents
 	/*
 	if (theme.hasParents){
 		for (const parent of theme.parents){
@@ -119,34 +117,26 @@ function getIconHelper(icon, size, scale, theme){
  * @param {number} size - The required icon size
  * @param {number} scale - The required icon scale
  * @param {string} userThemeName - Name of the current user's theme
- * @param {Object} themes - An object containing the system's icon themes
+ * @param {Object[]} themes - An array containing the system's icon themes
  * @returns {string} The absolute path to the icon's image
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#icon_lookup
  */
 async function getIcon(icon, size, scale, userThemeName, themes){
-
 	const defaultThemeName = "Hicolor";
+	const themeNames = new Set([userThemeName, defaultThemeName]);
 	let filename;
-
-	// Search in user theme
-	const userTheme = themes[userThemeName];
-	if (userTheme){
-		filename = getIconHelper(icon, size, scale, userTheme);
-		if (filename) return filename;
-	}
-
-	// Search in default theme
-	if (defaultThemeName !== userThemeName){
-		const defaultTheme = themes[defaultThemeName];
-		if (defaultTheme){
-			filename = getIconHelper(icon, size, scale, defaultTheme);
-			if (filename) return filename;
-		} else {
-			const message = `Default theme "${defaultThemeName}" not found`;
-			console.warn(message);
+	for (const themeName of themeNames){
+		for (const theme of themes){
+			if (theme["Icon Theme"]["Name"] === themeName){
+				filename = getIconHelper(icon, size, scale, theme);
+				if (filename){
+					return filename;
+				}
+			}
 		}
 	}
-
+	// TODO check in /usr/share/pixmaps
+	// It's not an icon theme folder, but it contains icons
 	return undefined;
 }
 
@@ -178,7 +168,7 @@ function getIconThemeDirs(){
 }
 
 async function getIconThemesInDirs(dirs){
-	const themes = new Object();
+	const themes = [];
 	for (const dir of dirs){
 		const dirents = await fsp.readdir(dir, {withFileTypes: true});
 		for (const dirent of dirents){
@@ -191,13 +181,13 @@ async function getIconThemesInDirs(dirs){
 				continue;
 			}
 			const themeFileContents = await fsp.readFile(themeFilePath, "utf-8");
-			const themeData = config.theme2js(themeFileContents);
-			const themeName = themeData["Icon Theme"]["Name"];
-			themeData._path = themeDirPath;
+			const theme = config.theme2js(themeFileContents);
+			const themeName = theme["Icon Theme"]["Name"];
 			if (!themeName || typeof themes[themeName] !== "undefined"){
 				continue;
 			}
-			themes[themeName] = themeData;
+			theme._path = themeDirPath;
+			themes.push(theme);
 		}
 	}
 	return themes;
@@ -205,8 +195,8 @@ async function getIconThemesInDirs(dirs){
 
 /**
  * Find all the icon themes on the machine.
- * This follows the xdg guidelines.
- * @returns {Object} An object containing themes.
+ * This follows the xdg spec.
+ * @returns {Object[]} An array of themes.
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
  */
 async function getIconThemes(){
