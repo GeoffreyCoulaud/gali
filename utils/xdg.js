@@ -2,18 +2,19 @@ const config      = require("./configFormats.js");
 const shell_quote = require("shell-quote");
 const fsp         = require("fs/promises");
 const fs          = require("fs");
+const path        = require("path");
 
 function directorySizeDistance(subdir, iconSize, iconScale){
-	const Scale = subdir.get("Scale");
-	const Type = subdir.get("Type");
-	const Size = subdir.get("Size");
-	const MinSize = subdir.get("MinSize");
-	const MaxSize = subdir.get("MaxSize");
-	const Threshold = subdir.get("Threshold");
+	const Scale     = subdir["Scale"] ?? 1;
+	const Type      = subdir["Type"];
+	const Size      = subdir["Size"];
+	const MinSize   = subdir["MinSize"];
+	const MaxSize   = subdir["MaxSize"];
+	const Threshold = subdir["Threshold"];
 	if (Type === "Fixed"){
 		return Math.abs(Size*Scale - iconSize*iconScale);
 	}
-	if (Type === "Scaled"){
+	if (Type === "Scalable"){
 		if (iconSize*iconScale < MinSize*Scale){
 			return MinSize*Scale - iconSize*iconScale;
 		}
@@ -34,19 +35,19 @@ function directorySizeDistance(subdir, iconSize, iconScale){
 }
 
 function directoryMatchesSize(subdir, iconSize, iconScale){
-	const Scale = subdir.get("Scale");
-	const Type = subdir.get("Type");
-	const Size = subdir.get("Size");
-	const MinSize = subdir.get("MinSize");
-	const MaxSize = subdir.get("MaxSize");
-	const Threshold = subdir.get("Threshold");
+	const Scale     = subdir["Scale"] ?? 1;
+	const Type      = subdir["Type"];
+	const Size      = subdir["Size"];
+	const MinSize   = subdir["MinSize"];
+	const MaxSize   = subdir["MaxSize"];
+	const Threshold = subdir["Threshold"];
 	if (Scale !== iconScale){
 		return false;
 	}
 	if (Type === "Fixed"){
 		return Size === iconSize;
 	}
-	if (Type === "Scaled"){
+	if (Type === "Scalable"){
 		return MinSize <= iconSize && iconSize <= MaxSize;
 	}
 	if (Type === "Threshold"){
@@ -58,14 +59,17 @@ function directoryMatchesSize(subdir, iconSize, iconScale){
 function lookupIcon(icon, size, scale, theme){
 	const exts = ["png", "svg", "xpm"];
 	let iconPath;
-	const subdirnameList = theme["Icon Theme"].get("Directories");
-	for (const subdirname of subdirnameList){
+	const subdirnames = theme["Icon Theme"]["Directories"].split(",");
+	for (const subdirname of subdirnames){
+		if (!subdirname){
+			continue;
+		}
 		const subdir = theme[subdirname];
 		if (!directoryMatchesSize(subdir, size, scale)){
 			continue;
 		}
 		for (const ext of exts){
-			iconPath = `${theme.path}/${subdirname}/${icon}.${ext}`;
+			iconPath = `${theme._path}/${subdirname}/${icon}.${ext}`;
 			if (fs.existsSync(iconPath)){
 				return iconPath;
 			}
@@ -73,11 +77,11 @@ function lookupIcon(icon, size, scale, theme){
 	}
 	let minimalSize = Number.MAX_SAFE_INTEGER;
 	let closestIconPath;
-	for (const subdirname of subdirnameList){
+	for (const subdirname of subdirnames){
 		const subdir = theme[subdirname];
 		for (const ext of exts){
 			const distance = directorySizeDistance(subdir, size, scale);
-			iconPath = `${theme.path}/${subdirname}/${icon}.${ext}`;
+			iconPath = `${theme._path}/${subdirname}/${icon}.${ext}`;
 			if (fs.existsSync(iconPath) && distance < minimalSize){
 				closestIconPath = iconPath;
 				minimalSize = distance;
@@ -115,23 +119,34 @@ function getIconHelper(icon, size, scale, theme){
  * @param {number} size - The required icon size
  * @param {number} scale - The required icon scale
  * @param {string} userThemeName - Name of the current user's theme
- * @param {Map} themes - A map of the system's icon themes
- * @returns {string} - The absolute path to the icon's image
+ * @param {Object} themes - An object containing the system's icon themes
+ * @returns {string} The absolute path to the icon's image
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#icon_lookup
  */
-// TODO write tests
 async function getIcon(icon, size, scale, userThemeName, themes){
+
+	const defaultThemeName = "Hicolor";
 	let filename;
-	const userTheme = themes.get(userThemeName);
-	const defaultTheme = themes.get("hicolor");
+
+	// Search in user theme
+	const userTheme = themes[userThemeName];
 	if (userTheme){
 		filename = getIconHelper(icon, size, scale, userTheme);
 		if (filename) return filename;
 	}
-	if (defaultTheme){
-		filename = getIconHelper(icon, size, scale, defaultTheme);
-		if (filename) return filename;
+
+	// Search in default theme
+	if (defaultThemeName !== userThemeName){
+		const defaultTheme = themes[defaultThemeName];
+		if (defaultTheme){
+			filename = getIconHelper(icon, size, scale, defaultTheme);
+			if (filename) return filename;
+		} else {
+			const message = `Default theme "${defaultThemeName}" not found`;
+			console.warn(message);
+		}
 	}
+
 	return undefined;
 }
 
@@ -139,22 +154,31 @@ function getIconThemeDirs(){
 	const USER_DIR = process.env["HOME"];
 	const XDG_DATA_DIRS = process.env["XDG_DATA_DIRS"];
 	const dirs = [];
-	if (USER_DIR && fs.existsSync(`${USER_DIR}/.icons`)){
-		dirs.push(`${USER_DIR}/.icons`);
+
+	// Get from $HOME/.icons
+	const userIconDir = path.resolve(`${USER_DIR}/.icons`);
+	if (USER_DIR && fs.existsSync(userIconDir)){
+		dirs.push(userIconDir);
 	}
+
+	// Get from $XDG_DATA_DIRS/icons
 	if (XDG_DATA_DIRS){
 		for (const dir of XDG_DATA_DIRS.split(":")){
-			if (fs.existsSync(`${dir}/icons`)){
-				dirs.push(`${dir}/icons`);
+			if (!dir){
+				continue;
+			}
+			const xdgIconDir = path.resolve(`${dir}/icons`);
+			if (fs.existsSync(xdgIconDir)){
+				dirs.push(xdgIconDir);
 			}
 		}
 	}
-	dirs.push("/usr/share/pixmaps");
+
 	return dirs;
 }
 
 async function getIconThemesInDirs(dirs){
-	const themes = new Map();
+	const themes = new Object();
 	for (const dir of dirs){
 		const dirents = await fsp.readdir(dir, {withFileTypes: true});
 		for (const dirent of dirents){
@@ -169,11 +193,11 @@ async function getIconThemesInDirs(dirs){
 			const themeFileContents = await fsp.readFile(themeFilePath, "utf-8");
 			const themeData = config.theme2js(themeFileContents);
 			const themeName = themeData["Icon Theme"]["Name"];
-			themeData["path"] = themeDirPath;
-			if (themes.has(themeName)){
+			themeData._path = themeDirPath;
+			if (!themeName || typeof themes[themeName] !== "undefined"){
 				continue;
 			}
-			themes.set(themeName, themeData);
+			themes[themeName] = themeData;
 		}
 	}
 	return themes;
@@ -182,10 +206,9 @@ async function getIconThemesInDirs(dirs){
 /**
  * Find all the icon themes on the machine.
  * This follows the xdg guidelines.
- * @returns {Map} - A map of theme names and theme data
+ * @returns {Object} An object containing themes.
  * @see https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html#directory_layout
  */
-// TODO write tests
 async function getIconThemes(){
 	const dirs = getIconThemeDirs();
 	const themes = await getIconThemesInDirs(dirs);
@@ -198,6 +221,7 @@ async function getIconThemes(){
  */
 async function getUserIconThemeName(){
 	// TODO implement for all linux desktops
+	// TODO test
 	/*
 		--- For gnome
 		gsettings set org.gnome.desktop.interface icon-theme
@@ -208,7 +232,7 @@ async function getUserIconThemeName(){
 /**
  * Split a desktop file exec field into cli arguments
  * @param {string} exec - A desktop file's exec field
- * @returns {string[]} - The exec field parsed and stripped
+ * @returns {string[]} The exec field parsed and stripped
  */
 function splitDesktopExec(exec){
 	const execFieldCodesRegex = /%[fFuUdDnNickvm]/g;

@@ -1,18 +1,33 @@
 const xml = require("fast-xml-parser");
 
+function parseConfigValue(str){
+	const falseRegex = /false/i;
+	const trueRegex = /true/i;
+
+	if (!isNaN(str)){
+		return Number(str);
+	} else if (trueRegex.test(str)){
+		return true;
+	} else if (falseRegex.test(str)){
+		return false;
+	}
+
+	return str;
+}
+
 /**
  * Convert a config file text into a JS readable object
  * @param {string} config - A config file contents
  * @returns {object} - The config's equivalent as a JS object.
  *                     sections are the object's keys,
- *                     key/values pairs are stored in their section's maps
+ *                     key/values pairs are stored in their section
  */
 function config2js(config){
 
 	const obj = new Object();
-	let currentKey = undefined;
-	const sectionRegex = /\[(?<sectionName>[^[\]]+)\]/;
-	const propertyRegex = /(?<propertyName>\S+)\s?=\s?(?<propertyValue>.*)/i;
+	let currentSection = undefined;
+	const sectionRegex = /\[(?<name>[^[\]]+)\]/;
+	const propertyRegex = /(?<name>\S+)\s?=\s?(?<value>.*)/i;
 
 	for (const line of config.split("\n")){
 
@@ -25,19 +40,19 @@ function config2js(config){
 
 		if (lineMatchSection != null){
 
-			// Section start
-			currentKey = lineMatchSection.groups["sectionName"];
-			if (typeof obj[currentKey] === "undefined"){
-				obj[currentKey] = new Map();
+			// Type section start
+			currentSection = lineMatchSection.groups["name"];
+			if (typeof obj[currentSection] === "undefined"){
+				obj[currentSection] = new Object();
 			}
 
 		} else if (lineMatchProperty != null){
 
-			// Property in the current section
-			if (typeof currentKey === "undefined") { continue; }
-			const propertyName = lineMatchProperty.groups["propertyName"];
-			const propertyValue = lineMatchProperty.groups["propertyValue"];
-			obj[currentKey].set(propertyName, propertyValue);
+			// Type property in the current section
+			if (typeof currentSection === "undefined") { continue; }
+			const name = lineMatchProperty.groups["name"];
+			const value = parseConfigValue(lineMatchProperty.groups["value"]);
+			obj[currentSection][name] = value;
 
 		}
 
@@ -52,14 +67,14 @@ function config2js(config){
  * @param {string} fileContents - A XDG file contents
  * @returns {object} - The entry's equivalent as a JS object.
  *                     groups are the object's keys,
- *                     key/values pairs are stored in their section's maps
+ *                     key/values pairs are stored in their section
  */
 function xdg2js(fileContents){
 
 	const obj = new Object();
-	let currentKey = undefined;
-	const groupName = /\[(?<groupName>[^[\]]+)\]/;
-	const propertyRegex = /(?<propertyName>[^=]+)=(?<propertyValue>.*)/;
+	let currentSection = undefined;
+	const sectionRegex = /\[(?<name>[^[\]]+)\]/;
+	const propertyRegex = /(?<name>[^=]+)=(?<value>.*)/;
 
 	for (const line of fileContents.split("\n")){
 
@@ -78,21 +93,19 @@ function xdg2js(fileContents){
 		} else if (line.startsWith("[")){
 
 			// Section start
-			currentKey = line.match(groupName).groups["groupName"];
-			if (!currentKey) {
-				continue;
-			}
-			if (typeof obj[currentKey] === "undefined"){
-				obj[currentKey] = new Map();
+			currentSection = line.match(sectionRegex).groups["name"];
+			if (!currentSection) { continue; }
+			if (typeof obj[currentSection] === "undefined"){
+				obj[currentSection] = new Object();
 			}
 
 		} else if (lineMatchProperty != null){
 
 			// Property in the current group
-			if (typeof currentKey === "undefined") { continue; }
-			const propertyName = lineMatchProperty.groups["propertyName"];
-			const propertyValue = lineMatchProperty.groups["propertyValue"];
-			obj[currentKey].set(propertyName, propertyValue);
+			if (typeof currentSection === "undefined") { continue; }
+			const name = lineMatchProperty.groups["name"];
+			const value = parseConfigValue(lineMatchProperty.groups["value"]);
+			obj[currentSection][name] = value;
 
 		}
 
@@ -107,7 +120,7 @@ function xdg2js(fileContents){
  * @param {string} desktopEntryContents - A desktop entry text
  * @returns {object} - The entry's equivalent as a JS object.
  *                     groups are the object's keys,
- *                     key/values pairs are stored in their section's maps
+ *                     key/values pairs are stored in their section
  */
 function desktop2js(desktopEntryContents){
 	return xdg2js(desktopEntryContents);
@@ -118,7 +131,7 @@ function desktop2js(desktopEntryContents){
  * @param {string} desktopEntryContents - An icon theme's text
  * @returns {object} - The entry's equivalent as a JS object.
  *                     groups are the object's keys,
- *                     key/values pairs are stored in their section's maps
+ *                     key/values pairs are stored in their section
  */
 function theme2js(themeFileContents){
 	return xdg2js(themeFileContents);

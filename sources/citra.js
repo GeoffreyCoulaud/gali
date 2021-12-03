@@ -94,7 +94,7 @@ class CitraSource extends emulation.EmulationSource{
 		const configData = config.config2js(configFileContents);
 
 		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
-		const nDirs = parseInt(configData["UI"].get("Paths\\gamedirs\\size"));
+		const nDirs = parseInt(configData["UI"]["Paths\\gamedirs\\size"]);
 		if (Number.isNaN(nDirs)){
 			throw Error("Non numeric Paths\\gamedirs\\size value in config file");
 		}
@@ -114,12 +114,12 @@ class CitraSource extends emulation.EmulationSource{
 
 		// Get number of paths
 		if (typeof configData["UI"] === "undefined") { return dirs; }
-		const nDirs = parseInt(configData["UI"].get("Paths\\gamedirs\\size"));
+		const nDirs = parseInt(configData["UI"]["Paths\\gamedirs\\size"]);
 
 		// Get paths
 		for (let i = 1; i <= nDirs; i++){
-			const recursive = String(configData["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
-			const path       = configData["UI"].get(`Paths\\gamedirs\\${i}\\path`);
+			const recursive = String(configData["UI"][`Paths\\gamedirs\\${i}\\deep_scan`]).toLowerCase() === "true";
+			const path      = configData["UI"][`Paths\\gamedirs\\${i}\\path`];
 			if (typeof path === "undefined"){ continue; }
 			dirs.push(new common.GameDir(path, recursive));
 		}

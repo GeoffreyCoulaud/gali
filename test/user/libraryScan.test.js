@@ -67,6 +67,7 @@ async function testLibraryScan(){
 	await library.scan();
 	await library.sort("name", 1);
 
+
 	// General stats
 	const nInstalled = library.games.filter(g=>g.isInstalled).length;
 	if (DO_DISPLAY_GAMES_LIST){
@@ -99,6 +100,7 @@ async function testLibraryScan(){
 
 testLibraryScan().then(()=>{
 	process.exit(0);
-}).catch(code=>{
-	process.exit(code);
+}).catch(error=>{
+	console.error(error);
+	process.exit(1);
 });

@@ -100,7 +100,7 @@ class YuzuSource extends nswitch.SwitchEmulationSource{
 		const configData = config.config2js(configFileContents);
 
 		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
-		const nDirs = parseInt(configData["UI"].get("Paths\\gamedirs\\size"));
+		const nDirs = parseInt(configData["UI"]["Paths\\gamedirs\\size"]);
 		if (Number.isNaN(nDirs)){
 			throw Error("Non numeric Paths\\gamedirs\\size value in config file");
 		}
@@ -122,13 +122,13 @@ class YuzuSource extends nswitch.SwitchEmulationSource{
 
 		// Get number of paths
 		if (typeof configData["UI"] === "undefined") { return dirs; }
-		const nDirs = parseInt(configData["UI"].get("Paths\\gamedirs\\size"));
+		const nDirs = parseInt(configData["UI"]["Paths\\gamedirs\\size"]);
 
 		// Get paths
 		if (Number.isNaN(nDirs)){ return dirs; }
 		for (let i = 1; i <= nDirs; i++){
-			const recursive = String(configData["UI"].get(`Paths\\gamedirs\\${i}\\deep_scan`)).toLowerCase() === "true";
-			const dirPath = configData["UI"].get(`Paths\\gamedirs\\${i}\\path`);
+			const recursive = String(configData["UI"][`Paths\\gamedirs\\${i}\\deep_scan`]).toLowerCase() === "true";
+			const dirPath = configData["UI"][`Paths\\gamedirs\\${i}\\path`];
 			if (typeof dirPath === "undefined"){ continue; }
 			dirs.push(new common.GameDir(dirPath, recursive));
 		}

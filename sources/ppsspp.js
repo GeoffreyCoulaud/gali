@@ -98,7 +98,11 @@ class PPSSPPSource extends emulation.EmulationSource{
 	async _getROMDirs(configData){
 
 		const dirs = [];
-		const paths = configData?.["PinnedPaths"].values();
+		const pathsObj = configData?.["PinnedPaths"];
+		if (!pathsObj){
+			return dirs;
+		}
+		const paths = Object.values(pathsObj);
 		for (const dirPath of paths){
 			dirs.push(new common.GameDir(dirPath, false));
 		}

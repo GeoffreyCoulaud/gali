@@ -104,9 +104,8 @@ class DesktopEntrySource extends common.Source{
 			try {
 				filePaths = await deepReaddir(dir.path, Infinity, (p)=>filesRegex.test(p) );
 			} catch (error){ continue; }
-			for (const file of filePaths){
-				const fileAbsPath = `${dir.path}/${file}`;
-				paths.push(fileAbsPath);
+			for (const filePath of filePaths){
+				paths.push(filePath);
 			}
 		}
 
@@ -117,7 +116,7 @@ class DesktopEntrySource extends common.Source{
 	/**
 	 * Filter function to apply to all desktop entries.
 	 * Returns true if the entry is a game (with exceptions), else false.
-	 * @param {Map} data - A map of desktop entry key and values
+	 * @param {Object} data - An object containing desktop entry data
 	 * @returns {boolean} - True if the entry is kept, else false.
 	 * @private
 	 */
@@ -135,22 +134,22 @@ class DesktopEntrySource extends common.Source{
 		];
 
 		// Filter out hidden desktop entries
-		const isHidden = String(data.get("Hidden")).toLowerCase() === "true";
-		const noDisplay = String(data.get("NoDisplay")).toLowerCase() === "true";
+		const isHidden = String(data["Hidden"]).toLowerCase() === "true";
+		const noDisplay = String(data["NoDisplay"]).toLowerCase() === "true";
 		if (isHidden || noDisplay) return false;
 
 		// Filter out non game desktop entries
-		let categories = data.get("Categories");
+		let categories = data["Categories"];
 		if (typeof categories === "undefined") return false;
 		categories = categories.split(";").filter(str=>str.length > 0);
 		if (!categories.includes("Game")) return false;
 
 		// Filter out explicitly excluded names
-		const name = data.get("Name");
+		const name = data["Name"];
 		if (EXCLUDED_NAMES.includes(name)) return false;
 
 		// Filter out excluded exec starts
-		const exec = data.get("Exec");
+		const exec = data["Exec"];
 		for (const EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS){
 			if (exec.startsWith(EXCLUDED_EXEC_START)){
 				return false;
@@ -165,16 +164,16 @@ class DesktopEntrySource extends common.Source{
 	/**
 	 * Get a desktop entry's localized name according to user preference.
 	 * Falls back to the regular name if none is found.
-	 * @param {Map} data - A map of desktop entry key and values
+	 * @param {Object} data - An object containing desktop entry data
 	 * @param {string[]} preferredLangs - The user's preferred languages
 	 * @returns {string} - A name
 	 * @private
 	 */
 	_getLocalizedName(data, preferredLangs){
 
-		let name = data.get("Name");
+		let name = data["Name"];
 		for (const lang of preferredLangs){
-			const localizedName = data.get(`Name[${lang}]`);
+			const localizedName = data[`Name[${lang}]`];
 			if (localizedName){
 				name = localizedName;
 				break;
@@ -211,7 +210,7 @@ class DesktopEntrySource extends common.Source{
 
 			// Get needed fields
 			const name = this._getLocalizedName(data, preferredLangs);
-			const exec = data.get("Exec");
+			const exec = data["Exec"];
 
 			// Add game
 			games.push(new DesktopEntryGame(name, exec));

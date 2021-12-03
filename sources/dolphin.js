@@ -84,7 +84,7 @@ class DolphinSource extends emulation.EmulationSource{
 		const configData = config.config2js(configFileContents);
 
 		// Check "General -> ISOPaths" value to be numeric
-		const nDirs = parseInt(configData["General"].get("ISOPaths"));
+		const nDirs = parseInt(configData["General"]["ISOPaths"]);
 		if ( Number.isNaN(nDirs) ){
 			throw new Error("Non numeric ISOPaths value in config file");
 		}
@@ -116,12 +116,12 @@ class DolphinSource extends emulation.EmulationSource{
 
 		// Get number of paths and options
 		if (typeof config["General"] === "undefined") { return dirs; }
-		const nDirs = parseInt(config["General"].get("ISOPaths"));
-		const recursive = config["General"].get("RecursiveISOPaths").toString().toLowerCase() === "true";
+		const nDirs = parseInt(config["General"]["ISOPaths"]);
+		const recursive = config["General"]["RecursiveISOPaths"].toString().toLowerCase() === "true";
 
 		// Get paths
 		for (let i = 0; i < nDirs; i++){
-			const dir = config["General"].get(`ISOPath${i}`);
+			const dir = config["General"][`ISOPath${i}`];
 			if (typeof dir === "undefined"){ continue; }
 			dirs.push(new common.GameDir(dir, recursive));
 		}

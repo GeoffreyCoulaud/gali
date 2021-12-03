@@ -152,7 +152,6 @@ class SteamSource extends common.Source{
 	 * @private
 	 */
 	_getGameImages(game){
-		// TODO prefer xdg desktop icons for the iconImage
 		const images = {
 			boxArtImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
 			coverImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
