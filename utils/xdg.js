@@ -59,6 +59,8 @@ function directoryMatchesSize(subdir, iconSize, iconScale){
 function lookupIcon(icon, size, scale, theme){
 	const exts = ["svg", "png", "xpm"];
 	let iconPath;
+
+	// Check for a fitting size in theme sub-directories
 	const subdirnames = theme["Icon Theme"]["Directories"].split(",").filter(x=>!!x);
 	for (const subdirname of subdirnames){
 		const subdir = theme[subdirname];
@@ -72,6 +74,8 @@ function lookupIcon(icon, size, scale, theme){
 			}
 		}
 	}
+
+	// Check for the smallest size bigger than requested
 	let minimalSize = Number.MAX_SAFE_INTEGER;
 	let closestIconPath;
 	for (const subdirname of subdirnames){
@@ -88,26 +92,33 @@ function lookupIcon(icon, size, scale, theme){
 	if (closestIconPath){
 		return closestIconPath;
 	}
+
 	return undefined;
 }
 
-function getIconHelper(icon, size, scale, theme){
-	// eslint-disable-next-line prefer-const
-	let filename = lookupIcon(icon, size, scale, theme);
+function getIconHelper(icon, size, scale, theme, themes){
+	let filename;
+
+	// Search into current theme
+	filename = lookupIcon(icon, size, scale, theme);
 	if (filename){
 		return filename;
 	}
-	// TODO search through parents
-	/*
-	if (theme.hasParents){
-		for (const parent of theme.parents){
-			filename = findIconHelper(icon, size, scale, parent);
-			if (filename){
-				return filename;
+
+	// Search through theme parents (recursively)
+	const field = theme["Icon Theme"]["Inherits"];
+	const parents = field ? field.split(",").filter(p=>!!p) : [];
+	for (const parent of parents){
+		for (const theme of themes){
+			if (theme["Icon Theme"]["Name"] === parent){
+				filename = getIconHelper(icon, size, scale, theme, themes);
+				if (filename){
+					return filename;
+				}
 			}
 		}
 	}
-	*/
+
 	return undefined;
 }
 
@@ -125,18 +136,19 @@ async function getIcon(icon, size, scale, userThemeName, themes){
 	const defaultThemeName = "Hicolor";
 	const themeNames = new Set([userThemeName, defaultThemeName]);
 	let filename;
+
+	// Search the user theme (and parents), then default theme
 	for (const themeName of themeNames){
 		for (const theme of themes){
 			if (theme["Icon Theme"]["Name"] === themeName){
-				filename = getIconHelper(icon, size, scale, theme);
+				filename = getIconHelper(icon, size, scale, theme, themes);
 				if (filename){
 					return filename;
 				}
 			}
 		}
 	}
-	// TODO check in /usr/share/pixmaps
-	// It's not an icon theme folder, but it contains icons
+
 	return undefined;
 }
 
