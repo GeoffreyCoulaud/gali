@@ -172,11 +172,11 @@ class DesktopEntrySource extends common.Source{
 	 */
 	_getLocalizedName(data, preferredLangs){
 
-		let name = data["Name"];
+		let name = String(data["Name"]);
 		for (const lang of preferredLangs){
 			const localizedName = data[`Name[${lang}]`];
 			if (localizedName){
-				name = localizedName;
+				name = String(localizedName);
 				break;
 			}
 		}
