@@ -21,7 +21,7 @@ function getPopBoolArgv(arg){
  *                     Set to a negative value if all following are to get.
  * @returns {*[]} An array of values gotten
  */
-function getPopValuesArgv(arg, n){
+function getPopValuesArgv(arg, n, map=undefined){
 	const index = process.argv.indexOf(arg);
 	let values = [];
 	if (index !== -1){
