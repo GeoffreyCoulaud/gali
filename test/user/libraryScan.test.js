@@ -1,6 +1,6 @@
-const Library     = require("../../library.js");
 const preferences = require("../../utils/preferences.js");
-const cli         = require("./cli.js");
+const cli         = require("../../utils/cli.js");
+const Library     = require("../../library.js");
 const process     = require("process");
 
 class SourceStat{

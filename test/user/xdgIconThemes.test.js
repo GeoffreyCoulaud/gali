@@ -1,5 +1,5 @@
 const xdg     = require("../../utils/xdg.js");
-const cli     = require("./cli.js");
+const cli     = require("../../utils/cli.js");
 const process = require("process");
 
 function help(){
