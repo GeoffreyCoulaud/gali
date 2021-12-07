@@ -41,7 +41,6 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 		// Get longname in config
 		let longname = metadata.menu[longnameKey];
 		longname = config.xmlDecodeSpecialChars(longname);
-		longname = longname.replaceAll("\n", " - ");
 		game.name = longname;
 	}
 
