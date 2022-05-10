@@ -38,13 +38,9 @@ Status | Name            | Description
 **Brag is in active development but is just not there yet. Be patient !**
 
 ### Dependencies
-* Main app 
-	* `node` 
+* Main app (will soon change dependencies)
+	* `node`
 	* `npm`
-* Node-Gtk ([refer to the docs](https://github.com/romgrk/node-gtk#installing-and-building)) : 
-	* `git`
-	* `python2` (for `node-gyp`)
-	* a C compiler (`gcc`≥8 or `clang`)
 * Supported sources programs (optional)
 
 ### Dev usage
@@ -68,14 +64,14 @@ Status | Name            | Description
 * Add a better way to handle nested sources
 * Better installation instructions
 * Additional sources
+	* bottles
 	* itch.io
 	* Decaf
 	* Ryujinx
 	* Retroarch (in Steam)
-	* Bethesda launcher (in Lutris)
 	* Origin (in Lutris)
 	* Battle_net (in Lutris)
 	* Uplay (in Lutris)
-	* Teknoparrot (in Lutris)(create installer first)
+	* Teknoparrot (in Lutris)
 * Fix game metadata (see [dedicated document](./resources/fixing_game_metadata.md))
 * Regroup duplicate games entries (eg. PPSSPP & Retroarch) into a "multiple source game"
