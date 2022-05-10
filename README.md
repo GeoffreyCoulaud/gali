@@ -59,6 +59,8 @@ Status | Name            | Description
 
 ## TODO
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
+* Support flatpak sources
+* Steam : Exclude hidden games
 * Dolphin : Scan cached games
 * Dolphin : Differenciate between Gamecube and Wii games
 * Yuzu : Scan installed games

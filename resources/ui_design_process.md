@@ -211,3 +211,20 @@ The solution to my problem was to wrap `app.run()` in a microtask (like
 Commit #31a07ca has this main/view process separation but moving 
 forward it's going to be removed since it complexifies the app's architecture
 and adds no benefit *for this use case*.
+
+## May of 2022, New ideas
+
+During the long hiatus, I've taken time to work on other projects and reflect on Brag's architecture. I am not satisfied with any of the UI solutions used at the moment. Node-gtk is not mature enough, electron is bloated and all of these are basically using a screwdriver to plant a nail. 
+
+I've made the mistake of treating Brag as a monolith, but it really needs to be split. My idea as of now is :  
+
+- "Server", starts the UI, initiates scans, communicates with subprocesses.
+- "Database", storing the scanned games data
+- "UI", responsible for, well, the UI
+- "Scanner", responsible for scanning for games
+
+The UI just can't store all the data at once, **pagination is mandatory**.
+Also, the OOP based architecture is flawed in this case. All of the scanned games need to be serializable.  
+Practically, games need to be composed of **only data**, not methods.
+
+Ultimately, I really want to use GTK, so the project will likely migrate to GJS. 
