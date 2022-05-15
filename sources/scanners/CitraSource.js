@@ -1,6 +1,6 @@
 const config = require("../utils/configFormats.js");
 const { EmulationSource } = require("./EmulationSource.js");
-const common = require("./common.js");
+const common = require("./GameDir.js");
 const fsp = require("fs/promises");
 const path = require("path");
 const { CitraGame } = require("../games/CitraGame.js");

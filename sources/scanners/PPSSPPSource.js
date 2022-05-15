@@ -1,6 +1,6 @@
 const config = require("../utils/configFormats.js");
 const { EmulationSource } = require("./EmulationSource.js");
-const { GameDir } = require("./common.js");
+const { GameDir } = require("./GameDir.js");
 const fsp = require("fs/promises");
 const path = require("path");
 const { PPSSPPGame } = require("../games/PPSSPPGame");

@@ -1,5 +1,5 @@
 const config = require("../utils/configFormats.js");
-const { GameDir } = require("./common.js");
+const { GameDir } = require("./GameDir.js");
 const { SwitchEmulationSource } = require("./SwitchEmulationSource.js");
 const fsp = require("fs/promises");
 const path = require("path");

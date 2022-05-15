@@ -1,6 +1,6 @@
 const convertPath = require("../../utils/convertPathPlatform.js");
 const config = require("../../utils/configFormats.js");
-const common = require("./common.js");
+const common = require("./GameDir.js");
 const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
 const fsp = require("fs/promises");
 const process = require("process");

@@ -1,5 +1,5 @@
 const { Source } = require("./Source.js");
-const { GameDir } = require("./common.js");
+const { GameDir } = require("./GameDir.js");
 const fsp = require("fs/promises");
 const vdfParser = require("vdf-parser");
 const fs = require("fs");

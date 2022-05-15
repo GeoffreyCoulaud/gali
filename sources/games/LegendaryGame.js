@@ -1,11 +1,11 @@
-const common = require("./common.js");
+const Game = require("./Game.js");
 
 /**
  * A class representing a legendary games launcher game
  * @property {string} appName - The game's epic games launcher app name
  * @property {LegendaryGameProcessContainer} processContainer - The game's process container
  */
-class LegendaryGame extends common.Game {
+class LegendaryGame extends Game {
 
 	platform = "PC";
 	isInstalled = true; // Legendary only exposes installed games
