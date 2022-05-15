@@ -4,6 +4,7 @@ const common = require("./common.js");
 const fsp = require("fs/promises");
 const path = require("path");
 const { CitraGame } = require("../games/CitraGame.js");
+const { NotImplementedError } = require("../NotImplementedError.js");
 
 const USER_DIR = process.env["HOME"];
 const CITRA_CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
@@ -97,7 +98,7 @@ class CitraSource extends EmulationSource {
 	async _getInstalledGames(configData) {
 
 		// TODO implement scanning for installed games
-		throw new common.NotImplementedError("Scanning for installed citra games is not implemented");
+		throw new NotImplementedError("Scanning for installed citra games is not implemented");
 
 	}
 

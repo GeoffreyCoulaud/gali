@@ -1,7 +1,7 @@
 const ad = require("../utils/appDirectories.js");
 const commandExists = require("../utils/commandExists.js");
 const { GameProcessContainer } = require("./GameProcessContainer.js");
-const { NoCommandError } = require("./NoCommandError.js");
+const { NoCommandError } = require("../NoCommandError.js");
 const child_process = require("child_process");
 
 /**

@@ -1,7 +1,5 @@
 const deepReaddir = require("../utils/deepReaddir.js");
 
-class NotImplementedError extends Error{}
-
 /**
  * Class representing a game directory
  */
@@ -53,8 +51,6 @@ async function getROMs(dirs, filesRegex, warn = false){
 }
 
 module.exports = {
-	NotImplementedError,
-	NoCommandError,
 	GameDir,
 	getROMs,
 };
