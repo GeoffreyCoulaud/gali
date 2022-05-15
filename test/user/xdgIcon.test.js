@@ -1,4 +1,4 @@
-const xdg     = require("../../sources/utils/xdg.js");
+const xdg     = require("../../src/utils/xdg.js");
 const cli     = require("./cli.js");
 const process = require("process");
 

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const conv   = require("../../sources/utils/convertPathPlatform.js");
+const conv   = require("../../src/utils/convertPathPlatform.js");
 const expect = require("chai").expect;
 
 describe("convertPathPlatform", function(){

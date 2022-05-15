@@ -1,5 +1,5 @@
 const Library     = require("../../library.js");
-const preferences = require("../../sources/utils/preferences.js");
+const preferences = require("../../src/utils/preferences.js");
 const cli         = require("./cli.js");
 const process     = require("process");
 

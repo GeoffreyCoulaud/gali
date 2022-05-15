@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const commandExists = require("../../sources/utils/commandExists.js");
+const commandExists = require("../../src/utils/commandExists.js");
 const expect = require("chai").expect;
 
 const commands = {

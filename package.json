@@ -2,11 +2,11 @@
   "name": "game-launcher",
   "version": "1.0.0",
   "description": "A game launcher for linux",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node sources/main.js",
-    "lint": "eslint library.js main.js test sources utils UI --format stylish",
-    "lint (auto fix)": "eslint --fix library.js main.js test sources utils UI --format stylish",
+    "start": "node src/main.js",
+    "lint": "eslint test src UI --format stylish",
+    "lint (auto fix)": "eslint --fix test src UI --format stylish",
     "test": "mocha"
   },
   "keywords": [

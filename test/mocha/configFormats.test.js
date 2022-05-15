@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const configFormats = require("../../sources/utils/configFormats.js");
+const configFormats = require("../../src/utils/configFormats.js");
 const expect = require("chai").expect;
 
 const encodedText = "&quot;interesting&quot; text containing normal chars &amp; xml special chars like &lt;, &gt; or even &apos;";

@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const deepReaddir = require("../../sources/utils/deepReaddir.js");
+const deepReaddir = require("../../src/utils/deepReaddir.js");
 const expect = require("chai").expect;
 
 const SAMPLE_DIR = `${__dirname}/readdirTestDir`;
