@@ -1,83 +1,22 @@
-const config        = require("../utils/configFormats.js");
-const deepReaddir   = require("../utils/deepReaddir.js");
-const locale        = require("../utils/locale.js");
-const xdg           = require("../utils/xdg.js");
-const common        = require("./common.js");
-const child_process = require("child_process");
-const fsp           = require("fs/promises");
-const process       = require("process");
-const fs            = require("fs");
-
-const DESKTOP_ENTRIES_SOURCE_NAME = "Desktop entries";
-
-/**
- * A wrapper for desktop entry game process management
- * @property {string} exec - The exec value of the desktop entry file,
- *                           used to start the game in a subprocess.
- */
-class DesktopEntryGameProcessContainer extends common.GameProcessContainer{
-
-	/**
-	 * Create a desktop entry game process container
-	 * @param {string} exec - The desktop entry's exec field value
-	 */
-	constructor(exec){
-		super();
-		this.spawnArgs = xdg.splitDesktopExec(exec);
-		this.spawnCommand = this.spawnArgs.shift();
-	}
-
-	/**
-	 * Start the game in a subprocess.
-	 * The exec value of the desktop entry will be used, this is litteraly
-	 * arbitrary code execution, beware !
-	 */
-	async start(){
-		this.process = child_process.spawn(
-			this.spawnCommand,
-			this.spawnArgs,
-			common.GameProcessContainer.defaultSpawnOptions
-		);
-		this._bindProcessEvents();
-		return;
-	}
-
-}
-
-/**
- * A class representing a game found via its desktop entry
- */
-class DesktopEntryGame extends common.Game{
-
-	platform = "PC";
-	source = DESKTOP_ENTRIES_SOURCE_NAME;
-	isInstalled = true; // All desktop entries games are considered installed
-
-	/**
-	 * Create a desktop entry game
-	 * @param {string} name - The game's displayed name
-	 * @param {string} exec - The exec field of the game's desktop file
-	 */
-	constructor(name, exec){
-		super(name);
-		this.processContainer = new DesktopEntryGameProcessContainer(exec);
-	}
-
-	toString(){
-		return `${this.name} - ${this.source}`;
-	}
-
-}
+const config = require("../utils/configFormats.js");
+const deepReaddir = require("../utils/deepReaddir.js");
+const locale = require("../utils/locale.js");
+const xdg = require("../utils/xdg.js");
+const { GameDir } = require("./common./js");
+const { Source } = require("./Source.js");
+const fsp = require("fs/promises");
+const process = require("process");
+const fs = require("fs");
+const { DesktopEntryGame } = require("../games/DesktopEntryGame");
 
 /**
  * A class representing a Desktop Entries source
  */
-class DesktopEntrySource extends common.Source{
+class DesktopEntrySource extends Source {
 
-	static name = DESKTOP_ENTRIES_SOURCE_NAME;
 	preferCache = false;
 
-	constructor(preferCache = false){
+	constructor(preferCache = false) {
 		super();
 		this.preferCache = preferCache;
 	}
@@ -87,25 +26,25 @@ class DesktopEntrySource extends common.Source{
 	 * @returns {string[]} - An array of paths to desktop entries
 	 * @private
 	 */
-	async _getDesktopEntries(){
+	async _getDesktopEntries() {
 
 		const USER_DIR = process.env["HOME"];
 		const XDG_DATA_DIR = process.env["XDG_DATA_HOME"] ?? `${USER_DIR}/.local/share/applications`;
 		const dirs = [
-			new common.GameDir(XDG_DATA_DIR, true),
-			new common.GameDir("/usr/share/applications", true),
-			new common.GameDir("/usr/local/share/applications", true),
+			new GameDir(XDG_DATA_DIR, true),
+			new GameDir("/usr/share/applications", true),
+			new GameDir("/usr/local/share/applications", true),
 		];
 
 		// Find all .desktop files in dirs
 		const filesRegex = /.+\.desktop/;
 		const paths = [];
-		for (const dir of dirs){
+		for (const dir of dirs) {
 			let filePaths;
 			try {
-				filePaths = await deepReaddir(dir.path, Infinity, (p)=>filesRegex.test(p) );
-			} catch (error){ continue; }
-			for (const filePath of filePaths){
+				filePaths = await deepReaddir(dir.path, Infinity, (p)=>filesRegex.test(p));
+			} catch (error) { continue; }
+			for (const filePath of filePaths) {
 				paths.push(filePath);
 			}
 		}
@@ -121,7 +60,7 @@ class DesktopEntrySource extends common.Source{
 	 * @returns {boolean} - True if the entry is kept, else false.
 	 * @private
 	 */
-	_filter(data){
+	_filter(data) {
 
 		const EXCLUDED_NAMES = [
 			"Citra", "Yuzu", "Dolphin Emulator", "Dolphin Triforce Emulator",
@@ -137,22 +76,30 @@ class DesktopEntrySource extends common.Source{
 		// Filter out hidden desktop entries
 		const isHidden = String(data["Hidden"]).toLowerCase() === "true";
 		const noDisplay = String(data["NoDisplay"]).toLowerCase() === "true";
-		if (isHidden || noDisplay) return false;
+		if (isHidden || noDisplay){
+			return false;
+		}
 
 		// Filter out non game desktop entries
 		let categories = data["Categories"];
-		if (typeof categories === "undefined") return false;
+		if (typeof categories === "undefined"){
+			return false;
+		}
 		categories = categories.split(";").filter(str=>str.length > 0);
-		if (!categories.includes("Game")) return false;
+		if (!categories.includes("Game")){
+			return false;
+		}
 
 		// Filter out explicitly excluded names
 		const name = data["Name"];
-		if (EXCLUDED_NAMES.includes(name)) return false;
+		if (EXCLUDED_NAMES.includes(name)){
+			return false;
+		}
 
 		// Filter out excluded exec starts
 		const exec = data["Exec"];
-		for (const EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS){
-			if (exec.startsWith(EXCLUDED_EXEC_START)){
+		for (const EXCLUDED_EXEC_START of EXCLUDED_EXEC_STARTS) {
+			if (exec.startsWith(EXCLUDED_EXEC_START)) {
 				return false;
 			}
 		}
@@ -170,12 +117,12 @@ class DesktopEntrySource extends common.Source{
 	 * @returns {string} - A name
 	 * @private
 	 */
-	_getLocalizedName(data, preferredLangs){
+	_getLocalizedName(data, preferredLangs) {
 
 		let name = String(data["Name"]);
-		for (const lang of preferredLangs){
+		for (const lang of preferredLangs) {
 			const localizedName = data[`Name[${lang}]`];
-			if (localizedName){
+			if (localizedName) {
 				name = String(localizedName);
 				break;
 			}
@@ -192,18 +139,18 @@ class DesktopEntrySource extends common.Source{
 	 * @param {string} themeName - The name of the user's xdg icon theme
 	 * @param {Object[]} themes - An arry of cached xdg icon themes
 	 */
-	async _getGameImages(game, icon, themeName, themes){
+	async _getGameImages(game, icon, themeName, themes) {
 		let p;
-		if (!icon){
+		if (!icon) {
 			return;
-		} else if (icon.startsWith("/") && fs.existsSync(icon)){
+		} else if (icon.startsWith("/") && fs.existsSync(icon)) {
 			p = icon;
 		} else {
 			const size = 512;
 			const scale = 1;
 			try {
 				p = await xdg.getIcon(icon, size, scale, themeName, themes);
-			} catch (error){
+			} catch (error) {
 				p = undefined;
 			}
 		}
@@ -215,7 +162,7 @@ class DesktopEntrySource extends common.Source{
 	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {DesktopEntryGame[]} - An array of found games
 	 */
-	async scan(warn = false){
+	async scan(warn = false) {
 
 		// Get entries paths
 		const paths = await this._getDesktopEntries(warn);
@@ -224,7 +171,7 @@ class DesktopEntrySource extends common.Source{
 		let themes;
 		try {
 			themes = await xdg.getIconThemes();
-		} catch (error){
+		} catch (error) {
 			themes = [];
 		}
 
@@ -234,16 +181,20 @@ class DesktopEntrySource extends common.Source{
 		// Read each of the entries to decide of its fate
 		const preferredLangs = await locale.getUserLocalePreference(true);
 		const games = [];
-		for (const gamePath of paths){
+		for (const gamePath of paths) {
 
 			// Get desktop entry data
 			const contents = await fsp.readFile(gamePath, "utf-8");
 			let data = config.desktop2js(contents);
 			data = data?.["Desktop Entry"];
-			if (!data) continue;
+			if (!data){
+				continue;
+			}
 
 			// Filter entry by its data
-			if (!this._filter(data)) continue;
+			if (!this._filter(data)){
+				continue;
+			}
 
 			// Build game
 			const name = this._getLocalizedName(data, preferredLangs);
@@ -262,7 +213,5 @@ class DesktopEntrySource extends common.Source{
 }
 
 module.exports = {
-	DesktopEntryGameProcessContainer,
-	DesktopEntrySource,
-	DesktopEntryGame,
+	DesktopEntrySource
 };

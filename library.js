@@ -1,16 +1,14 @@
-const { DesktopEntrySource } = require("./sources/desktop-entries.js");
-const { LegendarySource }    = require("./sources/legendary.js");
-const { RetroarchSource }    = require("./sources/retroarch.js");
-const { DolphinSource }      = require("./sources/dolphin.js");
-const { HeroicSource }       = require("./sources/heroic.js");
-const { LutrisSource }       = require("./sources/lutris.js");
-const { PPSSPPSource }       = require("./sources/ppsspp.js");
-const { CitraSource }        = require("./sources/citra.js");
-const { SteamSource }        = require("./sources/steam.js");
-const { CemuSource }         = require("./sources/cemu.js");
-const { YuzuSource }         = require("./sources/yuzu.js");
-
-// TODO implement gameAdd (for UI and for nested sources triggering)
+const { DesktopEntrySource } = require("./sources/scanners/DesktopEntriesSource.js");
+const { LegendarySource }    = require("./sources/scanners/LegendarySource.js");
+const { RetroarchSource }    = require("./sources/scanners/RetroarchSource.js");
+const { DolphinSource }      = require("./sources/scanners/DolphinSource.js");
+const { HeroicSource }       = require("./sources/scanners/HeroicSource.js");
+const { LutrisSource }       = require("./sources/scanners/LutrisSource.js");
+const { PPSSPPSource }       = require("./sources/scanners/PPSSPPSource.js");
+const { CitraSource }        = require("./sources/scanners/CitraSource.js");
+const { SteamSource }        = require("./sources/scanners/SteamSource.js");
+const { CemuSource }         = require("./sources/scanners/CemuSource.js");
+const { YuzuSource }         = require("./sources/scanners/YuzuSource.js");
 
 /**
  * A representation of a game library.
@@ -52,17 +50,19 @@ class Library{
 
 		this.empty();
 
+		// TODO Find a less hacky way of scanning.
+
 		let promises = [];
 		let results = [];
 
 		// Get lutris games
-		if (this.enabledSources.includes(LutrisSource.name)){
+		if (this.enabledSources.includes("Lutris")){
 			const lutris = new LutrisSource();
 			const lutrisGames = await lutris.scan(this.warn);
 			this.games.push(...lutrisGames);
 
 			// Get cemu games
-			if (this.enabledSources.includes(CemuSource.name)){
+			if (this.enabledSources.includes("Cemu in Lutris")){
 				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
 				if (cemuGame){
 					const cemu = new CemuSource(cemuGame, false);
@@ -73,29 +73,26 @@ class Library{
 			results = await Promise.all(promises);
 			results = results.flat();
 			this.games.push(...results);
-
 		}
 
-
 		// Get games from straightforward sources
-		// ? create instances once and add / delete when this.enabledSources changes
-		// ? have a sourceByName method
-		const SOURCE_CLASSES = [
-			DesktopEntrySource,
-			RetroarchSource,
-			LegendarySource,
-			DolphinSource,
-			PPSSPPSource,
-			HeroicSource,
-			SteamSource,
-			CitraSource,
-			YuzuSource,
-		];
 		promises = [];
-		for (const sourceClass of SOURCE_CLASSES){
-			if (this.enabledSources.includes(sourceClass.name)){
-				const sourceInstance = new sourceClass();
-				promises.push(sourceInstance.scan(this.warn));
+		const sourceMap = {
+			"Citra"          : CitraSource,
+			"Desktop entries": DesktopEntrySource,
+			"Dolphin"        : DolphinSource,
+			"Heroic"         : HeroicSource,
+			"Legendary"      : LegendarySource,
+			"PPSSPP"         : PPSSPPSource,
+			"Retroarch"      : RetroarchSource,
+			"Steam"          : SteamSource,
+			"Yuzu"           : YuzuSource,
+		};
+		for (const key in Object.keys(sourceMap)){
+			if (this.enabledSources.includes(key)){
+				const klass = sourceMap[key];
+				const instance = new klass();
+				promises.push(instance.scan(this.warn));
 			}
 		}
 		results = await Promise.all(promises);

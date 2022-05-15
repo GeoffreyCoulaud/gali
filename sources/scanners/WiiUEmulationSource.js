@@ -1,16 +1,16 @@
-const config    = require("../utils/configFormats.js");
-const locale    = require("../utils/locale.js");
-const emulation = require("./emulation.js");
-const fsp       = require("fs/promises");
-const path      = require("path");
-const fs        = require("fs");
+const config = require("../utils/configFormats.js");
+const locale = require("../utils/locale.js");
+const { EmulationSource } = require("./EmulationSource.js");
+const fsp = require("fs/promises");
+const path = require("path");
+const fs = require("fs");
 
 /**
  * A class representing a WiiU emulator source.
  * You're not supposed to use it directly, instead use a descendent of this class.
  * @abstract
  */
-class WiiUEmulationSource extends emulation.EmulationSource{
+class WiiUEmulationSource extends EmulationSource {
 
 	/**
 	 * Add a better name to a game
@@ -19,7 +19,7 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 	 * @param {string[]} langs - An array of preferred language codes
 	 * @private
 	 */
-	#getRPXGameLongname(game, metadata, langs){
+	#getRPXGameLongname(game, metadata, langs) {
 
 		// Get longname lang key from available lang options
 		const keys = Object.entries(metadata.menu)
@@ -28,13 +28,13 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 
 		// Select a longname according to user locale
 		let longnameKey;
-		for (const lang of langs){
-			if (keys.includes(lang)){
+		for (const lang of langs) {
+			if (keys.includes(lang)) {
 				longnameKey = `longname_${lang}`;
 				break;
 			}
 		}
-		if (!longnameKey){
+		if (!longnameKey) {
 			return;
 		}
 
@@ -49,15 +49,15 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 	 * @param {CemuGame} game - The game to add images to
 	 * @private
 	 */
-	#getRPXGameImages(game){
+	#getRPXGameImages(game) {
 		const gameMetaDir = path.resolve(`${game.path}/../../meta`);
 		const images = {
 			coverImage: `${gameMetaDir}/bootTvTex.tga`,
 			iconImage: `${gameMetaDir}/iconTex.tga`,
 		};
-		for (const [key, value] of Object.entries(images)){
+		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);
-			if (imageExists){
+			if (imageExists) {
 				game[key] = value;
 			}
 		}
@@ -69,7 +69,7 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 	 * @returns {object|undefined} - The game's metadata
 	 * @access protected
 	 */
-	async _getRPXGameMetadata(game){
+	async _getRPXGameMetadata(game) {
 		const filePath = path.resolve(`${game.path}/../../meta/meta.xml`);
 		const fileContents = await fsp.readFile(filePath, "utf-8");
 		const metadata = await config.xml2js(fileContents);
@@ -82,7 +82,7 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 	 * @param {CemuGame} game - The game to add metadata to
 	 * @access protected
 	 */
-	async _getRPXGameProps(game){
+	async _getRPXGameProps(game) {
 		const preferredLangs = locale.getUserLocalePreference(true);
 		const metadata = await this._getRPXGameMetadata(game);
 		this.#getRPXGameLongname(game, metadata, preferredLangs);
@@ -91,14 +91,6 @@ class WiiUEmulationSource extends emulation.EmulationSource{
 
 }
 
-class WiiUEmulationGame extends emulation.EmulationGame{
-
-	platform = "Nintendo - Wii U";
-
-}
-
-
 module.exports = {
-	WiiUEmulationSource,
-	WiiUEmulationGame,
+	WiiUEmulationSource
 };
