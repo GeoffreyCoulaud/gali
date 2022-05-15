@@ -1,14 +1,14 @@
-const { DesktopEntrySource } = require("./sources/scanners/DesktopEntriesSource.js");
-const { LegendarySource }    = require("./sources/scanners/LegendarySource.js");
-const { RetroarchSource }    = require("./sources/scanners/RetroarchSource.js");
-const { DolphinSource }      = require("./sources/scanners/DolphinSource.js");
-const { HeroicSource }       = require("./sources/scanners/HeroicSource.js");
-const { LutrisSource }       = require("./sources/scanners/LutrisSource.js");
-const { PPSSPPSource }       = require("./sources/scanners/PPSSPPSource.js");
-const { CitraSource }        = require("./sources/scanners/CitraSource.js");
-const { SteamSource }        = require("./sources/scanners/SteamSource.js");
-const { CemuSource }         = require("./sources/scanners/CemuSource.js");
-const { YuzuSource }         = require("./sources/scanners/YuzuSource.js");
+const { DesktopEntrySource } = require("./scanners/DesktopEntriesSource.js");
+const { LegendarySource }    = require("./scanners/LegendarySource.js");
+const { RetroarchSource }    = require("./scanners/RetroarchSource.js");
+const { DolphinSource }      = require("./scanners/DolphinSource.js");
+const { HeroicSource }       = require("./scanners/HeroicSource.js");
+const { LutrisSource }       = require("./scanners/LutrisSource.js");
+const { PPSSPPSource }       = require("./scanners/PPSSPPSource.js");
+const { CitraSource }        = require("./scanners/CitraSource.js");
+const { SteamSource }        = require("./scanners/SteamSource.js");
+const { CemuSource }         = require("./scanners/CemuSource.js");
+const { YuzuSource }         = require("./scanners/YuzuSource.js");
 
 /**
  * A representation of a game library.

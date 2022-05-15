@@ -1,4 +1,4 @@
-const convertPath = require("../../utils/convertPathPlatform.js");
+const convertPath = require("../utils/convertPathPlatform.js");
 const { GameProcessContainer } = require("./GameProcessContainer.js");
 const lutris = require("../games/lutris.js");
 const child_process = require("child_process");
