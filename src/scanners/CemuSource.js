@@ -11,12 +11,13 @@ const config = require("../utils/configFormats.js");
 const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
 const { CemuGame } = require("../games/CemuGame.js");
 
-const GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
-
 // TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
-
+	
 	static name = "Cemu in Lutris";
+	
+	GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
+	
 	cemuLutrisGame = undefined;
 	preferCache = false;
 
@@ -137,7 +138,7 @@ class CemuSource extends WiiUEmulationSource {
 	async _getROMGames(dirs, warn = false) {
 
 		// Scan cemu dirs
-		const gameRomPaths = await this._getROMs(dirs, GAME_FILES_REGEX, warn);
+		const gameRomPaths = await this._getROMs(dirs, this.GAME_FILES_REGEX, warn);
 
 		// Convert found paths into cemu games
 		const romGamesPromises = gameRomPaths.map(async (romPath)=>{

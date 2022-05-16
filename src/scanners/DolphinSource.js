@@ -8,12 +8,14 @@ const { EmulationSource } = require("./EmulationSource.js");
 const { DolphinGame } = require("../games/DolphinGame");
 
 const USER_DIR = process.env["HOME"];
-const DOLPHIN_INSTALL_DIRS_PATH = `${USER_DIR}/.config/dolphin-emu/Dolphin.ini`;
-const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
 
 class DolphinSource extends EmulationSource {
-
+	
 	static name = "Dolphin";
+	
+	INSTALL_DIRS_PATH = `${USER_DIR}/.config/dolphin-emu/Dolphin.ini`;
+	GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -28,7 +30,7 @@ class DolphinSource extends EmulationSource {
 	 */
 	async _getConfig() {
 
-		const configFileContents = await fsp.readFile(DOLPHIN_INSTALL_DIRS_PATH, "utf-8");
+		const configFileContents = await fsp.readFile(this.INSTALL_DIRS_PATH, "utf-8");
 		const configData = config.config2js(configFileContents);
 
 		// Check "General -> ISOPaths" value to be numeric
@@ -86,7 +88,7 @@ class DolphinSource extends EmulationSource {
 	 */
 	async _getROMGames(dirs) {
 		// TODO detect games console between GameCube and Wii
-		const gamePaths = await this._getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, this.GAME_FILES_REGEX);
 		const games = [];
 		for (const gamePath of gamePaths) {
 			const game = new DolphinGame(path.basename(gamePath), gamePath);

@@ -9,12 +9,14 @@ const { EmulationSource } = require("./EmulationSource.js");
 const { CitraGame } = require("../games/CitraGame.js");
 
 const USER_DIR = process.env["HOME"];
-const CITRA_CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
-const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
 
 class CitraSource extends EmulationSource {
-
+	
 	static name = "Citra";
+	
+	GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
+	CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -31,7 +33,7 @@ class CitraSource extends EmulationSource {
 	 */
 	async _getConfig() {
 
-		const configFileContents = await fsp.readFile(CITRA_CONFIG_PATH, "utf-8");
+		const configFileContents = await fsp.readFile(this.CONFIG_PATH, "utf-8");
 		const configData = config.config2js(configFileContents);
 
 		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
@@ -77,7 +79,7 @@ class CitraSource extends EmulationSource {
 	 */
 	async _getROMGames(dirs) {
 
-		const gamePaths = await this._getROMs(dirs, GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, this.GAME_FILES_REGEX);
 		const games = [];
 		for (const gamePath of gamePaths) {
 			const game = new CitraGame(path.basename(gamePath), gamePath);

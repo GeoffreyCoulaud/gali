@@ -6,11 +6,13 @@ const { Source } = require("./Source.js");
 const { RetroarchGame } = require("../games/RetroarchGame");
 
 const USER_DIR = process.env["HOME"];
-const PLAYLISTS_PATH = `${USER_DIR}/.config/retroarch/playlists`;
 
 class RetroarchSource extends Source {
-
+	
 	static name = "Retroarch";
+	
+	PLAYLISTS_PATH = `${USER_DIR}/.config/retroarch/playlists`;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -26,9 +28,9 @@ class RetroarchSource extends Source {
 	 */
 	async _getPlaylistPaths() {
 
-		let playlists = await fsp.readdir(PLAYLISTS_PATH, { encoding: "utf-8", withFileTypes: true });
+		let playlists = await fsp.readdir(this.PLAYLISTS_PATH, { encoding: "utf-8", withFileTypes: true });
 		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith(".lpl"));
-		playlists = playlists.map(dirent=>`${PLAYLISTS_PATH}/${dirent.name}`);
+		playlists = playlists.map(dirent=>`${this.PLAYLISTS_PATH}/${dirent.name}`);
 		return playlists;
 
 	}

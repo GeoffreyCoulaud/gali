@@ -8,8 +8,6 @@ const { Source } = require("./Source.js");
 const { SteamGame } = require("../games/SteamGame");
 
 const USER_DIR = process.env["HOME"];
-const STEAM_INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
-const STEAM_IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
 
 /**
  * Checks if a string matches any of the passed regular expressions
@@ -27,8 +25,12 @@ function strMatchAny(str, regexes){
 }
 
 class SteamSource extends Source {
-
+	
 	static name = "Steam";
+	
+	IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
+	INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -43,7 +45,7 @@ class SteamSource extends Source {
 	 */
 	async _getConfig() {
 
-		const fileContents = await fsp.readFile(STEAM_INSTALL_DIRS_PATH, { encoding: "utf-8" });
+		const fileContents = await fsp.readFile(this.INSTALL_DIRS_PATH, { encoding: "utf-8" });
 		const config = vdfParser.parse(fileContents);
 
 		// Validate
@@ -87,9 +89,9 @@ class SteamSource extends Source {
 	 */
 	_getGameImages(game) {
 		const images = {
-			boxArtImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
-			coverImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
-			iconImage: `${STEAM_IMAGE_CACHE_DIR}/${game.appId}_icon.jpg`,
+			boxArtImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
+			coverImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
+			iconImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_icon.jpg`,
 		};
 		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);

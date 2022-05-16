@@ -4,11 +4,13 @@ const { Source } = require("./Source.js");
 const { LegendaryGame } = require("../games/LegendaryGame");
 
 const USER_DIR = process.env["HOME"];
-const INSTALLED_FILE_PATH = `${USER_DIR}/.config/legendary/installed.json`;
 
 class LegendarySource extends Source {
-
+	
 	static name = "Legendary";
+	
+	INSTALLED_FILE_PATH = `${USER_DIR}/.config/legendary/installed.json`;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -27,7 +29,7 @@ class LegendarySource extends Source {
 		// Read installed.json file
 		let data;
 		try {
-			const fileContents = await fsp.readFile(INSTALLED_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(this.INSTALLED_FILE_PATH, "utf-8");
 			data = JSON.parse(fileContents);
 		} catch (error) {
 			if (warn){

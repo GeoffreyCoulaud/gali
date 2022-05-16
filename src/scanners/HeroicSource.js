@@ -4,11 +4,13 @@ const { Source } = require("./Source.js");
 const { HeroicGame } = require("../games/HeroicGame");
 
 const USER_DIR = process.env["HOME"];
-const LIBRARY_FILE_PATH = `${USER_DIR}/.config/heroic/store/library.json`;
 
 class HeroicSource extends Source {
-
+	
 	static name = "Heroic";
+	
+	LIBRARY_FILE_PATH = `${USER_DIR}/.config/heroic/store/library.json`;
+	
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -21,7 +23,7 @@ class HeroicSource extends Source {
 		// Read library.json file
 		let library;
 		try {
-			const fileContents = await fsp.readFile(LIBRARY_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(this.LIBRARY_FILE_PATH, "utf-8");
 			library = JSON.parse(fileContents);
 			library = library?.["library"];
 		} catch (error) {
