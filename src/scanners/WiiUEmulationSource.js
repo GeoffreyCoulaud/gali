@@ -5,7 +5,7 @@ const fs = require("fs");
 const config = require("../utils/configFormats.js");
 const locale = require("../utils/locale.js");
 
-const { EmulationSource } = require("./EmulationSource.js");
+const EmulationSource = require("./EmulationSource.js");
 
 /**
  * A class representing a WiiU emulator source.
@@ -93,6 +93,4 @@ class WiiUEmulationSource extends EmulationSource {
 
 }
 
-module.exports = {
-	WiiUEmulationSource
-};
+module.exports = WiiUEmulationSource;

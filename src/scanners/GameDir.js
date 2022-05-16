@@ -13,6 +13,4 @@ class GameDir {
 	}
 }
 
-module.exports = {
-	GameDir
-};
+module.exports = GameDir;

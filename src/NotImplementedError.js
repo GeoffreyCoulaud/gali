@@ -1,5 +1,3 @@
 class NotImplementedError extends Error { }
 
-module.exports = {
-	NotImplementedError
-};
+module.exports = NotImplementedError;

@@ -1,5 +1,3 @@
 class NoCommandError extends Error { }
 
-module.exports = {
-	NoCommandError
-};
+module.exports = NoCommandError;

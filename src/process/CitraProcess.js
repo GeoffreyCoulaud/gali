@@ -1,17 +1,17 @@
 const child_process = require("child_process");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const Process = require("./Process.js");
 
 /**
- * A wrapper for ppsspp game process management
- * @property {string} romPath - The game's ROM path, used to invoke ppsspp
+ * A wrapper for citra game process management
+ * @property {string} romPath - The game's ROM path, used to invoke citra
  */
-class PPSSPPGameProcessContainer extends GameProcessContainer {
+class CitraProcess extends Process {
 
-	commandOptions = ["PPSSPPSDL", "PPSSPPQt"];
+	commandOptions = ["citra", "citra-qt"];
 
 	/**
-	 * Create a ppsspp game container
+	 * Create a citra game process container
 	 * @param {string} romPath - The game's ROM path
 	 */
 	constructor(romPath) {
@@ -35,6 +35,4 @@ class PPSSPPGameProcessContainer extends GameProcessContainer {
 
 }
 
-module.exports = {
-	PPSSPPGameProcessContainer
-};
+module.exports = CitraProcess;

@@ -1,11 +1,9 @@
-const { Game } = require("./Game.js");
+const Game = require("./Game.js");
+const LegendaryProcess = require("../process/LegendaryProcess.js");
 
-/**
- * A class representing a legendary games launcher game
- * @property {string} appName - The game's epic games launcher app name
- * @property {LegendaryGameProcessContainer} processContainer - The game's process container
- */
 class LegendaryGame extends Game {
+
+	static processClass = LegendaryProcess;
 
 	platform = "PC";
 	isInstalled = true; // Legendary only exposes installed games
@@ -21,6 +19,4 @@ class LegendaryGame extends Game {
 	}
 }
 
-module.exports = {
-	LegendaryGame
-};
+module.exports = LegendaryGame;

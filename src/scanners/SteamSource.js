@@ -2,10 +2,10 @@ const fsp = require("fs/promises");
 const vdfParser = require("vdf-parser");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 
-const { Source } = require("./Source.js");
-const { SteamGame } = require("../games/SteamGame");
+const Source = require("./Source.js");
+const SteamGame = require("../games/SteamGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -25,13 +25,14 @@ function strMatchAny(str, regexes){
 }
 
 class SteamSource extends Source {
-	
+
 	static name = "Steam";
-	
-	IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
-	INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
-	
+	static gameClass = SteamGame;
+
 	preferCache = false;
+
+	imageCacheDir = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
+	configPath = `${USER_DIR}/.local/share/Steam/config/libraryfolders.vdf`;
 
 	constructor(preferCache = false) {
 		super();
@@ -45,7 +46,7 @@ class SteamSource extends Source {
 	 */
 	async _getConfig() {
 
-		const fileContents = await fsp.readFile(this.INSTALL_DIRS_PATH, { encoding: "utf-8" });
+		const fileContents = await fsp.readFile(this.configPath, { encoding: "utf-8" });
 		const config = vdfParser.parse(fileContents);
 
 		// Validate
@@ -64,21 +65,14 @@ class SteamSource extends Source {
 	 * @private
 	 */
 	async _getDirs(config) {
-		const dirs = [];
-
-		// Read default steam install directory
-		const STEAM_DEFAULT_INSTALL_DIR = `${USER_DIR}/.steam/root`;
-		if (fs.existsSync(STEAM_DEFAULT_INSTALL_DIR)) {
-			dirs.push(new GameDir(STEAM_DEFAULT_INSTALL_DIR));
-		}
-
-		// Read user specified steam install directories
 		const libraryfolders = config.libraryfolders;
 		const keys = Object.keys(libraryfolders);
-		for (let i = 0; i < keys.length - 1; i++) {
-			dirs.push(new GameDir(libraryfolders[keys[i]].path));
+		const dirs = [];
+		for (const key of keys) {
+			const path = libraryfolders[key].path;
+			const dir = new GameDir(path);
+			dirs.push(dir);
 		}
-
 		return dirs;
 	}
 
@@ -89,9 +83,9 @@ class SteamSource extends Source {
 	 */
 	_getGameImages(game) {
 		const images = {
-			boxArtImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
-			coverImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
-			iconImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_icon.jpg`,
+			boxArtImage: `${this.imageCacheDir}/${game.appId}_library_600x900.jpg`,
+			coverImage: `${this.imageCacheDir}/${game.appId}_header.jpg`,
+			iconImage: `${this.imageCacheDir}/${game.appId}_icon.jpg`,
 		};
 		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);
@@ -180,7 +174,7 @@ class SteamSource extends Source {
 				}
 
 				// Build game
-				const game = new SteamGame(appid, name, isInstalled);
+				const game = new this.constructor.gameClass(appid, name, isInstalled);
 				this._getGameIsInstalled(game, manData);
 				this._getGameImages(game);
 				games.push(game);
@@ -240,6 +234,4 @@ class SteamSource extends Source {
 
 }
 
-module.exports = {
-	SteamSource
-};
+module.exports = SteamSource;

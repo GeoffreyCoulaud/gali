@@ -1,9 +1,9 @@
-const { Game } = require("./Game.js");
+const Game = require("./Game.js");
+const DesktopEntryProcess = require("../process/DesktopEntryProcess.js");
 
-/**
- * A class representing a game found via its desktop entry
- */
 class DesktopEntryGame extends Game {
+
+	static processClass = DesktopEntryProcess;
 
 	platform = "PC";
 	isInstalled = true; // All desktop entries games are considered installed
@@ -18,6 +18,4 @@ class DesktopEntryGame extends Game {
 	}
 }
 
-module.exports = {
-	DesktopEntryGame
-};
+module.exports = DesktopEntryGame;

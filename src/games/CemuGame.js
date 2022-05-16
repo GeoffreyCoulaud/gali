@@ -1,14 +1,13 @@
-const { WiiUEmulationGame } = require("./WiiUEmulationGame.js");
+const WiiUEmulationGame = require("./WiiUEmulationGame.js");
+const CemuProcess = require("../process/CemuProcess.js");
 
-/**
- * A class representing a cemu (in lutris) game
- */
 class CemuGame extends WiiUEmulationGame{
+
+	static processClass = CemuProcess;
+
 	constructor(name, path){
 		super(name, path);
 	}
 }
 
-module.exports = {
-	CemuGame
-};
+module.exports = CemuGame;

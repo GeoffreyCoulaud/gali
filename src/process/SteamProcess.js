@@ -1,12 +1,12 @@
 const child_process = require("child_process");
 
-const { StartOnlyGameProcessContainer } = require("./StartOnlyGameProcessContainer.js");
+const StartOnlyProcess = require("./StartOnlyProcess.js");
 
 /**
  * A wrapper for steam game process management
  * @property {string} appId - A steam appid, used to invoke steam
  */
-class SteamGameProcessContainer extends StartOnlyGameProcessContainer {
+class SteamProcess extends StartOnlyProcess {
 
 	commandOptions = ["steam"];
 
@@ -37,6 +37,4 @@ class SteamGameProcessContainer extends StartOnlyGameProcessContainer {
 
 }
 
-module.exports = {
-	SteamGameProcessContainer
-};
+module.exports = SteamProcess;

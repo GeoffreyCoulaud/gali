@@ -15,6 +15,8 @@
  */
 class Game {
 
+	static processClass = undefined;
+
 	// Game metadata props
 	name = undefined;
 	platform = undefined;
@@ -38,6 +40,4 @@ class Game {
 	}
 }
 
-module.exports = {
-	Game
-};
+module.exports = Game;

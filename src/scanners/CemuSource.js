@@ -1,25 +1,25 @@
 const fsp = require("fs/promises");
-const process = require("process");
 const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const convertPath = require("../utils/convertPathPlatform.js");
 const config = require("../utils/configFormats.js");
 
-const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
-const { CemuGame } = require("../games/CemuGame.js");
+const WiiUEmulationSource = require("./WiiUEmulationSource.js");
+const CemuGame = require("../games/CemuGame.js");
 
 // TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
-	
+
 	static name = "Cemu in Lutris";
-	
-	GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
-	
-	cemuLutrisGame = undefined;
+	static gameClass = CemuGame;
+
 	preferCache = false;
+
+	cemuLutrisGame = undefined;
+	romRegex = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
 
 	constructor(cemuLutrisGame, preferCache = false) {
 		super();
@@ -86,7 +86,7 @@ class CemuSource extends WiiUEmulationSource {
 			// Build game
 			const linuxPath = convertPath.wineToLinux(winePath, prefix);
 			const isInstalled = fs.existsSync(linuxPath);
-			const game = new CemuGame(name, linuxPath);
+			const game = new this.constructor.gameClass(name, linuxPath);
 			game.isInstalled = isInstalled;
 
 			// Get more info
@@ -138,14 +138,14 @@ class CemuSource extends WiiUEmulationSource {
 	async _getROMGames(dirs, warn = false) {
 
 		// Scan cemu dirs
-		const gameRomPaths = await this._getROMs(dirs, this.GAME_FILES_REGEX, warn);
+		const gameRomPaths = await this._getROMs(dirs, this.romRegex, warn);
 
 		// Convert found paths into cemu games
 		const romGamesPromises = gameRomPaths.map(async (romPath)=>{
 
 			// Get base info
 			const basename = path.basename(romPath);
-			const game = new CemuGame(basename, romPath);
+			const game = new this.constructor.gameClass(basename, romPath);
 			game.isInstalled = true;
 
 			// Precise game info
@@ -243,6 +243,4 @@ class CemuSource extends WiiUEmulationSource {
 
 }
 
-module.exports = {
-	CemuSource
-};
+module.exports = CemuSource;

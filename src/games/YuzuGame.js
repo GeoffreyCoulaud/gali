@@ -1,10 +1,9 @@
-const { SwitchEmulationGame } = require("./SwitchEmulationGame.js");
+const SwitchEmulationGame = require("./SwitchEmulationGame.js");
+const YuzuProcess = require("../process/YuzuProcess.js");
 
-/**
- * A class representing a yuzu game
- * @property {YuzuGameProcessContainer} processContainer - The game's process container
- */
 class YuzuGame extends SwitchEmulationGame {
+
+	static processClass = YuzuProcess;
 
 	/**
 	 * Create a yuzu game
@@ -16,6 +15,4 @@ class YuzuGame extends SwitchEmulationGame {
 	}
 }
 
-module.exports = {
-	YuzuGame
-};
+module.exports = YuzuGame;

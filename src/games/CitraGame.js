@@ -1,12 +1,9 @@
-const { EmulationGame } = require("./EmulationGame.js");
+const EmulationGame = require("./EmulationGame.js");
+const CitraProcess = require("../process/CitraProcess.js");
 
-/**
- * Represents a Citra (Nintendo 3DS emulator) game
- * @property {string} name - The game's displayed name
- * @property {string} path - The game's ROM path
- * @property {CitraGameProcessContainer} processContainer - The game's process container
- */
 class CitraGame extends EmulationGame{
+
+	static processClass = CitraProcess;
 
 	platform = "Nintendo - 3DS";
 
@@ -20,6 +17,4 @@ class CitraGame extends EmulationGame{
 	}
 }
 
-module.exports = {
-	CitraGame,
-};
+module.exports = CitraGame;

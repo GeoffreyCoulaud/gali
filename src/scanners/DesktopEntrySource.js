@@ -1,19 +1,20 @@
 const fsp = require("fs/promises");
-const process = require("process");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 const deepReaddir = require("../utils/deepReaddir.js");
 const locale = require("../utils/locale.js");
 const xdg = require("../utils/xdg.js");
 
-const { DesktopEntryGame } = require("../games/DesktopEntryGame");
-const { Source } = require("./Source.js");
+const DesktopEntryGame = require("../games/DesktopEntryGame");
+const Source = require("./Source.js");
 
 class DesktopEntrySource extends Source {
 
 	static name = "Desktop Entries";
+	static gameClass = DesktopEntryGame;
+
 	preferCache = false;
 
 	constructor(preferCache = false) {
@@ -200,7 +201,7 @@ class DesktopEntrySource extends Source {
 			const name = this._getLocalizedName(data, preferredLangs);
 			const exec = data["Exec"];
 			const icon = data["Icon"];
-			const game = new DesktopEntryGame(name, exec);
+			const game = new this.constructor.gameClass(name, exec);
 			await this._getGameImages(game, icon, userThemeName, themes);
 
 			games.push(game);
@@ -212,6 +213,4 @@ class DesktopEntrySource extends Source {
 
 }
 
-module.exports = {
-	DesktopEntrySource
-};
+module.exports = DesktopEntrySource;

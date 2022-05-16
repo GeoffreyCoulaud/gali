@@ -1,10 +1,9 @@
-const { EmulationGame } = require("./EmulationGame.js");
+const EmulationGame = require("./EmulationGame.js");
+const PPSSPPProcess = require("../process/PPSSPPProcess.js");
 
-/**
- * A class representing a ppsspp game
- * @property {PPSSPPGameProcessContainer} processContainer - The game's process container
- */
 class PPSSPPGame extends EmulationGame {
+
+	static processClass = PPSSPPProcess;
 
 	platform = "Sony - PlayStation Portable";
 
@@ -18,6 +17,4 @@ class PPSSPPGame extends EmulationGame {
 	}
 }
 
-module.exports = {
-	PPSSPPGame
-};
+module.exports = PPSSPPGame;

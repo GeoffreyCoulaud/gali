@@ -1,9 +1,9 @@
-const { Game } = require("./Game.js");
+const Game = require("./Game.js");
+const SteamProcess = require("../process/SteamProcess");
 
-/**
- * Class representing a steam game
- */
 class SteamGame extends Game {
+
+	static processClass = SteamProcess;
 
 	platform = "PC";
 
@@ -24,10 +24,8 @@ class SteamGame extends Game {
 	 * @returns {string} - A string representing the game
 	 */
 	toString() {
-		return `${this.name} - ${this.source} - ${this.appId}`;
+		return `${this.name} - ${this.appId}`;
 	}
 }
 
-module.exports = {
-	SteamGame
-};
+module.exports = SteamGame;

@@ -1,12 +1,12 @@
 const child_process = require("child_process");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for dolphin game management
  * @property {string} romPath - The game's ROM path, used to invoke dolphin
  */
-class DolphinGameProcessContainer extends GameProcessContainer {
+class DolphinProcess extends Process {
 
 	commandOptions = ["dolphin-emu"];
 
@@ -39,6 +39,4 @@ class DolphinGameProcessContainer extends GameProcessContainer {
 	}
 }
 
-module.exports = {
-	DolphinGameProcessContainer
-};
+module.exports = DolphinProcess;

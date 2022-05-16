@@ -1,14 +1,5 @@
-const { DesktopEntrySource } = require("./scanners/DesktopEntrySource.js");
-const { LegendarySource }    = require("./scanners/LegendarySource.js");
-const { RetroarchSource }    = require("./scanners/RetroarchSource.js");
-const { DolphinSource }      = require("./scanners/DolphinSource.js");
-const { HeroicSource }       = require("./scanners/HeroicSource.js");
-const { LutrisSource }       = require("./scanners/LutrisSource.js");
-const { PPSSPPSource }       = require("./scanners/PPSSPPSource.js");
-const { CitraSource }        = require("./scanners/CitraSource.js");
-const { SteamSource }        = require("./scanners/SteamSource.js");
-const { CemuSource }         = require("./scanners/CemuSource.js");
-const { YuzuSource }         = require("./scanners/YuzuSource.js");
+let { LutrisSource, CemuSource, ...simpleSources } = require("./scanners/all.js");
+simpleSources = Object.values(simpleSources);
 
 /**
  * A representation of a game library.
@@ -78,18 +69,7 @@ class Library{
 
 		// Get games from straightforward sources
 		promises = [];
-		const sources = [
-			CitraSource,
-			DesktopEntrySource,
-			DolphinSource,
-			HeroicSource,
-			LegendarySource,
-			PPSSPPSource,
-			RetroarchSource,
-			SteamSource,
-			YuzuSource,
-		];
-		for (const klass of sources){
+		for (const klass of simpleSources){
 			if (this.enabledSources.includes(klass.name)){
 				const instance = new klass();
 				promises.push(instance.scan(this.warn));

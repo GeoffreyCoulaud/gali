@@ -1,12 +1,12 @@
 const child_process = require("child_process");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for yuzu game process management
  * @property {string} romPath - The game's ROM path, used to invoke yuzu
  */
-class YuzuGameProcessContainer extends GameProcessContainer {
+class YuzuProcess extends Process {
 
 	commandOptions = ["yuzu"];
 
@@ -44,6 +44,4 @@ class YuzuGameProcessContainer extends GameProcessContainer {
 	}
 }
 
-module.exports = {
-	YuzuGameProcessContainer
-};
+module.exports = YuzuProcess;

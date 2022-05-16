@@ -1,22 +1,23 @@
 const fsp = require("fs/promises");
 const path = require("path");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 
-const { EmulationSource } = require("./EmulationSource.js");
-const { PPSSPPGame } = require("../games/PPSSPPGame");
+const EmulationSource = require("./EmulationSource.js");
+const PPSSPPGame = require("../games/PPSSPPGame");
 
 const USER_DIR = process.env["HOME"];
 
 class PPSSPPSource extends EmulationSource {
-	
+
 	static name = "PPSSPP";
-	
-	INSTALL_DIRS_PATH = `${USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini`;
-	GAME_FILES_REGEX = /.+\.(iso|cso)/i;
-	
+	static gameClass = PPSSPPGame;
+
 	preferCache = false;
+
+	configPath = `${USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini`;
+	romRegex = /.+\.(iso|cso)/i;
 
 	constructor() {
 		super();
@@ -28,7 +29,7 @@ class PPSSPPSource extends EmulationSource {
 	 */
 	async _getConfig() {
 
-		const configFileContents = await fsp.readFile(this.INSTALL_DIRS_PATH, "utf-8");
+		const configFileContents = await fsp.readFile(this.configPath, "utf-8");
 		const configData = config.config2js(configFileContents);
 		return configData;
 
@@ -64,10 +65,10 @@ class PPSSPPSource extends EmulationSource {
 	 */
 	async _getROMGames(dirs) {
 
-		const gamePaths = await this._getROMs(dirs, this.GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, this.romRegex);
 		const games = [];
 		for (const gamePath of gamePaths) {
-			const game = new PPSSPPGame(path.basename(gamePath), gamePath);
+			const game = new this.constructor.gameClass(path.basename(gamePath), gamePath);
 			game.isInstalled = true;
 			games.push(game);
 		}
@@ -123,6 +124,4 @@ class PPSSPPSource extends EmulationSource {
 
 }
 
-module.exports = {
-	PPSSPPSource
-};
+module.exports = PPSSPPSource;

@@ -1,4 +1,4 @@
-const { Game } = require("./Game.js");
+const Game = require("./Game.js");
 
 /**
  * Class representing an emulated game.
@@ -7,9 +7,9 @@ const { Game } = require("./Game.js");
  * @abstract
  */
 class EmulationGame extends Game {
-	
+
 	platform = undefined;
-	
+
 	/**
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name
@@ -29,6 +29,4 @@ class EmulationGame extends Game {
 	}
 }
 
-module.exports = {
-	EmulationGame
-};
+module.exports = EmulationGame;

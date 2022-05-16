@@ -1,15 +1,15 @@
 const child_process = require("child_process");
 
-const { StartOnlyGameProcessContainer } = require("./StartOnlyGameProcessContainer.js");
+const StartOnlyProcess = require("./StartOnlyProcess.js");
 
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
  * @property {string} appName - The epic games store app name, used to start the game
  */
-class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer {
+class HeroicProcess extends StartOnlyProcess {
 
-	commandOptions = ["legendary"];
+	commandOptions = ["xdg-open"];
 
 	/**
 	 * Create a legendary game process container
@@ -20,17 +20,12 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer {
 		this.appName = appName;
 	}
 
-	// ! There is no way (AFAIK) to control a legendary game's life cycle from the launcher.
 	/**
 	 * Start the game in a subprocess
-	 * @param {boolean} offline - Whether to start the game offline. Defaults to false.
 	 */
-	async start(offline = false) {
+	async start() {
 		const command = await this._selectCommand();
-		const args = ["launch", this.appName];
-		if (offline){
-			args.splice(1, 0, "--offline");
-		}
+		const args = [`heroic://launch/${this.appName}`];
 		this.process = child_process.spawn(
 			command,
 			args,
@@ -43,6 +38,4 @@ class LegendaryGameProcessContainer extends StartOnlyGameProcessContainer {
 
 }
 
-module.exports = {
-	LegendaryGameProcessContainer
-};
+module.exports = HeroicProcess;

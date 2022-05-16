@@ -1,7 +1,5 @@
-const { EmulationSource } = require("./EmulationSource.js");
+const EmulationSource = require("./EmulationSource.js");
 
 class SwitchEmulationSource extends EmulationSource { }
 
-module.exports = {
-	SwitchEmulationSource
-};
+module.exports = SwitchEmulationSource;

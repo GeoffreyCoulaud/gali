@@ -1,17 +1,18 @@
 const fsp = require("fs/promises");
 
-const { Source } = require("./Source.js");
-const { LegendaryGame } = require("../games/LegendaryGame");
+const Source = require("./Source.js");
+const LegendaryGame = require("../games/LegendaryGame");
 
 const USER_DIR = process.env["HOME"];
 
 class LegendarySource extends Source {
-	
+
 	static name = "Legendary";
-	
-	INSTALLED_FILE_PATH = `${USER_DIR}/.config/legendary/installed.json`;
-	
+	static gameClass = LegendaryGame;
+
 	preferCache = false;
+
+	configPath = `${USER_DIR}/.config/legendary/installed.json`;
 
 	constructor(preferCache = false) {
 		super();
@@ -29,7 +30,7 @@ class LegendarySource extends Source {
 		// Read installed.json file
 		let data;
 		try {
-			const fileContents = await fsp.readFile(this.INSTALLED_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(this.configPath, "utf-8");
 			data = JSON.parse(fileContents);
 		} catch (error) {
 			if (warn){
@@ -46,7 +47,7 @@ class LegendarySource extends Source {
 				const gameName = gameData?.app_name;
 				const gameTitle = gameData?.title;
 				if (gameName && gameTitle) {
-					const game = new LegendaryGame(gameData?.app_name, gameData?.title);
+					const game = new this.constructor.gameClass(gameData?.app_name, gameData?.title);
 					games.push(game);
 				}
 			}
@@ -57,6 +58,4 @@ class LegendarySource extends Source {
 
 }
 
-module.exports = {
-	LegendarySource
-};
+module.exports = LegendarySource;

@@ -1,10 +1,9 @@
-const { EmulationGame } = require("./EmulationGame.js");
+const EmulationGame = require("./EmulationGame.js");
+const DolphinProcess = require("../process/DolphinProcess.js");
 
-/**
- * Class representing a dolphin game
- * @property {DolphinGameProcessContainer} processContainer - The game's process container
- */
 class DolphinGame extends EmulationGame {
+
+	static processClass = DolphinProcess;
 
 	platform = "Nintendo - Wii / GameCube";
 
@@ -18,6 +17,4 @@ class DolphinGame extends EmulationGame {
 	}
 }
 
-module.exports = {
-	DolphinGame
-};
+module.exports = DolphinGame;

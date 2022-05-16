@@ -2,18 +2,19 @@ const fsp = require("fs/promises");
 const path = require("path");
 const fs = require("fs");
 
-const { Source } = require("./Source.js");
-const { RetroarchGame } = require("../games/RetroarchGame");
+const Source = require("./Source.js");
+const RetroarchGame = require("../games/RetroarchGame");
 
 const USER_DIR = process.env["HOME"];
 
 class RetroarchSource extends Source {
-	
+
 	static name = "Retroarch";
-	
-	PLAYLISTS_PATH = `${USER_DIR}/.config/retroarch/playlists`;
-	
+	static gameClass = RetroarchGame;
+
 	preferCache = false;
+
+	configPath = `${USER_DIR}/.config/retroarch/playlists`;
 
 	constructor(preferCache = false) {
 		super();
@@ -28,9 +29,9 @@ class RetroarchSource extends Source {
 	 */
 	async _getPlaylistPaths() {
 
-		let playlists = await fsp.readdir(this.PLAYLISTS_PATH, { encoding: "utf-8", withFileTypes: true });
+		let playlists = await fsp.readdir(this.configPath, { encoding: "utf-8", withFileTypes: true });
 		playlists = playlists.filter(dirent=>dirent.isFile() && dirent.name.endsWith(".lpl"));
-		playlists = playlists.map(dirent=>`${this.PLAYLISTS_PATH}/${dirent.name}`);
+		playlists = playlists.map(dirent=>`${this.configPath}/${dirent.name}`);
 		return playlists;
 
 	}
@@ -71,7 +72,7 @@ class RetroarchSource extends Source {
 			if (!gameCorePath || gameCorePath === "DETECT") {
 				gameCorePath = PLAYLIST_DEFAULT_CORE_PATH;
 			}
-			const game = new RetroarchGame(
+			const game = new this.constructor.gameClass(
 				gameName,
 				gamePath,
 				gameCorePath,
@@ -132,6 +133,4 @@ class RetroarchSource extends Source {
 
 }
 
-module.exports = {
-	RetroarchSource
-};
+module.exports = RetroarchSource;
