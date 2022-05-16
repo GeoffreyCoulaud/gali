@@ -28,7 +28,7 @@ class HeroicSource extends Source {
 			library = library?.["library"];
 		} catch (error) {
 			if (warn){
-				console.warn("Unable to read heroic library.json");
+				console.warn(`Unable to read heroic library.json : ${error}`);
 			}
 			library = undefined;
 		}
