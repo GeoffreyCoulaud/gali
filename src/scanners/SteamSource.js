@@ -32,7 +32,7 @@ class SteamSource extends Source {
 	preferCache = false;
 
 	imageCacheDir = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
-	configPath = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
+	configPath = `${USER_DIR}/.local/share/Steam/config/libraryfolders.vdf`;
 
 	constructor(preferCache = false) {
 		super();
@@ -65,21 +65,14 @@ class SteamSource extends Source {
 	 * @private
 	 */
 	async _getDirs(config) {
-		const dirs = [];
-
-		// Read default steam install directory
-		const STEAM_DEFAULT_INSTALL_DIR = `${USER_DIR}/.steam/root`;
-		if (fs.existsSync(STEAM_DEFAULT_INSTALL_DIR)) {
-			dirs.push(new GameDir(STEAM_DEFAULT_INSTALL_DIR));
-		}
-
-		// Read user specified steam install directories
 		const libraryfolders = config.libraryfolders;
 		const keys = Object.keys(libraryfolders);
-		for (let i = 0; i < keys.length - 1; i++) {
-			dirs.push(new GameDir(libraryfolders[keys[i]].path));
+		const dirs = [];
+		for (const key of keys) {
+			const path = libraryfolders[key].path;
+			const dir = new GameDir(path);
+			dirs.push(dir);
 		}
-
 		return dirs;
 	}
 
