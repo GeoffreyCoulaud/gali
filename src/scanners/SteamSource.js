@@ -26,6 +26,7 @@ function strMatchAny(str, regexes){
 
 class SteamSource extends Source {
 
+	static name = "Steam";
 	preferCache = false;
 
 	constructor(preferCache = false) {

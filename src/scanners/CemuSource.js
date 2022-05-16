@@ -8,16 +8,13 @@ const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");
 const { CemuGame } = require("../games/CemuGame.js");
-const CEMU_SOURCE_NAME = require("../source_names.js");
 
 const GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
 
-/**
- * A class representing a Cemu source
- */
+// TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
 
-	static source = CEMU_SOURCE_NAME;
+	static name = "Cemu in Lutris";
 	cemuLutrisGame = undefined;
 	preferCache = false;
 

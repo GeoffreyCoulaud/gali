@@ -10,11 +10,9 @@ const USER_DIR = process.env["HOME"];
 const CITRA_CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
 const GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
 
-/**
- * A class representing a Citra source
- */
 class CitraSource extends EmulationSource {
 
+	static name = "Citra";
 	preferCache = false;
 
 	constructor(preferCache = false) {

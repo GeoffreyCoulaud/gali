@@ -30,7 +30,7 @@ class LutrisGame extends Game {
 	 * @returns {string} - A string representing the game
 	 */
 	toString() {
-		return `${this.name} - ${this.source} - ${this.gameSlug}`;
+		return `${this.name} - ${this.gameSlug}`;
 	}
 
 }

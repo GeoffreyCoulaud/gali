@@ -9,6 +9,7 @@ const PLAYLISTS_PATH = `${USER_DIR}/.config/retroarch/playlists`;
 
 class RetroarchSource extends Source {
 
+	static name = "Retroarch";
 	preferCache = false;
 
 	constructor(preferCache = false) {

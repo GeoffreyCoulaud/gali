@@ -11,6 +11,7 @@ const GAME_FILES_REGEX = /.+\.(c?iso|wbfs|gcm|gcz)/i;
 
 class DolphinSource extends EmulationSource {
 
+	static name = "Dolphin";
 	preferCache = false;
 
 	constructor(preferCache = false) {

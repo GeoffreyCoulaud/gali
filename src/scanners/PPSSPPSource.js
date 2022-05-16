@@ -9,11 +9,10 @@ const USER_DIR = process.env["HOME"];
 const PPSSPP_INSTALL_DIRS_PATH = `${USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini`;
 const GAME_FILES_REGEX = /.+\.(iso|cso)/i;
 
-/**
- * A class representing a PPSSPP source
- */
+
 class PPSSPPSource extends EmulationSource {
 
+	static name = "PPSSPP";
 	preferCache = false;
 
 	constructor() {

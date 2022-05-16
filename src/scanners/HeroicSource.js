@@ -5,11 +5,9 @@ const { HeroicGame } = require("../games/HeroicGame");
 const USER_DIR = process.env["HOME"];
 const LIBRARY_FILE_PATH = `${USER_DIR}/.config/heroic/store/library.json`;
 
-/**
- * A class representing a Heroic Games Launcher source
- */
 class HeroicSource extends Source {
 
+	static name = "Heroic";
 	preferCache = false;
 
 	constructor(preferCache = false) {

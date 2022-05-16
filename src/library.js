@@ -1,4 +1,4 @@
-const { DesktopEntrySource } = require("./scanners/DesktopEntriesSource.js");
+const { DesktopEntrySource } = require("./scanners/DesktopEntrySource.js");
 const { LegendarySource }    = require("./scanners/LegendarySource.js");
 const { RetroarchSource }    = require("./scanners/RetroarchSource.js");
 const { DolphinSource }      = require("./scanners/DolphinSource.js");
@@ -51,6 +51,7 @@ class Library{
 		this.empty();
 
 		// TODO Find a less hacky way of scanning.
+		// ? Remove dependency on games ?
 
 		let promises = [];
 		let results = [];
@@ -63,7 +64,7 @@ class Library{
 
 			// Get cemu games
 			if (this.enabledSources.includes("Cemu in Lutris")){
-				const cemuGame = lutrisGames.find(game=>game.name.toLowerCase() === "cemu");
+				const cemuGame = lutrisGames.find(g=>g.gameSlug.toLowerCase() === "cemu");
 				if (cemuGame){
 					const cemu = new CemuSource(cemuGame, false);
 					promises.push(cemu.scan(this.warn));
@@ -77,20 +78,19 @@ class Library{
 
 		// Get games from straightforward sources
 		promises = [];
-		const sourceMap = {
-			"Citra"          : CitraSource,
-			"Desktop entries": DesktopEntrySource,
-			"Dolphin"        : DolphinSource,
-			"Heroic"         : HeroicSource,
-			"Legendary"      : LegendarySource,
-			"PPSSPP"         : PPSSPPSource,
-			"Retroarch"      : RetroarchSource,
-			"Steam"          : SteamSource,
-			"Yuzu"           : YuzuSource,
-		};
-		for (const key in Object.keys(sourceMap)){
-			if (this.enabledSources.includes(key)){
-				const klass = sourceMap[key];
+		const sources = [
+			CitraSource,
+			DesktopEntrySource,
+			DolphinSource,
+			HeroicSource,
+			LegendarySource,
+			PPSSPPSource,
+			RetroarchSource,
+			SteamSource,
+			YuzuSource,
+		];
+		for (const klass of sources){
+			if (this.enabledSources.includes(klass.name)){
 				const instance = new klass();
 				promises.push(instance.scan(this.warn));
 			}

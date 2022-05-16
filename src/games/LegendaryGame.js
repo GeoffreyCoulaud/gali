@@ -1,4 +1,4 @@
-const Game = require("./Game.js");
+const { Game } = require("./Game.js");
 
 /**
  * A class representing a legendary games launcher game

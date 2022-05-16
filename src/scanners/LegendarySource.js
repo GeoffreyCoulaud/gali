@@ -5,11 +5,9 @@ const { LegendaryGame } = require("../games/LegendaryGame");
 const USER_DIR = process.env["HOME"];
 const INSTALLED_FILE_PATH = `${USER_DIR}/.config/legendary/installed.json`;
 
-/**
- * A class representing a Legendary Games Launcher source
- */
 class LegendarySource extends Source {
 
+	static name = "Legendary";
 	preferCache = false;
 
 	constructor(preferCache = false) {

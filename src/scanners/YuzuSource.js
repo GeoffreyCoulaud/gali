@@ -15,6 +15,7 @@ const GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
  */
 class YuzuSource extends SwitchEmulationSource {
 
+	static name = "Yuzu";
 	preferCache = false;
 
 	constructor(preferCache = false) {

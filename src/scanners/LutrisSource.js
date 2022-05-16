@@ -9,11 +9,9 @@ const LUTRIS_DB_PATH = `${USER_DIR}/.local/share/lutris/pga.db`;
 const LUTRIS_BANNER_PATH = `${USER_DIR}/.local/share/lutris/banners`;
 const LUTRIS_ICON_PATH = `${USER_DIR}/.local/share/icons/hicolor/128x128/apps`;
 
-/**
- * A class representing a Lutris source
- */
 class LutrisSource extends Source {
 
+	static name = "Lutris";
 	preferCache = false;
 
 	constructor(preferCache = false) {
