@@ -1,11 +1,20 @@
 const child_process = require("child_process");
 const fsp = require("fs/promises");
 
-const { sanitizeStringFilename } = require("../games/CemuGame");
 const convertPath = require("../utils/convertPathPlatform.js");
 const lutris = require("../games/lutris.js");
 
 const { GameProcessContainer } = require("./GameProcessContainer.js");
+
+/**
+ * Sanitize a string to be used in a filename
+ * @param {string} str - The string to sanitize
+ * @returns {string} - A string suitable for safe and clean filenames
+ */
+function sanitizeStringFilename(str){
+	return String(str).toLowerCase().replaceAll(/[^a-z0-9_-]/g, "-");
+}
+
 /**
  * A wrapper for cemu game process management
  */
