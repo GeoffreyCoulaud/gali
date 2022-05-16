@@ -8,7 +8,7 @@ class DolphinFlatpakSource extends DolphinSource{
 	static name = "Dolphin (Flatpak)";
 	static gameClass = DolphinFlatpakGame;
 
-	configPath = `${USER_DIR}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini`; 
+	configPath = `${USER_DIR}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini`;
 
 }
 
