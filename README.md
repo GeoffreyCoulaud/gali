@@ -44,10 +44,14 @@ Status | Name            | Description
 * Supported sources programs (optional)
 
 ### Dev usage
-1. Install the dependencies mentionned above.
-2. Clone this repo and `cd` into it.  
-3. Install NPM dependencies `npm i`
-4. Start `npm run start`
+Install the dependencies mentionned above, then :
+
+```sh
+git clone https://github.com/GeoffreyCoulaud/gali.git
+cd gali
+npm i
+npm run start
+```
 
 ## Known issues
 * Games from Steam, Legendary, Heroic can be started but not stopped or killed
