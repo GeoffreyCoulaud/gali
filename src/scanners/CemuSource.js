@@ -1,12 +1,14 @@
-const convertPath = require("../utils/convertPathPlatform.js");
-const config = require("../utils/configFormats.js");
-const common = require("./GameDir.js");
-const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
 const fsp = require("fs/promises");
 const process = require("process");
 const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");
+
+const { GameDir } = require("./GameDir.js");
+const convertPath = require("../utils/convertPathPlatform.js");
+const config = require("../utils/configFormats.js");
+
+const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
 const { CemuGame } = require("../games/CemuGame.js");
 
 const GAME_FILES_REGEX = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
@@ -120,7 +122,7 @@ class CemuSource extends WiiUEmulationSource {
 			wPaths.push(entries);
 		}
 		const lPaths = wPaths.map(wPath=>convertPath.wineToLinux(wPath, prefix));
-		const gameDirs = lPaths.map(lPath=>new common.GameDir(lPath, true));
+		const gameDirs = lPaths.map(lPath=>new GameDir(lPath, true));
 		return gameDirs;
 
 	}

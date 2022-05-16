@@ -1,15 +1,15 @@
-const fsp                  = require("fs/promises");
-const process              = require("process");
-const fs                   = require("fs");
+const fsp = require("fs/promises");
+const process = require("process");
+const fs = require("fs");
 
-const config               = require("../utils/configFormats.js");
-const deepReaddir          = require("../utils/deepReaddir.js");
-const locale               = require("../utils/locale.js");
-const xdg                  = require("../utils/xdg.js");
+const { GameDir } = require("./GameDir.js");
+const config = require("../utils/configFormats.js");
+const deepReaddir = require("../utils/deepReaddir.js");
+const locale = require("../utils/locale.js");
+const xdg = require("../utils/xdg.js");
 
 const { DesktopEntryGame } = require("../games/DesktopEntryGame");
-const { GameDir }          = require("./GameDir.js");
-const { Source }           = require("./Source.js");
+const { Source } = require("./Source.js");
 
 class DesktopEntrySource extends Source {
 

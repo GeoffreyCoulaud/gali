@@ -1,10 +1,12 @@
-const config = require("../utils/configFormats.js");
-const { GameDir } = require("./GameDir.js");
-const { SwitchEmulationSource } = require("./SwitchEmulationSource.js");
 const fsp = require("fs/promises");
 const path = require("path");
-const { YuzuGame } = require("../games/YuzuGame");
+
 const { NotImplementedError } = require("../NotImplementedError.js");
+const { GameDir } = require("./GameDir.js");
+const config = require("../utils/configFormats.js");
+
+const { SwitchEmulationSource } = require("./SwitchEmulationSource.js");
+const { YuzuGame } = require("../games/YuzuGame");
 
 const USER_DIR = process.env["HOME"];
 const YUZU_CONFIG_PATH = `${USER_DIR}/.config/yuzu/qt-config.ini`;

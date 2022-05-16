@@ -1,5 +1,6 @@
-const { Source } = require("./Source.js");
 const fsp = require("fs/promises");
+
+const { Source } = require("./Source.js");
 const { LegendaryGame } = require("../games/LegendaryGame");
 
 const USER_DIR = process.env["HOME"];

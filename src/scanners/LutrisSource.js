@@ -1,7 +1,8 @@
-const { Source } = require("./Source.js");
 const sqlite3 = require("sqlite3");
 const sqlite = require("sqlite");
 const fs = require("fs");
+
+const { Source } = require("./Source.js");
 const { LutrisGame } = require("../games/LutrisGame");
 
 const USER_DIR = process.env["HOME"];

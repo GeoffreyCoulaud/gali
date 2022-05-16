@@ -1,8 +1,10 @@
-const config = require("../utils/configFormats.js");
-const { EmulationSource } = require("./EmulationSource.js");
-const { GameDir } = require("./GameDir.js");
 const fsp = require("fs/promises");
 const path = require("path");
+
+const { GameDir } = require("./GameDir.js");
+const config = require("../utils/configFormats.js");
+
+const { EmulationSource } = require("./EmulationSource.js");
 const { DolphinGame } = require("../games/DolphinGame");
 
 const USER_DIR = process.env["HOME"];

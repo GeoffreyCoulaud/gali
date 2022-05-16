@@ -1,7 +1,8 @@
-const { Source } = require("./Source.js");
 const fsp = require("fs/promises");
 const path = require("path");
 const fs = require("fs");
+
+const { Source } = require("./Source.js");
 const { RetroarchGame } = require("../games/RetroarchGame");
 
 const USER_DIR = process.env["HOME"];

@@ -1,9 +1,11 @@
-const config = require("../utils/configFormats.js");
-const locale = require("../utils/locale.js");
-const { EmulationSource } = require("./EmulationSource.js");
 const fsp = require("fs/promises");
 const path = require("path");
 const fs = require("fs");
+
+const config = require("../utils/configFormats.js");
+const locale = require("../utils/locale.js");
+
+const { EmulationSource } = require("./EmulationSource.js");
 
 /**
  * A class representing a WiiU emulator source.

@@ -1,8 +1,10 @@
-const { Source } = require("./Source.js");
-const { GameDir } = require("./GameDir.js");
 const fsp = require("fs/promises");
 const vdfParser = require("vdf-parser");
 const fs = require("fs");
+
+const { GameDir } = require("./GameDir.js");
+
+const { Source } = require("./Source.js");
 const { SteamGame } = require("../games/SteamGame");
 
 const USER_DIR = process.env["HOME"];

@@ -1,10 +1,12 @@
-const config = require("../utils/configFormats.js");
-const { EmulationSource } = require("./EmulationSource.js");
-const common = require("./GameDir.js");
 const fsp = require("fs/promises");
 const path = require("path");
-const { CitraGame } = require("../games/CitraGame.js");
+
 const { NotImplementedError } = require("../NotImplementedError.js");
+const { GameDir } = require("./GameDir.js");
+const config = require("../utils/configFormats.js");
+
+const { EmulationSource } = require("./EmulationSource.js");
+const { CitraGame } = require("../games/CitraGame.js");
 
 const USER_DIR = process.env["HOME"];
 const CITRA_CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
@@ -60,7 +62,7 @@ class CitraSource extends EmulationSource {
 			const recursive = String(configData["UI"][`Paths\\gamedirs\\${i}\\deep_scan`]).toLowerCase() === "true";
 			const path = configData["UI"][`Paths\\gamedirs\\${i}\\path`];
 			if (typeof path === "undefined") { continue; }
-			dirs.push(new common.GameDir(path, recursive));
+			dirs.push(new GameDir(path, recursive));
 		}
 
 		return dirs;
