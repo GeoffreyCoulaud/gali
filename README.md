@@ -17,22 +17,30 @@ You will have to install other software to manage your games, they will definite
 ## Supported sources
 As of 21/11/2021
 
-Status | Name            | Description                                
------- |---------------- | ------------------------------------------
-🔶 (1) | Steam           | PC games store                             
-🔶 (1) | Legendary       | FOSS Epic Games Launcher alternative (CLI) 
-✅     | Lutris          | Open Source gaming platform for Linux      
-🔶 (1) | Heroic          | FOSS Epic Games Launcher alternative (GUI) 
-✅     | Desktop entries | Regular linux desktop entries              
-✅     | Retroarch       | Frontend for the libretro API              
-✅     | Dolphin         | Nintendo Wii / GameCube emulator           
-🔶 (2) | Citra           | Nintendo 3DS emulator                      
-🔶 (2) | Yuzu            | Nintendo Switch emulator                   
-✅     | PPSSPP          | Sony PSP emulator                          
-✅     | Cemu            | Nintendo Wii U emulator                    
+Status | Name                               | Description                                
+------ | ---------------------------------- | -----------------------------------------
+✅ (1) | Steam                              | PC games store
+🔶 (3) | Steam (flatpak)                    | -
+✅ (1) | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
+✅     | Lutris                             | Open Source gaming platform for Linux
+✅ (1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
+🔶 (3) | Heroic (flatpak)                   | -
+✅     | Desktop entries                    | Regular linux desktop entries
+✅     | Retroarch                          | Frontend for the libretro API
+🔶 (3) | Retroarch (flatpak)                | -
+✅     | Dolphin                            | Nintendo Wii / GameCube emulator
+🔶 (3) | Dolphin (flatpak)                  | -
+🔶 (2) | Citra                              | Nintendo 3DS emulator
+🔶 (3) | Citra (flatpak)                    | -
+🔶 (2) | Yuzu                               | Nintendo Switch emulator
+🔶 (3) | Yuzu (flatpak)                     | -
+✅     | PPSSPP                             | Sony PSP emulator
+🔶 (3) | PPSSPP (flatpak)                   | -
+✅     | Cemu                               | Nintendo Wii U emulator
 
 1. **Steam**, **Legendary** and **Heroic** only allow starting games, not stopping or killing them
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
+3. **Flatpak** games are not startable yet
 
 ## Usage
 **This is in active development but is just not there yet. Be patient !**
@@ -59,13 +67,13 @@ npm run start
 
 ## TODO
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
-* Support flatpak sources
+* Add a better way to handle nested sources
 * Steam : Exclude hidden games
+* Flatpak sources : Process start/stop/kill
 * Dolphin : Scan cached games
 * Dolphin : Differenciate between Gamecube and Wii games
 * Yuzu : Scan installed games
 * Citra : Scan installed games
-* Add a better way to handle nested sources
 * Better installation instructions
 * Additional sources
 	* bottles
