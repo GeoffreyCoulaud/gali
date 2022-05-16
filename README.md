@@ -15,7 +15,7 @@ this is not the intended purpose of Gali. This project is made to display your g
 You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
-As of 21/11/2021
+As of 2022-05-17
 
 Status | Name                               | Description                                
 ------ | ---------------------------------- | -----------------------------------------
