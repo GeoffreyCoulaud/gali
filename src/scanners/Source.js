@@ -10,7 +10,7 @@ class Source {
 
 	static name = undefined;
 	static gameClass = undefined;
-	
+
 	preferCache = false;
 
 	/**

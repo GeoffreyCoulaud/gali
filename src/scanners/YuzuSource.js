@@ -14,12 +14,12 @@ const USER_DIR = process.env["HOME"];
  * A class representing a Yuzu source
  */
 class YuzuSource extends SwitchEmulationSource {
-	
+
 	static name = "Yuzu";
 	static gameClass = YuzuGame;
-	
+
 	preferCache = false;
-	
+
 	romRegex = /.+\.(xci|nsp)/i;
 	configPath = `${USER_DIR}/.config/yuzu/qt-config.ini`;
 

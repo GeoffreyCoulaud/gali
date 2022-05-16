@@ -8,12 +8,12 @@ const { RetroarchGame } = require("../games/RetroarchGame");
 const USER_DIR = process.env["HOME"];
 
 class RetroarchSource extends Source {
-	
+
 	static name = "Retroarch";
 	static gameClass = RetroarchGame;
-	
+
 	preferCache = false;
-	
+
 	configPath = `${USER_DIR}/.config/retroarch/playlists`;
 
 	constructor(preferCache = false) {

@@ -4,7 +4,7 @@ const { SteamProcess } = require("../process/SteamProcess");
 class SteamGame extends Game {
 
 	static processClass = SteamProcess;
-	
+
 	platform = "PC";
 
 	/**

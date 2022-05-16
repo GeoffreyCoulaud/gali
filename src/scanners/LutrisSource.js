@@ -8,12 +8,12 @@ const { LutrisGame } = require("../games/LutrisGame");
 const USER_DIR = process.env["HOME"];
 
 class LutrisSource extends Source {
-	
+
 	static name = "Lutris";
 	static gameClass = LutrisGame;
 
 	preferCache = false;
-	
+
 	dbPath = `${USER_DIR}/.local/share/lutris/pga.db`;
 	bannerPath = `${USER_DIR}/.local/share/lutris/banners`;
 	iconPath = `${USER_DIR}/.local/share/icons/hicolor/128x128/apps`;

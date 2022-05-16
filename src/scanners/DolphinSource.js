@@ -10,10 +10,10 @@ const { DolphinGame } = require("../games/DolphinGame");
 const USER_DIR = process.env["HOME"];
 
 class DolphinSource extends EmulationSource {
-	
+
 	static name = "Dolphin";
 	static gameClass = DolphinGame;
-	
+
 	preferCache = false;
 
 	configPath = `${USER_DIR}/.config/dolphin-emu/Dolphin.ini`;

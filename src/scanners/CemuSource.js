@@ -12,12 +12,12 @@ const { CemuGame } = require("../games/CemuGame.js");
 
 // TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
-	
+
 	static name = "Cemu in Lutris";
 	static gameClass = CemuGame;
-	
+
 	preferCache = false;
-	
+
 	cemuLutrisGame = undefined;
 	romRegex = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
 

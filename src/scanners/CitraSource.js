@@ -11,12 +11,12 @@ const { CitraGame } = require("../games/CitraGame.js");
 const USER_DIR = process.env["HOME"];
 
 class CitraSource extends EmulationSource {
-	
+
 	static name = "Citra";
 	static gameClass = CitraGame;
 
 	preferCache = false;
-	
+
 	romRegex = /.+\.(3ds|cci)/i;
 	configPath = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
 

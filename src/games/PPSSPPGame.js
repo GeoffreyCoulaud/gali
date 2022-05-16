@@ -4,7 +4,7 @@ const { PPSSPPProcess } = require("../process/PPSSPPProcess.js");
 class PPSSPPGame extends EmulationGame {
 
 	static processClass = PPSSPPProcess;
-	
+
 	platform = "Sony - PlayStation Portable";
 
 	/**

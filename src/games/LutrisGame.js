@@ -4,7 +4,7 @@ const { LutrisProcess } = require("../process/LutrisProcess.js");
 class LutrisGame extends Game {
 
 	static processClass = LutrisProcess;
-	
+
 	platform = "PC";
 
 	/**

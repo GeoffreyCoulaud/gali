@@ -14,7 +14,7 @@ class DesktopEntrySource extends Source {
 
 	static name = "Desktop Entries";
 	static gameClass = DesktopEntryGame;
-	
+
 	preferCache = false;
 
 	constructor(preferCache = false) {

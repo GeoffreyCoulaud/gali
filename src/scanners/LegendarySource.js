@@ -6,7 +6,7 @@ const { LegendaryGame } = require("../games/LegendaryGame");
 const USER_DIR = process.env["HOME"];
 
 class LegendarySource extends Source {
-	
+
 	static name = "Legendary";
 	static gameClass = LegendaryGame;
 

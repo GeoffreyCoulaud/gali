@@ -4,7 +4,7 @@ const { HeroicProcess } = require("../process/HeroicProcess.js");
 class HeroicGame extends Game {
 
 	static processClass = HeroicProcess;
-	
+
 	platform = "PC";
 
 	/**

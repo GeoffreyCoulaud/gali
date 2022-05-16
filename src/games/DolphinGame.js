@@ -2,7 +2,7 @@ const { EmulationGame } = require("./EmulationGame.js");
 const { DolphinProcess } = require("../process/DolphinProcess.js");
 
 class DolphinGame extends EmulationGame {
-	
+
 	static processClass = DolphinProcess;
 
 	platform = "Nintendo - Wii / GameCube";

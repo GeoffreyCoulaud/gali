@@ -4,7 +4,7 @@ const { LegendaryProcess } = require("../process/LegendaryProcess.js");
 class LegendaryGame extends Game {
 
 	static processClass = LegendaryProcess;
-	
+
 	platform = "PC";
 	isInstalled = true; // Legendary only exposes installed games
 

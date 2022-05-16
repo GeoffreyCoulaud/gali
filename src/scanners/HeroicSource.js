@@ -6,12 +6,12 @@ const { HeroicGame } = require("../games/HeroicGame");
 const USER_DIR = process.env["HOME"];
 
 class HeroicSource extends Source {
-	
+
 	static name = "Heroic";
 	static gameClass = HeroicGame;
 
 	preferCache = false;
-	
+
 	configPath = `${USER_DIR}/.config/heroic/store/library.json`;
 
 	constructor(preferCache = false) {

@@ -25,12 +25,12 @@ function strMatchAny(str, regexes){
 }
 
 class SteamSource extends Source {
-	
+
 	static name = "Steam";
 	static gameClass = SteamGame;
-	
+
 	preferCache = false;
-	
+
 	imageCacheDir = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
 	configPath = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
 

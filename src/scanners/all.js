@@ -24,4 +24,4 @@ module.exports = {
 	CemuSource,
 	YuzuSource,
 	FlatpakCitraSource,
-}
+};

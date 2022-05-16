@@ -2,7 +2,7 @@ const { Game } = require("./Game.js");
 const { DesktopEntryProcess } = require("../process/DesktopEntryProcess.js");
 
 class DesktopEntryGame extends Game {
-	
+
 	static processClass = DesktopEntryProcess;
 
 	platform = "PC";

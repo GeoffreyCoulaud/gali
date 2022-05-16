@@ -10,12 +10,12 @@ const { PPSSPPGame } = require("../games/PPSSPPGame");
 const USER_DIR = process.env["HOME"];
 
 class PPSSPPSource extends EmulationSource {
-	
+
 	static name = "PPSSPP";
 	static gameClass = PPSSPPGame;
-	
+
 	preferCache = false;
-	
+
 	configPath = `${USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini`;
 	romRegex = /.+\.(iso|cso)/i;
 

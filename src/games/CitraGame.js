@@ -4,7 +4,7 @@ const { CitraProcess } = require("../process/CitraProcess.js");
 class CitraGame extends EmulationGame{
 
 	static processClass = CitraProcess;
-	
+
 	platform = "Nintendo - 3DS";
 
 	/**
