@@ -1,5 +1,6 @@
-const { GameProcessContainer } = require("./GameProcessContainer.js");
 const child_process = require("child_process");
+
+const { GameProcessContainer } = require("./GameProcessContainer.js");
 
 /**
  * A wrapper for ppsspp game process management

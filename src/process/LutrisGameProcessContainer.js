@@ -1,8 +1,10 @@
-const ad = require("../utils/appDirectories.js");
-const commandExists = require("../utils/commandExists.js");
-const { GameProcessContainer } = require("./GameProcessContainer.js");
-const { NoCommandError } = require("../NoCommandError.js");
 const child_process = require("child_process");
+
+const { NoCommandError } = require("../NoCommandError.js");
+const commandExists = require("../utils/commandExists.js");
+const ad = require("../utils/appDirectories.js");
+
+const { GameProcessContainer } = require("./GameProcessContainer.js");
 
 /**
  * A promise version of the child_process execFile

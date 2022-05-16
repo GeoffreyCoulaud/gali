@@ -1,5 +1,6 @@
-const { StartOnlyGameProcessContainer } = require("./StartOnlyGameProcessContainer.js");
 const child_process = require("child_process");
+
+const { StartOnlyGameProcessContainer } = require("./StartOnlyGameProcessContainer.js");
 
 /**
  * A wrapper for steam game process management

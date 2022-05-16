@@ -1,6 +1,8 @@
-const xdg = require("../utils/xdg.js");
-const { GameProcessContainer } = require("./GameProcessContainer.js");
 const child_process = require("child_process");
+
+const xdg = require("../utils/xdg.js");
+
+const { GameProcessContainer } = require("./GameProcessContainer.js");
 
 /**
  * A wrapper for desktop entry game process management

@@ -1,7 +1,8 @@
-const commandExists = require("../utils/commandExists.js");
-const { NoCommandError } = require("../NoCommandError.js");
 const process = require("process");
 const events = require("events");
+
+const { NoCommandError } = require("../NoCommandError.js");
+const commandExists = require("../utils/commandExists.js");
 
 /**
  * A wrapper for game process management

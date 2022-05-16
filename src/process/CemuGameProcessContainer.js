@@ -1,10 +1,11 @@
-const convertPath = require("../utils/convertPathPlatform.js");
-const { GameProcessContainer } = require("./GameProcessContainer.js");
-const lutris = require("../games/lutris.js");
 const child_process = require("child_process");
 const fsp = require("fs/promises");
-const { sanitizeStringFilename } = require("../games/CemuGame");
 
+const { sanitizeStringFilename } = require("../games/CemuGame");
+const convertPath = require("../utils/convertPathPlatform.js");
+const lutris = require("../games/lutris.js");
+
+const { GameProcessContainer } = require("./GameProcessContainer.js");
 /**
  * A wrapper for cemu game process management
  */
