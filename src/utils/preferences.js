@@ -69,19 +69,19 @@ const DEFAULT_PREFERENCES = {
 };
 
 /**
- * Check if the user has a brag config file
+ * Check if the user has a gali config file
  * @returns {boolean} - True if exists, else false
  */
 function userFileExistsSync(){
-	return fs.existsSync(ad.BRAG_CONFIG_PATH);
+	return fs.existsSync(ad.APP_CONFIG_PATH);
 }
 
 /**
- * Checks if the user has a brag config dir
+ * Checks if the user has a gali config dir
  * @returns {boolean} - True if exists, else false
  */
 function userDirExistsSync(){
-	return fs.existsSync(ad.BRAG_CONFIG_DIR);
+	return fs.existsSync(ad.APP_CONFIG_DIR);
 }
 
 /**
@@ -91,10 +91,10 @@ function userDirExistsSync(){
  */
 async function createUserFile(){
 	if (!userDirExistsSync()){
-		await fsp.mkdir(ad.BRAG_CONFIG_DIR, {recursive: true});
+		await fsp.mkdir(ad.APP_CONFIG_DIR, {recursive: true});
 	}
 	await fsp.writeFile(
-		ad.BRAG_CONFIG_PATH,
+		ad.APP_CONFIG_PATH,
 		JSON.stringify(DEFAULT_PREFERENCES, null, "\t"),
 		"utf-8"
 	);
@@ -108,7 +108,7 @@ async function createUserFile(){
  * @returns {object} - Parsed user data
  */
 async function readUserFile(){
-	const contents = await fsp.readFile(ad.BRAG_CONFIG_PATH, "utf-8");
+	const contents = await fsp.readFile(ad.APP_CONFIG_PATH, "utf-8");
 	const parsed = JSON.parse(contents);
 	return parsed;
 }
@@ -123,14 +123,14 @@ async function readUserFileSafe(){
 
 	let prefs;
 	if (!userFileExistsSync()){
-		console.log(`Created default config file "${ad.BRAG_CONFIG_PATH}`);
+		console.log(`Created default config file "${ad.APP_CONFIG_PATH}`);
 		await createUserFile();
 		prefs = DEFAULT_PREFERENCES;
 	} else {
 		try {
 			prefs = await readUserFile();
 		} catch (error){
-			console.error(`Invalid config file, delete or edit "${ad.BRAG_CONFIG_PATH}"`);
+			console.error(`Invalid config file, delete or edit "${ad.APP_CONFIG_PATH}"`);
 			console.error("\tError : ", error.toString());
 			prefs = DEFAULT_PREFERENCES;
 		}

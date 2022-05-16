@@ -16,11 +16,6 @@ class DesktopEntryGame extends Game {
 	constructor(name, exec) {
 		super(name);
 	}
-
-	toString() {
-		return `${this.name} - ${this.source}`;
-	}
-
 }
 
 module.exports = {

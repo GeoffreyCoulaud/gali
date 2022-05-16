@@ -1,4 +1,4 @@
-# Brag's UI
+# Gali's UI
 
 ## First mockups
 These images were made to give a rough idea of what the UI should look like.  
@@ -30,7 +30,7 @@ I took inspiration from [Lutris](https://github.com/lutris/lutris).
 </details>
 
 ## Second mockups
-This time I used Figma. The design file is [publicly available here](https://www.figma.com/file/YcTUGVEvarxrgpq01VkieN/Brag-launcher---Second-mockups).  
+This time I used Figma. The design file is [publicly available here](https://www.figma.com/file/YcTUGVEvarxrgpq01VkieN/Gali-Second-mockups?node-id=0%3A1).  
 These mockups are higher fidelity, but not final yet. My goal with this revision 
 is to start defining a system of app states.
 
@@ -196,9 +196,9 @@ and adds no benefit *for this use case*.
 
 ## May of 2022, New ideas
 
-During the long hiatus, I've taken time to work on other projects and reflect on Brag's architecture. I am not satisfied with any of the UI solutions used at the moment. Node-gtk is not mature enough, electron is bloated and all of these are basically using a screwdriver to plant a nail. 
+During the long hiatus, I've taken time to work on other projects and reflect on Gali's architecture. I am not satisfied with any of the UI solutions used at the moment. Node-gtk is not mature enough, electron is bloated and all of these are basically using a screwdriver to plant a nail. 
 
-I've made the mistake of treating Brag as a monolith, but it really needs to be split. My idea as of now is :  
+I've made the mistake of treating Gali as a monolith, but it really needs to be split. My idea as of now is :  
 
 - "Server", starts the UI, initiates scans, communicates with subprocesses.
 - "Database", storing the scanned games data

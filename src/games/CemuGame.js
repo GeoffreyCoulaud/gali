@@ -17,15 +17,6 @@ class CemuGame extends WiiUEmulationGame{
 	constructor(name, path){
 		super(name, path);
 	}
-
-	/**
-	 * Create a string representation of the game
-	 * @returns {string} - A string representing the game
-	 */
-	toString(){
-		return this.name;
-	}
-
 }
 
 module.exports = {

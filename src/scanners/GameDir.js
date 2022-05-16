@@ -12,3 +12,7 @@ class GameDir {
 		this.recursive = recursive;
 	}
 }
+
+module.exports = {
+	GameDir
+};

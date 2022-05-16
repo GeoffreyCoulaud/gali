@@ -1,7 +1,7 @@
 # Fixing game metadata
 ## The problem
 For frontends like this one it just isn't enough to get a ROM file that can be played. 
-Brag's goal is to *see and play* your library, to be able to choose a game to play for a chill session or with friends. 
+This app's goal is to *see and play* your library, to be able to choose a game to play for a chill session or with friends. 
 The games are the star of the show, not any software around them. 
 (Though, you should support projects you like if you have the means !)
 

@@ -15,7 +15,6 @@ class HeroicGame extends Game {
 	constructor(name, appName) {
 		super(name);
 	}
-
 }
 
 module.exports = {

@@ -54,7 +54,7 @@ class LutrisGameProcessContainer extends GameProcessContainer {
 		if (!scriptBaseName){
 			scriptBaseName = `lutris-${gameSlug}.sh`;
 		}
-		const scriptPath = `${ad.BRAG_START_SCRIPTS_DIR}/${scriptBaseName}`;
+		const scriptPath = `${ad.APP_START_SCRIPTS_DIR}/${scriptBaseName}`;
 		await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
 
 		return scriptPath;

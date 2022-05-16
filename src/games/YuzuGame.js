@@ -14,7 +14,6 @@ class YuzuGame extends SwitchEmulationGame {
 	constructor(name, path) {
 		super(name, path);
 	}
-
 }
 
 module.exports = {

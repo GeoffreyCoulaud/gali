@@ -24,15 +24,6 @@ class LutrisGame extends Game {
 		this.configPath = configPath;
 		this.isInstalled = isInstalled;
 	}
-
-	/**
-	 * Create a string representation of the game
-	 * @returns {string} - A string representing the game
-	 */
-	toString() {
-		return `${this.name} - ${this.gameSlug}`;
-	}
-
 }
 
 module.exports = {

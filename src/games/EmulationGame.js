@@ -7,6 +7,9 @@ const { Game } = require("./Game.js");
  * @abstract
  */
 class EmulationGame extends Game {
+	
+	platform = undefined;
+	
 	/**
 	 * Create an emulated game
 	 * @param {string} name - The game's displayed name
@@ -22,7 +25,7 @@ class EmulationGame extends Game {
 	 * @returns {string} - A string representing the game
 	 */
 	toString() {
-		return `${this.name} - ${this.source} (${this.platform})`;
+		return `${this.name} - (${this.platform})`;
 	}
 }
 

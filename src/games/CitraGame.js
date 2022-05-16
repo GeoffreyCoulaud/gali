@@ -18,7 +18,6 @@ class CitraGame extends EmulationGame{
 	constructor(name, path){
 		super(name, path);
 	}
-
 }
 
 module.exports = {

@@ -19,15 +19,6 @@ class LegendaryGame extends Game {
 		super(name);
 		this.appName = appName;
 	}
-
-	/**
-	 * Create a string representation of the game
-	 * @returns {string} - A string representing the game
-	 */
-	toString() {
-		return `${this.name} - ${this.source} - ${this.appName}`;
-	}
-
 }
 
 module.exports = {

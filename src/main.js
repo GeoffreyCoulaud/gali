@@ -1,7 +1,7 @@
 const preferences = require("./utils/preferences.js");
 const Library     = require("./library.js");
 
-class BragApp{
+class App{
 
 	preferences = undefined;
 	library = undefined;
@@ -35,5 +35,5 @@ class BragApp{
 
 }
 
-const app = new BragApp();
+const app = new App();
 app.start();

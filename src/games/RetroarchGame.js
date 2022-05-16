@@ -21,7 +21,6 @@ class RetroarchGame extends EmulationGame {
 		this.corePath = corePath;
 		this.isInstalled = isInstalled;
 	}
-
 }
 
 module.exports = {

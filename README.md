@@ -1,17 +1,17 @@
-# Brag
+# GALI
 
-![GitHub](https://img.shields.io/github/license/GeoffreyCoulaud/brag-launcher?style=for-the-badge)
-![GitHub last commit](https://img.shields.io/github/last-commit/GeoffreyCoulaud/brag-launcher?style=for-the-badge)
+![GitHub](https://img.shields.io/github/license/GeoffreyCoulaud/gali?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/GeoffreyCoulaud/gali?style=for-the-badge)
 
 A game launcher for **linux** where your library is the star of the show.
 
 ## Why ?
 > I'm so tired of interfaces that include 9 out 10 of my games. I want it all in one, pretty, place ! 
 
-If you think alike, I believe Brag is for you. 
+If you think alike, I believe Gali is for you. 
 
 However, if you want a single place to install, configure and manage your games, 
-this is not the intended purpose of Brag. This project is for *brag*ging, showing off your library. 
+this is not the intended purpose of Gali. This project is made to display your games library. 
 You will have to install other software to manage your games, they will definitely do it better.
 
 ## Supported sources
@@ -35,7 +35,7 @@ Status | Name            | Description
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
 
 ## Usage
-**Brag is in active development but is just not there yet. Be patient !**
+**This is in active development but is just not there yet. Be patient !**
 
 ### Dependencies
 * Main app (will soon change dependencies)
