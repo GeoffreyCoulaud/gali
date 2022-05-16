@@ -1,5 +1,5 @@
-const { YuzuGame } = require("./YuzuGame.js");
-const { YuzuFlatpakProcess } = require("../process/YuzuFlatpakProcess.js");
+const YuzuGame = require("./YuzuGame.js");
+const YuzuFlatpakProcess = require("../process/YuzuFlatpakProcess.js");
 
 class YuzuFlatpakGame extends YuzuGame{
 
@@ -7,6 +7,4 @@ class YuzuFlatpakGame extends YuzuGame{
 
 }
 
-module.exports = {
-	YuzuFlatpakGame
-};
+module.exports = YuzuFlatpakGame;

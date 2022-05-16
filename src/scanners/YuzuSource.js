@@ -1,12 +1,12 @@
 const fsp = require("fs/promises");
 const path = require("path");
 
-const { NotImplementedError } = require("../NotImplementedError.js");
-const { GameDir } = require("./GameDir.js");
+const NotImplementedError = require("../NotImplementedError.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 
-const { SwitchEmulationSource } = require("./SwitchEmulationSource.js");
-const { YuzuGame } = require("../games/YuzuGame");
+const SwitchEmulationSource = require("./SwitchEmulationSource.js");
+const YuzuGame = require("../games/YuzuGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -170,6 +170,4 @@ class YuzuSource extends SwitchEmulationSource {
 
 }
 
-module.exports = {
-	YuzuSource
-};
+module.exports = YuzuSource;

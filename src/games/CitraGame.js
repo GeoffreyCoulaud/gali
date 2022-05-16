@@ -1,5 +1,5 @@
-const { EmulationGame } = require("./EmulationGame.js");
-const { CitraProcess } = require("../process/CitraProcess.js");
+const EmulationGame = require("./EmulationGame.js");
+const CitraProcess = require("../process/CitraProcess.js");
 
 class CitraGame extends EmulationGame{
 
@@ -17,6 +17,4 @@ class CitraGame extends EmulationGame{
 	}
 }
 
-module.exports = {
-	CitraGame,
-};
+module.exports = CitraGame;

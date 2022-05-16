@@ -1,5 +1,5 @@
-const { NotImplementedError } = require("../NotImplementedError.js");
-const { Process } = require("./Process.js");
+const NotImplementedError = require("../NotImplementedError.js");
+const Process = require("./Process.js");
 
 class SteamFlatpakProcess extends Process{
 
@@ -9,6 +9,4 @@ class SteamFlatpakProcess extends Process{
 	}
 }
 
-module.exports = {
-	SteamFlatpakProcess
-};
+module.exports = SteamFlatpakProcess;

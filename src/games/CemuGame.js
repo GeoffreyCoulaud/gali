@@ -1,5 +1,5 @@
-const { WiiUEmulationGame } = require("./WiiUEmulationGame.js");
-const { CemuProcess } = require("../process/CemuProcess.js");
+const WiiUEmulationGame = require("./WiiUEmulationGame.js");
+const CemuProcess = require("../process/CemuProcess.js");
 
 class CemuGame extends WiiUEmulationGame{
 
@@ -10,6 +10,4 @@ class CemuGame extends WiiUEmulationGame{
 	}
 }
 
-module.exports = {
-	CemuGame
-};
+module.exports = CemuGame;

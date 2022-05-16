@@ -1,5 +1,5 @@
-const { NotImplementedError } = require("../NotImplementedError.js");
-const { Process } = require("./Process.js");
+const NotImplementedError = require("../NotImplementedError.js");
+const Process = require("./Process.js");
 
 class PPSSPPFlatpakProcess extends Process{
 
@@ -9,6 +9,4 @@ class PPSSPPFlatpakProcess extends Process{
 	}
 }
 
-module.exports = {
-	PPSSPPFlatpakProcess
-};
+module.exports = PPSSPPFlatpakProcess;

@@ -1,5 +1,5 @@
-const { Game } = require("./Game.js");
-const { HeroicProcess } = require("../process/HeroicProcess.js");
+const Game = require("./Game.js");
+const HeroicProcess = require("../process/HeroicProcess.js");
 
 class HeroicGame extends Game {
 
@@ -17,6 +17,4 @@ class HeroicGame extends Game {
 	}
 }
 
-module.exports = {
-	HeroicGame
-};
+module.exports = HeroicGame;

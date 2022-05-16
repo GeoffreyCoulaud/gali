@@ -1,14 +1,14 @@
 const fsp = require("fs/promises");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 const deepReaddir = require("../utils/deepReaddir.js");
 const locale = require("../utils/locale.js");
 const xdg = require("../utils/xdg.js");
 
-const { DesktopEntryGame } = require("../games/DesktopEntryGame");
-const { Source } = require("./Source.js");
+const DesktopEntryGame = require("../games/DesktopEntryGame");
+const Source = require("./Source.js");
 
 class DesktopEntrySource extends Source {
 
@@ -213,6 +213,4 @@ class DesktopEntrySource extends Source {
 
 }
 
-module.exports = {
-	DesktopEntrySource
-};
+module.exports = DesktopEntrySource;

@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { StartOnlyProcess } = require("./StartOnlyProcess.js");
+const StartOnlyProcess = require("./StartOnlyProcess.js");
 
 /**
  * A wrapper for steam game process management
@@ -37,6 +37,4 @@ class SteamProcess extends StartOnlyProcess {
 
 }
 
-module.exports = {
-	SteamProcess
-};
+module.exports = SteamProcess;

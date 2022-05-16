@@ -1,4 +1,4 @@
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A Process that doesn't handle stop and kill actions
@@ -29,6 +29,4 @@ class StartOnlyProcess extends Process {
 
 }
 
-module.exports = {
-	StartOnlyProcess
-};
+module.exports = StartOnlyProcess;

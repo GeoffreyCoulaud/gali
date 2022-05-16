@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for retroarch game process management
@@ -37,6 +37,4 @@ class RetroarchProcess extends Process {
 	}
 }
 
-module.exports = {
-	RetroarchProcess
-};
+module.exports = RetroarchProcess;

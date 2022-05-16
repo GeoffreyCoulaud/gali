@@ -2,10 +2,10 @@ const fsp = require("fs/promises");
 const vdfParser = require("vdf-parser");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 
-const { Source } = require("./Source.js");
-const { SteamGame } = require("../games/SteamGame");
+const Source = require("./Source.js");
+const SteamGame = require("../games/SteamGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -241,6 +241,4 @@ class SteamSource extends Source {
 
 }
 
-module.exports = {
-	SteamSource
-};
+module.exports = SteamSource;

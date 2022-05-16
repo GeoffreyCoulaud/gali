@@ -2,7 +2,7 @@ const child_process = require("child_process");
 
 const xdg = require("../utils/xdg.js");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for desktop entry game process management
@@ -38,6 +38,4 @@ class DesktopEntryProcess extends Process {
 
 }
 
-module.exports = {
-	DesktopEntryProcess
-};
+module.exports = DesktopEntryProcess;

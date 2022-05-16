@@ -1,6 +1,6 @@
 const deepReaddir = require("../utils/deepReaddir.js");
 
-const { Source } = require("./Source.js");
+const Source = require("./Source.js");
 
 /**
  * Class representing an emulated games source.
@@ -47,6 +47,4 @@ class EmulationSource extends Source {
 
 }
 
-module.exports = {
-	EmulationSource
-};
+module.exports = EmulationSource;

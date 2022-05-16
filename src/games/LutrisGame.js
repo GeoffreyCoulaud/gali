@@ -1,5 +1,5 @@
-const { Game } = require("./Game.js");
-const { LutrisProcess } = require("../process/LutrisProcess.js");
+const Game = require("./Game.js");
+const LutrisProcess = require("../process/LutrisProcess.js");
 
 class LutrisGame extends Game {
 
@@ -22,6 +22,4 @@ class LutrisGame extends Game {
 	}
 }
 
-module.exports = {
-	LutrisGame
-};
+module.exports = LutrisGame;

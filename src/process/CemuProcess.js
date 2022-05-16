@@ -2,9 +2,9 @@ const child_process = require("child_process");
 const fsp = require("fs/promises");
 
 const convertPath = require("../utils/convertPathPlatform.js");
-const { LutrisProcess } = require("../process/LutrisProcess.js");
+const LutrisProcess = require("../process/LutrisProcess.js");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * Sanitize a string to be used in a filename
@@ -79,6 +79,4 @@ class CemuProcess extends Process {
 
 }
 
-module.exports = {
-	CemuProcess
-};
+module.exports = CemuProcess;

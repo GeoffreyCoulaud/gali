@@ -1,11 +1,11 @@
 const fsp = require("fs/promises");
 const path = require("path");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 
-const { EmulationSource } = require("./EmulationSource.js");
-const { PPSSPPGame } = require("../games/PPSSPPGame");
+const EmulationSource = require("./EmulationSource.js");
+const PPSSPPGame = require("../games/PPSSPPGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -124,6 +124,4 @@ class PPSSPPSource extends EmulationSource {
 
 }
 
-module.exports = {
-	PPSSPPSource
-};
+module.exports = PPSSPPSource;

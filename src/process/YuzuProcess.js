@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for yuzu game process management
@@ -44,6 +44,4 @@ class YuzuProcess extends Process {
 	}
 }
 
-module.exports = {
-	YuzuProcess
-};
+module.exports = YuzuProcess;

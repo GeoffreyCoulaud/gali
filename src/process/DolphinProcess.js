@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for dolphin game management
@@ -39,6 +39,4 @@ class DolphinProcess extends Process {
 	}
 }
 
-module.exports = {
-	DolphinProcess
-};
+module.exports = DolphinProcess;

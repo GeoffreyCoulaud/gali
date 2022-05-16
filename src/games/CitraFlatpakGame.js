@@ -1,5 +1,5 @@
-const { CitraGame } = require("./CitraGame.js");
-const { CitraFlatpakProcess } = require("../process/CitraFlatpakProcess.js");
+const CitraGame = require("./CitraGame.js");
+const CitraFlatpakProcess = require("../process/CitraFlatpakProcess.js");
 
 class CitraFlatpakGame extends CitraGame{
 
@@ -7,6 +7,4 @@ class CitraFlatpakGame extends CitraGame{
 
 }
 
-module.exports = {
-	CitraFlatpakGame
-};
+module.exports = CitraFlatpakGame;

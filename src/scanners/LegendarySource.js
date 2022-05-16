@@ -1,7 +1,7 @@
 const fsp = require("fs/promises");
 
-const { Source } = require("./Source.js");
-const { LegendaryGame } = require("../games/LegendaryGame");
+const Source = require("./Source.js");
+const LegendaryGame = require("../games/LegendaryGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -58,6 +58,4 @@ class LegendarySource extends Source {
 
 }
 
-module.exports = {
-	LegendarySource
-};
+module.exports = LegendarySource;

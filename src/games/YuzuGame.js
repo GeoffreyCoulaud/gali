@@ -1,5 +1,5 @@
-const { SwitchEmulationGame } = require("./SwitchEmulationGame.js");
-const { YuzuProcess } = require("../process/YuzuProcess.js");
+const SwitchEmulationGame = require("./SwitchEmulationGame.js");
+const YuzuProcess = require("../process/YuzuProcess.js");
 
 class YuzuGame extends SwitchEmulationGame {
 
@@ -15,6 +15,4 @@ class YuzuGame extends SwitchEmulationGame {
 	}
 }
 
-module.exports = {
-	YuzuGame
-};
+module.exports = YuzuGame;

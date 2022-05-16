@@ -24,6 +24,4 @@ class Source {
 
 }
 
-module.exports = {
-	Source
-};
+module.exports = Source;

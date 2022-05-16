@@ -1,7 +1,7 @@
 const process = require("process");
 const events = require("events");
 
-const { NoCommandError } = require("../NoCommandError.js");
+const NoCommandError = require("../NoCommandError.js");
 const commandExists = require("../utils/commandExists.js");
 
 /**
@@ -131,6 +131,4 @@ class Process extends events.EventEmitter {
 
 }
 
-module.exports = {
-	Process
-};
+module.exports = Process;

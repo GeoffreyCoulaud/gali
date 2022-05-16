@@ -1,5 +1,5 @@
-const { RetroarchGame } = require("./RetroarchGame.js");
-const { RetroarchFlatpakProcess } = require("../process/RetroarchFlatpakProcess.js");
+const RetroarchGame = require("./RetroarchGame.js");
+const RetroarchFlatpakProcess = require("../process/RetroarchFlatpakProcess.js");
 
 class RetroarchFlatpakGame extends RetroarchGame{
 
@@ -7,6 +7,4 @@ class RetroarchFlatpakGame extends RetroarchGame{
 
 }
 
-module.exports = {
-	RetroarchFlatpakGame
-};
+module.exports = RetroarchFlatpakGame;

@@ -3,12 +3,12 @@ const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const convertPath = require("../utils/convertPathPlatform.js");
 const config = require("../utils/configFormats.js");
 
-const { WiiUEmulationSource } = require("./WiiUEmulationSource.js");
-const { CemuGame } = require("../games/CemuGame.js");
+const WiiUEmulationSource = require("./WiiUEmulationSource.js");
+const CemuGame = require("../games/CemuGame.js");
 
 // TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
@@ -243,6 +243,4 @@ class CemuSource extends WiiUEmulationSource {
 
 }
 
-module.exports = {
-	CemuSource
-};
+module.exports = CemuSource;

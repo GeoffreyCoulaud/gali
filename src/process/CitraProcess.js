@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for citra game process management
@@ -35,6 +35,4 @@ class CitraProcess extends Process {
 
 }
 
-module.exports = {
-	CitraProcess
-};
+module.exports = CitraProcess;

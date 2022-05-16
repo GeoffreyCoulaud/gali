@@ -1,4 +1,4 @@
-const { EmulationGame } = require("./EmulationGame.js");
+const EmulationGame = require("./EmulationGame.js");
 
 class WiiUEmulationGame extends EmulationGame {
 
@@ -6,6 +6,4 @@ class WiiUEmulationGame extends EmulationGame {
 
 }
 
-module.exports = {
-	WiiUEmulationGame
-};
+module.exports = WiiUEmulationGame;

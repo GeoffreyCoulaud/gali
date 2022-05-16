@@ -1,6 +1,6 @@
 const child_process = require("child_process");
 
-const { StartOnlyProcess } = require("./StartOnlyProcess.js");
+const StartOnlyProcess = require("./StartOnlyProcess.js");
 
 /**
  * A wrapper for legendary game process management.
@@ -43,6 +43,4 @@ class LegendaryProcess extends StartOnlyProcess {
 
 }
 
-module.exports = {
-	LegendaryProcess
-};
+module.exports = LegendaryProcess;

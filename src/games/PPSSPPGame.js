@@ -1,5 +1,5 @@
-const { EmulationGame } = require("./EmulationGame.js");
-const { PPSSPPProcess } = require("../process/PPSSPPProcess.js");
+const EmulationGame = require("./EmulationGame.js");
+const PPSSPPProcess = require("../process/PPSSPPProcess.js");
 
 class PPSSPPGame extends EmulationGame {
 
@@ -17,6 +17,4 @@ class PPSSPPGame extends EmulationGame {
 	}
 }
 
-module.exports = {
-	PPSSPPGame
-};
+module.exports = PPSSPPGame;

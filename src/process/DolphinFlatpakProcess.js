@@ -1,5 +1,5 @@
-const { NotImplementedError } = require("../NotImplementedError.js");
-const { Process } = require("./Process.js");
+const NotImplementedError = require("../NotImplementedError.js");
+const Process = require("./Process.js");
 
 class DolphinFlatpakProcess extends Process{
 
@@ -9,6 +9,4 @@ class DolphinFlatpakProcess extends Process{
 	}
 }
 
-module.exports = {
-	DolphinFlatpakProcess
-};
+module.exports = DolphinFlatpakProcess;

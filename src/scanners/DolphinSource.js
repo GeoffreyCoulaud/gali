@@ -1,11 +1,11 @@
 const fsp = require("fs/promises");
 const path = require("path");
 
-const { GameDir } = require("./GameDir.js");
+const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 
-const { EmulationSource } = require("./EmulationSource.js");
-const { DolphinGame } = require("../games/DolphinGame");
+const EmulationSource = require("./EmulationSource.js");
+const DolphinGame = require("../games/DolphinGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -146,6 +146,4 @@ class DolphinSource extends EmulationSource {
 
 }
 
-module.exports = {
-	DolphinSource
-};
+module.exports = DolphinSource;

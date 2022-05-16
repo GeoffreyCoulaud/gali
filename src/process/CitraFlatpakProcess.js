@@ -1,5 +1,5 @@
-const { NotImplementedError } = require("../NotImplementedError.js");
-const { Process } = require("./Process.js");
+const NotImplementedError = require("../NotImplementedError.js");
+const Process = require("./Process.js");
 
 class CitraFlatpakProcess extends Process{
 
@@ -9,6 +9,4 @@ class CitraFlatpakProcess extends Process{
 	}
 }
 
-module.exports = {
-	CitraFlatpakProcess
-};
+module.exports = CitraFlatpakProcess;

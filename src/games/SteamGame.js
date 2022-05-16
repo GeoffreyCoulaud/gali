@@ -1,5 +1,5 @@
-const { Game } = require("./Game.js");
-const { SteamProcess } = require("../process/SteamProcess");
+const Game = require("./Game.js");
+const SteamProcess = require("../process/SteamProcess");
 
 class SteamGame extends Game {
 
@@ -28,6 +28,4 @@ class SteamGame extends Game {
 	}
 }
 
-module.exports = {
-	SteamGame
-};
+module.exports = SteamGame;

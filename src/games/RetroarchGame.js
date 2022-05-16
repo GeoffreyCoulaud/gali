@@ -1,5 +1,5 @@
-const { EmulationGame } = require("./EmulationGame.js");
-const { RetroarchProcess } = require("../process/RetroarchProcess.js");
+const EmulationGame = require("./EmulationGame.js");
+const RetroarchProcess = require("../process/RetroarchProcess.js");
 
 class RetroarchGame extends EmulationGame {
 
@@ -21,6 +21,4 @@ class RetroarchGame extends EmulationGame {
 	}
 }
 
-module.exports = {
-	RetroarchGame
-};
+module.exports = RetroarchGame;

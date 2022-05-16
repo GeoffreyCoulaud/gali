@@ -1,7 +1,7 @@
 const fsp = require("fs/promises");
 
-const { Source } = require("./Source.js");
-const { HeroicGame } = require("../games/HeroicGame");
+const Source = require("./Source.js");
+const HeroicGame = require("../games/HeroicGame");
 
 const USER_DIR = process.env["HOME"];
 
@@ -52,6 +52,4 @@ class HeroicSource extends Source {
 
 }
 
-module.exports = {
-	HeroicSource
-};
+module.exports = HeroicSource;

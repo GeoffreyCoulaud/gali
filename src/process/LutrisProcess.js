@@ -1,10 +1,10 @@
 const child_process = require("child_process");
 
-const { NoCommandError } = require("../NoCommandError.js");
+const NoCommandError = require("../NoCommandError.js");
 const commandExists = require("../utils/commandExists.js");
 const ad = require("../utils/appDirectories.js");
 
-const { Process } = require("./Process.js");
+const Process = require("./Process.js");
 
 /**
  * A promise version of the child_process execFile
@@ -78,6 +78,4 @@ class LutrisProcess extends Process {
 
 }
 
-module.exports = {
-	LutrisProcess
-};
+module.exports = LutrisProcess;

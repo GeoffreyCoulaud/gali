@@ -1,5 +1,5 @@
-const { SteamGame } = require("./SteamGame.js");
-const { SteamFlatpakProcess } = require("../process/SteamFlatpakProcess.js");
+const SteamGame = require("./SteamGame.js");
+const SteamFlatpakProcess = require("../process/SteamFlatpakProcess.js");
 
 class SteamFlatpakGame extends SteamGame{
 
@@ -7,6 +7,4 @@ class SteamFlatpakGame extends SteamGame{
 
 }
 
-module.exports = {
-	SteamFlatpakGame
-};
+module.exports = SteamFlatpakGame;

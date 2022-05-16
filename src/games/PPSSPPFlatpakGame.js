@@ -1,5 +1,5 @@
-const { PPSSPPGame } = require("./PPSSPPGame.js");
-const { PPSSPPFlatpakProcess } = require("../process/PPSSPPFlatpakProcess.js");
+const PPSSPPGame = require("./PPSSPPGame.js");
+const PPSSPPFlatpakProcess = require("../process/PPSSPPFlatpakProcess.js");
 
 class PPSSPPFlatpakGame extends PPSSPPGame{
 
@@ -7,6 +7,4 @@ class PPSSPPFlatpakGame extends PPSSPPGame{
 
 }
 
-module.exports = {
-	PPSSPPFlatpakGame
-};
+module.exports = PPSSPPFlatpakGame;

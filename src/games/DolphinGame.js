@@ -1,5 +1,5 @@
-const { EmulationGame } = require("./EmulationGame.js");
-const { DolphinProcess } = require("../process/DolphinProcess.js");
+const EmulationGame = require("./EmulationGame.js");
+const DolphinProcess = require("../process/DolphinProcess.js");
 
 class DolphinGame extends EmulationGame {
 
@@ -17,6 +17,4 @@ class DolphinGame extends EmulationGame {
 	}
 }
 
-module.exports = {
-	DolphinGame
-};
+module.exports = DolphinGame;
