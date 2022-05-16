@@ -2,9 +2,9 @@ const child_process = require("child_process");
 const fsp = require("fs/promises");
 
 const convertPath = require("../utils/convertPathPlatform.js");
-const { LutrisGameProcessContainer } = require("../process/LutrisGameProcessContainer.js");
+const { LutrisProcess } = require("../process/LutrisProcess.js");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const { Process } = require("./Process.js");
 
 /**
  * Sanitize a string to be used in a filename
@@ -18,7 +18,7 @@ function sanitizeStringFilename(str){
 /**
  * A wrapper for cemu game process management
  */
-class CemuGameProcessContainer extends GameProcessContainer {
+class CemuProcess extends Process {
 
 	commandOptions = ["sh", "zsh", "bash"];
 
@@ -49,7 +49,7 @@ class CemuGameProcessContainer extends GameProcessContainer {
 			const safeName = sanitizeStringFilename(name);
 			scriptBaseName = `lutris-${safeSlug}-${safeName}.sh`;
 		}
-		const scriptPath = await LutrisGameProcessContainer.getStartScript(cemuGameSlug, scriptBaseName);
+		const scriptPath = await LutrisProcess.getStartScript(cemuGameSlug, scriptBaseName);
 
 		// Add the game path argument
 		const winePath = convertPath.linuxToWine(path);
@@ -80,5 +80,5 @@ class CemuGameProcessContainer extends GameProcessContainer {
 }
 
 module.exports = {
-	CemuGameProcessContainer
+	CemuProcess
 };

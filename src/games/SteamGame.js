@@ -1,10 +1,10 @@
 const { Game } = require("./Game.js");
+const { SteamProcess } = require("../process/SteamProcess");
 
-/**
- * Class representing a steam game
- */
 class SteamGame extends Game {
 
+	static processClass = SteamProcess;
+	
 	platform = "PC";
 
 	/**

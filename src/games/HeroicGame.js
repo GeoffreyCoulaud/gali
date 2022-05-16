@@ -1,10 +1,10 @@
 const { Game } = require("./Game.js");
+const { HeroicProcess } = require("../process/HeroicProcess.js");
 
-/**
- * A class representing a Heroic launcher game
- */
 class HeroicGame extends Game {
 
+	static processClass = HeroicProcess;
+	
 	platform = "PC";
 
 	/**

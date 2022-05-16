@@ -27,11 +27,12 @@ function strMatchAny(str, regexes){
 class SteamSource extends Source {
 	
 	static name = "Steam";
-	
-	IMAGE_CACHE_DIR = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
-	INSTALL_DIRS_PATH = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
+	static gameClass = SteamGame;
 	
 	preferCache = false;
+	
+	imageCacheDir = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
+	configPath = `${USER_DIR}/.steam/root/config/libraryfolders.vdf`;
 
 	constructor(preferCache = false) {
 		super();
@@ -45,7 +46,7 @@ class SteamSource extends Source {
 	 */
 	async _getConfig() {
 
-		const fileContents = await fsp.readFile(this.INSTALL_DIRS_PATH, { encoding: "utf-8" });
+		const fileContents = await fsp.readFile(this.configPath, { encoding: "utf-8" });
 		const config = vdfParser.parse(fileContents);
 
 		// Validate
@@ -89,9 +90,9 @@ class SteamSource extends Source {
 	 */
 	_getGameImages(game) {
 		const images = {
-			boxArtImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_library_600x900.jpg`,
-			coverImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_header.jpg`,
-			iconImage: `${this.IMAGE_CACHE_DIR}/${game.appId}_icon.jpg`,
+			boxArtImage: `${this.imageCacheDir}/${game.appId}_library_600x900.jpg`,
+			coverImage: `${this.imageCacheDir}/${game.appId}_header.jpg`,
+			iconImage: `${this.imageCacheDir}/${game.appId}_icon.jpg`,
 		};
 		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);
@@ -180,7 +181,7 @@ class SteamSource extends Source {
 				}
 
 				// Build game
-				const game = new SteamGame(appid, name, isInstalled);
+				const game = new this.constructor.gameClass(appid, name, isInstalled);
 				this._getGameIsInstalled(game, manData);
 				this._getGameImages(game);
 				games.push(game);

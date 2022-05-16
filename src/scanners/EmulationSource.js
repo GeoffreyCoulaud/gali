@@ -9,6 +9,10 @@ const { Source } = require("./Source.js");
  */
 class EmulationSource extends Source {
 
+	static gameClass = undefined;
+	preferCache = false;
+	name = undefined;
+
 	/**
 	 * Get the ROMs (emulation games) inside of some game dirs
 	 * @param {GameDir} dirs - The game dirs to scan

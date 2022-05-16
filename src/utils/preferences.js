@@ -2,69 +2,13 @@ const ad  = require("./appDirectories.js");
 const fsp = require("fs/promises");
 const fs  = require("fs");
 
-const { DesktopEntrySource } = require("../scanners/DesktopEntrySource.js");
-const { LegendarySource }    = require("../scanners/LegendarySource.js");
-const { RetroarchSource }    = require("../scanners/RetroarchSource.js");
-const { DolphinSource }      = require("../scanners/DolphinSource.js");
-const { HeroicSource }       = require("../scanners/HeroicSource.js");
-const { LutrisSource }       = require("../scanners/LutrisSource.js");
-const { PPSSPPSource }       = require("../scanners/PPSSPPSource.js");
-const { CitraSource }        = require("../scanners/CitraSource.js");
-const { SteamSource }        = require("../scanners/SteamSource.js");
-const { CemuSource }         = require("../scanners/CemuSource.js");
-const { YuzuSource }         = require("../scanners/YuzuSource.js");
+const all = require("../scanners/all.js");
 
-const DEFAULT_PREFERRED_SHELL_COMMAND = ["sh", "zsh", "bash"];
 const DEFAULT_PREFERENCES = {
 	"scan": {
 		"warnings": false,
 		"preferCache": false,
-		"enabledSources": [
-			CemuSource.name,
-			CitraSource.name,
-			DesktopEntrySource.name,
-			DolphinSource.name,
-			HeroicSource.name,
-			LegendarySource.name,
-			LutrisSource.name,
-			PPSSPPSource.name,
-			RetroarchSource.name,
-			SteamSource.name,
-			YuzuSource.name,
-		],
-	},
-	"start": {
-		"preferredCommands": {
-			[CemuSource.name]: DEFAULT_PREFERRED_SHELL_COMMAND,
-			[CitraSource.name]: [
-				"citra",
-				"citra-qt",
-			],
-			[DesktopEntrySource.name]: DEFAULT_PREFERRED_SHELL_COMMAND,
-			[DolphinSource.name]: [
-				"dolphin-emu",
-			],
-			[HeroicSource.name]: [
-				"xdg-open",
-			],
-			[LegendarySource.name]: [
-				"legendary",
-			],
-			[LutrisSource.name]: DEFAULT_PREFERRED_SHELL_COMMAND,
-			[PPSSPPSource.name]: [
-				"PPSSPPSDL",
-				"PPSSPPQt",
-			],
-			[RetroarchSource.name]: [
-				"retroarch",
-			],
-			[SteamSource.name]: [
-				"steam",
-			],
-			[YuzuSource.name]: [
-				"yuzu"
-			],
-		}
+		"enabledSources": Object.values(all).map(k=>k.name),
 	}
 };
 
@@ -120,7 +64,6 @@ async function readUserFile(){
  * @returns {object} - A preference object
  */
 async function readUserFileSafe(){
-
 	let prefs;
 	if (!userFileExistsSync()){
 		console.log(`Created default config file "${ad.APP_CONFIG_PATH}`);
@@ -136,7 +79,6 @@ async function readUserFileSafe(){
 		}
 	}
 	return prefs;
-
 }
 
 module.exports = {

@@ -4,7 +4,7 @@ const { NoCommandError } = require("../NoCommandError.js");
 const commandExists = require("../utils/commandExists.js");
 const ad = require("../utils/appDirectories.js");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const { Process } = require("./Process.js");
 
 /**
  * A promise version of the child_process execFile
@@ -22,7 +22,7 @@ function execFilePromise(command, args = [], options = {}){
  * A wrapper for lutris game process management
  * @property {string} gameSlug - A lutris game slug, used to invoke lutris
  */
-class LutrisGameProcessContainer extends GameProcessContainer {
+class LutrisProcess extends Process {
 
 	commandOptions = ["sh", "zsh", "bash"];
 
@@ -79,5 +79,5 @@ class LutrisGameProcessContainer extends GameProcessContainer {
 }
 
 module.exports = {
-	LutrisGameProcessContainer
+	LutrisProcess
 };

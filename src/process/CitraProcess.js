@@ -1,12 +1,12 @@
 const child_process = require("child_process");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const { Process } = require("./Process.js");
 
 /**
  * A wrapper for citra game process management
  * @property {string} romPath - The game's ROM path, used to invoke citra
  */
-class CitraGameProcessContainer extends GameProcessContainer {
+class CitraProcess extends Process {
 
 	commandOptions = ["citra", "citra-qt"];
 
@@ -36,5 +36,5 @@ class CitraGameProcessContainer extends GameProcessContainer {
 }
 
 module.exports = {
-	CitraGameProcessContainer
+	CitraProcess
 };

@@ -13,11 +13,12 @@ const USER_DIR = process.env["HOME"];
 class CitraSource extends EmulationSource {
 	
 	static name = "Citra";
-	
-	GAME_FILES_REGEX = /.+\.(3ds|cci)/i;
-	CONFIG_PATH = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
-	
+	static gameClass = CitraGame;
+
 	preferCache = false;
+	
+	romRegex = /.+\.(3ds|cci)/i;
+	configPath = `${USER_DIR}/.config/citra-emu/qt-config.ini`;
 
 	constructor(preferCache = false) {
 		super();
@@ -33,7 +34,7 @@ class CitraSource extends EmulationSource {
 	 */
 	async _getConfig() {
 
-		const configFileContents = await fsp.readFile(this.CONFIG_PATH, "utf-8");
+		const configFileContents = await fsp.readFile(this.configPath, "utf-8");
 		const configData = config.config2js(configFileContents);
 
 		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
@@ -79,10 +80,10 @@ class CitraSource extends EmulationSource {
 	 */
 	async _getROMGames(dirs) {
 
-		const gamePaths = await this._getROMs(dirs, this.GAME_FILES_REGEX);
+		const gamePaths = await this._getROMs(dirs, this.romRegex);
 		const games = [];
 		for (const gamePath of gamePaths) {
-			const game = new CitraGame(path.basename(gamePath), gamePath);
+			const game = new this.constructor.gameClass(path.basename(gamePath), gamePath);
 			game.isInstalled = true;
 			games.push(game);
 		}

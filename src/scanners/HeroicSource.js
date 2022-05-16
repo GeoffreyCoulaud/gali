@@ -8,10 +8,11 @@ const USER_DIR = process.env["HOME"];
 class HeroicSource extends Source {
 	
 	static name = "Heroic";
-	
-	LIBRARY_FILE_PATH = `${USER_DIR}/.config/heroic/store/library.json`;
-	
+	static gameClass = HeroicGame;
+
 	preferCache = false;
+	
+	configPath = `${USER_DIR}/.config/heroic/store/library.json`;
 
 	constructor(preferCache = false) {
 		super();
@@ -23,7 +24,7 @@ class HeroicSource extends Source {
 		// Read library.json file
 		let library;
 		try {
-			const fileContents = await fsp.readFile(this.LIBRARY_FILE_PATH, "utf-8");
+			const fileContents = await fsp.readFile(this.configPath, "utf-8");
 			library = JSON.parse(fileContents);
 			library = library?.["library"];
 		} catch (error) {
@@ -38,7 +39,7 @@ class HeroicSource extends Source {
 		if (library) {
 			for (const entry of library) {
 				if (entry?.["is_game"]) {
-					const game = new HeroicGame(entry.title, entry.app_name);
+					const game = new this.constructor.gameClass(entry.title, entry.app_name);
 					game.isInstalled = entry?.is_installed;
 					games.push(game);
 				}

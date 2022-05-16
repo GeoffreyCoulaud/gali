@@ -1,10 +1,10 @@
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const { Process } = require("./Process.js");
 
 /**
- * A GameProcessContainer that doesn't handle stop and kill actions
+ * A Process that doesn't handle stop and kill actions
  * @abstract
  */
-class StartOnlyGameProcessContainer extends GameProcessContainer {
+class StartOnlyProcess extends Process {
 
 	isStoppable = false;
 	isKillable = false;
@@ -30,5 +30,5 @@ class StartOnlyGameProcessContainer extends GameProcessContainer {
 }
 
 module.exports = {
-	StartOnlyGameProcessContainer
+	StartOnlyProcess
 };

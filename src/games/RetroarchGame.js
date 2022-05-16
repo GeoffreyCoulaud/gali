@@ -1,11 +1,9 @@
 const { EmulationGame } = require("./EmulationGame.js");
+const { RetroarchProcess } = require("../process/RetroarchProcess.js");
 
-/**
- * A class representing a retroarch game
- * @property {string} corePath - The game's libretro core path
- * @property {RetroarchGameProcessContainer} processContainer - The game's process container
- */
 class RetroarchGame extends EmulationGame {
+
+	static processClass = RetroarchProcess;
 
 	/**
 	 * Create a retroarch game

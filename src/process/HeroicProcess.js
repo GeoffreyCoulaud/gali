@@ -1,13 +1,13 @@
 const child_process = require("child_process");
 
-const { StartOnlyGameProcessContainer } = require("./StartOnlyGameProcessContainer.js");
+const { StartOnlyProcess } = require("./StartOnlyProcess.js");
 
 /**
  * A wrapper for legendary game process management.
  * Doesn't support stop and kill !
  * @property {string} appName - The epic games store app name, used to start the game
  */
-class HeroicGameProcessContainer extends StartOnlyGameProcessContainer {
+class HeroicProcess extends StartOnlyProcess {
 
 	commandOptions = ["xdg-open"];
 
@@ -39,5 +39,5 @@ class HeroicGameProcessContainer extends StartOnlyGameProcessContainer {
 }
 
 module.exports = {
-	HeroicGameProcessContainer
+	HeroicProcess
 };

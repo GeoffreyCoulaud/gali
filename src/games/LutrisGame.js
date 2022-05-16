@@ -1,14 +1,10 @@
 const { Game } = require("./Game.js");
+const { LutrisProcess } = require("../process/LutrisProcess.js");
 
-/**
- * A class representing a Lutris game
- * @property {string} gameSlug - A lutris game slug
- * @property {string} configPath - The game's config path
- * @property {boolean} isInstalled - Whether the game is installed or not
- * @property {LutrisGameProcessContainer} processContainer - The game's process container
- */
 class LutrisGame extends Game {
 
+	static processClass = LutrisProcess;
+	
 	platform = "PC";
 
 	/**

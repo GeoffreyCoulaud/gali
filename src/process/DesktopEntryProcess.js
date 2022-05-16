@@ -2,14 +2,14 @@ const child_process = require("child_process");
 
 const xdg = require("../utils/xdg.js");
 
-const { GameProcessContainer } = require("./GameProcessContainer.js");
+const { Process } = require("./Process.js");
 
 /**
  * A wrapper for desktop entry game process management
  * @property {string} exec - The exec value of the desktop entry file,
  *                           used to start the game in a subprocess.
  */
-class DesktopEntryGameProcessContainer extends GameProcessContainer {
+class DesktopEntryProcess extends Process {
 
 	/**
 	 * Create a desktop entry game process container
@@ -39,5 +39,5 @@ class DesktopEntryGameProcessContainer extends GameProcessContainer {
 }
 
 module.exports = {
-	DesktopEntryGameProcessContainer
+	DesktopEntryProcess
 };

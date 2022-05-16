@@ -15,6 +15,8 @@
  */
 class Game {
 
+	static processClass = undefined;
+
 	// Game metadata props
 	name = undefined;
 	platform = undefined;

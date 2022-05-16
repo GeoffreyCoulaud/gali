@@ -10,12 +10,13 @@ const USER_DIR = process.env["HOME"];
 class LutrisSource extends Source {
 	
 	static name = "Lutris";
-	
-	DB_PATH = `${USER_DIR}/.local/share/lutris/pga.db`;
-	BANNER_PATH = `${USER_DIR}/.local/share/lutris/banners`;
-	ICON_PATH = `${USER_DIR}/.local/share/icons/hicolor/128x128/apps`;
-	
+	static gameClass = LutrisGame;
+
 	preferCache = false;
+	
+	dbPath = `${USER_DIR}/.local/share/lutris/pga.db`;
+	bannerPath = `${USER_DIR}/.local/share/lutris/banners`;
+	iconPath = `${USER_DIR}/.local/share/icons/hicolor/128x128/apps`;
 
 	constructor(preferCache = false) {
 		super();
@@ -28,8 +29,8 @@ class LutrisSource extends Source {
 	 */
 	_getGameImages(game) {
 		const images = {
-			coverImage: `${this.BANNER_PATH}/${game.gameSlug}.jpg`,
-			iconImage: `${this.ICON_PATH}/lutris_${game.gameSlug}.png`,
+			coverImage: `${this.bannerPath}/${game.gameSlug}.jpg`,
+			iconImage: `${this.iconPath}/lutris_${game.gameSlug}.png`,
 		};
 		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);
@@ -50,7 +51,7 @@ class LutrisSource extends Source {
 		// Open DB
 		let db;
 		try {
-			db = await sqlite.open({ filename: this.DB_PATH, driver: sqlite3.cached.Database });
+			db = await sqlite.open({ filename: this.dbPath, driver: sqlite3.cached.Database });
 		} catch (error) {
 			if (warn){
 				console.warn(`Could not open lutris DB (${error})`);
@@ -63,7 +64,7 @@ class LutrisSource extends Source {
 		const results = await db.all(DB_REQUEST);
 		for (const row of results) {
 			if (row.slug && row.name && row.configpath) {
-				const game = new LutrisGame(
+				const game = new this.constructor.gameClass(
 					row.slug,
 					row.name,
 					row.configpath,

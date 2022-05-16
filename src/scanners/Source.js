@@ -8,9 +8,10 @@
  */
 class Source {
 
-	gameClass = undefined;
+	static name = undefined;
+	static gameClass = undefined;
+	
 	preferCache = false;
-	name = undefined;
 
 	/**
 	 * Scan for games of this class.

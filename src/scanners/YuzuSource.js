@@ -16,11 +16,12 @@ const USER_DIR = process.env["HOME"];
 class YuzuSource extends SwitchEmulationSource {
 	
 	static name = "Yuzu";
-	
-	GAME_FILES_REGEX = /.+\.(xci|nsp)/i;
-	CONFIG_PATH = `${USER_DIR}/.config/yuzu/qt-config.ini`;
+	static gameClass = YuzuGame;
 	
 	preferCache = false;
+	
+	romRegex = /.+\.(xci|nsp)/i;
+	configPath = `${USER_DIR}/.config/yuzu/qt-config.ini`;
 
 	constructor(preferCache = false) {
 		super();
@@ -36,7 +37,7 @@ class YuzuSource extends SwitchEmulationSource {
 	 */
 	async _getConfig() {
 
-		const configFileContents = await fsp.readFile(this.CONFIG_PATH, "utf-8");
+		const configFileContents = await fsp.readFile(this.configPath, "utf-8");
 		const configData = config.config2js(configFileContents);
 
 		// Check "UI > Paths\Gamedirs\size" value in config to be numeric
@@ -85,10 +86,10 @@ class YuzuSource extends SwitchEmulationSource {
 	 */
 	async _getROMGames(dirs) {
 
-		const roms = await this._getROMs(dirs, this.GAME_FILES_REGEX);
+		const roms = await this._getROMs(dirs, this.romRegex);
 		const games = [];
 		for (const rom of roms) {
-			const game = new YuzuGame(path.basename(rom), rom);
+			const game = new this.constructor.gameClass(path.basename(rom), rom);
 			game.isInstalled = true;
 			games.push(game);
 		}

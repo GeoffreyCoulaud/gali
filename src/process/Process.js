@@ -9,12 +9,12 @@ const commandExists = require("../utils/commandExists.js");
  * @property {string[]} commandOptions - Commands that the process can launch, favorite first
  * @property {ChildProcess|undefined} process - A reference to the game process
  * @property {boolean} isRunning - Whether the game is running or not
- * @fires GameProcessContainer#spawn - Fired when the subprocess has spawned successfuly
- * @fires GameProcessContainer#exit  - Fired on subprocess exit. Passes code and signal to the handler.
- * @fires GameProcessContainer#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
+ * @fires Process#spawn - Fired when the subprocess has spawned successfuly
+ * @fires Process#exit  - Fired on subprocess exit. Passes code and signal to the handler.
+ * @fires Process#error - Fired on subprocess spawn/stop error. Passes error message to the handler.
  * @abstract
  */
-class GameProcessContainer extends events.EventEmitter {
+class Process extends events.EventEmitter {
 
 	/**
 	 * Default spawn options to pass to child_process.spawn
@@ -132,5 +132,5 @@ class GameProcessContainer extends events.EventEmitter {
 }
 
 module.exports = {
-	GameProcessContainer
+	Process
 };
