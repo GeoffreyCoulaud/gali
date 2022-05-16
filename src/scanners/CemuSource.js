@@ -1,5 +1,4 @@
 const fsp = require("fs/promises");
-const process = require("process");
 const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");

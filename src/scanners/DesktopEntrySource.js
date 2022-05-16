@@ -1,5 +1,4 @@
 const fsp = require("fs/promises");
-const process = require("process");
 const fs = require("fs");
 
 const { GameDir } = require("./GameDir.js");
