@@ -1,14 +1,14 @@
 const { NotImplementedError } = require("../NotImplementedError.js");
 const { Process } = require("./Process.js");
 
-class FlatpakHeroicProcess extends Process{
+class YuzuFlatpakProcess extends Process{
 
 	// TODO implement flatpak processes
 	async start(){
-		throw NotImplementedError("Starting flatpak Heroic games is not yet supported");
+		throw NotImplementedError("Starting flatpak Yuzu games is not yet supported");
 	}
 }
 
 module.exports = {
-	FlatpakHeroicProcess
+	YuzuFlatpakProcess
 };

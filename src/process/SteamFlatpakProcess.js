@@ -1,7 +1,7 @@
 const { NotImplementedError } = require("../NotImplementedError.js");
 const { Process } = require("./Process.js");
 
-class FlatpakSteamProcess extends Process{
+class SteamFlatpakProcess extends Process{
 
 	// TODO implement flatpak processes
 	async start(){
@@ -10,5 +10,5 @@ class FlatpakSteamProcess extends Process{
 }
 
 module.exports = {
-	FlatpakSteamProcess
+	SteamFlatpakProcess
 };
