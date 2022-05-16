@@ -41,9 +41,6 @@ class Library{
 
 		this.empty();
 
-		// TODO Find a less hacky way of scanning.
-		// ? Remove dependency on games ?
-
 		let promises = [];
 		let results = [];
 
@@ -54,6 +51,7 @@ class Library{
 			this.games.push(...lutrisGames);
 
 			// Get cemu games
+			// TODO remove dependency on the Lutris game "cemu" for cemu source.
 			if (this.enabledSources.includes("Cemu in Lutris")){
 				const cemuGame = lutrisGames.find(g=>g.gameSlug.toLowerCase() === "cemu");
 				if (cemuGame){
