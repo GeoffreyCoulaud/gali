@@ -6,7 +6,7 @@
 A game launcher for **linux** where your library is the star of the show.
 
 ## Why ?
-> I'm so tired of interfaces that include 9 out 10 of my games. I want it all in one, pretty, place ! 
+> I'm so tired of interfaces that include 9 out of 10 of my games. I want it all in one, pretty, place ! 
 
 If you think alike, I believe Gali is for you. 
 
