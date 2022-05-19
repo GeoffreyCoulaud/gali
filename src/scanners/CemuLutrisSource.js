@@ -5,7 +5,7 @@ const fs = require("fs");
 
 const GameDir = require("./GameDir.js");
 const convertPath = require("../utils/convertPathPlatform.js");
-const config = require("../utils/configFormats.js");
+const { xml2js } = require("../utils/configFormats.js");
 
 const { Dependency, PropCriteria, EqCriteria } = require("./Dependency.js");
 const LutrisGame = require("../games/LutrisGame.js");
@@ -24,29 +24,29 @@ class CemuLutrisSource extends WiiUEmulationSource {
 		new PropCriteria("gameSlug", new EqCriteria("cemu"))
 	)
 
+	cemuGame = undefined;
 	preferCache = false;
 
-	cemuLutrisGame = undefined;
 	romRegex = /.+\.(wud|wux|wad|iso|rpx|elf)/i;
 
-	constructor(cemuLutrisGame, preferCache = false) {
+	constructor(cemuGame, preferCache = false) {
 		super();
-		this.cemuLutrisGame = cemuLutrisGame;
+		this.cemuGame = cemuGame;
 		this.preferCache = preferCache;
 	}
 
 	/**
 	 * Get cemu's config data
-	 * @param {string} cemuExePath - The path to cemu's executable
+	 * @param {string} exe - Absolute path to cemu's executable
 	 * @returns {object} - Cemu's config data
 	 * @private
 	 */
-	async _getConfig(cemuExePath) {
-		const configDir = path.dirname(cemuExePath);
-		const configFilePath = `${configDir}/settings.xml`;
-		const configFileContents = await fsp.readFile(configFilePath, "utf-8");
-		const configData = await config.xml2js(configFileContents);
-		return configData;
+	async _getConfig(exe) {
+		const dir = path.dirname(exe);
+		const _path = `${dir}/settings.xml`;
+		let config = await fsp.readFile(_path, "utf-8");
+		config = await xml2js(config);
+		return config;
 	}
 
 	/**
@@ -139,7 +139,6 @@ class CemuLutrisSource extends WiiUEmulationSource {
 	/**
 	 * Get cemu ROM games from given game directories
 	 * @param {GameDir[]} dirs - The game dirs to scan for ROMs
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {CemuGame[]} - An array of found games
 	 * @private
 	 */
@@ -171,26 +170,31 @@ class CemuLutrisSource extends WiiUEmulationSource {
 
 	/**
 	 * Get all cemu games
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {CemuGame[]} - An array of found games
 	 */
 	async scan() {
 
+		
 		// Read lutris config for cemu.
 		// This is to get cemu's exe path.
-		const lConfigPath = path.join(USER_DIR, ".config/lutris/games", `${this.cemuLutrisGame.configPath}.yml`);
+		const lConfigPath = `${USER_DIR}/.config/lutris/games/${this.cemuGame.configPath}.yml`;
 		let lConfig = await fsp.readFile(lConfigPath, "utf-8");
 		lConfig = YAML.parse(lConfig);
-		const { cemuExePath, cemuPrefixPath } = lConfig.game;
+		const { exe, prefix } = lConfig.game;
+		
+		// Get cemu config
+		let exePath = exe;
+		if (exePath.startsWith("/")) exePath = exe;
+		else                         exePath = `${prefix}/${exe}`;
+		const config = await this._getConfig(exePath);
 
 		// Scan for games
-		const configData = await this._getConfig(cemuExePath);
-		let games;
+		let games = new Array();
 		if (this.preferCache) {
-			games = await this._getCachedROMGames(configData, cemuPrefixPath);
+			games = await this._getCachedROMGames(config, prefix);
 		} else {
-			const romDirs = await this._getROMDirs(configData, cemuPrefixPath);
-			games = await this._getROMGames(romDirs);
+			const dirs = await this._getROMDirs(config, prefix);
+			games = await this._getROMGames(dirs);
 		}
 		return games;
 

@@ -1,3 +1,6 @@
+const fsp = require("fs/promises");
+const fs = require("fs");
+
 const deepReaddir = require("../utils/deepReaddir.js");
 
 const Source = require("./Source.js");
@@ -10,37 +13,22 @@ const Source = require("./Source.js");
 class EmulationSource extends Source {
 
 	static gameClass = undefined;
-	preferCache = false;
-	name = undefined;
 
 	/**
 	 * Get the ROMs (emulation games) inside of some game dirs
 	 * @param {GameDir} dirs - The game dirs to scan
 	 * @param {RegExp} filesRegex - The regular expression to match rom files against
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {string[]} - A list of path to game ROMs
 	 * @access protected
 	 */
-	async _getROMs(dirs, filesRegex, warn = false) {
+	async _getROMs(dirs, filesRegex) {
 		const paths = [];
-		// Get roms
 		for (const dir of dirs) {
-			// Get all the files in dir recursively
-			let filePaths;
-			try {
-				filePaths = await deepReaddir(
-					dir.path,
-					Infinity,
-					(p)=>filesRegex.test(p)
-				);
-			} catch (error) {
-				if (warn){
-					console.warn(`Skipping directory ${dir.path} (${error})`);
-				}
-				continue;
-			}
-			// Add games
-			paths.push(...filePaths);
+			try { await fsp.access(dir.path, fs.constants.R_OK); } 
+			catch (err) { continue; }
+			const depth = dir.recursive ? Infinity : 0; 
+			const found = await deepReaddir(dir.path, depth, (p)=>filesRegex.test(p));
+			paths.push(...found);
 		}
 		return paths;
 	}
