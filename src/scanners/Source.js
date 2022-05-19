@@ -1,8 +1,6 @@
 /**
  * A class representing a source of games.
  * This is not supposed to be used directly, use one of the derived classes.
- * @property {string} name - The displayed name for this source
- * @property {Class} gameClass - The class for games of this source
  * @property {boolean} preferCache - Whether the source should prefer cached options when scanning
  * @abstract
  */
@@ -10,7 +8,8 @@ class Source {
 
 	static name = undefined;
 	static gameClass = undefined;
-
+	static gameDependency = null;
+	
 	preferCache = false;
 
 	/**

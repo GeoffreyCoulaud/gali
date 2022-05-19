@@ -16,7 +16,7 @@ class Criteria{
 
 }
 
-class EqualityCriteria extends Criteria{
+class EqCriteria extends Criteria{
 
 	constructor(referenceValue){
 		super();
@@ -29,7 +29,7 @@ class EqualityCriteria extends Criteria{
 
 }
 
-class InstanceOfCriteria extends Criteria{
+class InstCriteria extends Criteria{
 
 	constructor(referenceClass){
 		super();
@@ -42,7 +42,7 @@ class InstanceOfCriteria extends Criteria{
 
 }
 
-class RegexMatchingCriteria extends Criteria{
+class RegexCriteria extends Criteria{
 
 	constructor(referenceRegex){
 		super();
@@ -56,7 +56,7 @@ class RegexMatchingCriteria extends Criteria{
 
 }
 
-class PropertyMatchingCriteria extends Criteria{
+class PropCriteria extends Criteria{
 
 	constructor(property, criteria){
 		super();
@@ -73,12 +73,20 @@ class PropertyMatchingCriteria extends Criteria{
 
 /**
  * A class representing a Source dependency.
- * To match, a game must fit all the criteria of the dependency.
- * @property {Criteria[]} criteras - Criteria for the game to match
+ * To match, a game must fit all the PropCriterias of the dependency
+ * and be an instance of the given class.
+ * @property {class} klass - The class the game must be an instance of
+ * @property {PropCriteria[]} criteras - Criteria for the game to match
  */
-class SourceDependency{
+class Dependency{
 
-	constructor(...criterias){
+	/**
+	 * Create a new Dependency
+	 * @param {class} klass - The class the game must be an instance of
+	 * @param {PropCriteria[]} criterias - The PropCriterias to match for the dependency to be met
+	 */
+	constructor(klass, ...criterias){
+		this.klass = klass;
 		this.criterias = criterias;
 	}
 
@@ -88,6 +96,7 @@ class SourceDependency{
 	 * @returns {boolean}
 	 */
 	test(game){
+		if (!game instanceof this.klass) return false;
 		for (const criteria of this.criterias){
 			if (!criteria.test(game)) return false;
 		}
@@ -102,7 +111,7 @@ class SourceDependency{
 	*	- Is instance of LutrisGame
 	*   - Has a property "name" equal to "cemu"  
 
-	const dep = new SourceDependency(
+	const dep = new Dependency(
 		new InstanceOfCriteria(LutrisGame),
 		new PropertyMatchingCriteria(
 			"name",
@@ -114,9 +123,9 @@ class SourceDependency{
 
 module.exports = {
 	Criteria,
-	EqualityCriteria,
-	InstanceOfCriteria,
-	RegexMatchingCriteria,
-	PropertyMatchingCriteria,
-	SourceDependency,
+	EqCriteria,
+	InstCriteria,
+	RegexCriteria,
+	PropCriteria,
+	Dependency,
 };

@@ -7,14 +7,20 @@ const GameDir = require("./GameDir.js");
 const convertPath = require("../utils/convertPathPlatform.js");
 const config = require("../utils/configFormats.js");
 
+const { Dependency, PropCriteria, EqCriteria } = require("./Dependency.js");
+const LutrisGame = require("../games/LutrisGame.js");
+
 const WiiUEmulationSource = require("./WiiUEmulationSource.js");
 const CemuGame = require("../games/CemuGame.js");
 
-// TODO Remove dependency on lutris game
 class CemuSource extends WiiUEmulationSource {
 
 	static name = "Cemu in Lutris";
 	static gameClass = CemuGame;
+	static gameDependency = new Dependency(
+		LutrisGame,
+		new PropCriteria("gameSlug", new EqCriteria("cemu"))
+	)
 
 	preferCache = false;
 

@@ -1,6 +1,16 @@
 let { LutrisSource, CemuSource, ...simpleSources } = require("./scanners/all.js");
 simpleSources = Object.values(simpleSources);
 
+let sources = require("./scanners/all.js");
+sources = Object.values(sources);
+
+class ClassPlusArgs{
+	constructor(klass, args = []){
+		this.klass = klass;
+		this.args = args;
+	}
+}
+
 /**
  * A representation of a game library.
  * @property {Game[]} games - An array of games in the library
@@ -41,41 +51,41 @@ class Library{
 
 		this.empty();
 
-		let promises = [];
-		let results = [];
-
-		// Get lutris games
-		if (this.enabledSources.includes("Lutris")){
-			const lutris = new LutrisSource();
-			const lutrisGames = await lutris.scan(this.warn);
-			this.games.push(...lutrisGames);
-
-			// Get cemu games
-			// TODO remove dependency on the Lutris game "cemu" for cemu source.
-			if (this.enabledSources.includes("Cemu in Lutris")){
-				const cemuGame = lutrisGames.find(g=>g.gameSlug.toLowerCase() === "cemu");
-				if (cemuGame){
-					const cemu = new CemuSource(cemuGame, false);
-					promises.push(cemu.scan(this.warn));
-				}
-			}
-
-			results = await Promise.all(promises);
-			results = results.flat();
-			this.games.push(...results);
-		}
-
-		// Get games from straightforward sources
-		promises = [];
-		for (const klass of simpleSources){
-			if (this.enabledSources.includes(klass.name)){
-				const instance = new klass();
-				promises.push(instance.scan(this.warn));
+		const awaiting = [];
+		const scannables = [];
+		
+		// Prepare sources
+		for (const source of sources){
+			if (!this.enabledSources.includes(source.name)){
+				continue;
+			} 
+			if (source.gameDependency){
+				awaiting.push(source);
+			} else {
+				scannables.push(new ClassPlusArgs(source));
 			}
 		}
-		results = await Promise.all(promises);
-		results = results.flat();
-		this.games.push(...results);
+
+		// Scan sources
+		while (scannables.length > 0){
+
+			// Scan source
+			const [ scannable ] = scannables.splice(0, 1);
+			const { klass, args } = scannable;
+			const source = new klass(...args, this.preferCache);
+			const games = await source.scan(this.warn);
+			this.games.push(...games);
+
+			// Test if any awaiting class' dependency is met
+			for (const qlass of awaiting){
+				const game = games.find(game => qlass.gameDependency.test(game));
+				if (!game) continue;
+				scannables.push(new ClassPlusArgs(qlass, [game]));
+			}
+
+		}
+		
+		return;
 
 	}
 
