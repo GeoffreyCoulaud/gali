@@ -31,8 +31,9 @@ class SteamSource extends Source {
 
 	preferCache = false;
 
-	imageCacheDir = `${USER_DIR}/.local/share/Steam/appcache/librarycache`;
-	configPath = `${USER_DIR}/.local/share/Steam/config/libraryfolders.vdf`;
+	steamDir = `${USER_DIR}/.local/share/Steam`;
+	relativeImageCachePath    = "appcache/librarycache";
+	relativeLibraryConfigPath = "config/libraryfolders.vdf";
 
 	constructor(preferCache = false) {
 		super();
@@ -44,18 +45,12 @@ class SteamSource extends Source {
 	 * @returns {object} - Steam's config data (install dirs)
 	 * @private
 	 */
-	async _getConfig() {
-
-		const fileContents = await fsp.readFile(this.configPath, { encoding: "utf-8" });
-		const config = vdfParser.parse(fileContents);
-
-		// Validate
-		if (typeof config.libraryfolders === "undefined") {
-			throw "Invalid steam config : libraryfolders key undefined";
-		}
-
+	async _getLibraryConfig() {
+		const _path = `${this.steamDir}/${this.relativeLibraryConfigPath}`;
+		let config = await fsp.readFile(_path, { encoding: "utf-8" });
+		config = vdfParser.parse(config);
+		if (!config.libraryfolders) throw new Error("Invalid steam config");
 		return config;
-
 	}
 
 	/**
@@ -82,10 +77,11 @@ class SteamSource extends Source {
 	 * @private
 	 */
 	_getGameImages(game) {
+		const dir = `${this.steamDir}/${this.relativeImageCachePath}`;
 		const images = {
-			boxArtImage: `${this.imageCacheDir}/${game.appId}_library_600x900.jpg`,
-			coverImage: `${this.imageCacheDir}/${game.appId}_header.jpg`,
-			iconImage: `${this.imageCacheDir}/${game.appId}_icon.jpg`,
+			boxArtImage: `${dir}/${game.appId}_library_600x900.jpg`,
+			coverImage : `${dir}/${game.appId}_header.jpg`,
+			iconImage  : `${dir}/${game.appId}_icon.jpg`,
 		};
 		for (const [key, value] of Object.entries(images)) {
 			const imageExists = fs.existsSync(value);
@@ -137,7 +133,10 @@ class SteamSource extends Source {
 			const manDir = `${dir.path}/steamapps`;
 			let entries = [];
 			try { entries = await fsp.readdir(manDir); } catch (err) { continue; }
-			const manifests = entries.filter(string=>string.startsWith("appmanifest_") && string.endsWith(".acf"));
+			const manifests = entries.filter(string=>(
+				string.startsWith("appmanifest_") &&
+				string.endsWith(".acf")
+			));
 
 			// Get info from manifests
 			for (const manName of manifests) {
@@ -151,27 +150,19 @@ class SteamSource extends Source {
 				const appid = manData?.AppState?.appid;
 				const name = manData?.AppState?.name;
 				const isInstalled = stateFlags & INSTALLED_MASK;
+				if (!name || !appid) continue;
 
 				// Skip duplicate games, except if the installed state of the
 				// existing duplicate is worse.
-				const dupIndex = games.findIndex(g=>g.appId === appid);
-				if (dupIndex !== -1) {
-					const dupGame = games[dupIndex];
-					const isDupWorse = !dupGame.isInstalled && isInstalled;
-					if (isDupWorse) {
-						games.splice(dupIndex, 1);
-					} else {
-						continue;
-					}
+				const iDup = games.findIndex(g=>g.appId === appid);
+				if (iDup !== -1) {
+					if (!games[iDup].isInstalled && isInstalled) continue;
+					games.splice(iDup, 1);
 				}
 
 				// Skip explicitly excluded manifests
-				if (!name ||
-					!appid ||
-					IGNORED_ENTRIES_APPIDS.includes(appid) ||
-					strMatchAny(name, IGNORED_ENTRIES_REGEXES)) {
-					continue;
-				}
+				if (IGNORED_ENTRIES_APPIDS.includes(appid)) continue;
+				if (strMatchAny(name, IGNORED_ENTRIES_REGEXES)) continue;
 
 				// Build game
 				const game = new this.constructor.gameClass(appid, name, isInstalled);
@@ -191,9 +182,9 @@ class SteamSource extends Source {
 	 * @todo add support for non installed games
 	 */
 	async scan() {
-		const config = await this._getConfig();
-		const dirs = await this._getDirs(config);
-		const games = await this._getInstalledGames(dirs);
+		const lConfig = await this._getLibraryConfig();
+		const dirs    = await this._getDirs(lConfig);
+		const games   = await this._getInstalledGames(dirs);
 		return games;
 	}
 

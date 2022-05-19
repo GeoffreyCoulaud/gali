@@ -67,7 +67,6 @@ npm run start
 
 ## TODO
 * Implement UI (see [dedicated document](./resources/ui_design_process.md))
-* Steam : Exclude hidden games
 * Flatpak sources : Process start/stop/kill
 * Dolphin : Scan cached games
 * Dolphin : Differenciate between Gamecube and Wii games
