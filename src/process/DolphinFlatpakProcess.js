@@ -1,12 +1,6 @@
-const NotImplementedError = require("../NotImplementedError.js");
-const Process = require("./Process.js");
+const FlatpakProcess = require("./FlatpakProcess.js");
 
-class DolphinFlatpakProcess extends Process{
-
-	// TODO implement flatpak processes
-	async start(){
-		throw NotImplementedError("Starting flatpak Dolphin games is not yet supported");
-	}
-}
+// TODO implement dolphin flatpak process
+class DolphinFlatpakProcess extends FlatpakProcess{}
 
 module.exports = DolphinFlatpakProcess;

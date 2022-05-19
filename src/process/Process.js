@@ -112,7 +112,6 @@ class Process extends events.EventEmitter {
 			this.isRunning = false;
 		}
 		return hasKilled;
-
 	}
 
 	/**

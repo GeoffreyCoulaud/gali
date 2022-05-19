@@ -1,12 +1,6 @@
-const NotImplementedError = require("../NotImplementedError.js");
-const Process = require("./Process.js");
+const FlatpakProcess = require("./FlatpakProcess.js");
 
-class CitraFlatpakProcess extends Process{
-
-	// TODO implement flatpak processes
-	async start(){
-		throw NotImplementedError("Starting flatpak Citra games is not yet supported");
-	}
-}
+// TODO Implement citra flatpak process
+class CitraFlatpakProcess extends FlatpakProcess{}
 
 module.exports = CitraFlatpakProcess;

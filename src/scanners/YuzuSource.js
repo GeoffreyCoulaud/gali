@@ -98,7 +98,6 @@ class YuzuSource extends SwitchEmulationSource {
 
 	/**
 	 * Get yuzu installed games.
-	 * @throws {NotImplementedError} - Will throw a "Not implemented" error on every case, this is not yet supported
 	 * @param {object} configData - Yuzu's config data
 	 * @private
 	 * @todo

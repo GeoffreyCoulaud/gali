@@ -1,12 +1,6 @@
-const NotImplementedError = require("../NotImplementedError.js");
-const Process = require("./Process.js");
+const FlatpakProcess = require("./FlatpakProcess.js");
 
-class PPSSPPFlatpakProcess extends Process{
-
-	// TODO implement flatpak processes
-	async start(){
-		throw NotImplementedError("Starting flatpak PPSSPP games is not yet supported");
-	}
-}
+// TODO implement PPSSPP flatpak process
+class PPSSPPFlatpakProcess extends FlatpakProcess{}
 
 module.exports = PPSSPPFlatpakProcess;

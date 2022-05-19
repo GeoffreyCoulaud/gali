@@ -1,12 +1,6 @@
-const NotImplementedError = require("../NotImplementedError.js");
-const Process = require("./Process.js");
+const FlatpakProcess = require("./FlatpakProcess.js");
 
-class SteamFlatpakProcess extends Process{
-
-	// TODO implement flatpak processes
-	async start(){
-		throw NotImplementedError("Starting flatpak Steam games is not yet supported");
-	}
-}
+// TODO implement steam flatpak process
+class SteamFlatpakProcess extends FlatpakProcess{}
 
 module.exports = SteamFlatpakProcess;
