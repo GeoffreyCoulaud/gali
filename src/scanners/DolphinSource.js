@@ -51,8 +51,9 @@ class DolphinSource extends EmulationSource {
 	 * @private
 	 */
 	async _getCachedROMs() {
-		// TODO Read dolphin gamelist cache
 		// Cache path : $HOME/.cache/dolphin-emu/gamelist.cache
+		// TODO Read dolphin gamelist cache
+		return [];
 	}
 
 	/**
@@ -101,47 +102,13 @@ class DolphinSource extends EmulationSource {
 
 	/**
 	 * Get all dolphin games.
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {DolphinGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
-
-		// Get config
-		let config;
-		try {
-			config = await this._getConfig();
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to read dolphin config file : ${error}`);
-			}
-		}
-
-		// Get ROM dirs
-		let romDirs = [];
-		if (typeof config !== "undefined") {
-			try {
-				romDirs = await this._getROMDirs(config);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get dolphin ROM dirs : ${error}`);
-				}
-			}
-		}
-
-		// Get ROM games
-		let romGames = [];
-		if (romDirs.length > 0) {
-			try {
-				romGames = await this._getROMGames(romDirs);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get dolphin ROMs : ${error}`);
-				}
-			}
-		}
-
+	async scan() {
+		const config = await this._getConfig();
+		const romDirs = await this._getROMDirs(config);
+		const romGames = await this._getROMGames(romDirs);
 		return romGames;
-
 	}
 
 }

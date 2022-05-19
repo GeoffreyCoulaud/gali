@@ -93,42 +93,16 @@ class RetroarchSource extends Source {
 
 	/**
 	 * Get all retroarch games
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {RetroarchGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
-
-
-		// Get retroarch playlists
-		let playlistPaths = [];
-		try {
-			playlistPaths = await this._getPlaylistPaths();
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to get retroarch playlists : ${error}`);
-			}
-		}
-
-
-		// Read playlists
+	async scan() {
 		const games = [];
-		for (const playlistPath of playlistPaths) {
-			let playlistGames;
-			try {
-				playlistGames = await this._getGamesFromPlaylist(playlistPath);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get retroarch games from ${playlistPath} : ${error}`);
-				}
-				playlistGames = undefined;
-			}
-			if (playlistGames) {
-				games.push(...playlistGames);
-			}
+		const pPaths = await this._getPlaylistPaths();
+		for (const pPath of pPaths) {
+			const pGames = await this._getGamesFromPlaylist(pPath);
+			games.push(...pGames);
 		}
-
 		return games;
-
 	}
 
 }

@@ -13,6 +13,8 @@ const LutrisGame = require("../games/LutrisGame.js");
 const WiiUEmulationSource = require("./WiiUEmulationSource.js");
 const CemuGame = require("../games/CemuGame.js");
 
+const USER_DIR = process.env["HOME"];
+
 class CemuSource extends WiiUEmulationSource {
 
 	static name = "Cemu in Lutris";
@@ -54,7 +56,7 @@ class CemuSource extends WiiUEmulationSource {
 	 * @returns {CemuGame[]} - An array of found cached games
 	 * @private
 	 */
-	async _getCachedROMs(configData, prefix) {
+	async _getCachedROMGames(configData, prefix) {
 
 		// Search into config for cached games
 		const games = [];
@@ -141,10 +143,10 @@ class CemuSource extends WiiUEmulationSource {
 	 * @returns {CemuGame[]} - An array of found games
 	 * @private
 	 */
-	async _getROMGames(dirs, warn = false) {
+	async _getROMGames(dirs) {
 
 		// Scan cemu dirs
-		const gameRomPaths = await this._getROMs(dirs, this.romRegex, warn);
+		const gameRomPaths = await this._getROMs(dirs, this.romRegex);
 
 		// Convert found paths into cemu games
 		const romGamesPromises = gameRomPaths.map(async (romPath)=>{
@@ -172,78 +174,25 @@ class CemuSource extends WiiUEmulationSource {
 	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {CemuGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
+	async scan() {
 
-		// Read lutris config for cemu (to get cemu's exe path)
-		const USER_DIR = process.env["HOME"];
-		const lutrisConfigPath = path.join(USER_DIR, ".config/lutris/games", `${this.cemuLutrisGame.configPath}.yml`);
-		let cemuExePath, cemuPrefixPath;
-		try {
-			const lutrisConfigContents = await fsp.readFile(lutrisConfigPath, "utf-8");
-			const parsedLutrisConfig = YAML.parse(lutrisConfigContents);
-			cemuExePath = parsedLutrisConfig.game.exe;
-			cemuPrefixPath = parsedLutrisConfig.game.prefix;
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to read lutris's game config file for cemu : ${error}`);
-			}
+		// Read lutris config for cemu.
+		// This is to get cemu's exe path.
+		const lConfigPath = path.join(USER_DIR, ".config/lutris/games", `${this.cemuLutrisGame.configPath}.yml`);
+		let lConfig = await fsp.readFile(lConfigPath, "utf-8");
+		lConfig = YAML.parse(lConfig);
+		const { cemuExePath, cemuPrefixPath } = lConfig.game;
+
+		// Scan for games
+		const configData = await this._getConfig(cemuExePath);
+		let games;
+		if (this.preferCache) {
+			games = await this._getCachedROMGames(configData, cemuPrefixPath);
+		} else {
+			const romDirs = await this._getROMDirs(configData, cemuPrefixPath);
+			games = await this._getROMGames(romDirs);
 		}
-
-		// Read cemu's config
-		let configData;
-		if (typeof cemuExePath !== "undefined") {
-			try {
-				configData = await this._getConfig(cemuExePath);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to read cemu config file : ${error}`);
-				}
-			}
-		}
-
-		// If (scan) : scan cemu's game paths for games and ignore cemu's game cache
-		// Else      : trust cemu's game cache
-		let romGames = [];
-		if (typeof configData !== "undefined" && typeof cemuPrefixPath !== "undefined") {
-
-			if (!this.preferCache) {
-
-				// Get cemu's ROM dirs
-				let romDirs = [];
-				try {
-					romDirs = await this._getROMDirs(configData, cemuPrefixPath);
-				} catch (error) {
-					if (warn){
-						console.warn(`Unable to get cemu ROM dirs : ${error}`);
-					}
-				}
-
-				// Scan ROMDirs for ROMs
-				if (romDirs.length > 0) {
-					try {
-						romGames = await this._getROMGames(romDirs, warn);
-					} catch (error) {
-						if (warn){
-							console.warn(`Unable to get cemu ROMs : ${error}`);
-						}
-					}
-				}
-
-			} else {
-
-				// Get cemu's cached ROM games
-				try {
-					romGames = await this._getCachedROMs(configData, cemuPrefixPath);
-				} catch (error) {
-					if (warn){
-						console.warn(`Unable to get cemu cached ROMs : ${error}`);
-					}
-				}
-
-			}
-		}
-
-		return romGames;
+		return games;
 
 	}
 

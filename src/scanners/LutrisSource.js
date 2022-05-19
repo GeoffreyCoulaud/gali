@@ -17,6 +17,18 @@ class LutrisSource extends Source {
 	dbPath = `${USER_DIR}/.local/share/lutris/pga.db`;
 	bannerPath = `${USER_DIR}/.local/share/lutris/banners`;
 	iconPath = `${USER_DIR}/.local/share/icons/hicolor/128x128/apps`;
+	databaseRequest = `
+		SELECT 
+			name, slug, configpath, installed 
+		FROM
+			'games' 
+		WHERE 
+			NOT hidden
+			AND name IS NOT NULL 
+			AND slug IS NOT NULL
+			AND configPath IS NOT NULL
+		;
+	`;
 
 	constructor(preferCache = false) {
 		super();
@@ -41,41 +53,32 @@ class LutrisSource extends Source {
 	}
 
 	/**
-	 * Get all lutris games
-	 * @param {boolean} warn - Whether to display additional warnings
-	 * @returns {LutrisGame[]} - A list of found games
+	 * Get all Lutris games
+	 * @returns {LutrisGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
-		const games = [];
+	async scan() {
 
 		// Open DB
-		let db;
-		try {
-			db = await sqlite.open({ filename: this.dbPath, driver: sqlite3.cached.Database });
-		} catch (error) {
-			if (warn){
-				console.warn(`Could not open lutris DB (${error})`);
-			}
-			return games;
-		}
+		const db = await sqlite.open({
+			filename: this.dbPath,
+			driver: sqlite3.cached.Database
+		});
 
 		// Get games
-		const DB_REQUEST = "SELECT name, slug, configpath, installed FROM 'games' WHERE NOT hidden";
-		const results = await db.all(DB_REQUEST);
+		const games = [];
+		const results = await db.all(this.databaseRequest);
 		for (const row of results) {
-			if (row.slug && row.name && row.configpath) {
-				const game = new this.constructor.gameClass(
-					row.slug,
-					row.name,
-					row.configpath,
-					row.installed
-				);
-				this._getGameImages(game);
-				games.push(game);
-			}
+			const game = new this.constructor.gameClass(
+				row.slug,
+				row.name,
+				row.configpath,
+				row.installed
+			);
+			this._getGameImages(game);
+			games.push(game);
 		}
-
 		return games;
+
 	}
 
 }

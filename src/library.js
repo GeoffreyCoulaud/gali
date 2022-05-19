@@ -1,6 +1,3 @@
-let { LutrisSource, CemuSource, ...simpleSources } = require("./scanners/all.js");
-simpleSources = Object.values(simpleSources);
-
 let sources = require("./scanners/all.js");
 sources = Object.values(sources);
 
@@ -53,12 +50,12 @@ class Library{
 
 		const awaiting = [];
 		const scannables = [];
-		
+
 		// Prepare sources
 		for (const source of sources){
 			if (!this.enabledSources.includes(source.name)){
 				continue;
-			} 
+			}
 			if (source.gameDependency){
 				awaiting.push(source);
 			} else {
@@ -69,22 +66,31 @@ class Library{
 		// Scan sources
 		while (scannables.length > 0){
 
-			// Scan source
+			// Create class instance (source)
 			const [ scannable ] = scannables.splice(0, 1);
 			const { klass, args } = scannable;
 			const source = new klass(...args, this.preferCache);
-			const games = await source.scan(this.warn);
+
+			// Scan source
+			let games = new Array();
+			try {
+				games = await source.scan(this.warn);
+			} catch (err){
+				if (this.warn){
+					console.warn(`Error while scanning ${klass.name} :`, err);
+				}
+			}
 			this.games.push(...games);
 
 			// Test if any awaiting class' dependency is met
 			for (const qlass of awaiting){
-				const game = games.find(game => qlass.gameDependency.test(game));
+				const game = games.find(game=>qlass.gameDependency.test(game));
 				if (!game) continue;
 				scannables.push(new ClassPlusArgs(qlass, [game]));
 			}
 
 		}
-		
+
 		return;
 
 	}

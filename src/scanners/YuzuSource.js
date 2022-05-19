@@ -1,7 +1,6 @@
 const fsp = require("fs/promises");
 const path = require("path");
 
-const NotImplementedError = require("../NotImplementedError.js");
 const GameDir = require("./GameDir.js");
 const config = require("../utils/configFormats.js");
 
@@ -107,65 +106,21 @@ class YuzuSource extends SwitchEmulationSource {
 	async _getInstalledGames(configData) {
 
 		// TODO implement scanning for installed games
-		throw new NotImplementedError("Scanning for installed yuzu games is not implemented");
+		console.warn("Scanning for installed yuzu games is not implemented");
+		return [];
 
 	}
 
 	/**
 	 * Get all yuzu games
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {YuzuGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
-
-		// Get config
-		let configData;
-		try {
-			configData = await this._getConfig();
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to read yuzu config file : ${error}`);
-			}
-		}
-
-		// Get ROM dirs
-		let romDirs = [];
-		if (typeof configData !== "undefined") {
-			try {
-				romDirs = await this._getROMDirs(configData);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get yuzu ROM dirs : ${error}`);
-				}
-			}
-		}
-
-		// Get ROM games
-		let romGames = [];
-		if (romDirs.length > 0) {
-			try {
-				romGames = await this._getROMGames(romDirs);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get yuzu ROMs : ${error}`);
-				}
-			}
-		}
-
-		// Get installed games
-		let installedGames = [];
-		if (typeof configData !== "undefined") {
-			try {
-				installedGames = await this._getInstalledGames(configData);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get yuzu installed games : ${error}`);
-				}
-			}
-		}
-
+	async scan() {
+		const configData = await this._getConfig();
+		const romDirs = await this._getROMDirs(configData);
+		const romGames = await this._getROMGames(romDirs);
+		const installedGames = await this._getInstalledGames(configData);
 		return [...romGames, ...installedGames];
-
 	}
 
 }

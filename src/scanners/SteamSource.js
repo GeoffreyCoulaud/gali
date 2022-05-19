@@ -187,49 +187,14 @@ class SteamSource extends Source {
 
 	/**
 	 * Get all steam games
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {SteamGame[]} - An array of found games
 	 * @todo add support for non installed games
 	 */
-	async scan(warn = false) {
-
-		// Get config
-		let config;
-		try {
-			config = await this._getConfig();
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to get steam config : ${error}`);
-			}
-		}
-
-		// Get game dirs
-		let dirs = [];
-		if (typeof config !== "undefined") {
-			try {
-				dirs = await this._getDirs(config);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get steam install dirs : ${error}`);
-				}
-			}
-		}
-
-		// Get games
-		let games = [];
-		if (dirs.length > 0) {
-			try {
-				games = await this._getInstalledGames(dirs);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get steam installed games : ${error}`);
-				}
-			}
-		}
-
-		// ? Add support for non-installed games ?
+	async scan() {
+		const config = await this._getConfig();
+		const dirs = await this._getDirs(config);
+		const games = await this._getInstalledGames(dirs);
 		return games;
-
 	}
 
 }

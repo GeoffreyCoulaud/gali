@@ -19,33 +19,26 @@ class HeroicSource extends Source {
 		this.preferCache = preferCache;
 	}
 
-	async scan(warn = false) {
+	/**
+	 * Get all heroic launcher games
+	 * @returns {HeroicGame[]} - An array of found games
+	 * @todo support non installed games
+	 */
+	async scan() {
 
 		// Read library.json file
-		let library;
-		try {
-			const fileContents = await fsp.readFile(this.configPath, "utf-8");
-			library = JSON.parse(fileContents);
-			library = library?.["library"];
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to read heroic library.json : ${error}`);
-			}
-			library = undefined;
-		}
+		let library = await fsp.readFile(this.configPath, "utf-8");
+		library = JSON.parse(library).library;
 
 		// Build games
 		const games = [];
-		if (library) {
-			for (const entry of library) {
-				if (entry?.["is_game"]) {
-					const game = new this.constructor.gameClass(entry.title, entry.app_name);
-					game.isInstalled = entry?.is_installed;
-					games.push(game);
-				}
+		for (const entry of library) {
+			if (entry?.["is_game"]) {
+				const game = new this.constructor.gameClass(entry.title, entry.app_name);
+				game.isInstalled = entry?.is_installed;
+				games.push(game);
 			}
 		}
-
 		return games;
 
 	}

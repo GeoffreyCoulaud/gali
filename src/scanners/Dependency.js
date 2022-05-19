@@ -91,12 +91,12 @@ class Dependency{
 	}
 
 	/**
-	 * Test if a game fulfils the dependency. 
+	 * Test if a game fulfils the dependency.
 	 * @param {Game} game - The game to test
 	 * @returns {boolean}
 	 */
 	test(game){
-		if (!game instanceof this.klass) return false;
+		if (!(game instanceof this.klass)) return false;
 		for (const criteria of this.criterias){
 			if (!criteria.test(game)) return false;
 		}
@@ -109,14 +109,14 @@ class Dependency{
 /*
 	* Expliciting that a Source depends on a game that :
 	*	- Is instance of LutrisGame
-	*   - Has a property "name" equal to "cemu"  
+	*   - Has a property "name" equal to "cemu"
 
 	const dep = new Dependency(
 		new InstanceOfCriteria(LutrisGame),
 		new PropertyMatchingCriteria(
 			"name",
 			new EqualityCriteria("cemu")
-		) 
+		)
 	)
 
 */

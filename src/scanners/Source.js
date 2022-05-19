@@ -9,12 +9,13 @@ class Source {
 	static name = undefined;
 	static gameClass = undefined;
 	static gameDependency = null;
-	
+
 	preferCache = false;
 
 	/**
 	 * Scan for games of this class.
 	 * @param {boolean} warn - Whether to display additional warnings
+	 * @throws {Error} - If an error happens during the scan
 	 * @returns {Game[]} - An array of found games
 	 * @virtual
 	 * @async

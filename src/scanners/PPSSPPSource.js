@@ -79,47 +79,13 @@ class PPSSPPSource extends EmulationSource {
 
 	/**
 	 * Get all ppsspp games
-	 * @param {boolean} warn - Whether to display additional warnings.
 	 * @returns {PPSSPPGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
-
-		// Get config
-		let configData;
-		try {
-			configData = await this._getConfig();
-		} catch (error) {
-			if (warn){
-				console.warn(`Unable to get PPSSPP config : ${error}`);
-			}
-		}
-
-		// Get rom dirs
-		let romDirs = [];
-		if (typeof configData !== "undefined") {
-			try {
-				romDirs = await this._getROMDirs(configData);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get PPSSPP rom dirs : ${error}`);
-				}
-			}
-		}
-
-		// Get roms
-		let romGames = [];
-		if (romDirs.length > 0) {
-			try {
-				romGames = await this._getROMGames(romDirs);
-			} catch (error) {
-				if (warn){
-					console.warn(`Unable to get PPSSPP roms : ${error}`);
-				}
-			}
-		}
-
+	async scan() {
+		const config = await this._getConfig();
+		const romDirs = await this._getROMDirs(config);
+		const romGames = await this._getROMGames(romDirs);
 		return romGames;
-
 	}
 
 }
