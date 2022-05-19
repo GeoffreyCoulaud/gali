@@ -74,7 +74,7 @@ class Library{
 			// Scan source
 			let games = new Array();
 			try {
-				games = await source.scan(this.warn);
+				games = await source.scan();
 			} catch (err){
 				if (this.warn){
 					console.warn(`Error while scanning ${klass.name} :`, err);

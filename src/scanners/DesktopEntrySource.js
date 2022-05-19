@@ -160,13 +160,12 @@ class DesktopEntrySource extends Source {
 
 	/**
 	 * Get all games that have a desktop entry
-	 * @param {boolean} warn - Whether to display additional warnings
 	 * @returns {DesktopEntryGame[]} - An array of found games
 	 */
-	async scan(warn = false) {
+	async scan() {
 
 		// Get entries paths
-		const paths = await this._getDesktopEntries(warn);
+		const paths = await this._getDesktopEntries();
 
 		// Read XDG icon themes
 		let themes;
