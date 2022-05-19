@@ -15,9 +15,9 @@ const CemuGame = require("../games/CemuGame.js");
 
 const USER_DIR = process.env["HOME"];
 
-class CemuSource extends WiiUEmulationSource {
+class CemuLutrisSource extends WiiUEmulationSource {
 
-	static name = "Cemu in Lutris";
+	static name = "Cemu (Lutris)";
 	static gameClass = CemuGame;
 	static gameDependency = new Dependency(
 		LutrisGame,
@@ -198,4 +198,4 @@ class CemuSource extends WiiUEmulationSource {
 
 }
 
-module.exports = CemuSource;
+module.exports = CemuLutrisSource;

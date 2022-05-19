@@ -1,5 +1,5 @@
 module.exports = {
-	CemuSource             : require("./CemuSource.js"),
+	CemuLutrisSource       : require("./CemuLutrisSource.js"),
 	CitraSource            : require("./CitraSource.js"),
 	CitraFlatpakSource     : require("./CitraFlatpakSource.js"),
 	DolphinSource          : require("./DolphinSource.js"),
