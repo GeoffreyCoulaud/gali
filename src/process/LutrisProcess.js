@@ -1,7 +1,5 @@
 const child_process = require("child_process");
 
-const NoCommandError = require("../NoCommandError.js");
-const commandExists = require("../utils/commandExists.js");
 const ad = require("../utils/appDirectories.js");
 
 const Process = require("./Process.js");
@@ -24,7 +22,7 @@ function execFilePromise(command, args = [], options = {}){
  */
 class LutrisProcess extends Process {
 
-	commandOptions = ["sh", "zsh", "bash"];
+	command = "sh";
 
 	/**
 	 * Create a lutris game process container
@@ -42,23 +40,10 @@ class LutrisProcess extends Process {
 	* @returns {string} - An absolute path to the script
 	*/
 	static async getStartScript(gameSlug, scriptBaseName = "") {
-
-		// Get the start script from lutris
-		const lutrisCommand = "lutris";
-		const doesCommandExist = await commandExists(lutrisCommand);
-		if (!doesCommandExist) {
-			throw new NoCommandError("No lutris command found");
-		}
-
-		// Store the script
-		if (!scriptBaseName){
-			scriptBaseName = `lutris-${gameSlug}.sh`;
-		}
+		if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
 		const scriptPath = `${ad.APP_START_SCRIPTS_DIR}/${scriptBaseName}`;
-		await execFilePromise(lutrisCommand, [gameSlug, "--output-script", scriptPath]);
-
+		await execFilePromise("lutris", [gameSlug, "--output-script", scriptPath]);
 		return scriptPath;
-
 	}
 
 	/**
@@ -66,11 +51,10 @@ class LutrisProcess extends Process {
 	 */
 	async start() {
 		const scriptPath = await this.constructor.getStartScript(this.gameSlug);
-		const command = await this._selectCommand();
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			[scriptPath],
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;
