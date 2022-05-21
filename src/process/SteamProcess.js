@@ -8,7 +8,7 @@ const StartOnlyProcess = require("./StartOnlyProcess.js");
  */
 class SteamProcess extends StartOnlyProcess {
 
-	commandOptions = ["steam"];
+	command = "steam";
 
 	/**
 	 * Create a steam game process container
@@ -24,11 +24,10 @@ class SteamProcess extends StartOnlyProcess {
 	 * Start the game in a subprocess
 	 */
 	async start() {
-		const command = await this._selectCommand();
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			[`steam://rungameid/${this.appId}`],
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();

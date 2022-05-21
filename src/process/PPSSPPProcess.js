@@ -8,7 +8,7 @@ const Process = require("./Process.js");
  */
 class PPSSPPProcess extends Process {
 
-	commandOptions = ["PPSSPPSDL", "PPSSPPQt"];
+	command = "PPSSPPSDL";
 
 	/**
 	 * Create a ppsspp game container
@@ -23,11 +23,10 @@ class PPSSPPProcess extends Process {
 	 * Start the game in a subprocess
 	 */
 	async start() {
-		const command = await this._selectCommand();
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			[this.romPath],
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;

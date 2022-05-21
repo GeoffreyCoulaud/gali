@@ -8,7 +8,7 @@ const Process = require("./Process.js");
  */
 class DolphinProcess extends Process {
 
-	commandOptions = ["dolphin-emu"];
+	command = "dolphin-emu";
 
 	/**
 	 * Create a dolphin game process container.
@@ -24,15 +24,14 @@ class DolphinProcess extends Process {
 	 * @param {boolean} noUi - Whether to show dolphin's UI or only the game
 	 */
 	async start(noUi = false) {
-		const command = await this._selectCommand();
 		const args = ["-e", this.romPath];
 		if (noUi){
 			args.splice(0, 0, "-b");
 		}
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			args,
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;

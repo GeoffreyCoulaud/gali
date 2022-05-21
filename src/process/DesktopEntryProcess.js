@@ -30,7 +30,7 @@ class DesktopEntryProcess extends Process {
 		this.process = child_process.spawn(
 			this.spawnCommand,
 			this.spawnArgs,
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;

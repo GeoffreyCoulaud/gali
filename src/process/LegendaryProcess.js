@@ -9,7 +9,7 @@ const StartOnlyProcess = require("./StartOnlyProcess.js");
  */
 class LegendaryProcess extends StartOnlyProcess {
 
-	commandOptions = ["legendary"];
+	command = "legendary";
 
 	/**
 	 * Create a legendary game process container
@@ -26,15 +26,14 @@ class LegendaryProcess extends StartOnlyProcess {
 	 * @param {boolean} offline - Whether to start the game offline. Defaults to false.
 	 */
 	async start(offline = false) {
-		const command = await this._selectCommand();
 		const args = ["launch", this.appName];
 		if (offline){
 			args.splice(1, 0, "--offline");
 		}
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			args,
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();

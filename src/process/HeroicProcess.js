@@ -9,7 +9,7 @@ const StartOnlyProcess = require("./StartOnlyProcess.js");
  */
 class HeroicProcess extends StartOnlyProcess {
 
-	commandOptions = ["xdg-open"];
+	command = "xdg-open";
 
 	/**
 	 * Create a legendary game process container
@@ -24,12 +24,11 @@ class HeroicProcess extends StartOnlyProcess {
 	 * Start the game in a subprocess
 	 */
 	async start() {
-		const command = await this._selectCommand();
 		const args = [`heroic://launch/${this.appName}`];
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			args,
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this.process.unref();
 		this._bindProcessEvents();

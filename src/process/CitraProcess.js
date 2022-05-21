@@ -8,7 +8,7 @@ const Process = require("./Process.js");
  */
 class CitraProcess extends Process {
 
-	commandOptions = ["citra", "citra-qt"];
+	command = "citra-qt";
 
 	/**
 	 * Create a citra game process container
@@ -23,11 +23,10 @@ class CitraProcess extends Process {
 	 * Start the game in a subprocess
 	 */
 	async start() {
-		const command = await this._selectCommand();
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			[this.romPath],
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;

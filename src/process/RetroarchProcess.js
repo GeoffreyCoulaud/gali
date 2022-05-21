@@ -9,7 +9,7 @@ const Process = require("./Process.js");
  */
 class RetroarchProcess extends Process {
 
-	commandOptions = ["retroarch"];
+	command = "retroarch";
 
 	/**
 	 * Create a retroarch game process container
@@ -26,11 +26,10 @@ class RetroarchProcess extends Process {
 	 * Start the game in a subprocess
 	 */
 	async start() {
-		const command = await this._selectCommand();
 		this.process = child_process.spawn(
-			command,
+			this.command,
 			["--libretro", this.corePath, this.romPath],
-			this.constructor.defaultSpawnOptions
+			this.spawnOptions
 		);
 		this._bindProcessEvents();
 		return;
