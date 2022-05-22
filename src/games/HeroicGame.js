@@ -14,6 +14,7 @@ class HeroicGame extends Game {
 	 */
 	constructor(name, appName) {
 		super(name);
+		this.appName = appName;
 	}
 }
 

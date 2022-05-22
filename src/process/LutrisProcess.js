@@ -1,20 +1,7 @@
-const child_process = require("child_process");
-
+const { execFilePromise } = require("../utils/subprocess.js");
 const ad = require("../utils/appDirectories.js");
 
 const Process = require("./Process.js");
-
-/**
- * A promise version of the child_process execFile
- */
-function execFilePromise(command, args = [], options = {}){
-	return new Promise((resolve, reject)=>{
-		child_process.execFile(command, args, options, (error, stdout, stderr)=>{
-			if (error) reject(error);
-			else resolve(stdout, stderr);
-		});
-	});
-}
 
 /**
  * A wrapper for lutris game process management
@@ -24,13 +11,9 @@ class LutrisProcess extends Process {
 
 	command = "sh";
 
-	/**
-	 * Create a lutris game process container
-	 * @param {string} gameSlug - A lutris game slug
-	 */
-	constructor(gameSlug) {
+	constructor (game) {
 		super();
-		this.gameSlug = gameSlug;
+		this.game = game;
 	}
 
 	/**
@@ -46,18 +29,11 @@ class LutrisProcess extends Process {
 		return scriptPath;
 	}
 
-	/**
-	 * Start the game in a subprocess
-	 */
+	// ? Maybe we need a cleaner way to prepare before starting...
 	async start() {
-		const scriptPath = await this.constructor.getStartScript(this.gameSlug);
-		this.process = child_process.spawn(
-			this.command,
-			[scriptPath],
-			this.spawnOptions
-		);
-		this._bindProcessEvents();
-		return;
+		const scriptPath = await this.constructor.getStartScript(this.game.gameSlug);
+		this.args[0] = scriptPath; // Replace the script path
+		await super.start();
 	}
 
 }

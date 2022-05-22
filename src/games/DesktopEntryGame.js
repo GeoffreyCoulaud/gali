@@ -15,6 +15,7 @@ class DesktopEntryGame extends Game {
 	 */
 	constructor(name, exec) {
 		super(name);
+		this.exec = exec;
 	}
 }
 

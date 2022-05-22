@@ -1,5 +1,3 @@
-const child_process = require("child_process");
-
 const Process = require("./Process.js");
 
 /**
@@ -11,29 +9,11 @@ class RetroarchProcess extends Process {
 
 	command = "retroarch";
 
-	/**
-	 * Create a retroarch game process container
-	 * @param {string} romPath The game's ROM path
-	 * @param {string} corePath The game's libretro core path
-	 */
-	constructor(romPath, corePath) {
+	constructor (game) {
 		super();
-		this.romPath = romPath;
-		this.corePath = corePath;
+		this.args.push("--libretro", game.corePath, game.romPath);
 	}
 
-	/**
-	 * Start the game in a subprocess
-	 */
-	async start() {
-		this.process = child_process.spawn(
-			this.command,
-			["--libretro", this.corePath, this.romPath],
-			this.spawnOptions
-		);
-		this._bindProcessEvents();
-		return;
-	}
 }
 
 module.exports = RetroarchProcess;

@@ -1,6 +1,12 @@
 const FlatpakProcess = require("./FlatpakProcess.js");
 
-// TODO Implement citra flatpak process
-class CitraFlatpakProcess extends FlatpakProcess{}
+class CitraFlatpakProcess extends FlatpakProcess {
+
+	constructor (game) {
+		super("org.citra_emu.citra");
+		this.args.push(game.path);
+	}
+
+}
 
 module.exports = CitraFlatpakProcess;

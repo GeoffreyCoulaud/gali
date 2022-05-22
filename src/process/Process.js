@@ -1,3 +1,4 @@
+const child_process = require("child_process");
 const process = require("process");
 const events = require("events");
 
@@ -17,7 +18,9 @@ const events = require("events");
 class Process extends events.EventEmitter {
 
 	command      = undefined;
+	args         = [];
 	spawnOptions = { detached: true };
+
 	process      = undefined;
 	isRunning    = false;
 	isKillable   = true;
@@ -27,7 +30,7 @@ class Process extends events.EventEmitter {
 	 * Update isRunning on process events and bubble these events up.
 	 * @access protected
 	 */
-	_bindProcessEvents() {
+	_bindProcessEvents () {
 		this.process.on("spawn", (...args)=>{
 			this.isRunning = true;
 			this.emit("spawn", ...args);
@@ -48,7 +51,7 @@ class Process extends events.EventEmitter {
 	 * @param {boolean} wholeGroup - Whether to send the signal to the process PID only or also to its group
 	 * @returns {boolean} - True on success, else false
 	 */
-	sendSignal(signal, wholeGroup = false) {
+	sendSignal (signal, wholeGroup = false) {
 		if (!this.process.pid) {
 			console.error(`Could not signal ${this.process.pid}${wholeGroup ? "(group)" : ""} ${signal}`);
 			return false;
@@ -68,17 +71,43 @@ class Process extends events.EventEmitter {
 
 	/**
 	 * Start the game in a subprocess.
-	 * @abstract
 	 */
-	async start() { }
+	async start() {
+		
+		// Spawn a child process
+		this.process = child_process.spawn(
+			this.command,
+			this.args,
+			this.spawnOptions
+		);
+
+		// If we can't control it, don't wait for it
+		if (
+			!this.isStoppable && 
+			!this.isKillable
+		){
+			this.process.unref();
+		}
+
+		// Bind events emitted by subprocess to this
+		this._bindProcessEvents();
+
+		return;
+	}
 
 	/**
 	 * Send the SIGKILL signal to the game's subprocess.
 	 * Will do nothing if the game is not running.
 	 * @returns {boolean} True on success, else false
 	 */
-	kill() {
-		if (!this.isRunning) { return true; }
+	kill () {
+		if (!this.isKillable) {
+			console.warn(`${this.constructor.name} can't be killed`);
+			return false;
+		}
+		if (!this.isRunning) {
+			return true;
+		}
 		const hasKilled = this.sendSignal("SIGKILL", true);
 		if (hasKilled){
 			this.isRunning = false;
@@ -91,8 +120,14 @@ class Process extends events.EventEmitter {
 	 * Will do nothing if the game is not running.
 	 * @returns {boolean} True on success, else false
 	 */
-	stop() {
-		if (!this.isRunning) { return true; }
+	stop () {
+		if (!this.isStoppable) {
+			console.warn(`${this.constructor.name} can't be stopped`);
+			return false;
+		}
+		if (!this.isRunning) {
+			return true;
+		}
 		const hasStopped = this.sendSignal("SIGTERM", true);
 		if (hasStopped){
 			this.isRunning = false;

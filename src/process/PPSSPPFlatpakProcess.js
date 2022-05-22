@@ -1,6 +1,12 @@
 const FlatpakProcess = require("./FlatpakProcess.js");
 
-// TODO implement PPSSPP flatpak process
-class PPSSPPFlatpakProcess extends FlatpakProcess{}
+class PPSSPPFlatpakProcess extends FlatpakProcess {
+
+	constructor (game) {
+		super("org.ppsspp.PPSSPP");
+		this.args.push(game.romPath);
+	}
+
+}
 
 module.exports = PPSSPPFlatpakProcess;

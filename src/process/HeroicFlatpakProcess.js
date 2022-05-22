@@ -1,6 +1,15 @@
 const FlatpakProcess = require("./FlatpakProcess.js");
 
-// TODO implement heroic flatpak process
-class HeroicFlatpakProcess extends FlatpakProcess{}
+class HeroicFlatpakProcess extends FlatpakProcess{
+
+	isStoppable = false;
+	isKillable = false;
+
+	constructor (game) {
+		super("com.heroicgameslauncher.hgl");
+		this.args.push(`heroic://launch/${game.appName}`);
+	}
+
+}
 
 module.exports = HeroicFlatpakProcess;

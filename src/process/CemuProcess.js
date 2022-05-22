@@ -1,7 +1,6 @@
-const child_process = require("child_process");
 const fsp = require("fs/promises");
 
-const convertPath = require("../utils/convertPathPlatform.js");
+const { linuxToWine } = require("../utils/convertPathPlatform.js");
 const LutrisProcess = require("../process/LutrisProcess.js");
 
 const Process = require("./Process.js");
@@ -22,37 +21,24 @@ class CemuProcess extends Process {
 
 	command = "sh";
 
-	/**
-	 * Create a cemu game process container
-	 * @param {string} name - The game's displayed name
-	 * @param {string} path - A wine path to the game file
-	 */
-	constructor(name, path) {
+	constructor(game) {
 		super();
-		this.name = name;
-		this.path = path;
+		this.game = game;
 	}
 
 	/**
 	 * Get a start shell script for a cemu game
-	 * @param {string} name - The game's name
-	 * @param {string} path - The game's ROM path
-	 * @param {string} cemuGameSlug - The lutris game slug for cemu
-	 * @param {string} scriptBaseName - Name (with extension) for the output script file
 	 * @returns {string} - An absolute path to the script
 	 */
-	static async getStartScript(name, path, cemuGameSlug = "cemu", scriptBaseName = "") {
+	async getStartScript () {
 
 		// Create the base lutris start script for cemu
-		if (!scriptBaseName) {
-			const safeSlug = sanitizeStringFilename(cemuGameSlug);
-			const safeName = sanitizeStringFilename(name);
-			scriptBaseName = `lutris-${safeSlug}-${safeName}.sh`;
-		}
-		const scriptPath = await LutrisProcess.getStartScript(cemuGameSlug, scriptBaseName);
+		const safeName = sanitizeStringFilename(this.game.name);
+		scriptBaseName = `lutris-cemu-${safeName}.sh`;
+		const scriptPath = await LutrisProcess.getStartScript("cemu", scriptBaseName);
 
 		// Add the game path argument
-		const winePath = convertPath.linuxToWine(path);
+		const winePath = linuxToWine(path);
 		const fileContents = await fsp.readFile(scriptPath, "utf-8");
 		let newFileContents = fileContents.trimEnd();
 		newFileContents += ` --game "${winePath}"`;
@@ -62,18 +48,10 @@ class CemuProcess extends Process {
 
 	}
 
-	/**
-	 * Start the game in a sub process.
-	 * @param {string} cemuGameSlug - Optional, a specific lutris game slug for cemu.
-	 */
-	async start(cemuGameSlug = "cemu") {
-		const scriptPath = await this.constructor.getStartScript(this.name, this.path, cemuGameSlug);
-		this.process = child_process.spawn(
-			this.command,
-			[scriptPath],
-			this.spawnOptions
-		);
-		this._bindProcessEvents();
+	async start() {
+		const scriptPath = this.getStartScript("cemu", this.path, cemuGameSlug);
+		this.args[0] = scriptPath;
+		await super.start();
 	}
 
 }

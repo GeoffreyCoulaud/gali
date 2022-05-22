@@ -1,37 +1,19 @@
-const child_process = require("child_process");
-
-const StartOnlyProcess = require("./StartOnlyProcess.js");
+const Process = require("./Process.js");
 
 /**
  * A wrapper for steam game process management
  * @property {string} appId - A steam appid, used to invoke steam
  */
-class SteamProcess extends StartOnlyProcess {
+class SteamProcess extends Process {
 
 	command = "steam";
 
-	/**
-	 * Create a steam game process container
-	 * @param {string} appId - A steam appid
-	 */
-	constructor(appId) {
-		super();
-		this.appId = appId;
-	}
+	isStoppable = false;
+	isKillable = false;
 
-	// ! There is no way (AFAIK) to control a steam game's life cycle.
-	/**
-	 * Start the game in a subprocess
-	 */
-	async start() {
-		this.process = child_process.spawn(
-			this.command,
-			[`steam://rungameid/${this.appId}`],
-			this.spawnOptions
-		);
-		this.process.unref();
-		this._bindProcessEvents();
-		return;
+	constructor (game) {
+		super();
+		this.args.push(`steam://rungameid/${game.appId}`);
 	}
 
 }

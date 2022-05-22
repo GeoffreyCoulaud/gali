@@ -10,26 +10,9 @@ class PPSSPPProcess extends Process {
 
 	command = "PPSSPPSDL";
 
-	/**
-	 * Create a ppsspp game container
-	 * @param {string} romPath - The game's ROM path
-	 */
-	constructor(romPath) {
+	constructor (game) {
 		super();
-		this.romPath = romPath;
-	}
-
-	/**
-	 * Start the game in a subprocess
-	 */
-	async start() {
-		this.process = child_process.spawn(
-			this.command,
-			[this.romPath],
-			this.spawnOptions
-		);
-		this._bindProcessEvents();
-		return;
+		this.args.push(game.romPath);
 	}
 
 }
