@@ -20,27 +20,26 @@ As of 2022-05-17
 Status | Name                               | Description                                
 ------ | ---------------------------------- | -----------------------------------------
 ✅ (1) | Steam                              | PC games store
-🔶 (3) | Steam (flatpak)                    | -
+✅ (1) | Steam (flatpak)                    | -
 ✅ (1) | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
 ✅     | Lutris                             | Open Source gaming platform for Linux
 ✅ (1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
-🔶 (3) | Heroic (flatpak)                   | -
+✅ (1) | Heroic (flatpak)                   | -
 ✅     | Desktop entries                    | Regular linux desktop entries
 ✅     | Retroarch                          | Frontend for the libretro API
-🔶 (3) | Retroarch (flatpak)                | -
+✅     | Retroarch (flatpak)                | -
 ✅     | Dolphin                            | Nintendo Wii / GameCube emulator
-🔶 (3) | Dolphin (flatpak)                  | -
+✅     | Dolphin (flatpak)                  | -
 🔶 (2) | Citra                              | Nintendo 3DS emulator
-🔶 (3) | Citra (flatpak)                    | -
+🔶 (2) | Citra (flatpak)                    | -
 🔶 (2) | Yuzu                               | Nintendo Switch emulator
-🔶 (3) | Yuzu (flatpak)                     | -
+🔶 (2) | Yuzu (flatpak)                     | -
 ✅     | PPSSPP                             | Sony PSP emulator
-🔶 (3) | PPSSPP (flatpak)                   | -
+✅     | PPSSPP (flatpak)                   | -
 ✅     | Cemu                               | Nintendo Wii U emulator
 
 1. **Steam**, **Legendary** and **Heroic** only allow starting games, not stopping or killing them
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
-3. **Flatpak** games are not startable yet
 
 ## Usage
 **This is in active development but is just not there yet. Be patient !**
