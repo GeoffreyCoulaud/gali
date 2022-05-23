@@ -1,5 +1,4 @@
 const isIterable = require("./isIterable.js");
-const process    = require("process");
 
 const FB_LOCALES = ["en-US"];
 
