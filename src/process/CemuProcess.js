@@ -1,7 +1,7 @@
 const fsp = require("fs/promises");
 
+const getLutrisStartScript = require("../utils/getLutrisStartScript.js");
 const { linuxToWine } = require("../utils/convertPathPlatform.js");
-const LutrisProcess = require("../process/LutrisProcess.js");
 
 const Process = require("./Process.js");
 
@@ -35,7 +35,7 @@ class CemuProcess extends Process {
 		// Create the base lutris start script for cemu
 		const safeName = sanitizeStringFilename(this.game.name);
 		scriptBaseName = `lutris-cemu-${safeName}.sh`;
-		const scriptPath = await LutrisProcess.getStartScript("cemu", scriptBaseName);
+		const scriptPath = await getLutrisStartScript("cemu", scriptBaseName);
 
 		// Add the game path argument
 		const winePath = linuxToWine(path);

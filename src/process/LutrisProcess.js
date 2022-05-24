@@ -1,5 +1,4 @@
-const { execFilePromise } = require("../utils/subprocess.js");
-const ad = require("../utils/appDirectories.js");
+const getLutrisStartScript = require("../utils/getLutrisStartScript.js");
 
 const Process = require("./Process.js");
 
@@ -17,21 +16,16 @@ class LutrisProcess extends Process {
 	}
 
 	/**
-	* Get a start script for a lutris game
-	* @param {string} gameSlug - The lutris game's slug for which to get a start script
-	* @param {string} scriptBaseName - Name (with extension) for the output script file
-	* @returns {string} - An absolute path to the script
-	*/
-	static async getStartScript(gameSlug, scriptBaseName = "") {
-		if (!scriptBaseName) scriptBaseName = `lutris-${gameSlug}.sh`;
-		const scriptPath = `${ad.APP_START_SCRIPTS_DIR}/${scriptBaseName}`;
-		await execFilePromise("lutris", [gameSlug, "--output-script", scriptPath]);
-		return scriptPath;
+	 * Get a start shell script for a lutris game
+	 * @returns {string} - An absolute path to the script
+	 */
+	async getStartScript() {
+		return await getLutrisStartScript(this.game.gameSlug);
 	}
 
 	// ? Maybe we need a cleaner way to prepare before starting...
 	async start() {
-		const scriptPath = await this.constructor.getStartScript(this.game.gameSlug);
+		const scriptPath = await this.getStartScript();
 		this.args[0] = scriptPath; // Replace the script path
 		await super.start();
 	}
