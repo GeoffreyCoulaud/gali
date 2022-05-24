@@ -1,11 +1,10 @@
 const fsp = require("fs/promises");
-const YAML = require("yaml");
 const path = require("path");
 const fs = require("fs");
 
 const GameDir = require("./GameDir.js");
 const convertPath = require("../utils/convertPathPlatform.js");
-const { xml2js } = require("../utils/configFormats.js");
+const { xml2js, yml2js } = require("../utils/configFormats.js");
 
 const { Dependency, PropCriteria, EqCriteria } = require("./Dependency.js");
 const LutrisGame = require("../games/LutrisGame.js");
@@ -179,7 +178,7 @@ class CemuLutrisSource extends WiiUEmulationSource {
 		// This is to get cemu's exe path.
 		const lConfigPath = `${USER_DIR}/.config/lutris/games/${this.cemuGame.configPath}.yml`;
 		let lConfig = await fsp.readFile(lConfigPath, "utf-8");
-		lConfig = YAML.parse(lConfig);
+		lConfig = yml2js(lConfig);
 		const { exe, prefix } = lConfig.game;
 		
 		// Get cemu config

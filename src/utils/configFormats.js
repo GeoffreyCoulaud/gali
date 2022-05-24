@@ -1,4 +1,6 @@
 const xml = require("fast-xml-parser");
+const vdf = require("vdf-parser");
+const yml = require("yaml");
 
 function parseConfigValue(str){
 	const falseRegex = /false/i;
@@ -148,6 +150,24 @@ async function xml2js(config){
 }
 
 /**
+ * Convert a VDF text into a JS readable object
+ * @param {string} config - A VDF file contents
+ * @returns {object} An object representing the VDF data
+ */
+async function vdf2js(config){
+	return vdf.parse(config);
+}
+
+/**
+ * Convert a YAML text into a JS readable object
+ * @param {string} config - A YAML file contents
+ * @returns {object} An object representing the YAML data
+ */
+async function yml2js(config){
+	return yml.parse(config);
+}
+
+/**
  * A class representing a XML encoded value and the corresponding character
  * @property {string} code - The XML encoded value (ex: &amp;)
  * @property {string} char - The equivalent character (ex: &)
@@ -185,4 +205,6 @@ module.exports = {
 	theme2js,
 	xml2js,
 	xmlDecodeSpecialChars,
+	vdf2js,
+	yml2js,
 };

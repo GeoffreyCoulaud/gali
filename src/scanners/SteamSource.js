@@ -1,8 +1,8 @@
 const fsp = require("fs/promises");
-const vdfParser = require("vdf-parser");
 const fs = require("fs");
 
 const GameDir = require("./GameDir.js");
+const { vdf2js } = require("../utils/configFormats.js");
 
 const Source = require("./Source.js");
 const SteamGame = require("../games/SteamGame");
@@ -48,7 +48,7 @@ class SteamSource extends Source {
 	async _getLibraryConfig() {
 		const _path = `${this.steamDir}/${this.relativeLibraryConfigPath}`;
 		let config = await fsp.readFile(_path, { encoding: "utf-8" });
-		config = vdfParser.parse(config);
+		config = vdf2js(config);
 		if (!config.libraryfolders) throw new Error("Invalid steam config");
 		return config;
 	}
@@ -144,7 +144,7 @@ class SteamSource extends Source {
 				const INSTALLED_MASK = 4;
 				const manPath = `${manDir}/${manName}`;
 				const manContent = await fsp.readFile(manPath, { encoding: "utf-8" });
-				const manData = vdfParser.parse(manContent);
+				const manData = vdf2js(manContent);
 				const stateFlags = manData?.AppState?.StateFlags ?? 0;
 
 				const appid = manData?.AppState?.appid;
