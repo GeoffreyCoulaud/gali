@@ -9,6 +9,8 @@ from gali.games.citra_game import CitraGame
 
 class CitraSource(EmulationSource):
 
+	name = "Citra"
+
 	game_class: type[CitraGame] = CitraGame
 
 	rom_extensions = (".3ds", ".cci")
