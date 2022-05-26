@@ -30,7 +30,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/geoffrey/Projets/gali"
+                    "url" : "file:///home/geoffrey/Repositories/gali"
                 }
             ]
         }
