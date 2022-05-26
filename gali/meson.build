@@ -3,10 +3,10 @@ moduledir = join_paths(pkgdatadir, 'gali')
 gnome = import('gnome')
 
 gnome.compile_resources('gali',
-  'gali.gresource.xml',
-  gresource_bundle: true,
-  install: true,
-  install_dir: pkgdatadir,
+	'gali.gresource.xml',
+	gresource_bundle: true,
+	install: true,
+	install_dir: pkgdatadir,
 )
 
 python = import('python')
@@ -18,17 +18,17 @@ conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('pkgdatadir', pkgdatadir)
 
 configure_file(
-  input: 'gali.in',
-  output: 'gali',
-  configuration: conf,
-  install: true,
-  install_dir: get_option('bindir')
+	input: 'gali.in',
+	output: 'gali',
+	configuration: conf,
+	install: true,
+	install_dir: get_option('bindir')
 )
 
 gali_sources = [
-  '__init__.py',
-  'main.py',
-  'window.py',
+	'__init__.py',
+	'main.py',
+	'window.py',
 ]
 
 install_data(gali_sources, install_dir: moduledir)
