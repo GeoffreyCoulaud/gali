@@ -1,6 +1,7 @@
 from gali.processes.process import Process
 
 class Game():
+	"""Base class reprensenting a game"""
 
 	process_class: type[Process] = None
 
