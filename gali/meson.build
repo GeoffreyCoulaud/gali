@@ -25,10 +25,16 @@ configure_file(
 	install_dir: get_option('bindir')
 )
 
-gali_sources = [
-	'__init__.py',
-	'main.py',
-	'window.py',
-]
-
-install_data(gali_sources, install_dir: moduledir)
+install_subdir('games', install_dir: moduledir)
+install_subdir('processes', install_dir: moduledir)
+install_subdir('sources', install_dir: moduledir)
+install_subdir('ui', install_dir: moduledir)
+install_subdir('utils', install_dir: moduledir)
+install_data(
+	[
+		'__init__.py',
+		'main.py',
+		'library.py',
+	], 
+	install_dir: moduledir
+)

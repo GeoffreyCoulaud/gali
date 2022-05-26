@@ -18,35 +18,48 @@
 import sys
 import gi
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
 
 from gi.repository import Gtk, Gio, Adw
-from .window import GaliWindow, AboutDialog
 
+from gali.ui.window import GaliWindow, AboutDialog
+from gali.library import Library
 
 class GaliApplication(Adw.Application):
 	"""The main application singleton class."""
 
 	def __init__(self):
 		super().__init__(
-			application_id='com.github.geoffreycoulaud.gali',
+			application_id="com.github.geoffreycoulaud.gali",
 			flags=Gio.ApplicationFlags.FLAGS_NONE
 		)
-		self.create_action('quit', self.quit, ['<primary>q'])
-		self.create_action('about', self.on_about_action)
-		self.create_action('preferences', self.on_preferences_action)
+		self.create_action("quit", self.quit, ["<primary>q"])
+		self.create_action("scan", self.on_scan_action)
+		self.create_action("print_library", self.on_print_library_action)
+		self.create_action("about", self.on_about_action)
+		self.create_action("preferences", self.on_preferences_action)
+
+		self.library = Library([])
 
 	def do_activate(self):
 		"""Called when the application is activated.
 
-		We raise the application's main window, creating it if
+		We raise the application"s main window, creating it if
 		necessary.
 		"""
 		win = self.props.active_window
 		if not win:
 			win = GaliWindow(application=self)
 		win.present()
+
+	def on_scan_action(self, widget, _):
+		"""Callback for the app.scan action."""
+		self.library.scan()
+
+	def on_print_library_action(self, widget, _):
+		"""Callback for the app.print_library action"""
+		self.library.print()
 
 	def on_about_action(self, widget, _):
 		"""Callback for the app.about action."""
@@ -55,7 +68,7 @@ class GaliApplication(Adw.Application):
 
 	def on_preferences_action(self, widget, _):
 		"""Callback for the app.preferences action."""
-		print('app.preferences action activated')
+		print("app.preferences action activated")
 
 	def create_action(self, name, callback, shortcuts=None):
 		"""Add an application action.
@@ -73,6 +86,6 @@ class GaliApplication(Adw.Application):
 
 
 def main(version):
-	"""The application's entry point."""
+	"""The application"s entry point."""
 	app = GaliApplication()
 	return app.run(sys.argv)

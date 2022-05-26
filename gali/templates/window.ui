@@ -28,6 +28,14 @@
 	<menu id="primary_menu">
 		<section>
 			<item>
+				<attribute name="label" translatable="yes">_Scan Library</attribute>
+				<attribute name="action">app.scan</attribute>
+			</item>
+			<item>
+				<attribute name="label" translatable="yes">_Print Library</attribute>
+				<attribute name="action">app.print_library</attribute>
+			</item>
+			<item>
 				<attribute name="label" translatable="yes">_Preferences</attribute>
 				<attribute name="action">app.preferences</attribute>
 			</item>

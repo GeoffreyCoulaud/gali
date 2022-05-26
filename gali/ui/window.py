@@ -18,9 +18,9 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template(resource_path='/com/github/geoffreycoulaud/gali/window.ui')
+@Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/templates/window.ui")
 class GaliWindow(Gtk.ApplicationWindow):
-	__gtype_name__ = 'GaliWindow'
+	__gtype_name__ = "GaliWindow"
 
 	label = Gtk.Template.Child()
 
@@ -32,10 +32,10 @@ class AboutDialog(Gtk.AboutDialog):
 
 	def __init__(self, parent):
 		Gtk.AboutDialog.__init__(self)
-		self.props.program_name = 'gali'
+		self.props.program_name = "gali"
 		self.props.version = "0.1.0"
-		self.props.authors = ['Geoffrey Coulaud']
-		self.props.copyright = '2022 Geoffrey Coulaud'
-		self.props.logo_icon_name = 'com.github.geoffreycoulaud.gali'
+		self.props.authors = ["Geoffrey Coulaud"]
+		self.props.copyright = "2022 Geoffrey Coulaud"
+		self.props.logo_icon_name = "com.github.geoffreycoulaud.gali"
 		self.props.modal = True
 		self.set_transient_for(parent)
