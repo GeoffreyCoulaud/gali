@@ -1,4 +1,4 @@
-
+from gali.sources.all_sources import all_sources
 
 class Library():
 	"""A class representing a multi-source game library"""
