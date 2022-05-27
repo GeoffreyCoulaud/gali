@@ -17,15 +17,19 @@ class CitraSource(EmulationSource):
 	config_path = f"{USER_DIR}/.config/citra-emu/qt-config.ini"
 
 	def get_config(self) -> dict:
-		return ConfigParser().read(self.config_path)
+		config = ConfigParser()
+		config.read(self.config_path)
+		return config
 
 	def get_rom_dirs(self, config) -> list[GameDir]:
 		rom_dirs = []
-		n_dirs = config["UI"].getint("Paths\\gamedirs\\size", fallback=0)
-		for i in range(n_dirs):
-			deep = config["UI"].getboolean(f"Paths\\gamedirs\\{i}\\deep_scan", fallback=False)
-			path = config["UI"].get(f"Paths\\gamedirs\\{i}\\path", fallback=None)
+		n_dirs = config.getint("UI", "Paths\\gamedirs\\size", fallback=0)
+		for i in range(1, n_dirs + 1):
+			deep = config.getboolean("UI", f"Paths\\gamedirs\\{i}\\deep_scan", fallback=False)
+			path = config.get("UI", f"Paths\\gamedirs\\{i}\\path", fallback=None)
 			if path is None:
+				continue
+			if path in ("INSTALLED", "SYSTEM"):
 				continue
 			depth = inf if deep else 0
 			rom_dirs.append(GameDir(path, depth))

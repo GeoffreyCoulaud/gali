@@ -9,14 +9,10 @@ class EmulationSource(Source):
 		"""Get path to game roms"""
 		paths = []
 		for rom_dir in rom_dirs:
-			found = []
-			try:
-				found = deep_find_files(
-					rom_dir.path, 
-					rom_dir.depth, 
-					rom_extensions
-				)
-			except Exception as err:
-				continue
+			found = deep_find_files(
+				rom_dir.path, 
+				rom_dir.depth, 
+				rom_extensions
+			)
 			paths.extend(found)
 		return paths

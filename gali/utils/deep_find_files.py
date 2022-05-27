@@ -24,8 +24,8 @@ class DeepDirEntry():
 	dirent: DirEntry = None
 	depth: int = 0
 
-	def __init__(self, dir_entry, depth) -> None:
-		self.dirent = dir_entry
+	def __init__(self, dirent, depth) -> None:
+		self.dirent = dirent
 		self.depth = depth
 
 def deep_find_files(root, max_depth, extensions) -> list[str]:
@@ -34,8 +34,8 @@ def deep_find_files(root, max_depth, extensions) -> list[str]:
 	fifo = FIFO()
 
 	# Read root dir
-	for dir_entry in scandir(root):
-		deep_dirent = DeepDirEntry(dir_entry, 0)
+	for dirent in scandir(root):
+		deep_dirent = DeepDirEntry(dirent, 0)
 		fifo.add(deep_dirent)
 
 	# Read the queue
@@ -43,17 +43,17 @@ def deep_find_files(root, max_depth, extensions) -> list[str]:
 		top: DeepDirEntry = fifo.pop()
 
 		# Entry is file
-		if top.dir_entry.is_file():
-			ext = PurePath(top.dir_entry.name).suffix
+		if top.dirent.is_file():
+			ext = PurePath(top.dirent.name).suffix
 			if not (ext in extensions):
 				continue
-			paths.append(top.dir_entry.path)
+			paths.append(top.dirent.path)
 
 		# Entry is dir
-		if top.dir_entry.is_dir():
+		if top.dirent.is_dir():
 			if top.depth >= max_depth:
 				continue
-			for dir_entry in scandir(top.dir_entry.path):
-				fifo.add(DeepDirEntry(dir_entry, top.depth + 1))
+			for dirent in scandir(top.dirent.path):
+				fifo.add(DeepDirEntry(dirent, top.depth + 1))
 
 	return paths

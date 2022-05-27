@@ -1,3 +1,5 @@
+import sys
+from traceback import print_tb
 
 from gali.games.game import Game
 from gali.sources.source import Source
@@ -25,7 +27,7 @@ class Library():
 
 	def scan(self) -> None:
 		"""Scan the library sources"""
-		
+
 		self.empty()
 
 		# Create the ready and awaiting sources
@@ -35,10 +37,11 @@ class Library():
 		ready: list[Source] = []
 		klass: type[Source] = None
 		for klass in self.sources:
-			if klass.game_dependency is None:
+			if klass.game_dependency is not None:
 				awaiting.append(klass)
 			else:
-				ready.append(klass())
+				instance = klass()
+				ready.append(instance)
 
 		# Scan ready sources
 		while len(ready) > 0:
@@ -51,6 +54,7 @@ class Library():
 				games = source.scan()
 			except Exception as err:
 				print(f"Error while scanning {source.name}")
+				print_tb(sys.exc_info()[2])
 				print(err)
 			self.games.extend(games)
 

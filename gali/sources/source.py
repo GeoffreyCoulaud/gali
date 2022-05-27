@@ -9,9 +9,9 @@ class Source():
 
 	prefer_cache: bool = False
 
-	def __init__() -> None:
+	def __init__(self) -> None:
 		pass
 
-	def scan() -> list[Game]:
+	def scan(self) -> list[Game]:
 		"""Scan the source for games"""
 		pass
