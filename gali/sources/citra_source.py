@@ -37,11 +37,16 @@ class CitraSource(EmulationSource):
 
 	def get_rom_games(self, rom_dirs) -> list[CitraGame]:
 		games = []
-		rom_paths = self.get_rom_paths(rom_dirs, self.rom_extensions)
-		for path in rom_paths:
-			name = PurePath(path).name
-			game = self.game_class(name, path)
-			games.append(game)
+		for rom_dir in rom_dirs:
+			rom_paths = []
+			try:
+				rom_paths = self.get_rom_paths(rom_dir, self.rom_extensions)
+			except Exception as err:
+				rom_paths = []
+			for path in rom_paths:
+				name = PurePath(path).name
+				game = self.game_class(name, path)
+				games.append(game)
 		return games
 
 	def scan(self) -> list[CitraGame]:

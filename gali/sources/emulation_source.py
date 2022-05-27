@@ -5,14 +5,10 @@ class EmulationSource(Source):
 
 	rom_extensions: list[str] = []
 
-	def get_rom_paths(self, rom_dirs, rom_extensions) -> list[str]:
+	def get_rom_paths(self, rom_dir, rom_extensions) -> list[str]:
 		"""Get path to game roms"""
-		paths = []
-		for rom_dir in rom_dirs:
-			found = deep_find_files(
-				rom_dir.path, 
-				rom_dir.depth, 
-				rom_extensions
-			)
-			paths.extend(found)
-		return paths
+		return deep_find_files(
+			rom_dir.path, 
+			rom_dir.depth, 
+			rom_extensions
+		)
