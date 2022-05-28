@@ -1,9 +1,9 @@
 from math import inf
 from pathlib import PurePath
-from configparser import ConfigParser
 
-from gali.sources.emulation_source import EmulationSource
+from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import USER_DIR
+from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.games.citra_game import CitraGame, CitraFlatpakGame
 
@@ -14,16 +14,12 @@ class CitraSource(EmulationSource):
 	config_path    : str             = f"{USER_DIR}/.config/citra-emu/qt-config.ini"
 	rom_extensions : tuple[str]      = (".3ds", ".cci")
 
-	def get_config(self) -> dict:
-		config = ConfigParser()
-		try:
-			with open(self.config_path) as file:
-				config.read_file(file)
-		except IOError as err:
-			raise err
+	def get_config(self) -> ExplicitConfigParser:
+		config = ExplicitConfigParser()
+		config.read(self.config_path)
 		return config
 
-	def get_rom_dirs(self, config) -> list[GameDir]:
+	def get_rom_dirs(self, config: ExplicitConfigParser) -> list[GameDir]:
 		rom_dirs = []
 		n_dirs = config.getint("UI", r"Paths\gamedirs\size", fallback=0)
 		for i in range(1, n_dirs + 1):
@@ -37,7 +33,7 @@ class CitraSource(EmulationSource):
 			rom_dirs.append(GameDir(path, depth))
 		return rom_dirs
 
-	def get_rom_games(self, rom_dirs) -> list[CitraGame]:
+	def get_rom_games(self, rom_dirs: list[GameDir]) -> list[CitraGame]:
 		games = []
 		for rom_dir in rom_dirs:
 			rom_paths = []

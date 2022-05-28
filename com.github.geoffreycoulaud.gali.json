@@ -11,7 +11,8 @@
         "--device=dri",
         "--socket=wayland",
         "--filesystem=home:ro",
-        "--filesystem=home/.var/app/org.citra_emu.citra:ro"
+        "--filesystem=home/.var/app/org.citra_emu.citra:ro",
+        "--filesystem=home/.var/app/org.DolphinEmu.dolphin-emu:ro"
     ],
     "cleanup" : [
         "/include",
