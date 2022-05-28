@@ -26,7 +26,6 @@ configure_file(
 )
 
 install_subdir('games', install_dir: moduledir)
-install_subdir('processes', install_dir: moduledir)
 install_subdir('sources', install_dir: moduledir)
 install_subdir('ui', install_dir: moduledir)
 install_subdir('utils', install_dir: moduledir)

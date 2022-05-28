@@ -26,8 +26,6 @@ from gi.repository import Gtk, Gio, Adw
 from gali.ui.window import GaliWindow, AboutDialog
 from gali.library import Library
 
-TEMP_ENABLED_SOURCES = ["Citra"]
-
 class GaliApplication(Adw.Application):
 	"""The main application singleton class."""
 
@@ -43,6 +41,7 @@ class GaliApplication(Adw.Application):
 		self.create_action("preferences", self.on_preferences_action)
 
 		# TODO read user preferences
+		TEMP_ENABLED_SOURCES = ["Citra", "Citra (Flatpak)"]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 
 	def do_activate(self):

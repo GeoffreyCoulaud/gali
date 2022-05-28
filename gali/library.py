@@ -47,6 +47,7 @@ class Library():
 		while len(ready) > 0:
 
 			source = ready.pop(0)
+			print(f"Scanning source \"{source.name}\"")
 
 			# Scan
 			games: list[Game] = list()
@@ -65,6 +66,8 @@ class Library():
 				game = next(filter(predicate, games), None)
 				if game is None: continue
 				ready.append(klass(game))
+		
+		print("Scan finished")
 
 	def print(self) -> None:
 		"""Print the games in the library to stdout"""
