@@ -59,6 +59,6 @@ class CitraSource(EmulationSource):
 
 class CitraFlatpakSource(CitraSource):
 
-	name           : str             = "Citra (Flatpak)"
-	game_class     : type[CitraGame] = CitraFlatpakGame
-	config_path    : str             = f"{USER_DIR}/.var/app/org.citra_emu.citra/config/citra-emu/qt-config.ini"
+	name : str = "Citra (Flatpak)"
+	game_class : type[CitraGame] = CitraFlatpakGame
+	config_path : str = f"{USER_DIR}/.var/app/org.citra_emu.citra/config/citra-emu/qt-config.ini"
