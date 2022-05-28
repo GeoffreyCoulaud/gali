@@ -4,7 +4,7 @@ from typing import Union
 class ExplicitConfigParser(ConfigParser):
 	"""A class representing a ConfigParser that can fail while reading"""
 
-	def read(self, filenames: Union[str, list[str]], encoding: str = None) -> None:
+	def read(self, filenames: Union[str, list[str]], encoding: str = "utf-8-sig") -> None:
 		"""
 			Read and parse a filename or an iterable of filenames.
 			Failing to read a file will throw an exception. 

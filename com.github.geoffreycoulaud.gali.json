@@ -12,7 +12,8 @@
         "--socket=wayland",
         "--filesystem=home:ro",
         "--filesystem=home/.var/app/org.citra_emu.citra:ro",
-        "--filesystem=home/.var/app/org.DolphinEmu.dolphin-emu:ro"
+        "--filesystem=home/.var/app/org.DolphinEmu.dolphin-emu:ro",
+        "--filesystem=home/.var/app/org.ppsspp.PPSSPP:ro"
     ],
     "cleanup" : [
         "/include",

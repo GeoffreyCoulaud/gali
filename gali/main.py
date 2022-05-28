@@ -41,7 +41,14 @@ class GaliApplication(Adw.Application):
 		self.create_action("preferences", self.on_preferences_action)
 
 		# TODO read user preferences
-		TEMP_ENABLED_SOURCES = ["Citra", "Citra (Flatpak)", "Dolphin", "Dolphin (Flatpak)"]
+		TEMP_ENABLED_SOURCES = [
+			"Citra",
+			"Citra (Flatpak)", 
+			"Dolphin",
+			"Dolphin (Flatpak)",
+			"PPSSPP",
+			"PPSSPP (Flatpak)"
+		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 
 	def do_activate(self):
