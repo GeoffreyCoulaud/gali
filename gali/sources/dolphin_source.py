@@ -9,10 +9,10 @@ from gali.games.dolphin_game import DolphinGame, DolphinFlatpakGame
 
 class DolphinSource(EmulationSource):
 
-	name           : str               = "Dolphin"
-	game_class     : type[DolphinGame] = DolphinGame
-	config_path    : str               = f"{USER_DIR}/.config/dolphin-emu/Dolphin.ini"
-	rom_extensions : tuple[str]        = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
+	name : str = "Dolphin"
+	game_class : type[DolphinGame] = DolphinGame
+	config_path : str = f"{USER_DIR}/.config/dolphin-emu/Dolphin.ini"
+	rom_extensions : tuple[str] = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
 
 	def get_config(self) -> ExplicitConfigParser:
 		config = ExplicitConfigParser()

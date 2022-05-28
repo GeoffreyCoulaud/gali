@@ -9,10 +9,10 @@ from gali.games.citra_game import CitraGame, CitraFlatpakGame
 
 class CitraSource(EmulationSource):
 
-	name           : str             = "Citra"
-	game_class     : type[CitraGame] = CitraGame
-	config_path    : str             = f"{USER_DIR}/.config/citra-emu/qt-config.ini"
-	rom_extensions : tuple[str]      = (".3ds", ".cci")
+	name : str = "Citra"
+	game_class : type[CitraGame] = CitraGame
+	config_path : str = f"{USER_DIR}/.config/citra-emu/qt-config.ini"
+	rom_extensions : tuple[str] = (".3ds", ".cci")
 
 	def get_config(self) -> ExplicitConfigParser:
 		config = ExplicitConfigParser()
