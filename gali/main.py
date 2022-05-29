@@ -50,6 +50,7 @@ class GaliApplication(Adw.Application):
 			"PPSSPP (Flatpak)",
 			"Yuzu",
 			"Yuzu (Flatpak)",
+			"Desktop Entries",
 		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 
