@@ -47,7 +47,9 @@ class GaliApplication(Adw.Application):
 			"Dolphin",
 			"Dolphin (Flatpak)",
 			"PPSSPP",
-			"PPSSPP (Flatpak)"
+			"PPSSPP (Flatpak)",
+			"Yuzu",
+			"Yuzu (Flatpak)",
 		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 
