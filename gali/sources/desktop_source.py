@@ -14,13 +14,24 @@ class DesktopSource(Source):
 	extensions: tuple[str] = (".desktop",)
 
 	def get_desktop_dirs(self) -> tuple[GameDir]:
-		# FIXME - Find a way to read real XDG_DATA_DIRS in flatpak
+
+		ROOT = "/var/run/host" # In sandbox, host root is bound there
 		dirs = []
-		for XDG_DATA_DIR in XDG_DATA_DIRS:
-			dirs.append(f"{XDG_DATA_DIR}/applications")
+
+		# Regular dirs
 		dirs.append(f"{USER_DIR}/.local/share/applications")
-		dirs.append("/usr/share/applications")
-		dirs.append("/usr/local/share/applications")
+		dirs.append(f"{ROOT}/usr/share/applications")
+		dirs.append(f"{ROOT}/usr/local/share/applications")
+
+		# Flatpak dirs 
+		# HACK because we can't read host XDG_DATA_DIRS in flatpak
+		dirs.append(f"{USER_DIR}/.local/share/flatpak/exports/share")
+		dirs.append(f"{ROOT}/var/lib/flatpak/exports/share") 
+
+		# User defined dirs 
+		# for XDG_DATA_DIR in XDG_DATA_DIRS:
+		#	dirs.append(f"{ROOT}/{XDG_DATA_DIR}/applications")
+
 		return tuple(dirs)
 
 	def get_desktop_paths(self, desktop_dirs) -> tuple[str]:
@@ -74,8 +85,5 @@ class DesktopSource(Source):
 	def scan(self) -> list[DesktopGame]:
 		dirs = self.get_desktop_dirs()
 		paths = self.get_desktop_paths(dirs)
-		# ! DEBUG
-		for path in paths:
-			print(path)
 		games = self.get_desktop_games(paths)
 		return games
