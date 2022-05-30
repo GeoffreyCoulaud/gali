@@ -57,6 +57,6 @@ class DolphinSource(EmulationSource):
 
 class DolphinFlatpakSource(DolphinSource):
 
-	name           : str               = "Dolphin (Flatpak)"
-	game_class     : type[DolphinGame] = DolphinFlatpakGame
-	config_path    : str               = f"{USER_DIR}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini"
+	name : str = "Dolphin (Flatpak)"
+	game_class : type[DolphinGame] = DolphinFlatpakGame
+	config_path : str = f"{USER_DIR}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini"
