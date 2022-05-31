@@ -4,6 +4,7 @@ from gali.sources.dolphin_source import DolphinSource, DolphinFlatpakSource
 from gali.sources.ppsspp_source import PPSSPPSource, PPSSPPFlatpakSource
 from gali.sources.yuzu_source import YuzuFlatpakSource, YuzuSource
 from gali.sources.desktop_source import DesktopSource
+from gali.sources.heroic_source import HeroicSource, HeroicFlatpakSource
 
 # Register here all the scannable sources.
 all_sources = [
@@ -15,6 +16,8 @@ all_sources = [
 	PPSSPPFlatpakSource,
 	YuzuSource,
 	YuzuFlatpakSource,
+	HeroicSource,
+	HeroicFlatpakSource,
 ]
 
 # Desktop entries cannot yet be read correctly from inside flatpak's sandbox.

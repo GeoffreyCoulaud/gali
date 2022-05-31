@@ -51,6 +51,8 @@ class GaliApplication(Adw.Application):
 			"Yuzu",
 			"Yuzu (Flatpak)",
 			"Desktop Entries",
+			"Heroic",
+			"Heroic (Flatpak)"
 		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 

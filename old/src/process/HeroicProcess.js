@@ -9,7 +9,7 @@ class HeroicProcess extends Process {
 
 	constructor (game) {
 		super();
-		this.args.push(`heroic://launch/${game.appName}`);
+		this.args.push(`heroic://launch/${game.app_name}`);
 	}
 
 }

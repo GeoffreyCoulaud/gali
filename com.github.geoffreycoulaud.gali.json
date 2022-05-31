@@ -13,7 +13,8 @@
         "--filesystem=home/.var/app/org.citra_emu.citra:ro",
         "--filesystem=home/.var/app/org.DolphinEmu.dolphin-emu:ro",
         "--filesystem=home/.var/app/org.ppsspp.PPSSPP:ro",
-        "--filesystem=home/.var/app/org.yuzu_emu.yuzu:ro"
+        "--filesystem=home/.var/app/org.yuzu_emu.yuzu:ro",
+        "--filesystem=home/.var/app/com.heroicgameslauncher.hgl:ro"
     ],
     "cleanup" : [
         "/include",

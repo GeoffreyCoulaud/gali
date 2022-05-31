@@ -24,6 +24,8 @@ Status   | Name                               | Description
 ✅       | PPSSPP                             | Sony PSP emulator
 ✅       | PPSSPP (flatpak)                   | -
 ✅ (4)   | Desktop entries                    | Regular linux desktop entries
+✅ (3,1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
+✅ (3,1) | Heroic (flatpak)                   | -
 🔶 (2)   | Citra                              | Nintendo 3DS emulator
 🔶 (2)   | Citra (flatpak)                    | -
 🔶 (2)   | Yuzu                               | Nintendo Switch emulator
@@ -32,8 +34,6 @@ Status   | Name                               | Description
 ❌ (3,1) | Steam (flatpak)                    | -
 ❌ (3,1) | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
 ❌ (3)   | Lutris                             | Open Source gaming platform for Linux
-❌ (3,1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
-❌ (3,1) | Heroic (flatpak)                   | -
 ❌ (3)   | Retroarch                          | Frontend for the libretro API
 ❌ (3)   | Retroarch (flatpak)                | -
 ❌ (3)   | Cemu                               | Nintendo Wii U emulator
