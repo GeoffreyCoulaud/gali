@@ -42,7 +42,7 @@ Status   | Name                               | Description
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
 3. Was previously implemented in Node JS, is to be ported to python.
 4. Not available in Flatpak.  
-In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are not scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
+In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
 
 ## Usage
 **This is in active development but is just not there yet. Be patient !**
