@@ -3,7 +3,7 @@ from math import inf
 from gali.sources.game_dir import GameDir
 from gali.sources.source import Source
 from gali.games.desktop_game import DesktopGame
-from gali.utils.locations import XDG_DATA_DIRS, USER_DIR
+from gali.utils.locations import XDG_DATA_DIRS, XDG_DATA_HOME
 from gali.utils.deep_find_files import deep_find_files
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 
@@ -15,22 +15,16 @@ class DesktopSource(Source):
 
 	def get_desktop_dirs(self) -> tuple[GameDir]:
 
-		ROOT = "/var/run/host" # In sandbox, host root is bound there
-		dirs = []
-
 		# Regular dirs
-		dirs.append(f"{USER_DIR}/.local/share/applications")
-		dirs.append(f"{ROOT}/usr/share/applications")
-		dirs.append(f"{ROOT}/usr/local/share/applications")
-
-		# Flatpak dirs 
-		# HACK because we can't read host XDG_DATA_DIRS in flatpak
-		dirs.append(f"{USER_DIR}/.local/share/flatpak/exports/share")
-		dirs.append(f"{ROOT}/var/lib/flatpak/exports/share") 
+		dirs = [
+			f"{XDG_DATA_HOME}/applications"
+			"/usr/share/applications"
+			"/usr/local/share/applications"
+		]
 
 		# User defined dirs 
-		# for XDG_DATA_DIR in XDG_DATA_DIRS:
-		#	dirs.append(f"{ROOT}/{XDG_DATA_DIR}/applications")
+		for XDG_DATA_DIR in XDG_DATA_DIRS:
+			dirs.append(f"{XDG_DATA_DIR}/applications")
 
 		return tuple(dirs)
 

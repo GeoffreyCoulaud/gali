@@ -2,7 +2,7 @@ from math import inf
 from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.utils.locations import USER_DIR
+from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.games.citra_game import CitraGame, CitraFlatpakGame
@@ -11,7 +11,7 @@ class CitraSource(EmulationSource):
 
 	name : str = "Citra"
 	game_class : type[CitraGame] = CitraGame
-	config_path : str = f"{USER_DIR}/.config/citra-emu/qt-config.ini"
+	config_path : str = f"{HOME}/.config/citra-emu/qt-config.ini"
 	rom_extensions : tuple[str] = (".3ds", ".cci")
 
 	def get_config(self) -> ExplicitConfigParser:
@@ -61,4 +61,4 @@ class CitraFlatpakSource(CitraSource):
 
 	name : str = "Citra (Flatpak)"
 	game_class : type[CitraGame] = CitraFlatpakGame
-	config_path : str = f"{USER_DIR}/.var/app/org.citra_emu.citra/config/citra-emu/qt-config.ini"
+	config_path : str = f"{HOME}/.var/app/org.citra_emu.citra/config/citra-emu/qt-config.ini"

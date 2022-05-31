@@ -2,7 +2,7 @@ from math import inf
 from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.utils.locations import USER_DIR
+from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.games.yuzu_game import YuzuGame, YuzuFlatpakGame
@@ -11,7 +11,7 @@ class YuzuSource(EmulationSource):
 
 	name : str = "Yuzu"
 	game_class : type[YuzuGame] = YuzuGame
-	config_path : str = f"{USER_DIR}/.config/yuzu/qt-config.ini"
+	config_path : str = f"{HOME}/.config/yuzu/qt-config.ini"
 	rom_extensions : tuple[str] = (".xci", ".nsp", ".nso", ".nro")
 
 	def get_config(self) -> ExplicitConfigParser:
@@ -61,4 +61,4 @@ class YuzuFlatpakSource(YuzuSource):
 
 	name : str = "Yuzu (Flatpak)"
 	game_class : type[YuzuGame] = YuzuFlatpakGame
-	config_path : str = f"{USER_DIR}/.var/app/org.yuzu_emu.yuzu/config/yuzu/qt-config.ini"
+	config_path : str = f"{HOME}/.var/app/org.yuzu_emu.yuzu/config/yuzu/qt-config.ini"

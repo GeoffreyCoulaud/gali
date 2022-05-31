@@ -23,11 +23,11 @@ Status   | Name                               | Description
 ✅       | Dolphin (flatpak)                  | -
 ✅       | PPSSPP                             | Sony PSP emulator
 ✅       | PPSSPP (flatpak)                   | -
+✅ (4)   | Desktop entries                    | Regular linux desktop entries
 🔶 (2)   | Citra                              | Nintendo 3DS emulator
 🔶 (2)   | Citra (flatpak)                    | -
 🔶 (2)   | Yuzu                               | Nintendo Switch emulator
 🔶 (2)   | Yuzu (flatpak)                     | -
-🔶 (4)   | Desktop entries                    | Regular linux desktop entries
 ❌ (3,1) | Steam                              | PC games store
 ❌ (3,1) | Steam (flatpak)                    | -
 ❌ (3,1) | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
@@ -41,7 +41,8 @@ Status   | Name                               | Description
 1. **Steam**, **Legendary** and **Heroic** only allow starting games, not stopping or killing them
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
 3. Was previously implemented in Node JS, is to be ported to python.
-4. In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are not scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
+4. Not available in Flatpak.  
+In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are not scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
 
 ## Usage
 **This is in active development but is just not there yet. Be patient !**

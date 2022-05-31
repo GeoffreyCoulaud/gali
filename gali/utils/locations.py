@@ -1,10 +1,13 @@
 from os import environ
 
-USER_DIR = environ.get("HOME")
-USER_CONFIG_DIR = environ.get("XDG_CONFIG_DIR", f"{USER_DIR}/.config")
-USER_DATA_DIR = f"{USER_DIR}/.local/share"
-XDG_DATA_DIRS = environ.get("XDG_DATA_DIRS").split(":")
-APP_CONFIG_DIR = f"{USER_CONFIG_DIR}/gali"
-APP_CONFIG_PATH = f"{APP_CONFIG_DIR}/preferences.json"
-APP_DATA_DIR = f"{USER_DATA_DIR}/gali"
-APP_START_SCRIPTS_DIR = f"{APP_DATA_DIR}/start-scripts"
+HOME = environ.get("HOME")
+
+XDG_DATA_DIRS = environ.get("XDG_DATA_DIRS", default=None)
+if XDG_DATA_DIRS == None or len(XDG_DATA_DIRS) == 0:
+	XDG_DATA_DIRS = tuple()
+else:
+	XDG_DATA_DIRS = XDG_DATA_DIRS.split(":")
+
+XDG_DATA_HOME = environ.get("XDG_DATA_HOME", default=f"{HOME}/.local/share")
+
+XDG_CONFIG_HOME = environ.get("XDG_CONFIG_HOME", default=f"{HOME}/.config")

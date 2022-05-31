@@ -3,7 +3,7 @@ from math import inf
 from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.utils.locations import USER_DIR
+from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.games.ppsspp_game import PPSSPPGame, PPSSPPFlatpakGame
@@ -12,7 +12,7 @@ class PPSSPPSource(EmulationSource):
 
 	name : str = "PPSSPP"
 	game_class : type[PPSSPPGame] = PPSSPPGame
-	config_path : str = f"{USER_DIR}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
+	config_path : str = f"{HOME}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
 	rom_extensions : tuple[str] = (".iso", ".cso")
 
 	def get_config(self) -> ExplicitConfigParser:
@@ -55,4 +55,4 @@ class PPSSPPFlatpakSource(PPSSPPSource):
 
 	name : str = "PPSSPP (Flatpak)"
 	game_class : type[PPSSPPFlatpakGame] = PPSSPPFlatpakGame
-	config_path : str = f"{USER_DIR}/.var/app/org.ppsspp.PPSSPP/config/ppsspp/PSP/SYSTEM/ppsspp.ini"
+	config_path : str = f"{HOME}/.var/app/org.ppsspp.PPSSPP/config/ppsspp/PSP/SYSTEM/ppsspp.ini"

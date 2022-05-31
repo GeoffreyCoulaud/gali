@@ -2,7 +2,7 @@ from math import inf
 from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.utils.locations import USER_DIR
+from gali.utils.locations import HOME
 from gali.sources.game_dir import GameDir
 from gali.sources.emulation_source import EmulationSource
 from gali.games.dolphin_game import DolphinGame, DolphinFlatpakGame
@@ -11,7 +11,7 @@ class DolphinSource(EmulationSource):
 
 	name : str = "Dolphin"
 	game_class : type[DolphinGame] = DolphinGame
-	config_path : str = f"{USER_DIR}/.config/dolphin-emu/Dolphin.ini"
+	config_path : str = f"{HOME}/.config/dolphin-emu/Dolphin.ini"
 	rom_extensions : tuple[str] = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
 
 	def get_config(self) -> ExplicitConfigParser:
@@ -59,4 +59,4 @@ class DolphinFlatpakSource(DolphinSource):
 
 	name : str = "Dolphin (Flatpak)"
 	game_class : type[DolphinGame] = DolphinFlatpakGame
-	config_path : str = f"{USER_DIR}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini"
+	config_path : str = f"{HOME}/.var/app/org.DolphinEmu.dolphin-emu/config/dolphin-emu/Dolphin.ini"
