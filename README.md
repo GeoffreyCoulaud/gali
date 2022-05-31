@@ -8,7 +8,7 @@ A game launcher for **linux** where your library is the star of the show.
 ## Why ?
 > I'm so tired of interfaces that include 9 out of 10 of my games. I want it all in one, pretty, place ! 
 
-If you think alike, I believe Gali is for you. 
+If you think alike, we believe Gali is for you. 
 
 However, if you want a single place to install, configure and manage your games, 
 this is not the intended purpose of Gali. This project is made to display your games library. 
@@ -24,8 +24,8 @@ Status   | Name                               | Description
 ✅       | PPSSPP                             | Sony PSP emulator
 ✅       | PPSSPP (flatpak)                   | -
 ✅ (4)   | Desktop entries                    | Regular linux desktop entries
-✅ (3,1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
-✅ (3,1) | Heroic (flatpak)                   | -
+✅ (1) | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
+✅ (1) | Heroic (flatpak)                   | -
 🔶 (2)   | Citra                              | Nintendo 3DS emulator
 🔶 (2)   | Citra (flatpak)                    | -
 🔶 (2)   | Yuzu                               | Nintendo Switch emulator
@@ -45,7 +45,7 @@ Status   | Name                               | Description
 In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
 
 ## Usage
-**This is in active development but is just not there yet. Be patient !**
+**This is in active development, but not ready. Be patient !**
 
 ### Dev usage
 Open the project in Gnome Builder, build and start from there.
