@@ -31,10 +31,14 @@ class HeroicSource(Source):
 			if not is_game:
 				continue
 
-			# Build games
+			# Skip broken entries
 			name = entry.get("title", None)
 			app_name = entry.get("app_name", None)
-			is_installed = entry.get("is_installed", False)
+			if name is None or app_name is None:
+				continue
+
+			# Build games
+			is_installed = entry.get("is_installed", True)
 			game = self.game_class(
 				name=name, 
 				app_name=app_name, 
