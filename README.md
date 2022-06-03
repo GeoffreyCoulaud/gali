@@ -26,13 +26,13 @@ Status   | Name                               | Description
 ✅ (1)   | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
 ✅ (1)   | Heroic (flatpak)                   | -
 ✅ (1)   | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
+✅       | Lutris                             | Open Source gaming platform for Linux
 🔶 (2)   | Citra                              | Nintendo 3DS emulator
 🔶 (2)   | Citra (flatpak)                    | -
 🔶 (2)   | Yuzu                               | Nintendo Switch emulator
 🔶 (2)   | Yuzu (flatpak)                     | -
 ❌ (3,1) | Steam                              | PC games store
 ❌ (3,1) | Steam (flatpak)                    | -
-❌ (3)   | Lutris                             | Open Source gaming platform for Linux
 ❌ (3)   | Retroarch                          | Frontend for the libretro API
 ❌ (3)   | Retroarch (flatpak)                | -
 ❌ (3)   | Cemu                               | Nintendo Wii U emulator
