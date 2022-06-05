@@ -55,6 +55,8 @@ class GaliApplication(Adw.Application):
 			"Heroic (Flatpak)",
 			"Legendary",
 			"Lutris",
+			"Steam",
+			"Steam (Flatpak)",
 		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 
