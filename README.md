@@ -18,24 +18,24 @@ You will have to install other software to manage your games, they will definite
 
 Status   | Name                               | Description                                
 -------- | ---------------------------------- | -----------------------------------------
+❌ (3)   | Cemu                               | Nintendo Wii U emulator
+✅ (2)   | Citra                              | Nintendo 3DS emulator
+✅ (2)   | Citra (flatpak)                    | -
+✅ (4)   | Desktop entries                    | Regular linux desktop entries
 ✅       | Dolphin                            | Nintendo Wii / GameCube emulator
 ✅       | Dolphin (flatpak)                  | -
-✅       | PPSSPP                             | Sony PSP emulator
-✅       | PPSSPP (flatpak)                   | -
-✅ (4)   | Desktop entries                    | Regular linux desktop entries
 ✅ (1)   | Heroic                             | FOSS Epic Games Launcher alternative (GUI)
 ✅ (1)   | Heroic (flatpak)                   | -
 ✅ (1)   | Legendary                          | FOSS Epic Games Launcher alternative (CLI)
 ✅       | Lutris                             | Open Source gaming platform for Linux
-✅ (1)   | Steam                              | PC games store
-✅ (1)   | Steam (flatpak)                    | -
-✅ (2)   | Citra                              | Nintendo 3DS emulator
-✅ (2)   | Citra (flatpak)                    | -
-✅ (2)   | Yuzu                               | Nintendo Switch emulator
-✅ (2)   | Yuzu (flatpak)                     | -
+✅       | PPSSPP                             | Sony PSP emulator
+✅       | PPSSPP (flatpak)                   | -
 ❌ (3)   | Retroarch                          | Frontend for the libretro API
 ❌ (3)   | Retroarch (flatpak)                | -
-❌ (3)   | Cemu                               | Nintendo Wii U emulator
+✅ (1)   | Steam                              | PC games store
+✅ (1)   | Steam (flatpak)                    | -
+✅ (2)   | Yuzu                               | Nintendo Switch emulator
+✅ (2)   | Yuzu (flatpak)                     | -
 
 1. **Steam**, **Legendary** and **Heroic** only allow starting games, not stopping or killing them
 2. **Citra** and **Yuzu** installed games are not scanned (only roms are scanned)
