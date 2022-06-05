@@ -8,6 +8,7 @@ from gali.utils.prepare_filename import prepare_filename
 @dataclass
 class LutrisGame(Game):
 
+	platform : str = field(default="PC", init=False)
 	game_slug : str = field(default=None)
 	config_path : str = field(default=None)
 
