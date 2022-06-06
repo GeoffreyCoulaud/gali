@@ -9,6 +9,6 @@ class Source():
 	def __init__(self) -> None:
 		pass
 
-	def scan(self) -> list[Game]:
+	def scan(self) -> tuple[Game]:
 		"""Scan the source for games"""
 		pass

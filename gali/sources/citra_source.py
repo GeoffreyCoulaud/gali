@@ -19,7 +19,7 @@ class CitraSource(EmulationSource):
 		config.read(self.config_path, encoding="utf-8-sig")
 		return config
 
-	def get_rom_dirs(self, config: ExplicitConfigParser) -> list[GameDir]:
+	def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
 		rom_dirs = []
 		n_dirs = config.getint("UI", r"Paths\gamedirs\size", fallback=0)
 		for i in range(1, n_dirs + 1):
@@ -31,9 +31,9 @@ class CitraSource(EmulationSource):
 				continue
 			depth = inf if deep else 0
 			rom_dirs.append(GameDir(path, depth))
-		return rom_dirs
+		return tuple(rom_dirs)
 
-	def get_rom_games(self, rom_dirs: list[GameDir]) -> list[CitraGame]:
+	def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[CitraGame]:
 		games = []
 		for rom_dir in rom_dirs:
 			rom_paths = []
@@ -49,9 +49,9 @@ class CitraSource(EmulationSource):
 					is_installed=True,
 				)
 				games.append(game)
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[CitraGame]:
+	def scan(self) -> tuple[CitraGame]:
 		config = self.get_config()
 		rom_dirs = self.get_rom_dirs(config)
 		rom_games = self.get_rom_games(rom_dirs)

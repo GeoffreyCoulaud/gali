@@ -19,7 +19,7 @@ class DolphinSource(EmulationSource):
 		config.read(self.config_path, encoding="utf-8-sig")
 		return config
 
-	def get_rom_dirs(self, config: ExplicitConfigParser) -> list[GameDir]:
+	def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
 		rom_dirs = []
 		n_dirs = config.getint("General", "ISOPaths", fallback=0)
 		deep = config.getboolean("General", "RecursiveISOPaths", fallback=False)
@@ -29,9 +29,9 @@ class DolphinSource(EmulationSource):
 			if path is None:
 				continue
 			rom_dirs.append(GameDir(path, depth))
-		return rom_dirs
+		return tuple(rom_dirs)
 
-	def get_rom_games(self, rom_dirs: list[GameDir]) -> list[DolphinGame]:
+	def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[DolphinGame]:
 		games = []
 		for rom_dir in rom_dirs:
 			rom_paths = []
@@ -47,9 +47,9 @@ class DolphinSource(EmulationSource):
 					is_installed=True,
 				)
 				games.append(game)
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[DolphinGame]:
+	def scan(self) -> tuple[DolphinGame]:
 		config = self.get_config()
 		rom_dirs = self.get_rom_dirs(config)
 		rom_games = self.get_rom_games(rom_dirs)

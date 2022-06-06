@@ -19,7 +19,7 @@ class HeroicSource(Source):
 		else:
 			return config
 
-	def get_games(self, config: dict) -> list[HeroicGame]:
+	def get_games(self, config: dict) -> tuple[HeroicGame]:
 		
 		games = []
 		library = config["library"]
@@ -46,9 +46,9 @@ class HeroicSource(Source):
 			)
 			games.append(game)
 		
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[HeroicGame]:
+	def scan(self) -> tuple[HeroicGame]:
 		config = self.get_config()
 		games = self.get_games(config)
 		return games

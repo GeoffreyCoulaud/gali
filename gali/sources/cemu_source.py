@@ -117,9 +117,9 @@ class CemuLutrisSource(EmulationSource):
 					game = self.game_class(name=basename, game_path=rom_path)
 					games.append(game)
 
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[CemuLutrisGame]:
+	def scan(self) -> tuple[CemuLutrisGame]:
 
 		# Read lutris config for cemu
 		cemu_lutris_config = self.get_cemu_lutris_config()
@@ -136,4 +136,5 @@ class CemuLutrisSource(EmulationSource):
 		else:
 			game_dirs = self.get_rom_dirs(wine_prefix_path, cemu_config)
 			games = self.get_rom_games(game_dirs)
-		return games
+
+		return tuple(games)

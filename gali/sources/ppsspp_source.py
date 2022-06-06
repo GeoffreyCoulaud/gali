@@ -20,14 +20,14 @@ class PPSSPPSource(EmulationSource):
 		config.read(self.config_path, encoding="utf-8-sig")
 		return config
 
-	def get_rom_dirs(self, config: ExplicitConfigParser) -> list[GameDir]:
+	def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
 		rom_dirs = []
 		items = config.items("PinnedPaths")
 		for (key, path) in items: 
 			rom_dirs.append(GameDir(path, 0))
-		return rom_dirs
+		return tuple(rom_dirs)
 
-	def get_rom_games(self, rom_dirs: list[GameDir]) -> list[PPSSPPGame]:
+	def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[PPSSPPGame]:
 		games = []
 		for rom_dir in rom_dirs:
 			rom_paths = []
@@ -43,7 +43,7 @@ class PPSSPPSource(EmulationSource):
 					is_installed=True,
 				)
 				games.append(game)
-		return games
+		return tuple(games)
 
 	def scan(self) -> list[PPSSPPGame]:
 		config = self.get_config()

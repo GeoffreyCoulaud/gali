@@ -76,7 +76,7 @@ class DesktopSource(Source):
 
 		return tuple(games)
 
-	def scan(self) -> list[DesktopGame]:
+	def scan(self) -> tuple[DesktopGame]:
 		dirs = self.get_desktop_dirs()
 		paths = self.get_desktop_paths(dirs)
 		games = self.get_desktop_games(paths)

@@ -123,9 +123,9 @@ class SteamSource(Source):
 
 			games.append(game)
 
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[SteamGame]:
+	def scan(self) -> tuple[SteamGame]:
 		config = self.get_library_config()
 		game_dirs = self.get_game_dirs(config)
 		games = self.get_games(game_dirs)

@@ -32,7 +32,7 @@ class LegendarySource(Source):
 		else:
 			return config
 
-	def get_games(self, installed_json: dict) -> list[LegendaryGame]:
+	def get_games(self, installed_json: dict) -> tuple[LegendaryGame]:
 		
 		games = []
 		
@@ -57,9 +57,9 @@ class LegendarySource(Source):
 			)
 			games.append(game)
 		
-		return games
+		return tuple(games)
 
-	def scan(self) -> list[LegendaryGame]:
+	def scan(self) -> tuple[LegendaryGame]:
 		config = self.get_config()
 		installed_json = self.get_installed_json(config)
 		games = self.get_games(installed_json)

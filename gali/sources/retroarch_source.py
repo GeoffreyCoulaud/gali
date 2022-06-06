@@ -89,7 +89,7 @@ class RetroarchSource(Source):
 
 		return tuple(games)
 
-	def scan(self) -> list[RetroarchGame]:
+	def scan(self) -> tuple[RetroarchGame]:
 		config = self.get_config()
 		playlist_paths = self.get_playlist_paths(config)
 		games = self.get_games(playlist_paths)
