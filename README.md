@@ -30,8 +30,8 @@ Status   | Name                               | Description
 ✅       | Lutris                             | Open Source gaming platform for Linux
 ✅       | PPSSPP                             | Sony PSP emulator
 ✅       | PPSSPP (flatpak)                   | -
-❌ (3)   | Retroarch                          | Frontend for the libretro API
-❌ (3)   | Retroarch (flatpak)                | -
+✅       | Retroarch                          | Frontend for the libretro API
+✅       | Retroarch (flatpak)                | -
 ✅ (1)   | Steam                              | PC games store
 ✅ (1)   | Steam (flatpak)                    | -
 ✅ (2)   | Yuzu                               | Nintendo Switch emulator

@@ -8,6 +8,7 @@ from gali.sources.heroic_source import HeroicSource, HeroicFlatpakSource
 from gali.sources.legendary_source import LegendarySource
 from gali.sources.lutris_source import LutrisSource
 from gali.sources.steam_source import SteamSource, SteamFlatpakSource
+from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSource
 
 # Register here all the scannable sources.
 all_sources = [
@@ -25,6 +26,8 @@ all_sources = [
 	LutrisSource,
 	SteamSource,
 	SteamFlatpakSource,
+	RetroarchSource,
+	RetroarchFlatpakSource
 ]
 
 # Desktop entries cannot yet be read correctly from inside flatpak's sandbox.

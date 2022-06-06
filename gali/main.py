@@ -57,6 +57,8 @@ class GaliApplication(Adw.Application):
 			"Lutris",
 			"Steam",
 			"Steam (Flatpak)",
+			"Retroarch",
+			"Retroarch (Flatpak)",
 		]
 		self.library = Library(TEMP_ENABLED_SOURCES)
 

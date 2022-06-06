@@ -15,7 +15,8 @@
         "--filesystem=home/.var/app/org.ppsspp.PPSSPP:ro",
         "--filesystem=home/.var/app/org.yuzu_emu.yuzu:ro",
         "--filesystem=home/.var/app/com.heroicgameslauncher.hgl:ro",
-        "--filesystem=home/.var/app/com.valvesoftware.Steam:ro"
+        "--filesystem=home/.var/app/com.valvesoftware.Steam:ro",
+        "--filesystem=home/.var/app/org.libretro.RetroArch:ro"
     ],
     "cleanup" : [
         "/include",
