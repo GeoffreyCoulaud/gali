@@ -57,7 +57,13 @@ class SteamSource(Source):
 		# Get all manifest paths
 		manifests = []
 		for game_dir in game_dirs:
+
+			# Test if dir is scannable
 			path = f"{game_dir}/steamapps"
+			if not os.access(path, os.R_OK):
+				continue
+
+			# Scan dir
 			for dirent in os.scandir(path):
 				if not dirent.is_file():
 					continue
