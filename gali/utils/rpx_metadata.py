@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from pathlib import PurePath
 from xml.etree.ElementTree import ElementTree, Element
