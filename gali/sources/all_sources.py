@@ -9,9 +9,11 @@ from gali.sources.legendary_source import LegendarySource
 from gali.sources.lutris_source import LutrisSource
 from gali.sources.steam_source import SteamSource, SteamFlatpakSource
 from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSource
+from gali.sources.cemu_source import CemuLutrisSource
 
 # Register here all the scannable sources.
 all_sources = [
+	CemuLutrisSource,
 	CitraSource,
 	CitraFlatpakSource,
 	DolphinSource,

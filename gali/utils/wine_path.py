@@ -9,8 +9,14 @@ def wine_to_posix(wine_prefix_path: str, path: str):
 	win_path = PureWindowsPath(path)
 	if not win_path.is_absolute():
 		raise NonAbsoluteError()
-	win_parts = win_path.parts
-	posix_path = PurePosixPath(wine_prefix_path, *win_parts)
+	win_drive = win_path.drive.lower()
+	win_parts = win_path.parts[1:]
+	posix_path = PurePosixPath(
+		wine_prefix_path, 
+		"dosdevices", 
+		win_drive, 
+		*win_parts
+	)
 	return str(posix_path)
 
 def posix_to_wine(path: str):

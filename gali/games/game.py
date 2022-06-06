@@ -12,7 +12,8 @@ class Game():
 	image_icon    : str  = field(default=None, compare=False)
 
 	def __str__(self) -> str:
-		return self.name
+		name = self.name.replace("\n", " ")
+		return name
 
 	def get_start_command(self, **kwargs) -> tuple[str]:
 		"""Get the list of arguments to start the game process"""

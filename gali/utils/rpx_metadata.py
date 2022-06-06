@@ -17,9 +17,9 @@ def xml_prefix_dict(root : Element, prefix : str):
 class RPXMetadata:
 	title_id : str
 	region : str
-	long_names : dict[str]
-	short_names : dict[str]
-	publishers : dict[str]
+	long_name : dict[str]
+	short_name : dict[str]
+	publisher : dict[str]
 	image_banner : str
 	image_icon : str
 
@@ -41,9 +41,9 @@ class RPXMetadata:
 		metadata = RPXMetadata(
 			title_id = xml.findtext("menu/title_id", default=None),
 			region = xml.findtext("menu/region", default=None),
-			long_names = xml_prefix_dict(xml_root, "longname_"),
-			short_names = xml_prefix_dict(xml_root, "publisher_"),
-			publishers = xml_prefix_dict(xml_root, "shortname_"),
+			long_name = xml_prefix_dict(xml_root, "longname_"),
+			short_name = xml_prefix_dict(xml_root, "shortname_"),
+			publisher = xml_prefix_dict(xml_root, "publisher_"),
 			image_banner = f"{meta_dir}/bootTvTex.tga",
 			image_icon = f"{meta_dir}/iconTex.tga"
 		)

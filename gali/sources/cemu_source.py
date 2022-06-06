@@ -5,6 +5,7 @@ from locale import getlocale, LC_MESSAGES
 from pathlib import PurePath
 from xml.etree.ElementTree import ElementTree
 
+from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.utils.rpx_metadata import RPXMetadata
 from gali.games.cemu_game import CemuLutrisGame
@@ -22,14 +23,14 @@ class CemuLutrisSource(EmulationSource):
 
 		# Get path to lutris config for cemu
 		connection = sqlite3.connect(LutrisSource.db_path)
-		sql = "SELECT configpath FROM 'games' WHERE name = 'cemu'"
+		sql = "SELECT configpath FROM 'games' WHERE slug = 'cemu'"
 		cursor = connection.execute(sql)
 		row = cursor.fetchone()
 		connection.close()
-		config_path = row[0]
+		config_path = f"{HOME}/.config/lutris/games/{row[0]}.yml"
 
 		# Get config content
-		file = open(config_path, "r", "utf-8-sig")
+		file = open(config_path, "r", encoding="utf-8-sig")
 		config = yaml.safe_load(file)
 		file.close()
 		return config
@@ -44,9 +45,9 @@ class CemuLutrisSource(EmulationSource):
 	def get_cached_games(self, wine_prefix_path: str, config: ElementTree) -> tuple[CemuLutrisGame]:
 		
 		games = []
-		
-		# Read XML tree 
-		elements = config.findall("content/GameCache/Entry")
+
+		# Read XML tree
+		elements = config.findall("./GameCache/Entry")
 		for element in elements:
 
 			# Get game data
@@ -69,9 +70,10 @@ class CemuLutrisSource(EmulationSource):
 
 	def get_rom_dirs(self, wine_prefix_path: str, config : ElementTree) -> tuple[str]:
 		game_dirs = []
-		elements = config.findall("content/GamePaths/Entry")
+		elements = config.findall("./GamePaths/Entry")
 		for element in elements:
 			path = wine_to_posix(wine_prefix_path, element.text)
+			print(path) # ! DEBUG
 			game_dir = GameDir(path, inf)
 			game_dirs.append(game_dir)
 		return tuple(game_dirs)
@@ -104,9 +106,9 @@ class CemuLutrisSource(EmulationSource):
 				basename = pure_path.stem
 
 				# Special case for metadata-rich ".rpx" games
-				if extension is ".rpx":
+				if extension == ".rpx":
 					metadata : RPXMetadata = RPXMetadata.from_rom_path(rom_path)
-					name = metadata.short_names.get(locale_lang_code, basename)
+					name = metadata.long_name.get(locale_lang_code, basename)
 					game = self.game_class(name=name, game_path=rom_path)
 					games.append(game)
 
@@ -114,6 +116,8 @@ class CemuLutrisSource(EmulationSource):
 				else:
 					game = self.game_class(name=basename, game_path=rom_path)
 					games.append(game)
+
+		return games
 
 	def scan(self) -> list[CemuLutrisGame]:
 
