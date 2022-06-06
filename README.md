@@ -18,7 +18,7 @@ You will have to install other software to manage your games, they will definite
 
 Status   | Name                               | Description                                
 -------- | ---------------------------------- | -----------------------------------------
-❌ (3)   | Cemu                               | Nintendo Wii U emulator
+✅       | Cemu                               | Nintendo Wii U emulator
 ✅ (2)   | Citra                              | Nintendo 3DS emulator
 ✅ (2)   | Citra (flatpak)                    | -
 ✅ (4)   | Desktop entries                    | Regular linux desktop entries

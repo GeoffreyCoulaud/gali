@@ -5,8 +5,6 @@ class Source():
 
 	name: str = None
 	game_class: type[Game] = None
-	game_dependency: Dependency = None
-
 	prefer_cache: bool = False
 
 	def __init__(self) -> None:

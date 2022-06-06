@@ -16,4 +16,4 @@ class Game():
 
 	def get_start_command(self, **kwargs) -> tuple[str]:
 		"""Get the list of arguments to start the game process"""
-		raise NotImplementedError
+		raise NotImplementedError()

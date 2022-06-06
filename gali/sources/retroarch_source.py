@@ -23,7 +23,7 @@ class RetroarchSource(Source):
 		# Get playlist dir
 		playlists_dir : str = config.get("playlist_directory", None)
 		if playlists_dir is None:
-			raise KeyError
+			raise KeyError()
 
 		# Handle "~" for user home
 		playlists_dir = os.path.expanduser(playlists_dir)

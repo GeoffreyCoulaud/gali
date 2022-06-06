@@ -36,7 +36,7 @@ class SteamSource(Source):
 		paths = []
 		library_folders = config["libraryfolders"]
 		if library_folders is None:
-			raise KeyError
+			raise KeyError()
 		for key in library_folders:
 			entry = library_folders[key]
 			path = entry.get("path", None)

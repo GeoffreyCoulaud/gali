@@ -42,6 +42,7 @@ class GaliApplication(Adw.Application):
 
 		# TODO read user preferences
 		TEMP_ENABLED_SOURCES = [
+			"Cemu (Lutris)",
 			"Citra",
 			"Citra (Flatpak)", 
 			"Dolphin",

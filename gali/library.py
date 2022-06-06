@@ -10,63 +10,31 @@ class Library():
 
 	games: list[Game] = []
 	sources: list[type[Source]] = []
+	enabled_source_names : list[str] = []
 
-	def __init__(self, enabled_sources_names: list[str]) -> None:
-		"""Create a Library instance
-		
-		Args: 
-			enabled_sources_names : name of the sources that the user wants 
-			to scan
-		"""
-		for klass in all_sources:
-			if klass.name in enabled_sources_names:
-				self.sources.append(klass)
+	def __init__(self, enabled_source_names: list[str]) -> None:
+		self.enabled_sources_names = enabled_source_names
 
 	def empty(self) -> None:
+		"""Empty the library"""
 		self.games.clear()
 
 	def scan(self) -> None:
 		"""Scan the library sources"""
-
 		self.empty()
-
-		# Create the ready and awaiting sources
-		# Awaiting = List of source classes
-		# Ready = List of source instances
-		awaiting: list[type[Source]] = []
-		ready: list[Source] = []
-		klass: type[Source] = None
-		for klass in self.sources:
-			if klass.game_dependency is not None:
-				awaiting.append(klass)
-			else:
-				instance = klass()
-				ready.append(instance)
-
-		# Scan ready sources
-		while len(ready) > 0:
-
-			source = ready.pop(0)
+		for klass in all_sources:
+			if not (klass.name in self.enabled_sources_names):
+				continue
+			source = klass()
 			print(f"Scanning source \"{source.name}\"")
-
-			# Scan
-			games: list[Game] = list()
 			try:
 				games = source.scan()
 			except Exception as err:
 				print(f"Error while scanning {source.name}")
 				print_tb(sys.exc_info()[2])
 				print(err)
-			self.games.extend(games)
-
-			# If some awaiting are unlocked,
-			# add them to the ready list
-			for klass in awaiting:
-				predicate = lambda g: klass.game_dependency.test(g)
-				game = next(filter(predicate, games), None)
-				if game is None: continue
-				ready.append(klass(game))
-		
+			else:
+				self.games.extend(games)
 		print("Scan finished")
 
 	def print(self) -> None:

@@ -31,6 +31,7 @@
     ],
     "modules" : [
         "python3-vdf.json",
+        "python3-pyyaml.json",
         {
             "name" : "gali",
             "builddir" : true,
