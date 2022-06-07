@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=gali
+Exec=gali
+Icon=com.github.geoffreycoulaud.gali
+Terminal=false
+Type=Application
+Categories=GTK;
+StartupNotify=true
