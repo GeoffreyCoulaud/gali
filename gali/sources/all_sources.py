@@ -8,31 +8,32 @@ from gali.sources.heroic_source import HeroicSource, HeroicFlatpakSource
 from gali.sources.legendary_source import LegendarySource
 from gali.sources.lutris_source import LutrisSource
 from gali.sources.steam_source import SteamSource, SteamFlatpakSource
-from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSource
+from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSource  # noqa: E501
 from gali.sources.cemu_source import CemuLutrisSource
 
 # Register here all the scannable sources.
 all_sources = [
-	CemuLutrisSource,
-	CitraSource,
-	CitraFlatpakSource,
-	DolphinSource,
-	DolphinFlatpakSource,
-	PPSSPPSource,
-	PPSSPPFlatpakSource,
-	YuzuSource,
-	YuzuFlatpakSource,
-	HeroicSource,
-	HeroicFlatpakSource,
-	LegendarySource,
-	LutrisSource,
-	SteamSource,
-	SteamFlatpakSource,
-	RetroarchSource,
-	RetroarchFlatpakSource
+    CemuLutrisSource,
+    CitraSource,
+    CitraFlatpakSource,
+    DolphinSource,
+    DolphinFlatpakSource,
+    PPSSPPSource,
+    PPSSPPFlatpakSource,
+    YuzuSource,
+    YuzuFlatpakSource,
+    HeroicSource,
+    HeroicFlatpakSource,
+    LegendarySource,
+    LutrisSource,
+    SteamSource,
+    SteamFlatpakSource,
+    RetroarchSource,
+    RetroarchFlatpakSource
 ]
 
 # Desktop entries cannot yet be read correctly from inside flatpak's sandbox.
-# For a future fix, see https://github.com/flatpak/xdg-desktop-portal/issues/809
+# For a future fix, see :
+# https://github.com/flatpak/xdg-desktop-portal/issues/809
 if not is_flatpak():
-	all_sources.append(DesktopSource)
+    all_sources.append(DesktopSource)
