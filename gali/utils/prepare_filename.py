@@ -1,5 +1,6 @@
 import re
 
+
 def prepare_filename(string: str) -> str:
     """Transform a string to be a suitable file name.
 

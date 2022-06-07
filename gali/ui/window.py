@@ -15,10 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk # pylint: disable=import-error
+from gi.repository import Gtk
 
 
-@Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/templates/window.ui")
+@Gtk.Template(
+    resource_path="/com/github/geoffreycoulaud/gali/templates/window.ui"
+)
 class GaliWindow(Gtk.ApplicationWindow):
     """Main Gali window"""
     __gtype_name__ = "GaliWindow"

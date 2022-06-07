@@ -1,8 +1,10 @@
 from dataclasses import dataclass
 from pathlib import PurePath
-from xml.etree.ElementTree import ElementTree, Element
+from xml.etree.ElementTree import Element  # nosec B405
+from defusedxml.etree.ElementTree import ElementTree
 
-def xml_prefix_dict(root : Element, prefix : str):
+
+def xml_prefix_dict(root: Element, prefix: str):
     """From an XML root node, get text of inner nodes matching a prefix.
     The resulting dict associates unprefixed tag name to text."""
     _dict = dict()
@@ -14,19 +16,20 @@ def xml_prefix_dict(root : Element, prefix : str):
         _dict[key] = value
     return _dict
 
+
 @dataclass
 class RPXMetadata:
     """A class representing metadata for a Wii U .rpx game"""
-    title_id : str
-    region : str
-    long_name : dict[str]
-    short_name : dict[str]
-    publisher : dict[str]
-    image_banner : str
-    image_icon : str
+    title_id: str
+    region: str
+    long_name: dict[str]
+    short_name: dict[str]
+    publisher: dict[str]
+    image_banner: str
+    image_icon: str
 
     @staticmethod
-    def from_rom_path(rom_path : str):
+    def from_rom_path(rom_path: str):
         """Create a RPXMetadata object from a .rpx rom path"""
 
         # Get path to meta.xml
@@ -42,12 +45,12 @@ class RPXMetadata:
 
         # Build metadata
         metadata = RPXMetadata(
-            title_id = xml.findtext("menu/title_id", default=None),
-            region = xml.findtext("menu/region", default=None),
-            long_name = xml_prefix_dict(xml_root, "longname_"),
-            short_name = xml_prefix_dict(xml_root, "shortname_"),
-            publisher = xml_prefix_dict(xml_root, "publisher_"),
-            image_banner = f"{meta_dir}/bootTvTex.tga",
-            image_icon = f"{meta_dir}/iconTex.tga"
+            title_id=xml.findtext("menu/title_id", default=None),
+            region=xml.findtext("menu/region", default=None),
+            long_name=xml_prefix_dict(xml_root, "longname_"),
+            short_name=xml_prefix_dict(xml_root, "shortname_"),
+            publisher=xml_prefix_dict(xml_root, "publisher_"),
+            image_banner=f"{meta_dir}/bootTvTex.tga",
+            image_icon=f"{meta_dir}/iconTex.tga"
         )
         return metadata

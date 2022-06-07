@@ -2,6 +2,7 @@ from os import scandir, DirEntry
 from pathlib import PurePath
 from typing import Any
 
+
 class FIFO():
     """A class representing a FIFO queue"""
 
@@ -23,6 +24,7 @@ class FIFO():
         """Remove and get the first element of the queue"""
         return self.__items.pop(0)
 
+
 class DeepDirEntry():
     """A wrapper for os.DirEntry that contains depth information"""
 
@@ -32,6 +34,7 @@ class DeepDirEntry():
     def __init__(self, dirent, depth) -> None:
         self.dirent = dirent
         self.depth = depth
+
 
 def deep_find_files(root, max_depth, extensions) -> list[str]:
     """Deeply find files of an extension inside a root directory"""
@@ -51,7 +54,7 @@ def deep_find_files(root, max_depth, extensions) -> list[str]:
         # Entry is file
         if top.dirent.is_file():
             ext = PurePath(top.dirent.name).suffix
-            if not ext in extensions:
+            if ext not in extensions:
                 continue
             paths.append(top.dirent.path)
 

@@ -1,6 +1,7 @@
 from subprocess import run
 
-from gali.utils.sandbox import is_flatpak # pylint: disable=import-error
+from gali.utils.sandbox import is_flatpak
+
 
 def lutris_export_script(game_slug: str, script_path: str) -> None:
     """Export a lutris game's script to a file path"""

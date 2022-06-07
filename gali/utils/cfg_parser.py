@@ -1,5 +1,6 @@
 from typing import Union, Any
 
+
 class CfgParser():
     """Parser for .cfg format
 
@@ -9,7 +10,7 @@ class CfgParser():
 
     keyvals = dict()
 
-    def read(self, filenames : Union[str, list[str]]):
+    def read(self, filenames: Union[str, list[str]]):
         """Feed files content to the parser"""
 
         if isinstance(filenames, str):
