@@ -15,27 +15,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk
+from gi.repository import Gtk # pylint: disable=import-error
 
 
 @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/templates/window.ui")
 class GaliWindow(Gtk.ApplicationWindow):
-	__gtype_name__ = "GaliWindow"
+    """Main Gali window"""
+    __gtype_name__ = "GaliWindow"
 
-	label = Gtk.Template.Child()
-
-	def __init__(self, **kwargs):
-		super().__init__(**kwargs)
+    label = Gtk.Template.Child()
 
 
 class AboutDialog(Gtk.AboutDialog):
+    """Dialog for about Gali"""
 
-	def __init__(self, parent):
-		Gtk.AboutDialog.__init__(self)
-		self.props.program_name = "gali"
-		self.props.version = "0.1.0"
-		self.props.authors = ["Geoffrey Coulaud"]
-		self.props.copyright = "2022 Geoffrey Coulaud"
-		self.props.logo_icon_name = "com.github.geoffreycoulaud.gali"
-		self.props.modal = True
-		self.set_transient_for(parent)
+    def __init__(self, parent):
+        Gtk.AboutDialog.__init__(self)
+        self.props.program_name = "gali"
+        self.props.version = "0.1.0"
+        self.props.authors = ["Geoffrey Coulaud"]
+        self.props.copyright = "2022 Geoffrey Coulaud"
+        self.props.logo_icon_name = "com.github.geoffreycoulaud.gali"
+        self.props.modal = True
+        self.set_transient_for(parent)
