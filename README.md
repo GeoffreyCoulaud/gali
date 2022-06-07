@@ -1,7 +1,7 @@
 # GALI
 
 ![GitHub](https://img.shields.io/github/license/GeoffreyCoulaud/gali?style=for-the-badge)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GeoffreyCoulaud/gali/python-gnome-builder?style=for-the-badge)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/GeoffreyCoulaud/gali/main?style=for-the-badge)
 
 A game launcher for **linux** where your library is the star of the show.
 
