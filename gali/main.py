@@ -17,13 +17,14 @@
 
 import sys
 
-import gi # pylint: disable=import-error
+import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Gio, Adw # pylint: disable=import-error, unused-import, wrong-import-position
+from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.ui.window import GaliWindow, AboutDialog # pylint: disable=wrong-import-position
-from gali.library import Library # pylint: disable=wrong-import-position
+from gali.ui.window import GaliWindow, AboutDialog  # noqa: E402
+from gali.library import Library  # noqa: E402
+
 
 class GaliApplication(Adw.Application):
     """The main application singleton class."""
@@ -107,6 +108,7 @@ class GaliApplication(Adw.Application):
         self.add_action(action)
         if shortcuts:
             self.set_accels_for_action(f"app.{name}", shortcuts)
+
 
 # pylint: disable=unused-argument
 def main(version):
