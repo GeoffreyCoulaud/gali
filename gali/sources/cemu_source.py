@@ -3,7 +3,8 @@ import sqlite3
 from math import inf
 from locale import getlocale, LC_MESSAGES
 from pathlib import PurePath
-from defusedxml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import ElementTree  # nosec B405
+from defusedxml.ElementTree import parse as xml_parse
 
 from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
@@ -46,8 +47,7 @@ class CemuLutrisSource(EmulationSource):
     def get_cemu_config(self, cemu_exe_path) -> ElementTree:
         config_dir = PurePath(cemu_exe_path).parent
         config_path = f"{config_dir}/settings.xml"
-        config = ElementTree()
-        config.parse(config_path)
+        config = xml_parse(config_path)
         return config
 
     def get_cached_games(

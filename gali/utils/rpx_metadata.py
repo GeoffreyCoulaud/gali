@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pathlib import PurePath
-from xml.etree.ElementTree import Element  # nosec B405
-from defusedxml.etree.ElementTree import ElementTree
+from defusedxml.ElementTree import parse as xml_parse
+from xml.etree.ElementTree import Element, ElementTree  # nosec B405
 
 
 def xml_prefix_dict(root: Element, prefix: str):
@@ -39,8 +39,7 @@ class RPXMetadata:
         meta_xml_path = f"{meta_dir}/meta.xml"
 
         # Read meta.xml
-        xml = ElementTree()
-        xml.parse(meta_xml_path)
+        xml: ElementTree = xml_parse(meta_xml_path)
         xml_root = xml.getroot()
 
         # Build metadata
