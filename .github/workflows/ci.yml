@@ -1,0 +1,52 @@
+# Continuous integration workflow
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: 
+    - main
+  pull_request:
+    branches: 
+    - main
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      # Setup python env
+      - name: Set up Python environment
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      # Lint with flake8
+      - name: Flake8
+        uses: py-actions/flake8@v2
+        with:
+          path: "gali"
+      
+      # Lint with bandit
+      - name: Bandit
+        uses: jpetrucciani/bandit-check@1.6.2
+        with:
+          # File or directory to run bandit on
+          path: "gali"
+      
+      # Lint with prospector
+      - name: Prospector
+        uses: jpetrucciani/prospector-check@1.5.3
+        with:
+          # Optional prospector flags (refer to `prospector --help`)
+          prospector_flags: "--without-tool pylint"
