@@ -1,4 +1,3 @@
-# pylint: disable=missing-module-docstring
 # main.py
 #
 # Copyright 2022 Geoffrey Coulaud
