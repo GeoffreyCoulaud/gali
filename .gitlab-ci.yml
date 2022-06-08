@@ -41,6 +41,6 @@ lint-flake8:
 lint-prospector: 
   stage: test
   script:
-    - dnf-install -y pip
+    - dnf install -y pip
     - pip install prospector
     - prospector --without-tool pylint
