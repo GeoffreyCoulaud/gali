@@ -15,21 +15,8 @@
 
 image: fedora:latest
 
-stages:          # List of stages for jobs, and their order of execution
-  - build
+stages:
   - test
-
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - echo "Building the app..."
-    - echo "No building is done at the moment."
-
-unit-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
-  script:
-    - echo "Running unit tests... "
-    - echo "No unit testing done at the moment."
 
 lint-flake8:
   stage: test
@@ -37,7 +24,6 @@ lint-flake8:
     - dnf install -y python3-flake8
     - flake8 --show-source gali
 
-# Prospector includes bandit
 lint-prospector: 
   stage: test
   script:
