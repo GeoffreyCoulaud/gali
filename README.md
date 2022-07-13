@@ -41,7 +41,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (2)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Citra</td>
@@ -55,7 +55,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (3)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16">
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16">
 			</td>
 			<td>Desktop entries</td>
 			<td>Regular linux desktop entries</td>
@@ -67,7 +67,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Dolphin</td>
@@ -81,7 +81,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (1)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Heroic</td>
@@ -95,7 +95,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (1)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16">
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16">
 			</td>
 			<td>Legendary</td>
 			<td>FOSS Epic Games Launcher alternative (CLI)</td>
@@ -107,7 +107,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16">
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16">
 			</td>
 			<td>Lutris</td>
 			<td>Open Source gaming platform for Linux</td>
@@ -119,7 +119,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>PPSSPP</td>
@@ -133,7 +133,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Retroarch</td>
@@ -147,7 +147,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (1)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Steam</td>
@@ -161,7 +161,7 @@ You will have to install other software to manage your games, they will definite
 		<tr>
 			<td>✅ (2)</td>
 			<td>
-				<img src="docs/icons/tux_mono.svg" alt="Native" title="Native" width="16"> 
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
 				<img src="docs/icons/flatpak.svg" alt="Flatpak" title="Flatpak" width="16">
 			</td>
 			<td>Yuzu</td>
