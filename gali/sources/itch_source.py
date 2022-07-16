@@ -1,8 +1,13 @@
+import json
 from sqlite3 import connect, Row
 
 from gali.sources.source import Source
 from gali.games.itch_game import ItchGame
 from gali.utils.locations import HOME
+
+
+class NoCandidateException(Exception):
+    pass
 
 
 class ItchSource(Source):
@@ -26,6 +31,15 @@ class ItchSource(Source):
         ;
     """
 
+    """
+    From http://docs.itch.ovh/butlerd/master/#/?id=cave-struct
+
+    A Cave corresponds to an "installed item" for a game.
+    It maps one-to-one with an upload. There might be 0, 1, or several
+    caves for a given game. Multiple caves for a single game is a rare-ish
+    case (single-page bundles, bonus content) but one that should be handled.
+    """
+
     def get_db_contents(self) -> list[Row]:
         connection = connect(self.db_path)
         cursor = connection.execute(self.db_request)
@@ -39,10 +53,18 @@ class ItchSource(Source):
 
             # Raw fields
             game_id = row[0]
-            verdict = row[1]
+            raw_verdict = row[1]
             name = row[2]
             cover_url = row[3]
             still_cover_url = row[4]
+
+            # Parse verdict
+            try:
+                verdict = json.loads(raw_verdict)
+            except Exception:
+                continue
+            if len(verdict["candidates"]) == 0:
+                continue
 
             # Game image (prefer still)
             image_box_art = cover_url
