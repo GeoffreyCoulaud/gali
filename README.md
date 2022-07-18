@@ -100,7 +100,7 @@ You will have to install other software to manage your games, they will definite
 			<td>Itch</td>
 			<td>Install, update and play indie games</td>
 			<td>
-				<a href="https://itch.io/app">Website</a> |
+				<a href="https://itch.io/app">Website</a>
 			</td>
 		</tr>
 		<!-- Legendary -->
