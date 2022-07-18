@@ -10,6 +10,7 @@ from gali.sources.lutris_source import LutrisSource
 from gali.sources.steam_source import SteamSource, SteamFlatpakSource
 from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSource  # noqa: E501
 from gali.sources.cemu_source import CemuLutrisSource
+from gali.sources.itch_source import ItchSource
 
 # Register here all the scannable sources.
 all_sources = [
@@ -24,6 +25,7 @@ all_sources = [
     YuzuFlatpakSource,
     HeroicSource,
     HeroicFlatpakSource,
+    ItchSource,
     LegendarySource,
     LutrisSource,
     SteamSource,
