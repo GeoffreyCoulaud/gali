@@ -91,6 +91,18 @@ You will have to install other software to manage your games, they will definite
 				<a href="https://flathub.org/apps/details/com.heroicgameslauncher.hgl">Flathub</a>
 			</td>
 		</tr>
+		<!-- Itch -->
+		<tr>
+			<td>✅</td>
+			<td>
+				<img src="docs/icons/tux.svg" alt="Native" title="Native" width="16"> 
+			</td>
+			<td>Itch</td>
+			<td>Install, update and play indie games</td>
+			<td>
+				<a href="https://itch.io/app">Website</a> |
+			</td>
+		</tr>
 		<!-- Legendary -->
 		<tr>
 			<td>✅ (1)</td>
