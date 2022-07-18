@@ -54,6 +54,7 @@ class GaliApplication(Adw.Application):
             "Desktop Entries",
             "Heroic",
             "Heroic (Flatpak)",
+            "Itch",
             "Legendary",
             "Lutris",
             "Steam",
