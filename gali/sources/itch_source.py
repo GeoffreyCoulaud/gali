@@ -27,7 +27,7 @@ class ItchSource(Source):
         INNER JOIN
             'games'
         ON
-            caves.game_id = games.game_id
+            caves.game_id = games.id
         ;
     """
 
