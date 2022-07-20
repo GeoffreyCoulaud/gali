@@ -1,0 +1,47 @@
+using Gtk 4.0;
+
+template GaliWindow: Gtk.ApplicationWindow {
+    default-width: 600;
+    default-height: 300;
+
+    titlebar: Gtk.HeaderBar header_bar {
+
+        [end]
+        Gtk.MenuButton {
+            icon-name: "open-menu-symbolic";
+            menu-model: primary_menu;
+        }
+
+    };
+
+    [content]
+    Gtk.Label {
+        label: "Hello, World! (in blueprint)";
+    }
+
+}
+
+menu primary_menu {
+    section {
+        item {
+            label: _("Scan Library");
+            action: "app.scan";
+        }
+        item {
+            label: _("Print Library");
+            action: "app.print_library";
+        }
+        item {
+            label: _("Preferences");
+            action: "app.preferences";
+        }
+        item {
+            label: _("Keyboard Shortcuts");
+            action: "app.show-help-overlay";
+        }
+        item {
+            label: _("About Gali");
+            action: "app.about";
+        }
+    }
+}
