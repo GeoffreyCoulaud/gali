@@ -34,6 +34,7 @@ install_data(
         '__init__.py',
         'main.py',
         'library.py',
+        'window.py',
     ], 
     install_dir: moduledir
 )

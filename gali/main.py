@@ -22,7 +22,7 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.ui.window import GaliWindow, AboutDialog  # noqa: E402
+from gali.window import GaliWindow, AboutDialog  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 

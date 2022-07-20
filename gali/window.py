@@ -19,7 +19,7 @@ from gi.repository import Gtk
 
 
 @Gtk.Template(
-    resource_path="/com/github/geoffreycoulaud/gali/templates/window.ui"
+    resource_path="/com/github/geoffreycoulaud/gali/ui/window.ui"
 )
 class GaliWindow(Gtk.ApplicationWindow):
     """Main Gali window"""
