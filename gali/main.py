@@ -22,7 +22,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.window import GaliWindow, AboutDialog  # noqa: E402
+from gali.ui.application_window import ApplicationWindow  # noqa: E402
+from gali.ui.about_dialog import AboutDialog  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 
@@ -65,35 +66,22 @@ class GaliApplication(Adw.Application):
         self.library = Library(enabled_source_names)
 
     def do_activate(self):
-        """Called when the application is activated.
-
-        We raise the application"s main window, creating it if
-        necessary.
-        """
         win = self.props.active_window
         if not win:
-            win = GaliWindow(application=self)
+            win = ApplicationWindow(application=self)
         win.present()
 
-    # pylint: disable=unused-argument
     def on_scan_action(self, widget, _):
-        """Callback for the app.scan action."""
         self.library.scan()
 
-    # pylint: disable=unused-argument
     def on_print_library_action(self, widget, _):
-        """Callback for the app.print_library action"""
         self.library.print()
 
-    # pylint: disable=unused-argument
     def on_about_action(self, widget, _):
-        """Callback for the app.about action."""
         about = AboutDialog(self.props.active_window)
         about.present()
 
-    # pylint: disable=unused-argument
     def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
         print("app.preferences action activated")
 
     def create_action(self, name, callback, shortcuts=None):
@@ -111,8 +99,6 @@ class GaliApplication(Adw.Application):
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
 
-# pylint: disable=unused-argument
 def main(version):
-    """The application"s entry point."""
     app = GaliApplication()
     return app.run(sys.argv)

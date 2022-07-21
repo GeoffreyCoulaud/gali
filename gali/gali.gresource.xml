@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/geoffreycoulaud/gali">
-    <file>ui/window.ui</file>
-    <file>ui/help-overlay.ui</file>
+    <file>ui/blueprints/about_dialog.ui</file>
+    <file>ui/blueprints/application_window.ui</file>
+    <file>ui/blueprints/help-overlay.ui</file>
   </gresource>
 </gresources>
