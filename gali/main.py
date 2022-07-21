@@ -22,8 +22,8 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.ui.application_window import ApplicationWindow  # noqa: E402
-from gali.ui.about_dialog import AboutDialog  # noqa: E402
+from gali.ui.gali_application_window import GaliApplicationWindow  # noqa: E402
+from gali.ui.gali_about_dialog import GaliAboutDialog  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 
@@ -68,7 +68,7 @@ class GaliApplication(Adw.Application):
     def do_activate(self):
         win = self.props.active_window
         if not win:
-            win = ApplicationWindow(application=self)
+            win = GaliApplicationWindow(application=self)
         win.present()
 
     def on_scan_action(self, widget, _):
@@ -78,7 +78,7 @@ class GaliApplication(Adw.Application):
         self.library.print()
 
     def on_about_action(self, widget, _):
-        about = AboutDialog(self.props.active_window)
+        about = GaliAboutDialog(self.props.active_window)
         about.present()
 
     def on_preferences_action(self, widget, _):

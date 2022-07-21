@@ -4,9 +4,9 @@ gnome = import('gnome')
 
 blueprints = custom_target('blueprints',
     input: files(
-        'ui/blueprints/about_dialog'
-        'ui/blueprints/application_window.blp',
-        'ui/blueprints/help_overlay.blp',
+        'ui/blueprints/gali_about_dialog.blp',
+        'ui/blueprints/gali_application_window.blp',
+        'ui/blueprints/gali_help_overlay.blp'
     ),
     output: '.',
     command: [
@@ -51,7 +51,6 @@ install_data(
         '__init__.py',
         'main.py',
         'library.py',
-        'window.py',
     ], 
     install_dir: moduledir
 )
