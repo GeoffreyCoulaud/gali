@@ -34,11 +34,5 @@ locale.textdomain("gali")
 gettext.install("gali", localedir)
 
 if __name__ == "__main__":
-    import gi
-
-    from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, "gali.gresource"))
-    resource._register()
-
     from gali import main
     sys.exit(main.main(VERSION))

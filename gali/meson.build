@@ -2,30 +2,6 @@ pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.proje
 moduledir = join_paths(pkgdatadir, 'gali')
 gnome = import('gnome')
 
-blueprints = custom_target('blueprints',
-    input: files(
-        'ui/blueprints/gali_about_dialog.blp',
-        'ui/blueprints/gali_application_window.blp',
-        'ui/blueprints/gali_help_overlay.blp'
-    ),
-    output: '.',
-    command: [
-        find_program('blueprint-compiler'),
-        'batch-compile',
-        '@OUTPUT@',
-        '@CURRENT_SOURCE_DIR@',
-        '@INPUT@'
-    ],
-)
-
-gnome.compile_resources('gali',
-    'gali.gresource.xml',
-    dependencies: blueprints,
-    gresource_bundle: true,
-    install: true,
-    install_dir: pkgdatadir,
-)
-
 python = import('python')
 
 conf = configuration_data()

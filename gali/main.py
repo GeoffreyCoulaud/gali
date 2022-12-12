@@ -20,7 +20,7 @@ import sys
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
+from gi.repository import Gtk, Gio, Adw, GObject  # noqa: F401,E402
 
 from gali.ui.gali_application_window import GaliApplicationWindow  # noqa: E402
 from gali.ui.gali_about_dialog import GaliAboutDialog  # noqa: E402
@@ -43,25 +43,25 @@ class GaliApplication(Adw.Application):
 
         # TODO read user preferences
         enabled_source_names = [
-            "Cemu (Lutris)",
-            "Citra",
-            "Citra (Flatpak)",
-            "Dolphin",
-            "Dolphin (Flatpak)",
-            "PPSSPP",
-            "PPSSPP (Flatpak)",
-            "Yuzu",
-            "Yuzu (Flatpak)",
-            "Desktop Entries",
-            "Heroic",
-            "Heroic (Flatpak)",
-            "Itch",
-            "Legendary",
-            "Lutris",
-            "Steam",
+            # "Cemu (Lutris)",
+            # "Citra",
+            # "Citra (Flatpak)",
+            # "Dolphin",
+            # "Dolphin (Flatpak)",
+            # "PPSSPP",
+            # "PPSSPP (Flatpak)",
+            # "Yuzu",
+            # "Yuzu (Flatpak)",
+            # "Desktop Entries",
+            # "Heroic",
+            # "Heroic (Flatpak)",
+            # "Itch",
+            # "Legendary",
+            # "Lutris",
+            # "Steam",
             "Steam (Flatpak)",
-            "Retroarch",
-            "Retroarch (Flatpak)",
+            # "Retroarch",
+            # "Retroarch (Flatpak)",
         ]
         self.library = Library(enabled_source_names)
 
@@ -73,6 +73,12 @@ class GaliApplication(Adw.Application):
 
     def on_scan_action(self, widget, _):
         self.library.scan()
+        win = self.props.active_window
+        if not win:
+            print("No main window to render games")
+            return
+        # Update the list store of games
+        win.update_games_list_store(self.library.games)
 
     def on_print_library_action(self, widget, _):
         self.library.print()

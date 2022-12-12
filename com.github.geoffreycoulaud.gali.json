@@ -34,17 +34,6 @@
         "python3-pyyaml.json",
         "python3-defusedxml.json",
         {
-            "name": "blueprint-compiler",
-            "buildsystem": "meson",
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://gitlab.gnome.org/jwestman/blueprint-compiler",
-                    "branch": "main"
-                }
-            ]
-        },
-        {
             "name" : "gali",
             "builddir" : true,
             "buildsystem" : "meson",

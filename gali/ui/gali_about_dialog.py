@@ -1,8 +1,5 @@
 from gi.repository import Gtk
 
-
-@Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/blueprints/\
-gali_about_dialog.ui")
 class GaliAboutDialog(Gtk.AboutDialog):
     """Dialog for about Gali"""
     __gtype_name__ = "GaliAboutDialog"
