@@ -12,6 +12,8 @@ from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSourc
 from gali.sources.cemu_source import CemuLutrisSource
 from gali.sources.itch_source import ItchSource
 
+# TODO implement correctly with python's package __init__.py
+
 # Register here all the scannable sources.
 all_sources = [
     CemuLutrisSource,

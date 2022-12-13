@@ -20,9 +20,10 @@ import sys
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
+from gi.repository import Gtk, Gio, Adw, GObject  # noqa: F401,E402
 
-from gali.ui.window import GaliWindow, AboutDialog  # noqa: E402
+from gali.ui.gali_application_window import GaliApplicationWindow  # noqa: E402
+from gali.ui.gali_about_dialog import GaliAboutDialog  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 
@@ -41,6 +42,7 @@ class GaliApplication(Adw.Application):
         self.create_action("preferences", self.on_preferences_action)
 
         # TODO read user preferences
+        # TODO only enable scannable sources (having a config file or another precondition met)
         enabled_source_names = [
             "Cemu (Lutris)",
             "Citra",
@@ -65,35 +67,28 @@ class GaliApplication(Adw.Application):
         self.library = Library(enabled_source_names)
 
     def do_activate(self):
-        """Called when the application is activated.
-
-        We raise the application"s main window, creating it if
-        necessary.
-        """
         win = self.props.active_window
         if not win:
-            win = GaliWindow(application=self)
+            win = GaliApplicationWindow(application=self)
         win.present()
 
-    # pylint: disable=unused-argument
     def on_scan_action(self, widget, _):
-        """Callback for the app.scan action."""
         self.library.scan()
+        win = self.props.active_window
+        if not win:
+            print("No main window to render games")
+            return
+        # Update the list store of games
+        win.update_games_list_store(self.library.games)
 
-    # pylint: disable=unused-argument
     def on_print_library_action(self, widget, _):
-        """Callback for the app.print_library action"""
         self.library.print()
 
-    # pylint: disable=unused-argument
     def on_about_action(self, widget, _):
-        """Callback for the app.about action."""
-        about = AboutDialog(self.props.active_window)
+        about = GaliAboutDialog(self.props.active_window)
         about.present()
 
-    # pylint: disable=unused-argument
     def on_preferences_action(self, widget, _):
-        """Callback for the app.preferences action."""
         print("app.preferences action activated")
 
     def create_action(self, name, callback, shortcuts=None):
@@ -111,8 +106,6 @@ class GaliApplication(Adw.Application):
             self.set_accels_for_action(f"app.{name}", shortcuts)
 
 
-# pylint: disable=unused-argument
 def main(version):
-    """The application"s entry point."""
     app = GaliApplication()
     return app.run(sys.argv)
