@@ -12,13 +12,17 @@ from gali.sources.retroarch_source import RetroarchSource, RetroarchFlatpakSourc
 from gali.sources.cemu_source import CemuLutrisSource
 from gali.sources.itch_source import ItchSource
 
-# TODO implement correctly with python's package __init__.py
-
 # Register here all the scannable sources.
+
+# Note : Desktop entries cannot yet be read correctly from inside flatpak's sandbox.
+# For a future fix, see :
+# https://github.com/flatpak/xdg-desktop-portal/issues/809
+
 all_sources = [
     CemuLutrisSource,
     CitraSource,
     CitraFlatpakSource,
+    DesktopSource,
     DolphinSource,
     DolphinFlatpakSource,
     PPSSPPSource,
@@ -36,8 +40,3 @@ all_sources = [
     RetroarchFlatpakSource
 ]
 
-# Desktop entries cannot yet be read correctly from inside flatpak's sandbox.
-# For a future fix, see :
-# https://github.com/flatpak/xdg-desktop-portal/issues/809
-if not is_flatpak():
-    all_sources.append(DesktopSource)

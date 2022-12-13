@@ -219,7 +219,6 @@ Open the project in Gnome Builder, build and start from there.
 
 ## TODO
 
-* Refactor `all_source.py`
 * Implement the `CheckScannable` interface for appropriate sources
 * Decouple scanning from the main thread
 * Use Adwaita's about dialog
