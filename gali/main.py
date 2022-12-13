@@ -42,26 +42,27 @@ class GaliApplication(Adw.Application):
         self.create_action("preferences", self.on_preferences_action)
 
         # TODO read user preferences
+        # TODO only enable scannable sources (having a config file or another precondition met)
         enabled_source_names = [
-            # "Cemu (Lutris)",
-            # "Citra",
-            # "Citra (Flatpak)",
-            # "Dolphin",
-            # "Dolphin (Flatpak)",
-            # "PPSSPP",
-            # "PPSSPP (Flatpak)",
-            # "Yuzu",
-            # "Yuzu (Flatpak)",
-            # "Desktop Entries",
-            # "Heroic",
-            # "Heroic (Flatpak)",
-            # "Itch",
-            # "Legendary",
-            # "Lutris",
-            # "Steam",
+            "Cemu (Lutris)",
+            "Citra",
+            "Citra (Flatpak)",
+            "Dolphin",
+            "Dolphin (Flatpak)",
+            "PPSSPP",
+            "PPSSPP (Flatpak)",
+            "Yuzu",
+            "Yuzu (Flatpak)",
+            "Desktop Entries",
+            "Heroic",
+            "Heroic (Flatpak)",
+            "Itch",
+            "Legendary",
+            "Lutris",
+            "Steam",
             "Steam (Flatpak)",
-            # "Retroarch",
-            # "Retroarch (Flatpak)",
+            "Retroarch",
+            "Retroarch (Flatpak)",
         ]
         self.library = Library(enabled_source_names)
 

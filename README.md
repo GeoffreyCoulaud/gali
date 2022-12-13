@@ -218,28 +218,27 @@ Open the project in Gnome Builder, build and start from there.
 * Cemu in lutris is a clunky solution, but it's the best we currently have on linux
 
 ## TODO
-* Preferences
-	* Add a preference panel
-	* Save and load user preferences
-* App UI
-	* See [docs/ui_design_process.md](docs/ui_design_process.md)
-* Dolphin
-	* Scan cached games
+
+* Refactor `all_source.py`
+* Implement the `CheckScannable` interface for appropriate sources
+* Decouple scanning from the main thread
+* Use Adwaita's about dialog
+* Add Marie's new icon for Gali 
+* Add a preference panel
+* Save and load user preferences
+* Define Gali's UI, See [docs/ui_design_process.md](docs/ui_design_process.md)
+* Sources enhancements
+	* Scan Dolphin cached games
 	* Differenciate between Gamecube and Wii games
-* Yuzu
-	* Scan installed games
-* Citra
-	* Scan installed games
+	* Scan installed games in Yuzu and Citra
 * New sources
-	* Standalone
-		* Bottles (?)
-		* itch.io
-		* Decaf
-		* Ryujinx
-	* In Steam
-		* Retroarch
-	* In Lutris
-		* Origin
-		* Battle_net
-		* Uplay
-		* Teknoparrot
+	* Bottles
+	* itch.io
+	* Decaf
+	* Ryujinx
+	* (Linux native) Cemu
+	* (in Steam) Retroarch
+	* (in Lutris) Origin
+	* (in Lutris) Battle_net
+	* (in Lutris) Uplay
+	* (in Lutris) Teknoparrot
