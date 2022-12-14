@@ -221,7 +221,6 @@ Open the project in Gnome Builder, build and start from there.
 
 * Implement the `CheckScannable` interface for appropriate sources
 * Decouple scanning from the main thread
-* Use Adwaita's about dialog
 * Add Marie's new icon for Gali 
 * Add a preference panel
 * Save and load user preferences

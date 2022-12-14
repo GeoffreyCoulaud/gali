@@ -23,7 +23,6 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw, GObject  # noqa: F401,E402
 
 from gali.ui.gali_application_window import GaliApplicationWindow  # noqa: E402
-from gali.ui.gali_about_dialog import GaliAboutDialog  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 
@@ -85,7 +84,24 @@ class GaliApplication(Adw.Application):
         self.library.print()
 
     def on_about_action(self, widget, _):
-        about = GaliAboutDialog(self.props.active_window)
+        about = Adw.AboutWindow()
+        about.set_developers([
+            "Geoffrey Coulaud",
+        ])
+        about.set_artists([
+            "Marie Moua",
+        ])
+        about.set_documenters([
+            # Add documentation contributors here
+        ])
+        about.set_translator_credits(
+            "" # Add translators here
+        )
+        about.set_license_type(Gtk.License.GPL_3_0)
+        about.set_website("https://github.com/GeoffreyCoulaud/gali")
+        about.set_issue_url("https://github.com/GeoffreyCoulaud/gali/issues")
+        about.set_support_url("https://github.com/GeoffreyCoulaud/gali/issues")
+        about.set_transient_for(self.props.active_window)
         about.present()
 
     def on_preferences_action(self, widget, _):
