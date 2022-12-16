@@ -4,13 +4,14 @@ from sqlite3 import connect, Row
 from gali.sources.source import Source
 from gali.games.itch_game import ItchGame
 from gali.utils.locations import HOME
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
 class NoCandidateException(Exception):
     pass
 
 
-class ItchSource(Source):
+class ItchSource(Source, FileDependentScannable):
 
     name: str = "Itch"
     game_class: type[ItchGame] = ItchGame
@@ -89,3 +90,6 @@ class ItchSource(Source):
         db_contents = self.get_db_contents()
         games = self.get_games(db_contents)
         return games
+
+    def get_precondition_file_path(self):
+        return self.db_path

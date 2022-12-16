@@ -6,9 +6,10 @@ from gali.games.retroarch_game import RetroarchGame, RetroarchFlatpakGame
 from gali.sources.source import Source
 from gali.utils.cfg_parser import CfgParser
 from gali.utils.locations import HOME
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class RetroarchSource(Source):
+class RetroarchSource(Source, FileDependentScannable):
 
     name: str = "Retroarch"
     game_class: type[RetroarchGame] = RetroarchGame
@@ -95,6 +96,9 @@ class RetroarchSource(Source):
         playlist_paths = self.get_playlist_paths(config)
         games = self.get_games(playlist_paths)
         return games
+
+    def get_precondition_file_path(self):
+        return self.config_path
 
 
 class RetroarchFlatpakSource(RetroarchSource):

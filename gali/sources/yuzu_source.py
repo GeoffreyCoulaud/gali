@@ -6,9 +6,10 @@ from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.games.yuzu_game import YuzuGame, YuzuFlatpakGame
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class YuzuSource(EmulationSource):
+class YuzuSource(EmulationSource, FileDependentScannable):
 
     name: str = "Yuzu"
     game_class: type[YuzuGame] = YuzuGame
@@ -30,12 +31,12 @@ class YuzuSource(EmulationSource):
         for i in range(1, n_dirs + 1):
             deep = config.getboolean(
                 "UI",
-                fr"Paths\gamedirs\{i}\deep_scan",
+                f"Paths\\gamedirs\\{i}\\deep_scan",
                 fallback=False
             )
             path = config.get(
                 "UI",
-                fr"Paths\gamedirs\{i}\path",
+                f"Paths\\gamedirs\\{i}\\path",
                 fallback=None
             )
             if path is None:
@@ -69,6 +70,9 @@ class YuzuSource(EmulationSource):
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)
         return rom_games
+
+    def get_precondition_file_path(self):
+        return self.config_path
 
 
 class YuzuFlatpakSource(YuzuSource):

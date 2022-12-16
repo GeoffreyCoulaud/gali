@@ -41,7 +41,6 @@ class GaliApplication(Adw.Application):
         self.create_action("preferences", self.on_preferences_action)
 
         # TODO read user preferences
-        # TODO only enable scannable sources (having a config file or another precondition met)
         enabled_source_names = [
             "Cemu (Lutris)",
             "Citra",

@@ -2,10 +2,12 @@ from math import inf
 
 from gali.sources.game_dir import GameDir
 from gali.sources.source import Source
+from gali.sources.scannable import UnscannableReason
 from gali.games.desktop_game import DesktopGame
 from gali.utils.locations import XDG_DATA_DIRS, XDG_DATA_HOME
 from gali.utils.deep_find_files import deep_find_files
 from gali.utils.explicit_config_parser import ExplicitConfigParser
+from gali.utils.sandbox import is_flatpak
 
 
 class DesktopSource(Source):
@@ -90,3 +92,13 @@ class DesktopSource(Source):
         paths = self.get_desktop_paths(dirs)
         games = self.get_desktop_games(paths)
         return games
+
+    def is_scannable(self):
+        """
+        Desktop entries cannot yet be read correctly from inside flatpak's sandbox.
+        For a future fix, see :
+        https://github.com/flatpak/xdg-desktop-portal/issues/809
+        """
+        if is_flatpak():
+            return UnscannableReason("Not scannable inside of the flatpak sandbox")
+        return True

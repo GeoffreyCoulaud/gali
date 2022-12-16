@@ -219,7 +219,6 @@ Open the project in Gnome Builder, build and start from there.
 
 ## TODO
 
-* Implement the `CheckScannable` interface for appropriate sources
 * Decouple scanning from the main thread
 * Add Marie's new icon for Gali 
 * Add a preference panel

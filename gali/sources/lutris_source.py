@@ -3,9 +3,10 @@ from sqlite3 import connect, Row
 from gali.utils.locations import HOME
 from gali.sources.source import Source
 from gali.games.lutris_game import LutrisGame
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class LutrisSource(Source):
+class LutrisSource(Source, FileDependentScannable):
 
     name: str = "Lutris"
     game_class: type[LutrisGame] = LutrisGame
@@ -62,3 +63,6 @@ class LutrisSource(Source):
         db_rows = self.get_db_contents()
         games = self.get_games(db_rows)
         return games
+
+    def get_precondition_file_path(self):
+        return self.db_path

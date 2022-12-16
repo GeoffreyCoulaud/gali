@@ -3,6 +3,8 @@ import sqlite3
 from math import inf
 from locale import getlocale, LC_MESSAGES
 from pathlib import PurePath
+from os import access, R_OK, PathLike
+from os.path import isfile
 from xml.etree.ElementTree import ElementTree  # nosec B405
 from defusedxml.ElementTree import parse as xml_parse
 
@@ -13,6 +15,7 @@ from gali.games.cemu_game import CemuLutrisGame
 from gali.sources.lutris_source import LutrisSource
 from gali.utils.wine_path import wine_to_posix
 from gali.sources.game_dir import GameDir
+from gali.sources.scannable import UnscannableReason
 
 
 class CemuLutrisSource(EmulationSource):
@@ -28,17 +31,16 @@ class CemuLutrisSource(EmulationSource):
         ".elf"
     )
 
-    def get_cemu_lutris_config(self) -> dict:
-
-        # Get path to lutris config for cemu
+    def get_cemu_lutris_config_path(self) -> str: 
         connection = sqlite3.connect(LutrisSource.db_path)
         sql = "SELECT configpath FROM 'games' WHERE slug = 'cemu'"
         cursor = connection.execute(sql)
         row = cursor.fetchone()
         connection.close()
         config_path = f"{HOME}/.config/lutris/games/{row[0]}.yml"
+        return config_path
 
-        # Get config content
+    def get_cemu_lutris_config(self, config_path: str) -> dict:
         file = open(config_path, "r", encoding="utf-8-sig")
         config = yaml.safe_load(file)
         file.close()
@@ -136,7 +138,8 @@ class CemuLutrisSource(EmulationSource):
     def scan(self) -> tuple[CemuLutrisGame]:
 
         # Read lutris config for cemu
-        cemu_lutris_config = self.get_cemu_lutris_config()
+        cemu_lutris_config_path = self.get_cemu_lutris_config_path()
+        cemu_lutris_config = self.get_cemu_lutris_config(cemu_lutris_config_path)
         wine_prefix_path = cemu_lutris_config["game"]["prefix"]
         exe_path = cemu_lutris_config["game"]["exe"]
         exe_path = f"{wine_prefix_path}/{exe_path}"
@@ -152,3 +155,27 @@ class CemuLutrisSource(EmulationSource):
             games = self.get_rom_games(game_dirs)
 
         return tuple(games)
+
+    def is_scannable(self):
+        # TODO Evaluate if source dependencies are a good idea
+        # Maybe depending on a Lutris game is a better idea...
+        # Instead of re-scanning, use a criteria for a game to be the source's 
+        # starting point.
+        # Any LutrisGame with the slug "cemu" is fine, just specify so.
+        
+        # Not scannable if no Lutris DB is present
+        file = LutrisSource.db_path
+        if (not isfile(file)) or (not access(file, R_OK)):
+            return UnscannableReason(f"Lutris db file is not readable : {file}")
+        
+        # Not scannable if Lutris doesn't have Cemu installed
+        connection = sqlite3.connect(file)
+        sql = "SELECT count(*) FROM 'games' WHERE slug = 'cemu'"
+        cursor = connection.execute(sql)
+        row = cursor.fetchone()
+        connection.close()
+        has_cemu = row[0] > 0
+        if not has_cemu:
+            return UnscannableReason("Cemu is not installed in Lutris")
+
+        return True

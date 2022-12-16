@@ -6,9 +6,10 @@ from gali.utils.locations import HOME
 from gali.sources.game_dir import GameDir
 from gali.sources.emulation_source import EmulationSource
 from gali.games.dolphin_game import DolphinGame, DolphinFlatpakGame
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class DolphinSource(EmulationSource):
+class DolphinSource(EmulationSource, FileDependentScannable):
 
     name: str = "Dolphin"
     game_class: type[DolphinGame] = DolphinGame
@@ -63,6 +64,9 @@ class DolphinSource(EmulationSource):
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)
         return rom_games
+
+    def get_precondition_file_path(self):
+        return self.config_path
 
 
 class DolphinFlatpakSource(DolphinSource):

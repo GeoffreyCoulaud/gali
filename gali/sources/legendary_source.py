@@ -4,9 +4,10 @@ from gali.utils.locations import HOME
 from gali.sources.source import Source
 from gali.games.legendary_game import LegendaryGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class LegendarySource(Source):
+class LegendarySource(Source, FileDependentScannable):
 
     name: str = "Legendary"
     game_class: type[LegendaryGame] = LegendaryGame
@@ -69,3 +70,6 @@ class LegendarySource(Source):
         installed_json = self.get_installed_json(config)
         games = self.get_games(installed_json)
         return games
+
+    def get_precondition_file_path(self):
+        return self.config_path

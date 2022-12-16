@@ -14,10 +14,6 @@ from gali.sources.itch_source import ItchSource
 
 # Register here all the scannable sources.
 
-# Note : Desktop entries cannot yet be read correctly from inside flatpak's sandbox.
-# For a future fix, see :
-# https://github.com/flatpak/xdg-desktop-portal/issues/809
-
 all_sources = [
     CemuLutrisSource,
     CitraSource,

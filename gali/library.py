@@ -27,7 +27,11 @@ class Library():
             if not (klass.name in self.enabled_sources_names):
                 continue
             source = klass()
-            print(f"Scanning source \"{source.name}\"")
+            is_scannable = source.is_scannable() 
+            if not is_scannable :
+                print(f"🚫 Skipping source {source.name} : {str(is_scannable)}")
+                continue
+            print(f"🔍 Scanning source {source.name}")
             try:
                 games = source.scan()
             except Exception as err:

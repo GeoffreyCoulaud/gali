@@ -5,6 +5,7 @@ import re
 from gali.sources.source import Source
 from gali.games.steam_game import SteamGame
 from gali.utils.locations import HOME
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
 class InvalidManifestException(Exception):
@@ -23,7 +24,7 @@ def fullmatch_any(value: str, patterns: tuple[re.Pattern]) -> bool:
     return False
 
 
-class SteamSource(Source):
+class SteamSource(Source, FileDependentScannable):
 
     name: str = "Steam"
     game_class: type[SteamGame] = SteamGame
@@ -160,6 +161,9 @@ class SteamSource(Source):
         manifest_paths = self.get_manifest_paths(game_dir_paths)
         games = self.get_games(manifest_paths)
         return games
+
+    def get_precondition_file_path(self):
+        return f"{self.steam_dir}/{self.rel_library_config}"
 
 
 class SteamFlatpakSource(SteamSource):

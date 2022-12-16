@@ -3,9 +3,10 @@ import json
 from gali.utils.locations import HOME
 from gali.sources.source import Source
 from gali.games.heroic_game import HeroicGame
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class HeroicSource(Source):
+class HeroicSource(Source, FileDependentScannable):
 
     name: str = "Heroic"
     game_class: type[HeroicGame] = HeroicGame
@@ -53,6 +54,9 @@ class HeroicSource(Source):
         config = self.get_config()
         games = self.get_games(config)
         return games
+
+    def get_precondition_file_path(self):
+        return self.config_path
 
 
 class HeroicFlatpakSource(HeroicSource):
