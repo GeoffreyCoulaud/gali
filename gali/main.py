@@ -16,13 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
-
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Gio, Adw, GObject  # noqa: F401,E402
+from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.ui.gali_application_window import GaliApplicationWindow  # noqa: E402
+from gali.ui.application_window import ApplicationWindow  # noqa: E402
 from gali.library import Library  # noqa: E402
 
 
@@ -67,7 +66,7 @@ class GaliApplication(Adw.Application):
     def do_activate(self):
         win = self.props.active_window
         if not win:
-            win = GaliApplicationWindow(application=self)
+            win = ApplicationWindow(application=self)
         win.present()
 
     def on_scan_action(self, widget, _):
@@ -77,7 +76,7 @@ class GaliApplication(Adw.Application):
             print("No main window to render games")
             return
         # Update the list store of games
-        win.update_games_list_store(self.library.games)
+        win.update_games(self.library.games)
 
     def on_print_library_action(self, widget, _):
         self.library.print()
