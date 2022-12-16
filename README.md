@@ -2,14 +2,19 @@
 
 A game launcher for **linux** where your library is the star of the show.
 
-## Why ?
-> I'm so tired of interfaces that include 9 out of 10 of my games. I want it all in one, pretty, place !
 
-If you think alike, we believe Gali is for you.
+> I'm so tired of launchers that each have 20% of my games.  
+I want to view them all in the same place !
 
-However, if you want a single place to install, configure and manage your games,
-this is not the intended purpose of Gali. This project is made to display your games library.
-You will have to install other software to manage your games, they will definitely do it better.
+If you think alike, Gali is for you.
+
+However, gali is **not** 
+
+* A game manager that handles downloading, managing, uninstalling
+* A general-purpose app launcher
+* A replacement for other game launchers
+* A compatibility layer
+* A windows app
 
 ## Supported sources
 
@@ -192,9 +197,7 @@ You will have to install other software to manage your games, they will definite
 In flatpak's sandbox it is not possible to get desktop entries from `/var/lib/flatpak/exports/share`, so none of the system-wide flatpak desktop entries are scanned. See [xdg-desktop-portal#809](https://github.com/flatpak/xdg-desktop-portal/issues/809) for a possible solution.
 
 ### What are these "variants" ?
-Some of the supported game sources can be distributed using multiple methods.
-In that case, the underlying logic is the same but the place where the games are
-stored and how they are launched may change.
+Some of the supported game sources can be distributed using multiple methods. In that case, the underlying logic is the same but the place where the games are stored and how they are launched may change.
 
 For example, *Retroarch* is distributed in all of these formats:
 - Standalone, installed via your distribution's package manager
@@ -204,18 +207,15 @@ For example, *Retroarch* is distributed in all of these formats:
 - Steam, installed from Steam's client
 - Itch.io, installed from Itch.io's website or client
 
-It's still the same source under the hood, so all of these are **variants** of
-the standalone version.
+It's still the same source under the hood, so all of these are **variants** of the standalone version.
 
 ## Usage
+
+### For users
 **This is in active development, but not ready. Be patient !**
 
-### Dev usage
-Open the project in Gnome Builder, build and start from there.
-
-## Known issues
-* Games from Steam, Legendary, Heroic can be started but not stopped or killed
-* Cemu in lutris is a clunky solution, but it's the best we currently have on linux
+### For developers
+Open the project in Gnome Builder and start Gali from there.
 
 ## TODO
 
