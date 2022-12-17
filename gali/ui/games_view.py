@@ -1,10 +1,12 @@
-from gi.repository import Gtk, Gio
+from gi.repository import Adw, Gtk, Gio
 from gali.ui.game_gobject import GameGObject
 from gali.ui.string_list_item_factory import StringListItemFactory
 from gali.games.game import Game
 
 
-class GamesViewWindow(Gtk.ScrolledWindow):
+class GamesView(Gtk.ScrolledWindow):
+
+    list_store = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -13,19 +15,17 @@ class GamesViewWindow(Gtk.ScrolledWindow):
         self.list_store = Gio.ListStore.new(GameGObject)
 
         # List selection model
-        self.list_selection_model = Gtk.NoSelection()
-        self.list_selection_model.set_model(self.list_store)
+        list_selection_model = Gtk.NoSelection()
+        list_selection_model.set_model(self.list_store)
 
         # List factory
-        self.list_factory = StringListItemFactory()
+        list_factory = StringListItemFactory()
 
         # List view
-        self.list_view = Gtk.ListView()
-        self.list_view.set_model(self.list_selection_model)
-        self.list_view.set_factory(self.list_factory)
-
-        # Self
-        self.set_child(self.list_view)
+        list_view = Gtk.ListView()
+        list_view.set_model(list_selection_model)
+        list_view.set_factory(list_factory)
+        self.set_child(list_view)
 
     def update_games(self, games: tuple[Game]):
         """
