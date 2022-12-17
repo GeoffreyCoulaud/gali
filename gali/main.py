@@ -22,22 +22,30 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
 from gali.ui.application_window import ApplicationWindow  # noqa: E402
+from gali.ui.game_gobject import GameGObject
 from gali.library import Library  # noqa: E402
 
 
 class GaliApplication(Adw.Application):
     """The main application singleton class."""
 
+    library = None
+    games_list_store = None
+
     def __init__(self):
         super().__init__(
             application_id="com.github.geoffreycoulaud.gali",
             flags=Gio.ApplicationFlags.FLAGS_NONE
         )
+        
         self.create_action("quit", self.quit, ["<primary>q"])
-        self.create_action("scan", self.on_scan_action)
+        self.create_action("scan", self.on_scan)
         self.create_action("print_library", self.on_print_library_action)
         self.create_action("about", self.on_about_action)
         self.create_action("preferences", self.on_preferences_action)
+
+        self.games_list_store = Gio.ListStore.new(GameGObject)
+        self.games_list_store.connect("notify::n-items", self.on_games_list_store_size_change)
 
         # TODO read user preferences
         enabled_source_names = [
@@ -64,24 +72,37 @@ class GaliApplication(Adw.Application):
         self.library = Library(enabled_source_names)
 
     def do_activate(self):
-        win = self.props.active_window
-        if not win:
-            win = ApplicationWindow(application=self)
-        win.present()
+        window = self.props.active_window
+        if not window:
+            window = ApplicationWindow(
+                application=self,
+                games_list_store=self.games_list_store
+            )
+        window.present()
 
-    def on_scan_action(self, widget, _):
+    def on_scan(self, *data):
+        """
+        Handle scan signal
+        """
+        # TODO Scan in a different thread
+        # TODO Display a scanning cancellable toast
         self.library.scan()
-        win = self.props.active_window
-        if not win:
-            print("No main window to render games")
-            return
-        # Update the list store of games
-        win.update_games(self.library.games)
+        items = list(map(lambda g: GameGObject(g), self.library.games))
+        self.games_list_store.splice(0, self.games_list_store.get_n_items(), items)
 
-    def on_print_library_action(self, widget, _):
+    def on_games_list_store_size_change(self, *data):
+        """
+        Handle change of number of items in the games_list_storee
+        """
+        if self.games_list_store.get_n_items() == 0:
+            self.props.active_window.set_active_view("no_games")
+        else:
+            self.props.active_window.set_active_view("games")
+
+    def on_print_library_action(self, *data):
         self.library.print()
 
-    def on_about_action(self, widget, _):
+    def on_about_action(self, *data):
         about = Adw.AboutWindow()
         about.set_developers([
             "Geoffrey Coulaud",
@@ -102,7 +123,7 @@ class GaliApplication(Adw.Application):
         about.set_transient_for(self.props.active_window)
         about.present()
 
-    def on_preferences_action(self, widget, _):
+    def on_preferences_action(self, *data):
         print("app.preferences action activated")
 
     def create_action(self, name, callback, shortcuts=None):
