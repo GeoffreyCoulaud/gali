@@ -3,7 +3,7 @@ from gali.games.game import Game
 from gali.ui.header_bar_controls import HeaderBarControls
 from gali.ui.games_view import GamesView
 
-
+# @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/main_window.ui")
 class ApplicationWindow(Gtk.ApplicationWindow):
     """
     Main Gali window
