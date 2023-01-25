@@ -11,10 +11,6 @@ class Library():
 
     games: list[Game] = []
     sources: list[type[Source]] = []
-    enabled_source_names: list[str] = []
-
-    def __init__(self, enabled_source_names: list[str]) -> None:
-        self.enabled_sources_names = enabled_source_names
 
     def empty(self) -> None:
         """Empty the library"""
@@ -24,8 +20,6 @@ class Library():
         """Scan the library sources"""
         self.empty()
         for klass in all_sources:
-            if not (klass.name in self.enabled_sources_names):
-                continue
             source = klass()
             is_scannable = source.is_scannable() 
             if not is_scannable :

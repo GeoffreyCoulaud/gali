@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+
+  <menu id="application_menu">
+    <section>
+      <item>
+        <attribute name='label' translatable='yes'>_Preferences</attribute>
+        <attribute name='action'>app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>_Keyboard Shortcuts</attribute>
+        <attribute name='action'>app.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name='label' translatable='yes'>_About Gali</attribute>
+        <attribute name='action'>app.about</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <template class="GaliApplicationWindow" parent="AdwApplicationWindow">
+    <property name="default-width">600</property>
+    <property name="default-height">600</property>
+    <property name="content">
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="AdwHeaderBar">
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="menu-model">application_menu</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="icon-name">view-reveal-symbolic</property>
+                <property name="popover">
+                  <object class="GtkPopover" id="filter_popover">
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <!-- Insert Gtk.CheckButton with label here -->
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>  
+            </child>
+            <child type="end">
+              <object class="GtkButton">
+                <property name="action-name">app.scan</property>
+                <child>
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">emblem-synchronizing-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>        
+        <child>
+          <object class="GtkStack" id="view_stack">
+            <property name="vexpand">true</property>
+            <property name="transition-type">crossfade</property>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">no_games_view</property>
+                <property name="child">
+                  <object class="AdwStatusPage">
+                    <property name="icon-name">system-search-symbolic</property>
+                    <property name="title">No games found</property>
+                    <property name="description">Maybe try a broader filter</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">games_view</property>
+                <property name="child">
+                  <object class="GtkScrolledWindow">
+                    <child>
+                      <object class="GaliGamesView" id="games_view" />
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </property>
+  </template>
+</interface>

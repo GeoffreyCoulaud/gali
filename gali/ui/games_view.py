@@ -1,23 +1,58 @@
 from gi.repository import Adw, Gtk, Gio
-from gali.ui.game_gobject import GameGObject
-from gali.ui.string_list_item_factory import StringListItemFactory
-from gali.games.game import Game
 
 
-class GamesView(Gtk.ScrolledWindow):
+@Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/games_view.ui")
+class GaliGamesView(Gtk.ListView):
+    __gtype_name__ = "GaliGamesView"
 
-    def __init__(self, games_list_store):
+    games_store = None
+    selection_model = Gtk.Template.Child()
+
+    def __init__(self):
         super().__init__()
 
-        # List selection model
-        list_selection_model = Gtk.NoSelection()
-        list_selection_model.set_model(games_list_store)
+    def set_games_store(self, games_store):
+        self.games_store = games_store
+        self.selection_model.set_model(self.games_store)
 
-        # List factory
-        list_factory = StringListItemFactory()
+    def get_games_store(self):
+        return self.games_store
 
-        # List view
-        list_view = Gtk.ListView()
-        list_view.set_model(list_selection_model)
-        list_view.set_factory(list_factory)
-        self.set_child(list_view)
+    @Gtk.Template.Callback()
+    def on_setup(self, widget: Gtk.ListView, list_item: Gtk.ListItem):
+        """
+        Callback for the setup signal
+        In charge of creating the inner structure of the ListItem widget.
+        """
+        label = Gtk.Label()
+        list_item.set_child(label)
+
+    @Gtk.Template.Callback()
+    def on_bind(self, widget: Gtk.ListView, list_item: Gtk.ListItem):
+        """
+        Callback for the bind signal
+        In charge of finalizing the widget's content and signals just before
+        it is presented (at creation or reuse)
+        """
+        label = list_item.get_child()
+        game_gobject = list_item.get_item()
+        label.set_label(str(game_gobject))
+
+    @Gtk.Template.Callback()
+    def on_unbind(self, widget: Gtk.ListView, list_item: Gtk.ListItem):
+        """
+        Callback for the unbind signal
+        In charge of undoing the bind step. It is called before bind at reuse
+        and before teardown at destroy time.
+        """
+        # Nothing to do here
+        pass
+
+    @Gtk.Template.Callback()
+    def on_teardown(self, widget: Gtk.ListView, list_item: Gtk.ListItem):
+        """
+        Callback for the teardown signal
+        In charge of undoing the setup step. Used to free the inner structure
+        to set the widgets' reference count to 0.
+        """
+        label = list_item.set_child(None)

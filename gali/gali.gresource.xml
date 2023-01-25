@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/geoffreycoulaud/gali">
-    <file>ui/templates/main_window.ui</file>
-  </gresource>
-  <gresource prefix="/com/github/geoffreycoulaud/gali/icons/scalable/actions">
-    <file alias="funnel-symbolic.svg">../data/icons/symbolic/scalable/actions/funnel-symbolic.svg</file>
+    <file>ui/templates/application_window.ui</file>
+    <file>ui/templates/about_window.ui</file>
+    <file>ui/templates/games_view.ui</file>
   </gresource>
 </gresources>

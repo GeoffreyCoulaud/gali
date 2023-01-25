@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+	<template class="GaliGamesView" parent="GtkListView">
+		<property name="factory">
+			<object class="GtkSignalListItemFactory">
+				<signal name="setup"    handler="on_setup"    />
+				<signal name="bind"     handler="on_bind"     />
+				<signal name="unbind"   handler="on_unbind"   />
+				<signal name="teardown" handler="on_teardown" />
+			</object>
+		</property>
+		<property name="model">
+			<object class="GtkNoSelection" id="selection_model">
+			<!-- Here, set the model property to the application's games store -->
+			</object>
+		</property>
+	</template>
+</interface>
