@@ -4,23 +4,19 @@ gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
 from gali.ui.application_window import GaliApplicationWindow  # noqa: E402
-from gali.ui.game_gobject import GameGObject
-from gali.library import Library  # noqa: E402
+import gali.singletons as singletons
 
 class GaliApplication(Adw.Application):
     """The main application singleton class."""
 
-    library = None
     games_store = None
 
-    def __init__(self, library: Library = None):
+    def __init__(self):
         super().__init__(
             application_id="com.github.geoffreycoulaud.gali",
             flags=Gio.ApplicationFlags.FLAGS_NONE,
         )
-        self.library = library
-        self.games_store = Gio.ListStore(item_type=GameGObject)
-        self.games_store.connect("notify::n-items", self.on_games_list_store_size_change)
+        singletons.library.gio_list_store.connect("notify::n-items", self.on_library_size_change)
         self.create_action("quit", self.quit, ["<primary>q"])
         self.create_action("scan", self.on_scan)
         self.create_action("about", self.on_about)
@@ -28,16 +24,12 @@ class GaliApplication(Adw.Application):
 
     def do_activate(self):
         window = self.props.active_window
-        if not window: 
-            window = GaliApplicationWindow(application=self, games_store=self.games_store)
+        if not window: window = GaliApplicationWindow(application=self)
         window.present()
 
     def on_scan(self, *data):
-        # TODO Scan in a different thread
         # TODO Display a scanning cancellable toast
-        self.library.scan()
-        items = list(map(lambda g: GameGObject(g), self.library.games))
-        self.games_store.splice(0, self.games_store.get_n_items(), items)
+        singletons.library.scan()
 
     def on_about(self, *data):
         builder = Gtk.Builder.new_from_resource(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/about_window.ui")
@@ -48,14 +40,14 @@ class GaliApplication(Adw.Application):
     def on_preferences(self, *data):
         print("Preferences action")
 
-    def on_games_list_store_size_change(self, *data):
+    def on_library_size_change(self, *data):
         """
-        Handle change of number of items in the games_list_storee
+        Handle change of number of items in the library
         """
-        if self.games_store.get_n_items() == 0:
-            self.props.active_window.set_active_view("no_games_view")
-        else:
-            self.props.active_window.set_active_view("games_view")
+        n_items = singletons.library.gio_list_store.get_n_items()
+        window = self.props.active_window
+        if n_items == 0: window.set_active_view("no_games_view")
+        else: window.set_active_view("games_view")
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.
