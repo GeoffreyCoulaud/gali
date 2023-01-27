@@ -3,6 +3,5 @@
   <gresource prefix="/com/github/geoffreycoulaud/gali">
     <file>ui/templates/application_window.ui</file>
     <file>ui/templates/about_window.ui</file>
-    <file>ui/templates/games_view.ui</file>
   </gresource>
 </gresources>
