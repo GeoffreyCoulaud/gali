@@ -28,8 +28,9 @@ class GaliApplicationWindow(Adw.ApplicationWindow):
     def _init_filter_popover(self):
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         for klass in all_sources:
-            check_button = Gtk.CheckButton.new_with_label(klass.name)
             if not klass().is_scannable():
-                check_button.set_active(False)
+                continue
+            check_button = Gtk.CheckButton.new_with_label(klass.name)
+            check_button.set_active(True)
             box.append(check_button)
         self.filter_popover.set_child(box)
