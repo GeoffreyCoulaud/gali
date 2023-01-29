@@ -73,16 +73,6 @@ class Library():
             for game in games:
                 yield game
 
-    def _rebuild_gio_list_store(self):
-        """Update the GioListStore with the games in the library. 
-        Private method, called on contents change."""
-        self.gio_list_store.remove_all()
-        for (klass, games) in self._source_games_map.items():
-            if klass in self._hidden_sources: continue
-            store_items = list(map(lambda g: GameGObject(g), games))
-            store_len = self.gio_list_store.get_n_items()
-            self.gio_list_store.splice(store_len, 0, store_items)
-
     def clear(self) -> None:
         """Empty the library"""
         for klass in self._source_games_map.keys():
