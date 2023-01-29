@@ -1,6 +1,7 @@
 import sys
 from traceback import print_tb
 from gi.repository import Gio, GObject
+from typing import Iterable 
 
 from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
@@ -20,6 +21,36 @@ class GameGObject(GObject.GObject):
     def __str__(self):
         return str(self.game)
 
+    def get_game_type(self):
+        return type(self.game)
+
+
+class GamesListStore(Gio.ListStore):
+    """A GioListStore that exclusively stores items of type GameGObject"""
+
+    __gtype_name__ = "GamesListStore"
+
+    def __init__(self) -> None:
+        super().__init__(item_type=GameGObject)
+
+    def extend(self, games: Iterable[Game]):
+        """Add multiple games to itself.
+        Will only emit `Gio.ListModel::items-changed` once."""
+        store_len = self.get_n_items()
+        items = list(map(lambda g: GameGObject(g), games))
+        self.splice(store_len, 0, items)
+    
+    def remove_of_type(self, _type: type):
+        """Remove all the GameGObjects wrapping a game of the given type.
+        Will emit multiple `Gio.ListModel::items-changed`"""
+        index = 0
+        while index < self.get_n_items():
+            game = self.get_item(index)
+            if game.get_game_type() == _type:
+                self.remove(index)
+                continue
+            index += 1
+
 
 class Library():
     """A class representing a multi-source game library"""
@@ -28,10 +59,10 @@ class Library():
     _hidden_sources: set[type[Source]] = set()
     
     # View containing the games to display in the UI
-    gio_list_store: Gio.ListStore
+    gio_list_store: GamesListStore
 
     def __init__(self):
-        self.gio_list_store = Gio.ListStore(item_type=GameGObject)
+        self.gio_list_store = GamesListStore()
         for klass in all_sources:
             self._source_games_map[klass] = list()
 
@@ -42,15 +73,13 @@ class Library():
             for game in games:
                 yield game
 
-    def _update_gio_list_store(self):
+    def _rebuild_gio_list_store(self):
         """Update the GioListStore with the games in the library. 
         Private method, called on contents change."""
-        # TODO don't rebuild, only apply delta
         self.gio_list_store.remove_all()
         for (klass, games) in self._source_games_map.items():
             if klass in self._hidden_sources: continue
-            store_items = list()
-            for game in games: store_items.append(GameGObject(game))
+            store_items = list(map(lambda g: GameGObject(g), games))
             store_len = self.gio_list_store.get_n_items()
             self.gio_list_store.splice(store_len, 0, store_items)
 
@@ -60,21 +89,22 @@ class Library():
             self._source_games_map[klass].clear()
         self.gio_list_store.remove_all()
 
-    def append(self, klass: type[Source], *games: Game):
+    def extend(self, klass: type[Source], games: Iterable[Game]):
         """Add games from a given source to the library"""
         self._source_games_map[klass].extend(games)
-        self._update_gio_list_store()
+        self.gio_list_store.extend(games)
 
     def hide_source(self, klass: type[Source]):
-        """Hide a source in the view"""
+        """Hide a source in the view""" 
         self._hidden_sources.add(klass)
-        self._update_gio_list_store()
+        self.gio_list_store.remove_of_type(klass.game_class)
 
     def show_source(self, klass: type[Source]):
         """Show a source in the view"""
         if klass not in self._hidden_sources: return
         self._hidden_sources.remove(klass)
-        self._update_gio_list_store()
+        games = self._source_games_map[klass]
+        self.gio_list_store.extend(games)
 
     def scan(self) -> None:
         """Scan the library sources"""
@@ -94,7 +124,7 @@ class Library():
                 print_tb(sys.exc_info()[2])
                 print(err)
             else:
-                self.append(klass, *games)
+                self.extend(klass, games)
         print("Scan finished")
 
     def print(self) -> None:
