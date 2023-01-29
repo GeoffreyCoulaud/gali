@@ -82,6 +82,7 @@ class Library():
     def extend(self, klass: type[Source], games: Iterable[Game]):
         """Add games from a given source to the library"""
         self._source_games_map[klass].extend(games)
+        if klass in self._hidden_sources: return
         self.gio_list_store.extend(games)
 
     def hide_source(self, klass: type[Source]):
