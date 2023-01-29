@@ -2,6 +2,16 @@ from gi.repository import Gtk
 import gali.singletons as singletons
 
 class GaliGamesViewFactory():
+    """Utility class to create a SignalListItemFactory used to display games"""
+
+    def create_factory() -> Gtk.SignalListItemFactory:
+        """Create a new SignalListItemFactory connected to this class' signal handlers"""
+        factory = Gtk.SignalListItemFactory()
+        factory.connect("setup", GaliGamesViewFactory.on_setup)
+        factory.connect("bind", GaliGamesViewFactory.on_bind)
+        factory.connect("unbind", GaliGamesViewFactory.on_unbind)
+        factory.connect("teardown", GaliGamesViewFactory.on_teardown)
+        return factory
 
     def on_setup(widget: Gtk.ListView, list_item: Gtk.ListItem):
         """
@@ -47,11 +57,7 @@ class GaliGamesView(Gtk.ListView):
         selection_model.set_model(singletons.library.gio_list_store)
         self.set_model(selection_model)
 
-        factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", GaliGamesViewFactory.on_setup)
-        factory.connect("bind", GaliGamesViewFactory.on_bind)
-        factory.connect("unbind", GaliGamesViewFactory.on_unbind)
-        factory.connect("teardown", GaliGamesViewFactory.on_teardown)
+        factory = GaliGamesViewFactory.create_factory()
         self.set_factory(factory)
 
     def test(self, *args):

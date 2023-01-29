@@ -36,14 +36,7 @@
               <object class="GtkMenuButton">
                 <property name="icon-name">view-reveal-symbolic</property>
                 <property name="popover">
-                  <object class="GtkPopover" id="filter_popover">
-                    <child>
-                      <object class="GtkBox">
-                        <property name="orientation">vertical</property>
-                        <!-- Insert Gtk.CheckButton with label here -->
-                      </object>
-                    </child>
-                  </object>
+                  <object class="GaliFilterPopover"></object>
                 </property>
               </object>  
             </child>
