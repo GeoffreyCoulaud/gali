@@ -57,9 +57,9 @@
             <property name="flap-position">GTK_PACK_END</property>
             <property name="swipe-to-close">false</property>
             <property name="swipe-to-open">false</property>
+            <property name="reveal-flap">false</property>
             <!--
               <property name="fold-policy">ADW_FLAP_FOLD_POLICY_ALWAYS</property>
-            <property name="reveal-flap">true</property>
             <property name="modal">false</property>
             <property name="locked">true</property>
             -->

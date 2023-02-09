@@ -64,7 +64,7 @@ class Library():
 
     def __init__(self):
         self.gio_list_store = GamesListStore()
-        self.gtk_selection_model = Gtk.SingleSelection()
+        self.gtk_selection_model = Gtk.SingleSelection(can_unselect=True)
         self.gtk_selection_model.set_model(self.gio_list_store)
         for klass in all_sources:
             self._source_games_map[klass] = list()

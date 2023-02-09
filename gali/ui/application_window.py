@@ -35,8 +35,6 @@ class GaliApplicationWindow(Adw.ApplicationWindow):
         """Handle the selected game changing"""
         # TODO Show flap on selection set, hide on unset.
         # TODO Pass selected game to game details
-        print("Game selection changed")
-        
         # Find selected game
         n_items = singletons.library.gio_list_store.get_n_items()
         selected_item = None
