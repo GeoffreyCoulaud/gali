@@ -53,10 +53,7 @@ class GaliGamesView(Gtk.ListView):
 
     def __init__(self):
         super().__init__()
-        selection_model = Gtk.SingleSelection()
-        selection_model.set_model(singletons.library.gio_list_store)
-        self.set_model(selection_model)
-
+        self.set_model(singletons.library.gtk_selection_model)
         factory = GaliGamesViewFactory.create_factory()
         self.set_factory(factory)
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+	<template class="GaliGameLifeCycleControls" parent="GtkBox">
+		<child>
+			<object class="GtkLabel">
+				<property name="label">Life cycle controls</property>
+			</object>
+		</child>
+	</template>
+</interface>

@@ -1,6 +1,6 @@
 import sys
 from traceback import print_tb
-from gi.repository import Gio, GObject
+from gi.repository import Gio, GObject, Gtk
 from typing import Iterable 
 
 from gali.sources.source import Source
@@ -60,9 +60,12 @@ class Library():
     
     # View containing the games to display in the UI
     gio_list_store: GamesListStore
+    gtk_selection_model: Gtk.SelectionModel
 
     def __init__(self):
         self.gio_list_store = GamesListStore()
+        self.gtk_selection_model = Gtk.SingleSelection()
+        self.gtk_selection_model.set_model(self.gio_list_store)
         for klass in all_sources:
             self._source_games_map[klass] = list()
 

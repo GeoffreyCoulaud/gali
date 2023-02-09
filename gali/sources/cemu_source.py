@@ -32,11 +32,10 @@ class CemuLutrisSource(EmulationSource):
     )
 
     def get_cemu_lutris_config_path(self) -> str: 
-        connection = sqlite3.connect(LutrisSource.db_path)
-        sql = "SELECT configpath FROM 'games' WHERE slug = 'cemu'"
-        cursor = connection.execute(sql)
-        row = cursor.fetchone()
-        connection.close()
+        with sqlite3.connect(LutrisSource.db_path) as connection:
+            sql = "SELECT configpath FROM 'games' WHERE slug = 'cemu'"
+            cursor = connection.execute(sql)
+            row = cursor.fetchone()
         config_path = f"{HOME}/.config/lutris/games/{row[0]}.yml"
         return config_path
 

@@ -53,31 +53,58 @@
           </object>
         </child>        
         <child>
-          <object class="GtkStack" id="view_stack">
-            <property name="vexpand">true</property>
-            <property name="transition-type">crossfade</property>
-            <child>
-              <object class="GtkStackPage">
-                <property name="name">no_games_view</property>
-                <property name="child">
-                  <object class="AdwStatusPage">
-                    <property name="icon-name">system-search-symbolic</property>
-                    <property name="title">No games found</property>
-                    <property name="description">Maybe try a broader filter</property>
+          <object class="AdwFlap" id="flap">
+            <property name="flap-position">GTK_PACK_END</property>
+            <property name="swipe-to-close">false</property>
+            <property name="swipe-to-open">false</property>
+            <!--
+              <property name="fold-policy">ADW_FLAP_FOLD_POLICY_ALWAYS</property>
+            <property name="reveal-flap">true</property>
+            <property name="modal">false</property>
+            <property name="locked">true</property>
+            -->
+            <child type="content">
+              <object class="GtkStack" id="view_stack">
+                <property name="vexpand">true</property>
+                <property name="transition-type">crossfade</property>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">no_games_view</property>
+                    <property name="child">
+                      <object class="AdwStatusPage">
+                        <property name="icon-name">system-search-symbolic</property>
+                        <property name="title">No games found</property>
+                        <property name="description">Maybe try a broader filter</property>
+                      </object>
+                    </property>
                   </object>
-                </property>
+                </child>
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">games_view</property>
+                    <property name="child">
+                      <object class="GtkScrolledWindow">
+                        <child>
+                          <object class="GaliGamesView" id="games_view" />
+                        </child>
+                      </object>
+                    </property>
+                  </object>
+                </child>
               </object>
             </child>
-            <child>
-              <object class="GtkStackPage">
-                <property name="name">games_view</property>
-                <property name="child">
-                  <object class="GtkScrolledWindow">
-                    <child>
-                      <object class="GaliGamesView" id="games_view" />
-                    </child>
-                  </object>
-                </property>
+            <child type="flap">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <style>
+                  <class name="background" />
+                </style>
+                <child>
+                  <object class="GaliGameDetails" id="game_details" />
+                </child>
+                <child>
+                  <object class="GaliGameLifeCycleControls" />
+                </child>
               </object>
             </child>
           </object>
