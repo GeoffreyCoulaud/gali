@@ -1,4 +1,8 @@
 from gali.library import Library
+from gali.launcher import Launcher
 
-# Singleton Library used across the project
+# Library containing games, that can trigger scans
 library = Library()
+
+# Launcher that starts a game, then handles stopping it 
+launcher = Launcher()
