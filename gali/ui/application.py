@@ -21,6 +21,9 @@ class Application(Adw.Application):
         self.create_action("scan", self.on_scan)
         self.create_action("about", self.on_about)
         self.create_action("preferences", self.on_preferences)
+        self.create_action("start-game-requested", self.on_start_game_requested)
+        self.create_action("stop-game-requested", self.on_stop_game_requested)
+        self.create_action("kill-game-requested", self.on_kill_game_requested)
 
     def do_activate(self):
         window = self.props.active_window
@@ -48,6 +51,23 @@ class Application(Adw.Application):
         window = self.props.active_window
         if n_items == 0: window.set_active_view("no_games_view")
         else: window.set_active_view("games_view")
+
+    def on_start_game_requested(self, *data):
+        singletons.launcher.start()
+
+    def on_stop_game_requested(self, *data):
+        singletons.launcher.stop()
+
+    def on_kill_game_requested(self, *data):
+        builder = Gtk.Builder.new_from_resource(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/kill_game_confirm_dialog.ui")
+        dialog = builder.get_object("kill_game_confirm_dialog")
+        dialog.connect("response", self.on_kill_game_confirm_response)
+        dialog.set_transient_for(self.props.active_window)
+        dialog.present()
+
+    def on_kill_game_confirm_response(self, response: str, *data):
+        if response == "kill":
+            singletons.launcher.kill()
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

@@ -1,10 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <interface>
+	
+	<menu id="stop_button_menu">
+		<item>
+			<attribute name="label">Stop game</attribute>
+			<attribute name="action">app.stop-game-requested</attribute>
+		</item>
+		<item>
+			<attribute name="label">Kill game</attribute>
+			<attribute name="action">app.kill-game-requested</attribute>
+		</item>
+	</menu>
+	
 	<template class="GaliGameLifeCycleControls" parent="GtkBox">
-		<child>
-			<object class="GtkLabel">
-				<property name="label">Life cycle controls</property>
+		<property name="orientation">horizontal</property>
+		<property name="homogeneous">true</property>
+		
+		<!-- TODO put all these "8" in a variable -->
+		<property name="margin-bottom">8</property>
+		<property name="margin-top">8</property>
+		<property name="margin-start">8</property>
+		<property name="margin-end">8</property>
+	
+		<child>		
+			<object class="GtkButton" id="start_button">
+				<property name="margin-end">8</property>
+				<property name="action-name">app.start-game-requested</property>
+				<child>
+					<object class="AdwButtonContent">
+						<property name="icon-name">media-playback-start-symbolic</property>
+						<property name="label">Start</property>
+					</object>
+				</child>
 			</object>
 		</child>
+
+		<child>		
+			<object class="AdwSplitButton" id="stop_button">
+				<property name="action-name">app.stop-game-requested</property>
+				<property name="menu-model">stop_button_menu</property>
+				<property name="direction">GTK_ARROW_UP</property>
+				<child>
+					<object class="AdwButtonContent">
+						<property name="icon-name">media-playback-stop-symbolic</property>
+						<property name="label">Stop</property>
+					</object>
+				</child>
+			</object>
+		</child>
+	
 	</template>
 </interface>

@@ -31,10 +31,8 @@ class ApplicationWindow(Adw.ApplicationWindow):
         """
         self.view_stack.set_visible_child_name(visible_child_name)
 
-    def on_selection_change(self, selection_model, *args, **kwargs):
+    def on_selection_change(self, selection_model, *args):
         """Handle the selected game changing"""
-        # TODO Show flap on selection set, hide on unset.
-        # TODO Pass selected game to game details
         # Find selected game
         n_items = singletons.library.gio_list_store.get_n_items()
         selected_item = None
@@ -53,14 +51,16 @@ class ApplicationWindow(Adw.ApplicationWindow):
         self.flap.set_reveal_flap(True)
         self.game_details.set_game(selected_item.game)
 
+        # Update launcher game
+        singletons.launcher.set_game(selected_item.game)
 
-    def on_game_before_start(self, *args, **kwargs):
+    def on_game_before_start(self, *args):
         """Handle game about to start"""
         # TODO lock game selection
         # TODO flap grabs all clicks can't be closed
         print("Game starting")
 
-    def on_game_stopped(self, *args, **kwargs):
+    def on_game_stopped(self, *args):
         """Handle game stopped"""
         # TODO unlock game selection
         # TODO revert flap to normal

@@ -1,10 +1,12 @@
+import logging
+from shutil import which
 from gi.repository import GObject
 from os import setsid, getpgid, killpg
 from signal import SIGTERM, SIGKILL
 from subprocess import Popen, TimeoutExpired
 
 from gali.sources.game import Game
-
+from gali.utils.sandbox import is_flatpak
 
 class GameRunningError(Exception):
     """Error raised when trying to change the launcher's game while it is running"""
@@ -15,6 +17,9 @@ class GameNotSetError(Exception):
     """Error raised when trying to start the launcher when no game is set"""
     pass
 
+
+# TODO edit to accomodate the StartupChain model
+# (use multiprocessing, pool of size 1, stop and kill sent directly to it)
 
 class Launcher(GObject.Object):
     """Singleton class representing a game launcher
@@ -47,17 +52,27 @@ class Launcher(GObject.Object):
         * Can raise GameNotSetError if no game is set
         * Can raise OSError if the subprocess cannot be created
         * Can raise ValueError if the arguments are invalid"""
+        
         if self.game is None: 
             raise GameNotSetError()
-        command = self.game.get_start_command()
-        # ! Command executed in a shell : possible injection
-        # TODO limit the impact of the shell=True command.
-        self.process = Popen(args=command, preexec_fn=setsid, shell=True)
+        
+        # Build command arguments
+        args = list()
+        if is_flatpak(): args.extend(["flatpak-spawn", "--host"])
+        args.extend(self.game.get_start_command())
+        
+        # Resolve command path
+        args[0] = which(args[0])
+
+        print(f"Starting \"{self.game.name}\"")
+        print(args)
+        self.process = Popen(args=args, preexec_fn=setsid)
 
     def _send_subprocess_signal(self, signal: int, **kwargs) -> int|None:
         """Send signal to subprocess
         * Returns the process exit code if available, else None"""
         if not self.is_running():
+            logging.warning(f"Cannot send signal {signal} to subprocess")
             return None
         pgid = getpgid(self.process.pid)
         killpg(pgid, signal)
@@ -72,18 +87,3 @@ class Launcher(GObject.Object):
         """Force kill the running game. Data loss can occur, please prefer the stop method.
         * Returns the process exit code"""
         self._send_subprocess_signal(SIGKILL)
-
-    @GObject.Signal(name="terminated")
-    def terminated_signal(self):
-        pass
-
-    def loop_finish_signal(self):
-        """Loop waiting for the process to terminate to emit a signal.
-        PROCESS_WAIT_TIMEOUT_SECONDS is set to 1 by default."""
-        # TODO check that this happens correctly
-        try:
-            self.process.wait(timeout=self.PROCESS_WAIT_TIMEOUT_SECONDS)
-        except TimeoutExpired:
-            self.loop_finish_signal()
-        else:
-            self.emit("terminated")

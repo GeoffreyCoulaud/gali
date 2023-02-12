@@ -5,5 +5,6 @@
     <file>ui/templates/about_window.ui</file>
     <file>ui/templates/game_details.ui</file>
     <file>ui/templates/game_life_cycle_controls.ui</file>
+    <file>ui/templates/kill_game_confirm_dialog.ui</file>
   </gresource>
 </gresources>

@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 
+from gali.sources.startable import Startable
 
 @dataclass
-class Game():
+class Game(Startable):
     """Base class representing a game"""
 
     name: str = field(default=None)
@@ -17,7 +18,3 @@ class Game():
     def __str__(self) -> str:
         name = self.name.replace("\n", " ")
         return name
-
-    def get_start_command(self, **kwargs) -> tuple[str]:
-        """Get the list of arguments to start the game process"""
-        raise NotImplementedError()

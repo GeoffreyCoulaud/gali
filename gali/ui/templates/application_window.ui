@@ -100,7 +100,9 @@
                   <class name="background" />
                 </style>
                 <child>
-                  <object class="GaliGameDetails" id="game_details" />
+                  <object class="GaliGameDetails" id="game_details">
+                    <property name="vexpand">true</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GaliGameLifeCycleControls" />

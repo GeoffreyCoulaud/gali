@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+
+  <object class="AdwMessageDialog" id="kill_game_confirm_dialog">
+    <property name="heading" translatable="yes">Kill game?</property>
+    <property name="body" translatable="yes">Unsaved game progression and settings will be permanently lost</property>
+    <property name="default-response">cancel</property>
+    <property name="close-response">cancel</property>
+    <responses>
+      <response id="cancel" translatable="yes">_Cancel</response>
+      <response id="kill" translatable="yes" appearance="destructive">_Kill</response>
+    </responses>
+  </object>
+
+</interface>
