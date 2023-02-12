@@ -2,7 +2,7 @@ from sqlite3 import connect, Row
 
 from gali.utils.locations import HOME
 from gali.sources.source import Source
-from gali.games.lutris_game import LutrisGame
+from gali.sources.lutris.lutris_game import LutrisGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 

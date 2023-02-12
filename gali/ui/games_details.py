@@ -1,5 +1,5 @@
 from gi.repository import Gtk
-from gali.games.game import Game
+from gali.sources.game import Game
 
 @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/game_details.ui")
 class GameDetails(Gtk.Box):

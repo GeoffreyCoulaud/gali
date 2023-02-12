@@ -2,7 +2,7 @@ import re
 import shlex
 from dataclasses import dataclass, field
 
-from gali.games.game import Game
+from gali.sources.game import Game
 
 
 @dataclass

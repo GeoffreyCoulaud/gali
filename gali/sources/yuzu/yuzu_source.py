@@ -3,18 +3,18 @@ from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
-from gali.sources.game_dir import GameDir
 from gali.sources.emulation_source import EmulationSource
-from gali.games.dolphin_game import DolphinGame, DolphinFlatpakGame
+from gali.sources.game_dir import GameDir
+from gali.sources.yuzu.yuzu_game import YuzuGame, YuzuFlatpakGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class DolphinSource(EmulationSource, FileDependentScannable):
+class YuzuSource(EmulationSource, FileDependentScannable):
 
-    name: str = "Dolphin"
-    game_class: type[DolphinGame] = DolphinGame
-    config_path: str = f"{HOME}/.config/dolphin-emu/Dolphin.ini"
-    rom_extensions: tuple[str] = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
+    name: str = "Yuzu"
+    game_class: type[YuzuGame] = YuzuGame
+    config_path: str = f"{HOME}/.config/yuzu/qt-config.ini"
+    rom_extensions: tuple[str] = (".xci", ".nsp", ".nso", ".nro")
 
     def get_config(self) -> ExplicitConfigParser:
         config = ExplicitConfigParser()
@@ -24,24 +24,30 @@ class DolphinSource(EmulationSource, FileDependentScannable):
     def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
         rom_dirs = []
         n_dirs = config.getint(
-            "General",
-            "ISOPaths",
+            "UI",
+            r"Paths\gamedirs\size",
             fallback=0
         )
-        deep = config.getboolean(
-            "General",
-            "RecursiveISOPaths",
-            fallback=False
-        )
-        depth = inf if deep else 0
-        for i in range(n_dirs):
-            path = config.get("General", f"ISOPath{i}", fallback=None)
+        for i in range(1, n_dirs + 1):
+            deep = config.getboolean(
+                "UI",
+                f"Paths\\gamedirs\\{i}\\deep_scan",
+                fallback=False
+            )
+            path = config.get(
+                "UI",
+                f"Paths\\gamedirs\\{i}\\path",
+                fallback=None
+            )
             if path is None:
                 continue
+            if path in ("SDMC", "UserNAND", "SysNAND"):
+                continue
+            depth = inf if deep else 0
             rom_dirs.append(GameDir(path, depth))
         return tuple(rom_dirs)
 
-    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[DolphinGame]:
+    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[YuzuGame]:
         games = []
         for rom_dir in rom_dirs:
             rom_paths = []
@@ -59,7 +65,7 @@ class DolphinSource(EmulationSource, FileDependentScannable):
                 games.append(game)
         return tuple(games)
 
-    def scan(self) -> tuple[DolphinGame]:
+    def scan(self) -> tuple[YuzuGame]:
         config = self.get_config()
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)
@@ -69,9 +75,9 @@ class DolphinSource(EmulationSource, FileDependentScannable):
         return self.config_path
 
 
-class DolphinFlatpakSource(DolphinSource):
+class YuzuFlatpakSource(YuzuSource):
 
-    name: str = "Dolphin (Flatpak)"
-    game_class: type[DolphinGame] = DolphinFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.DolphinEmu.dolphin-emu\
-/config/dolphin-emu/Dolphin.ini"
+    name: str = "Yuzu (Flatpak)"
+    game_class: type[YuzuGame] = YuzuFlatpakGame
+    config_path: str = f"{HOME}/.var/app/org.yuzu_emu.yuzu\
+/config/yuzu/qt-config.ini"

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from gali.games.emulation_game import EmulationGame
+from gali.sources.emulation_game import EmulationGame
 from gali.utils.prepare_filename import prepare_filename
 from gali.utils.locations import XDG_DATA_HOME
 from gali.utils.lutris_export_script import lutris_export_script

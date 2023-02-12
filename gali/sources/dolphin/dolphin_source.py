@@ -3,18 +3,18 @@ from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
-from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
-from gali.games.citra_game import CitraGame, CitraFlatpakGame
+from gali.sources.emulation_source import EmulationSource
+from gali.sources.dolphin.dolphin_game import DolphinGame, DolphinFlatpakGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class CitraSource(EmulationSource, FileDependentScannable):
+class DolphinSource(EmulationSource, FileDependentScannable):
 
-    name: str = "Citra"
-    game_class: type[CitraGame] = CitraGame
-    config_path: str = f"{HOME}/.config/citra-emu/qt-config.ini"
-    rom_extensions: tuple[str] = (".3ds", ".cci")
+    name: str = "Dolphin"
+    game_class: type[DolphinGame] = DolphinGame
+    config_path: str = f"{HOME}/.config/dolphin-emu/Dolphin.ini"
+    rom_extensions: tuple[str] = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
 
     def get_config(self) -> ExplicitConfigParser:
         config = ExplicitConfigParser()
@@ -23,27 +23,25 @@ class CitraSource(EmulationSource, FileDependentScannable):
 
     def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
         rom_dirs = []
-        n_dirs = config.getint("UI", r"Paths\gamedirs\size", fallback=0)
-        for i in range(1, n_dirs + 1):
-            deep = config.getboolean(
-                "UI",
-                f"Paths\\gamedirs\\{i}\\deep_scan",
-                fallback=False
-            )
-            path = config.get(
-                "UI",
-                f"Paths\\gamedirs\\{i}\\path",
-                fallback=None
-            )
+        n_dirs = config.getint(
+            "General",
+            "ISOPaths",
+            fallback=0
+        )
+        deep = config.getboolean(
+            "General",
+            "RecursiveISOPaths",
+            fallback=False
+        )
+        depth = inf if deep else 0
+        for i in range(n_dirs):
+            path = config.get("General", f"ISOPath{i}", fallback=None)
             if path is None:
                 continue
-            if path in ("INSTALLED", "SYSTEM"):
-                continue
-            depth = inf if deep else 0
             rom_dirs.append(GameDir(path, depth))
         return tuple(rom_dirs)
 
-    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[CitraGame]:
+    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[DolphinGame]:
         games = []
         for rom_dir in rom_dirs:
             rom_paths = []
@@ -61,7 +59,7 @@ class CitraSource(EmulationSource, FileDependentScannable):
                 games.append(game)
         return tuple(games)
 
-    def scan(self) -> tuple[CitraGame]:
+    def scan(self) -> tuple[DolphinGame]:
         config = self.get_config()
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)
@@ -71,9 +69,9 @@ class CitraSource(EmulationSource, FileDependentScannable):
         return self.config_path
 
 
-class CitraFlatpakSource(CitraSource):
+class DolphinFlatpakSource(DolphinSource):
 
-    name: str = "Citra (Flatpak)"
-    game_class: type[CitraGame] = CitraFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.citra_emu.citra\
-/config/citra-emu/qt-config.ini"
+    name: str = "Dolphin (Flatpak)"
+    game_class: type[DolphinGame] = DolphinFlatpakGame
+    config_path: str = f"{HOME}/.var/app/org.DolphinEmu.dolphin-emu\
+/config/dolphin-emu/Dolphin.ini"

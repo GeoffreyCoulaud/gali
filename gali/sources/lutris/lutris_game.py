@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from gali.games.game import Game
+from gali.sources.game import Game
 from gali.utils.locations import XDG_DATA_HOME
 from gali.utils.lutris_export_script import lutris_export_script
 from gali.utils.prepare_filename import prepare_filename

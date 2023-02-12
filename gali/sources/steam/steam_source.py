@@ -3,7 +3,7 @@ import os
 import re
 
 from gali.sources.source import Source
-from gali.games.steam_game import SteamGame
+from gali.sources.steam.steam_game import SteamGame
 from gali.utils.locations import HOME
 from gali.sources.file_dependent_scannable import FileDependentScannable
 

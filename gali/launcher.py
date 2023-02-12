@@ -3,7 +3,7 @@ from os import setsid, getpgid, killpg
 from signal import SIGTERM, SIGKILL
 from subprocess import Popen, TimeoutExpired
 
-from gali.games.game import Game
+from gali.sources.game import Game
 
 
 class GameRunningError(Exception):

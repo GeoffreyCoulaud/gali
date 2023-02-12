@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from gali.games.game import Game
+from gali.sources.game import Game
 from gali.sources.scannable import Scannable
 
 class Source(Scannable):

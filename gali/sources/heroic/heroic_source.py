@@ -2,7 +2,7 @@ import json
 
 from gali.utils.locations import HOME
 from gali.sources.source import Source
-from gali.games.heroic_game import HeroicGame
+from gali.sources.heroic.heroic_game import HeroicGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from gali.games.game import Game
+from gali.sources.game import Game
 
 
 class UnsupportedFlavorException(Exception):

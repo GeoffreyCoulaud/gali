@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import PurePath
 
-from gali.games.retroarch_game import RetroarchGame, RetroarchFlatpakGame
+from gali.sources.retroarch.retroarch_game import RetroarchGame, RetroarchFlatpakGame
 from gali.sources.source import Source
 from gali.utils.cfg_parser import CfgParser
 from gali.utils.locations import HOME

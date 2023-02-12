@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from gali.games.emulation_game import EmulationGame
+from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass

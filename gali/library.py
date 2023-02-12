@@ -5,7 +5,7 @@ from typing import Iterable
 
 from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
-from gali.games.game import Game
+from gali.sources.game import Game
 
 
 class GameGObject(GObject.GObject):

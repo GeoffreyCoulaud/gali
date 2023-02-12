@@ -11,8 +11,8 @@ from defusedxml.ElementTree import parse as xml_parse
 from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.utils.rpx_metadata import RPXMetadata
-from gali.games.cemu_game import CemuLutrisGame
-from gali.sources.lutris_source import LutrisSource
+from gali.sources.cemu.cemu_game import CemuLutrisGame
+from gali.sources.lutris.lutris_source import LutrisSource
 from gali.utils.wine_path import wine_to_posix
 from gali.sources.game_dir import GameDir
 from gali.sources.scannable import UnscannableReason

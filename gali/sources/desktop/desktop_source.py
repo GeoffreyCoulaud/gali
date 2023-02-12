@@ -3,7 +3,7 @@ from math import inf
 from gali.sources.game_dir import GameDir
 from gali.sources.source import Source
 from gali.sources.scannable import UnscannableReason
-from gali.games.desktop_game import DesktopGame
+from gali.sources.desktop.desktop_game import DesktopGame
 from gali.utils.locations import XDG_DATA_DIRS, XDG_DATA_HOME
 from gali.utils.deep_find_files import deep_find_files
 from gali.utils.explicit_config_parser import ExplicitConfigParser
