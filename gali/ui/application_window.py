@@ -3,14 +3,14 @@ from gali.sources.all_sources import all_sources
 import gali.singletons as singletons
 
 # Must be processed by GTK first, needed in application_window.ui
-from gali.ui.games_view import GaliGamesView
-from gali.ui.games_details import GaliGameDetails
-from gali.ui.filter_popover import GaliFilterPopover
-from gali.ui.game_life_cycle_controls import GaliGameLifeCycleControls
+from gali.ui.games_view import GamesView
+from gali.ui.games_details import GameDetails
+from gali.ui.filter_popover import FilterPopover
+from gali.ui.game_life_cycle_controls import GameLifeCycleControls
 
 
 @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/application_window.ui")
-class GaliApplicationWindow(Adw.ApplicationWindow):
+class ApplicationWindow(Adw.ApplicationWindow):
     __gtype_name__ = "GaliApplicationWindow"
 
     flap = Gtk.Template.Child("flap")

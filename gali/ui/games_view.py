@@ -1,16 +1,16 @@
 from gi.repository import Gtk
 import gali.singletons as singletons
 
-class GaliGamesViewFactory():
+class GamesViewFactoryBuilder():
     """Utility class to create a SignalListItemFactory used to display games"""
 
-    def create_factory() -> Gtk.SignalListItemFactory:
+    def build_factory() -> Gtk.SignalListItemFactory:
         """Create a new SignalListItemFactory connected to this class' signal handlers"""
         factory = Gtk.SignalListItemFactory()
-        factory.connect("setup", GaliGamesViewFactory.on_setup)
-        factory.connect("bind", GaliGamesViewFactory.on_bind)
-        factory.connect("unbind", GaliGamesViewFactory.on_unbind)
-        factory.connect("teardown", GaliGamesViewFactory.on_teardown)
+        factory.connect("setup", GamesViewFactoryBuilder.on_setup)
+        factory.connect("bind", GamesViewFactoryBuilder.on_bind)
+        factory.connect("unbind", GamesViewFactoryBuilder.on_unbind)
+        factory.connect("teardown", GamesViewFactoryBuilder.on_teardown)
         return factory
 
     def on_setup(widget: Gtk.ListView, list_item: Gtk.ListItem):
@@ -48,13 +48,13 @@ class GaliGamesViewFactory():
         """
         list_item.set_child(None)
 
-class GaliGamesView(Gtk.ListView):
+class GamesView(Gtk.ListView):
     __gtype_name__ = "GaliGamesView"
 
     def __init__(self):
         super().__init__()
         self.set_model(singletons.library.gtk_selection_model)
-        factory = GaliGamesViewFactory.create_factory()
+        factory = GamesViewFactoryBuilder.build_factory()
         self.set_factory(factory)
 
     def test(self, *args):

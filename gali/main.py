@@ -1,9 +1,9 @@
 import sys
-from gali.ui.application import GaliApplication
+from gali.ui.application import Application
 
 # Set up the singletons
 import gali.singletons as singletons
 
 def main(version):
-    application = GaliApplication()
+    application = Application()
     return application.run(sys.argv)

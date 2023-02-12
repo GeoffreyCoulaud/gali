@@ -68,19 +68,20 @@ class ItchSource(Source, FileDependentScannable):
                 continue
 
             # Game image (prefer still)
-            image_box_art = cover_url
-            if still_cover_url is not None:
-                image_box_art = still_cover_url
-            image_icon = image_box_art
+            # TODO enable when "ImagedGame"-ish interface is ready
+            # image_box_art = cover_url
+            # if still_cover_url is not None:
+            #     image_box_art = still_cover_url
+            # image_icon = image_box_art
 
             # Build game
             game = self.game_class(
                 game_id=game_id,
                 name=name,
                 verdict=verdict,
-                is_installed=True,
-                image_box_art=image_box_art,
-                image_icon=image_icon
+                is_installed=True
+                # image_box_art=image_box_art,
+                # image_icon=image_icon
             )
             games.append(game)
 

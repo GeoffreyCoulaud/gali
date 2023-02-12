@@ -2,7 +2,7 @@ from gi.repository import Gtk
 from gali.games.game import Game
 
 @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/game_details.ui")
-class GaliGameDetails(Gtk.Box):
+class GameDetails(Gtk.Box):
     __gtype_name__ = "GaliGameDetails"
 
     title = Gtk.Template.Child("name")

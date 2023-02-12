@@ -3,10 +3,10 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
 
-from gali.ui.application_window import GaliApplicationWindow  # noqa: E402
+from gali.ui.application_window import ApplicationWindow  # noqa: E402
 import gali.singletons as singletons
 
-class GaliApplication(Adw.Application):
+class Application(Adw.Application):
     """The main application singleton class."""
 
     games_store = None
@@ -24,7 +24,7 @@ class GaliApplication(Adw.Application):
 
     def do_activate(self):
         window = self.props.active_window
-        if not window: window = GaliApplicationWindow(application=self)
+        if not window: window = ApplicationWindow(application=self)
         window.present()
 
     def on_scan(self, *data):

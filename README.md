@@ -219,11 +219,12 @@ Open the project in Gnome Builder and start Gali from there.
 
 ## TODO
 
+* Continue UI work
+* Better documentation (docstrings, wiki)
 * Decouple scanning from the main thread
 * Add Marie's new icon for Gali 
 * Add a preference panel
 * Save and load user preferences
-* Define Gali's UI, See [docs/ui_design_process.md](docs/ui_design_process.md)
 * Sources enhancements
 	* Scan Dolphin cached games
 	* Differenciate between Gamecube and Wii games

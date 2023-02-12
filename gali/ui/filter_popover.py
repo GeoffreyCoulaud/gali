@@ -3,7 +3,7 @@ from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
 import gali.singletons as singletons
 
-class GaliFilterPopover(Gtk.Popover):
+class FilterPopover(Gtk.Popover):
     """A class representing the games filtering Popover"""
 
     __gtype_name__ = "GaliFilterPopover"
