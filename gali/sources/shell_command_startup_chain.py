@@ -10,8 +10,6 @@ from gali.sources.game import Game
 
 class ShellCommandStartupChain(StartupChain):
     """Class representing a startup chain that starts a game from a command in a subprocess"""
-    
-    _process = None
 
     @abstractmethod
     def get_start_command(self, game: Game, **kwargs) -> Iterable[str]:
