@@ -1,6 +1,9 @@
 from dataclasses import dataclass, field
 
 from gali.sources.game import Game
+from gali.sources.itch.itch_linux_startup_chain import ItchLinuxStartupChain
+from gali.sources.itch.itch_script_startup_chain import ItchScriptStartupChain
+from gali.sources.itch.itch_java_startup_chain import ItchJavaStartupChain
 
 
 class UnsupportedFlavorException(Exception):
@@ -14,6 +17,7 @@ class ItchGame(Game):
     caves: list = field(default=None)
     verdict: dict = field(default=None)
     game_id: str = field(default=None)
+    startup_chains = list()
 
     # Example verdict structure
     """{
@@ -30,49 +34,14 @@ class ItchGame(Game):
         ]
     }"""
 
-    def _get_linux_start_command(self, path) -> tuple[str]:
-        return (path,)
-
-    def _get_script_start_command(self, path) -> tuple[str]:
-        return ("sh", path)
-
-    def _get_jar_start_command(self, path) -> tuple[str]:
-        return ("java", "-jar", path)
-
-    def get_start_command(self, **kwargs) -> tuple[str]:
-
-        """
-        From http://docs.itch.ovh/butlerd/master/#/?id=verdict-struct
-
-        A Verdict contains a wealth of information on how to “launch” or “open”
-        a specific folder.
-
-        From http://docs.itch.ovh/butlerd/master/#/?id=candidate-struct
-
-        A Candidate is a potentially interesting launch target, be it a native
-        executable, a Java or Love2D bundle, an HTML index, etc.
-        """
-
-        base_path = self.verdict["basePath"]
-
-        # Find right candidate
-        candidate_index = 0
-        if kwargs.candidate_index is not None:
-            candidate_index = kwargs.candidate_index
-        candidate = self.verdict["candidates"][candidate_index]
-
-        # Build start command
-        exec_path = candidate["path"]
-        path = f"{base_path}/{exec_path}"
-        flavor = candidate["flavor"]
-
-        # TODO find a way to start HTML games too (needs http server)
-        # ? Implement pre-start and post-finish hooks, life cycle wrapper class
-        if flavor == "linux":
-            return self._get_linux_start_command(path)
-        elif flavor == "script":
-            return self._get_script_start_command(path)
-        elif flavor == "jar":
-            return self._get_jar_start_command(path)
-        else:
-            raise UnsupportedFlavorException(f"Unsupported flavor {flavor}")
+    def __post_init__(self) -> None:
+        """Determine the appropriate command chains"""
+        for candidate in self.verdict["candidates"]:
+            match candidate:
+                case "linux": 
+                    self.startup_chains.append(ItchLinuxStartupChain)
+                case "script":
+                    self.startup_chains.append(ItchScriptStartupChain)
+                case "java":
+                    self.startup_chains.append(ItchJavaStartupChain)
+                # TODO implement startup chain for web games
