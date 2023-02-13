@@ -1,6 +1,7 @@
-from gali.utils.sandbox import is_flatpak
-from gali.sources.citra.citra_source import CitraSource, CitraFlatpakSource
-from gali.sources.dolphin.dolphin_source import DolphinSource, DolphinFlatpakSource
+from gali.sources.citra.citra_source import CitraSource
+from gali.sources.citra.citra_flatpak_source import CitraFlatpakSource
+from gali.sources.dolphin.dolphin_source import DolphinSource
+from gali.sources.dolphin.dolphin_flatpak_source import DolphinFlatpakSource
 from gali.sources.ppsspp.ppsspp_source import PPSSPPSource, PPSSPPFlatpakSource
 from gali.sources.yuzu.yuzu_source import YuzuFlatpakSource, YuzuSource
 from gali.sources.desktop.desktop_source import DesktopSource

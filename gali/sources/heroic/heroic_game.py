@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 
 from gali.sources.game import Game
+from gali.sources.heroic.heroic_startup_chain import HeroicStartupChain
 
 
 @dataclass
@@ -8,7 +9,6 @@ class HeroicGame(Game):
 
     platform: str = field(default="PC", init=False)
     app_name: str = field(default=None)
-
-    def get_start_command(self, **kwargs) -> tuple[str]:
-        args = ["xdg-open", f"heroic://launch/{self.app_name}"]
-        return tuple(args)
+    startup_chains = [
+        HeroicStartupChain
+    ]

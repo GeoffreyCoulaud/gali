@@ -57,11 +57,3 @@ class HeroicSource(Source, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return self.config_path
-
-
-class HeroicFlatpakSource(HeroicSource):
-
-    name: str = "Heroic (Flatpak)"
-    game_class: type[HeroicGame] = HeroicGame
-    config_path: str = f"{HOME}/.var/app/com.heroicgameslauncher.hgl\
-/config/heroic/lib-cache/library.json"

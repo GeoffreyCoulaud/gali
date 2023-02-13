@@ -5,7 +5,7 @@ from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
-from gali.sources.citra.citra_game import CitraGame, CitraFlatpakGame
+from gali.sources.citra.citra_game import CitraGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
@@ -69,11 +69,3 @@ class CitraSource(EmulationSource, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return self.config_path
-
-
-class CitraFlatpakSource(CitraSource):
-
-    name: str = "Citra (Flatpak)"
-    game_class: type[CitraGame] = CitraFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.citra_emu.citra\
-/config/citra-emu/qt-config.ini"
