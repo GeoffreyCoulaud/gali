@@ -52,11 +52,3 @@ class PPSSPPSource(EmulationSource, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return self.config_path
-
-
-class PPSSPPFlatpakSource(PPSSPPSource):
-
-    name: str = "PPSSPP (Flatpak)"
-    game_class: type[PPSSPPFlatpakGame] = PPSSPPFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.ppsspp.PPSSPP\
-/config/ppsspp/PSP/SYSTEM/ppsspp.ini"

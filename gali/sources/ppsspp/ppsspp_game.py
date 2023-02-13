@@ -1,19 +1,13 @@
 from dataclasses import dataclass, field
 
 from gali.sources.emulation_game import EmulationGame
+from gali.sources.ppsspp.ppsspp_startup_chain import PPSSPPStartupChain
 
 
 @dataclass
 class PPSSPPGame(EmulationGame):
 
     platform: str = field(default="Sony - PSP", init=False)
-
-    def get_start_command(self, **kwargs) -> tuple[str]:
-        return ("PPSSPPSDL", self.game_path)
-
-
-@dataclass
-class PPSSPPFlatpakGame(PPSSPPGame):
-
-    def get_start_command(self, **kwargs) -> tuple[str]:
-        return ("flatpak", "run", "org.ppsspp.PPSSPP", self.game_path)
+    startup_chains = [
+        PPSSPPStartupChain
+    ]
