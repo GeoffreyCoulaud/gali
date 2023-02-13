@@ -164,10 +164,3 @@ class SteamSource(Source, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return f"{self.steam_dir}/{self.rel_library_config}"
-
-
-class SteamFlatpakSource(SteamSource):
-
-    name: str = "Steam (Flatpak)"
-    steam_dir: str = f"{HOME}/.var/app/com.valvesoftware.Steam\
-/.local/share/Steam"

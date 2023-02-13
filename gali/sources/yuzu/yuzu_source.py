@@ -73,11 +73,3 @@ class YuzuSource(EmulationSource, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return self.config_path
-
-
-class YuzuFlatpakSource(YuzuSource):
-
-    name: str = "Yuzu (Flatpak)"
-    game_class: type[YuzuGame] = YuzuFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.yuzu_emu.yuzu\
-/config/yuzu/qt-config.ini"
