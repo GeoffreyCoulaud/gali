@@ -5,6 +5,7 @@ from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommand
 
 class DolphinStartupChain(StemmedShellCommandStartupChain):
 
+    name = "Dolphin"
     stem = ["dolphin-emu"]
 
     def get_start_command_suffix(self) -> Iterable[str]:

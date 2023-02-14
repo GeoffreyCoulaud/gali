@@ -5,6 +5,8 @@ from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommand
 
 class ItchScriptStartupChain(ItchStartupChain, StemmedShellCommandStartupChain):
 
+    name = "Itch Shell script candidate"
+
     def make_script(self) -> Iterable[str]:
         # TODO
         pass

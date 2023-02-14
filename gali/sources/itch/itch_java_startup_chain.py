@@ -6,6 +6,7 @@ from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommand
 
 class ItchJavaStartupChain(ItchStartupChain, StemmedShellCommandStartupChain):
 
+    name = "Itch Java candidate"
     stem = ["java", "-jar"]
 
     def get_start_command_suffix(self) -> Iterable[str]:

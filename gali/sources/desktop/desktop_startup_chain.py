@@ -7,6 +7,8 @@ from gali.sources.shell_command_startup_chain import ShellCommandStartupChain
 
 class DesktopStartupChain(ShellCommandStartupChain):
 
+    name = "Desktop Entry"
+
     def get_start_command(self) -> Iterable[str]:
         def filter_fn(string: str):
             unwanted = re.compile("%[fFuUdDnNickvm]")

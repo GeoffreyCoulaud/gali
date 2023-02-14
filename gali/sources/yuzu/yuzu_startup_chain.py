@@ -5,6 +5,7 @@ from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommand
 
 class YuzuStartupChain(StemmedShellCommandStartupChain):
 
+    name = "Yuzu"
     stem = "yuzu"
 
     def get_start_command(self) -> Iterable[str]:

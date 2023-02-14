@@ -5,6 +5,7 @@ from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommand
 
 class LegendaryStartupChain(StemmedShellCommandStartupChain):
 
+    name = "Legendary"
     stem = ["legendary", "launch"]
 
     def get_start_command_suffix(self) -> Iterable[str]:
