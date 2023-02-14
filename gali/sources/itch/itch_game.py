@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from gali.sources.game import Game
+from gali.sources.base_game import BaseGame
 from gali.sources.itch.itch_linux_startup_chain import ItchLinuxStartupChain
 from gali.sources.itch.itch_script_startup_chain import ItchScriptStartupChain
 from gali.sources.itch.itch_java_startup_chain import ItchJavaStartupChain
@@ -11,7 +11,7 @@ class UnsupportedFlavorException(Exception):
 
 
 @dataclass
-class ItchGame(Game):
+class ItchGame(BaseGame):
 
     platform: str = field(default="PC", init=False)
     caves: list = field(default=None)

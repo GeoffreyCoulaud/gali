@@ -1,17 +1,16 @@
-from tempfile import mkstemp
-from os import remove
-
 from gali.sources.shell_script_startup_chain import ShellScriptStartupChain
-from gali.utils.prepare_filename import prepare_filename
 from gali.utils.lutris_export_script import lutris_export_script
 from gali.utils.wine_path import posix_to_wine
+from gali.sources.game import Game
 
 class CemuLutrisStartupChain(ShellScriptStartupChain):
 
     name: str = "Cemu in Lutris"
     _tempfile: str
 
-    def make_script(self, game, **kwargs) -> None:
+    def make_script(self, game: Game, **kwargs) -> None:
+        # TODO export lutris script first
+        
         # Get cemu args
         game_path_wine = posix_to_wine(game.game_path)
         args = ("--game", game_path_wine)

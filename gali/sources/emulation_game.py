@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from gali.sources.game import Game
+from gali.sources.base_game import BaseGame
 
 
 @dataclass
-class EmulationGame(Game):
+class EmulationGame(BaseGame):
     """A class representing emulation games"""
 
     game_path: str = field(default=None)

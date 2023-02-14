@@ -13,7 +13,7 @@ class ShellScriptStartupChain(ShellCommandStartupChain):
     _tempfile: str = None
 
     @abstractmethod
-    def make_script(self, game, **kwargs) -> None:
+    def make_script(self, game: Game, **kwargs) -> None:
         """Make the shell script that will be started"""
         pass
 

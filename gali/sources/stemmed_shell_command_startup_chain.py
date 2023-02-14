@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Iterable, MutableSequence
+from typing import Iterable, Sequence
 
 from gali.sources.shell_command_startup_chain import ShellCommandStartupChain
 from gali.sources.game import Game
@@ -7,7 +7,7 @@ from gali.sources.game import Game
 
 class StemmedShellCommandStartupChain(ShellCommandStartupChain):
 
-    stem: MutableSequence[str] = list()
+    stem: Sequence[str] = list()
 
     @abstractmethod
     def get_start_command_suffix(self, game: Game, **kwargs) -> Iterable[str]:

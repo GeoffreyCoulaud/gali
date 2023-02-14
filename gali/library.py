@@ -5,14 +5,14 @@ from typing import Iterable
 
 from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
-from gali.sources.game import Game
+from gali.sources.base_game import BaseGame
 
 
 class GameGObject(GObject.GObject):
     """A GObject wrapper around Gali games for use with GTK"""
     __gtype_name__ = "GameGObject"
 
-    game: Game
+    game: BaseGame
 
     def __init__(self, game):
         GObject.GObject.__init__(self)
@@ -33,7 +33,7 @@ class GamesListStore(Gio.ListStore):
     def __init__(self) -> None:
         super().__init__(item_type=GameGObject)
 
-    def extend(self, games: Iterable[Game]):
+    def extend(self, games: Iterable[BaseGame]):
         """Add multiple games to itself.
         Will only emit `Gio.ListModel::items-changed` once."""
         store_len = self.get_n_items()
@@ -55,7 +55,7 @@ class GamesListStore(Gio.ListStore):
 class Library():
     """A class representing a multi-source game library"""
 
-    _source_games_map: dict[type[Source], list[Game]] = dict()
+    _source_games_map: dict[type[Source], list[BaseGame]] = dict()
     _hidden_sources: set[type[Source]] = set()
     
     # View containing the games to display in the UI
@@ -82,7 +82,7 @@ class Library():
             self._source_games_map[klass].clear()
         self.gio_list_store.remove_all()
 
-    def extend(self, klass: type[Source], games: Iterable[Game]):
+    def extend(self, klass: type[Source], games: Iterable[BaseGame]):
         """Add games from a given source to the library"""
         self._source_games_map[klass].extend(games)
         if klass in self._hidden_sources: return
