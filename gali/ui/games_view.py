@@ -4,6 +4,7 @@ import gali.singletons as singletons
 class GamesViewFactoryBuilder():
     """Utility class to create a SignalListItemFactory used to display games"""
 
+    @staticmethod
     def build_factory() -> Gtk.SignalListItemFactory:
         """Create a new SignalListItemFactory connected to this class' signal handlers"""
         factory = Gtk.SignalListItemFactory()
@@ -13,6 +14,7 @@ class GamesViewFactoryBuilder():
         factory.connect("teardown", GamesViewFactoryBuilder.on_teardown)
         return factory
 
+    @staticmethod
     def on_setup(widget: Gtk.ListView, list_item: Gtk.ListItem):
         """
         Callback for the setup signal
@@ -21,6 +23,7 @@ class GamesViewFactoryBuilder():
         label = Gtk.Label()
         list_item.set_child(label)
 
+    @staticmethod
     def on_bind(widget: Gtk.ListView, list_item: Gtk.ListItem):
         """
         Callback for the bind signal
@@ -31,6 +34,7 @@ class GamesViewFactoryBuilder():
         game_gobject = list_item.get_item()
         label.set_label(str(game_gobject))
 
+    @staticmethod
     def on_unbind(widget: Gtk.ListView, list_item: Gtk.ListItem):
         """
         Callback for the unbind signal
@@ -40,6 +44,7 @@ class GamesViewFactoryBuilder():
         # Nothing to do here
         pass
 
+    @staticmethod
     def on_teardown(widget: Gtk.ListView, list_item: Gtk.ListItem):
         """
         Callback for the teardown signal
@@ -56,6 +61,3 @@ class GamesView(Gtk.ListView):
         self.set_model(singletons.library.gtk_selection_model)
         factory = GamesViewFactoryBuilder.build_factory()
         self.set_factory(factory)
-
-    def test(self, *args):
-        print("factory should do its job")

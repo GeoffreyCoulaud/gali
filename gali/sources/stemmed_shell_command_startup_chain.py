@@ -14,7 +14,7 @@ class StemmedShellCommandStartupChain(ShellCommandStartupChain):
         pass
 
     def get_start_command(self) -> Iterable[str]:
-        command = list()
+        command: list[str] = list()
         command.extend(self.stem)
-        command.extend(self.get_start_command_suffix(self.game))
+        command.extend(self.get_start_command_suffix())
         return command

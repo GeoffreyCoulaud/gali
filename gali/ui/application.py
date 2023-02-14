@@ -1,9 +1,9 @@
 import gi
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Gtk, Gio, Adw  # noqa: F401,E402
+from gi.repository import Gtk, Gio, Adw
 
-from gali.ui.application_window import ApplicationWindow  # noqa: E402
+from gali.ui.application_window import ApplicationWindow
 import gali.singletons as singletons
 
 class Application(Adw.Application):

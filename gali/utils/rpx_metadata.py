@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from pathlib import PurePath
 from defusedxml.ElementTree import parse as xml_parse
-from xml.etree.ElementTree import Element, ElementTree  # nosec B405
+from xml.etree.ElementTree import Element, ElementTree
+from typing import Union
 
 
 def xml_prefix_dict(root: Element, prefix: str):
@@ -20,11 +21,11 @@ def xml_prefix_dict(root: Element, prefix: str):
 @dataclass
 class RPXMetadata:
     """A class representing metadata for a Wii U .rpx game"""
-    title_id: str
-    region: str
-    long_name: dict[str]
-    short_name: dict[str]
-    publisher: dict[str]
+    title_id: Union[str, None]
+    region: Union[str, None]
+    long_name: dict[str, str]
+    short_name: dict[str, str]
+    publisher: dict[str, str]
     image_banner: str
     image_icon: str
 

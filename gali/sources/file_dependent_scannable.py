@@ -9,7 +9,7 @@ class FileDependentScannable(Scannable):
     present and readable for is_scannable to return true"""
 
     @abstractmethod
-    def get_precondition_file_path() -> PathLike:
+    def get_precondition_file_path(self) -> PathLike:
         pass
 
     def is_scannable(self):

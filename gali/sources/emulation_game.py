@@ -7,4 +7,4 @@ from gali.sources.base_game import BaseGame
 class EmulationGame(BaseGame):
     """A class representing emulation games"""
 
-    game_path: str = field(default=None)
+    game_path: str = field(default="")

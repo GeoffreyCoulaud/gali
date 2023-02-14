@@ -8,7 +8,7 @@ class CfgParser():
     - there are no sections
     - values are strings, quoted or not by double quotes"""
 
-    keyvals = dict()
+    keyvals: dict = dict()
 
     def read(self, filenames: Union[str, list[str]]):
         """Feed files content to the parser"""

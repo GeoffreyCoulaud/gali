@@ -28,7 +28,7 @@ class FIFO():
 class DeepDirEntry():
     """A wrapper for os.DirEntry that contains depth information"""
 
-    dirent: DirEntry = None
+    dirent: DirEntry
     depth: int = 0
 
     def __init__(self, dirent, depth) -> None:
@@ -37,7 +37,7 @@ class DeepDirEntry():
 
 
 def deep_find_files(root, max_depth, extensions) -> list[str]:
-    """Deeply find files of an extension inside a root directory"""
+    """Recursively find files of an extension inside a root directory"""
 
     paths: list[str] = []
     fifo = FIFO()

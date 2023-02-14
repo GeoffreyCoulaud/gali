@@ -18,7 +18,7 @@ class CitraSource(EmulationSource, FileDependentScannable):
 
     def get_config(self) -> ExplicitConfigParser:
         config = ExplicitConfigParser()
-        config.read(self.config_path, encoding="utf-8-sig")
+        config.read_one(self.config_path, encoding="utf-8-sig")
         return config
 
     def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:

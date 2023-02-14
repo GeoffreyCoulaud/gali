@@ -15,7 +15,7 @@ class CemuGame(EmulationGame):
 class CemuLutrisGame(CemuGame):
     """Class representing a Cemu in Lutris game"""
 
-    wine_prefix_path: str = field(default=None)
+    wine_prefix_path: str = field(default="")
     cemu_slug: str = field(default="cemu")
     startup_chains = [
         CemuLutrisStartupChain

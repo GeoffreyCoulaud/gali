@@ -1,5 +1,5 @@
-from abc import ABC, abstractmethod
-from typing import Union
+from abc import ABC
+from typing import Union, Any, Iterable
 
 
 class UnscannableReason():
@@ -28,9 +28,9 @@ class Scannable(ABC):
     the end user.
     """
 
-    @abstractmethod
-    def scan(self) -> tuple[object]:
-        """Start a scan, returning a tuple of objects"""
+    def scan(self) -> Iterable[Any]:
+        """Start a scan, returning an iterable"""
+        return list()
 
     def is_scannable(self) -> Union[bool, UnscannableReason]:
         """

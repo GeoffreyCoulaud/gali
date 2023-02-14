@@ -1,6 +1,6 @@
 class GameDir():
 
-    path: str = None
+    path: str
     depth: int = 0
 
     def __init__(self, path, depth) -> None:

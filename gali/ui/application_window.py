@@ -1,5 +1,4 @@
 from gi.repository import Gtk, Adw
-from gali.sources.all_sources import all_sources
 import gali.singletons as singletons
 
 # Must be processed by GTK first, needed in application_window.ui

@@ -10,7 +10,7 @@ from gali.utils.prepare_filename import prepare_filename
 class ShellScriptStartupChain(ShellCommandStartupChain):
     """Class representing a startup chain that starts a game from generated shell script in a subprocess"""
     
-    _tempfile: str = None
+    _tempfile: str
 
     @abstractmethod
     def make_script(self) -> None:
@@ -19,7 +19,9 @@ class ShellScriptStartupChain(ShellCommandStartupChain):
 
     def prepare(self) -> None:
         """Create a temp file ready to contain a shell script"""
-        suffix = f"{prepare_filename(type(self.game))}-{prepare_filename(self.game.name)}.sh"
+        game_type = prepare_filename(str(type(self.game)))
+        game_name = prepare_filename(self.game.name)
+        suffix = f"{game_type}-{game_name}.sh"
         (_, path) = mkstemp(suffix=suffix)
         self._tempfile = path
         self.make_script()

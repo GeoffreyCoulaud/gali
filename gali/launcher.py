@@ -85,7 +85,10 @@ class Launcher(GObject.Object):
 
 def startup_queue_subprocess(startup_chain_class: type[StartupChain], game: Startable, options: dict[str, Any]) -> None:
     """Execute a game startup chain in an independent subprocess"""
-    startup_chain = startup_chain_class()
-    startup_chain.prepare(game=game, **options)
-    startup_chain.start(game=game, **options)
-    startup_chain.cleanup(game=game, **options)
+    startup_chain = startup_chain_class(
+        game=game,
+        options=options
+    )
+    startup_chain.prepare()
+    startup_chain.start()
+    startup_chain.cleanup()

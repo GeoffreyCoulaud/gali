@@ -1,14 +1,14 @@
 from dataclasses import dataclass, field
 
 from gali.sources.startable import Startable
-from gali.sources.game import Game
+
 
 @dataclass
-class BaseGame(Game, Startable):
+class BaseGame(Startable):
     """Base class representing a game"""
 
-    name: str = field(default=None)
-    platform: str = field(default=None)
+    name: str = field(default="")
+    platform: str = field(default="")
     is_installed: bool = field(default=True)
     
     # TODO extract to an interface

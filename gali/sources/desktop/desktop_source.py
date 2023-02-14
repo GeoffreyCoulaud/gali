@@ -50,7 +50,7 @@ class DesktopSource(Source):
             # Read desktop entry data
             data = ExplicitConfigParser()
             try:
-                data.read(path)
+                data.read_one(path)
             except IOError:
                 continue
 

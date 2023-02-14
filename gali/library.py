@@ -1,7 +1,7 @@
 import sys
 from traceback import print_tb
 from gi.repository import Gio, GObject, Gtk
-from typing import Iterable 
+from typing import Iterable
 
 from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
