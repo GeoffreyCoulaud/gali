@@ -38,10 +38,7 @@ class Launcher(GObject.Object):
         """Get the game running status"""
         if self.game is None: 
             return False
-        if self.process is None:
-            return False
-        exit_code = self.process.poll()
-        return (exit_code is None)
+        # TODO define the pool running status
 
     def set_game(self, game: Startable):
         """Set the game for the launcher
