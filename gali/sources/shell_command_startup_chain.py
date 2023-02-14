@@ -6,17 +6,17 @@ from subprocess import run
 
 from gali.sources.startup_chain import StartupChain
 from gali.utils.sandbox import is_flatpak
-from gali.sources.game import Game
+
 
 class ShellCommandStartupChain(StartupChain):
     """Class representing a startup chain that starts a game from a command in a subprocess"""
 
     @abstractmethod
-    def get_start_command(self, game: Game, **kwargs) -> Iterable[str]:
+    def get_start_command(self) -> Iterable[str]:
         """Get the start command"""
         pass
 
-    def start(self, game: Game, **kwargs) -> None:
+    def start(self) -> None:
         """Start the game from its command in a subprocess"""
         
         # Get shell command
@@ -28,6 +28,6 @@ class ShellCommandStartupChain(StartupChain):
         args[0] = which(args[0])
         
         # Start command in a subprocess
-        print(f"Starting \"{game.name}\"")
+        print(f"Starting \"{self.game.name}\"")
         print(args)
         run(args=args, preexec_fn=setsid)

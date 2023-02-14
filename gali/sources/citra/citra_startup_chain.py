@@ -7,5 +7,5 @@ class CitraStartupChain(StemmedShellCommandStartupChain):
 
     stem = ["citra-qt"]
 
-    def get_start_command_suffix(self, **kwargs) -> Iterable[str]:
-        return [self.game_path]
+    def get_start_command_suffix(self) -> Iterable[str]:
+        return [self.game.game_path]
