@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 
 from gali.sources.startable import Startable
 
+
 @dataclass
 class Game(Startable):
     """Base class representing a game"""

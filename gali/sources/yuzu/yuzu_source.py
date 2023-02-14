@@ -5,7 +5,7 @@ from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
-from gali.sources.yuzu.yuzu_game import YuzuGame, YuzuFlatpakGame
+from gali.sources.yuzu.yuzu_game import YuzuGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 

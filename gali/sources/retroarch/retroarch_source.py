@@ -2,7 +2,7 @@ import os
 import json
 from pathlib import PurePath
 
-from gali.sources.retroarch.retroarch_game import RetroarchGame, RetroarchFlatpakGame
+from gali.sources.retroarch.retroarch_game import RetroarchGame
 from gali.sources.source import Source
 from gali.utils.cfg_parser import CfgParser
 from gali.utils.locations import HOME
@@ -99,11 +99,3 @@ class RetroarchSource(Source, FileDependentScannable):
 
     def get_precondition_file_path(self):
         return self.config_path
-
-
-class RetroarchFlatpakSource(RetroarchSource):
-
-    name: str = "Retroarch (Flatpak)"
-    game_class: type[RetroarchFlatpakGame] = RetroarchFlatpakGame
-    config_path: str = f"{HOME}/.var/app/org.libretro.RetroArch\
-/config/retroarch/retroarch.cfg"

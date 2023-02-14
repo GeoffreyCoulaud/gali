@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from gali.sources.game import Game
 
+# from gali.sources.game import Game
+# TODO find a way to type properly without having circular dependencies
 
 class StartupChain(ABC):
     """Class representing a startup chain for a startable object.
@@ -22,15 +23,15 @@ class StartupChain(ABC):
 
     name: str
 
-    def prepare(self, game: Game, **kwargs) -> None:
+    def prepare(self, game, **kwargs) -> None:
         """Method to run before starting the game"""
         pass
     
     @abstractmethod
-    def start(self, game: Game, **kwargs) -> None:
+    def start(self, game, **kwargs) -> None:
         """Start the game"""
         pass
 
-    def cleanup(self, game: Game, **kwargs) -> None:
+    def cleanup(self, game, **kwargs) -> None:
         """Method to run after the game has terminated"""
         pass
