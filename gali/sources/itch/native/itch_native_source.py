@@ -1,17 +1,17 @@
 import json
 from sqlite3 import connect, Row
 
-from gali.sources.abc_source import ABCSource
+from gali.sources.source import Source
 from gali.sources.itch.native.itch_native_game import ItchNativeGame
 from gali.utils.locations import HOME
-from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
 class NoCandidateException(Exception):
     pass
 
 
-class ItchNativeSource(ABCSource, ABCFileDependentScannable):
+class ItchNativeSource(Source, FileDependentScannable):
 
     name: str = "Itch"
     game_class: type[ItchNativeGame] = ItchNativeGame

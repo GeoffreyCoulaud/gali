@@ -1,8 +1,8 @@
 from math import inf
 
 from gali.sources.game_dir import GameDir
-from gali.sources.abc_source import ABCSource
-from gali.sources.abc_scannable import UnscannableReason
+from gali.sources.source import Source
+from gali.sources.scannable import UnscannableReason
 from gali.sources.desktop.desktop_game import DesktopGame
 from gali.utils.locations import XDG_DATA_DIRS, XDG_DATA_HOME
 from gali.utils.deep_find_files import deep_find_files
@@ -10,7 +10,7 @@ from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.sandbox import is_flatpak
 
 
-class DesktopSource(ABCSource):
+class DesktopSource(Source):
 
     name: str = "Desktop Entries"
     game_class: type[DesktopGame] = DesktopGame

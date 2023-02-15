@@ -1,5 +1,5 @@
 from gi.repository import Gtk
-from gali.sources.abc_source import ABCSource
+from gali.sources.source import Source
 from gali.sources.all_sources import all_sources
 import gali.singletons as singletons
 
@@ -8,7 +8,7 @@ class FilterPopover(Gtk.Popover):
 
     __gtype_name__ = "GaliFilterPopover"
 
-    button_source_map: dict[Gtk.CheckButton, type[ABCSource]] = dict()
+    button_source_map: dict[Gtk.CheckButton, type[Source]] = dict()
 
     def __init__(self) -> None:
         super().__init__()

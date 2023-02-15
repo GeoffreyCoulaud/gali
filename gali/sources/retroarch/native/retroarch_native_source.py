@@ -3,13 +3,13 @@ import json
 from pathlib import PurePath
 
 from gali.sources.retroarch.native.retroarch_native_game import RetroarchNativeGame
-from gali.sources.abc_source import ABCSource
+from gali.sources.source import Source
 from gali.utils.cfg_parser import CfgParser
 from gali.utils.locations import HOME
-from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class RetroarchNativeSource(ABCSource, ABCFileDependentScannable):
+class RetroarchNativeSource(Source, FileDependentScannable):
 
     name: str = "Retroarch"
     game_class: type[RetroarchNativeGame] = RetroarchNativeGame

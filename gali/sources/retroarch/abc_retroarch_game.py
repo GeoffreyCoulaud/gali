@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCRetroarchGame(ABCEmulationGame):
+class ABCRetroarchGame(EmulationGame):
 
     core_path: str = field(default=None)

@@ -1,8 +1,8 @@
 from gali.sources.cemu.abc_cemu_lutris_game import ABCCemuLutrisGame
 from gali.sources.cemu.lutris.cemu_lutris_startup_chain import CemuLutrisStartupChain
-from gali.sources.abc_startable import ABCStartable
+from gali.sources.startable import Startable
 
-class CemuLutrisGame(ABCCemuLutrisGame, ABCStartable):
+class CemuLutrisGame(ABCCemuLutrisGame, Startable):
     """Class representing a Cemu in Lutris game"""
 
     startup_chains = [

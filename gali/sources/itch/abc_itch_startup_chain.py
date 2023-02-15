@@ -1,8 +1,8 @@
-from gali.sources.abc_startup_chain import ABCStartupChain
+from gali.sources.startup_chain import StartupChain
 from gali.sources.itch.abc_itch_game import ABCItchGame
 
 
-class ABCItchStartupChain(ABCStartupChain):
+class ABCItchStartupChain(StartupChain):
     """An abstract Itch startup chain
     
     From http://docs.itch.ovh/butlerd/master/#/?id=verdict-struct

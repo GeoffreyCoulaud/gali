@@ -3,13 +3,13 @@ from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
-from gali.sources.abc_emulation_source import ABCEmulationSource
+from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.sources.yuzu.native.yuzu_native_game import YuzuNativeGame
-from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class YuzuNativeSource(ABCEmulationSource, ABCFileDependentScannable):
+class YuzuNativeSource(EmulationSource, FileDependentScannable):
 
     name: str = "Yuzu"
     game_class: type[YuzuNativeGame] = YuzuNativeGame

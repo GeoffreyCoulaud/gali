@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCCemuGame(ABCEmulationGame):
+class ABCCemuGame(EmulationGame):
     """Abstract class representing a Cemu game"""
 
     platform: str = field(default="Nintendo - Wii U", init=False)

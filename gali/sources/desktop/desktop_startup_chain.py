@@ -2,11 +2,11 @@ import re
 import shlex
 from typing import Iterable
 
-from gali.sources.abc_cli_startup_chain import ABCCLIStartupChain
+from gali.sources.cli_startup_chain import CLIStartupChain
 from gali.sources.desktop.abc_desktop_game import ABCDesktopGame
 
 
-class DesktopStartupChain(ABCCLIStartupChain):
+class DesktopStartupChain(CLIStartupChain):
 
     game: ABCDesktopGame
     name = "Desktop Entry"

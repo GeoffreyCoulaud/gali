@@ -1,10 +1,10 @@
 from typing import Iterable, Sequence
 
-from gali.sources.abc_source import ABCSource
+from gali.sources.source import Source
 from gali.utils.deep_find_files import deep_find_files
 
 
-class ABCEmulationSource(ABCSource):
+class EmulationSource(Source):
 
     rom_extensions: Sequence[str] = []
 

@@ -1,12 +1,12 @@
 from sqlite3 import connect, Row
 
 from gali.utils.locations import HOME
-from gali.sources.abc_source import ABCSource
+from gali.sources.source import Source
 from gali.sources.lutris.native.lutris_native_game import LutrisNativeGame
-from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class LutrisNativeSource(ABCSource, ABCFileDependentScannable):
+class LutrisNativeSource(Source, FileDependentScannable):
 
     name: str = "Lutris"
     game_class: type[LutrisNativeGame] = LutrisNativeGame

@@ -1,10 +1,10 @@
 from typing import Iterable
 
 from gali.sources.itch.abc_itch_startup_chain import ABCItchStartupChain
-from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
+from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
 
 
-class ItchJavaStartupChain(ABCItchStartupChain, ABCStemmedCLIStartupChain):
+class ItchJavaStartupChain(ABCItchStartupChain, StemmedCLIStartupChain):
 
     name = "Itch Java candidate"
     stem = ["java", "-jar"]

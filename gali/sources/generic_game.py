@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 
 
 @dataclass
-class ABCGenericGame():
+class GenericGame():
     """Base class representing a game"""
 
     name: str = field(default="")

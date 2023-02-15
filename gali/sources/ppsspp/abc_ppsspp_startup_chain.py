@@ -1,10 +1,10 @@
 from typing import Iterable
 
-from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
+from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
 from gali.sources.ppsspp.abc_ppsspp_game import ABCPPSSPPGame
 
 
-class ABCPPSSPPStartupChain(ABCStemmedCLIStartupChain):
+class ABCPPSSPPStartupChain(StemmedCLIStartupChain):
 
     game: ABCPPSSPPGame
 

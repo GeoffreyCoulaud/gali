@@ -1,5 +1,5 @@
 from gi.repository import Gtk
-from gali.sources.abc_game import ABCGame
+from gali.sources.game import Game
 
 @Gtk.Template(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/game_details.ui")
 class GameDetails(Gtk.Box):
@@ -10,6 +10,6 @@ class GameDetails(Gtk.Box):
     def __init__(self) -> None:
         super().__init__()
 
-    def set_game(self, game: ABCGame) -> None:
+    def set_game(self, game: Game) -> None:
         """Set the game displayed"""
         self.title.set_label(game.name)

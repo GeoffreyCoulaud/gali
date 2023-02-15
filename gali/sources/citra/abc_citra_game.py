@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCCitraGame(ABCEmulationGame):
+class ABCCitraGame(EmulationGame):
 
     platform: str = field(default="Nintendo - 3DS", init=False)

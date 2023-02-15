@@ -2,8 +2,8 @@ from gi.repository import GObject
 from multiprocessing.pool import Pool
 from typing import Any
 
-from gali.sources.abc_startable import ABCStartable
-from gali.sources.abc_startup_chain import ABCStartupChain
+from gali.sources.startable import Startable
+from gali.sources.startup_chain import StartupChain
 
 
 class GameRunningError(Exception):
@@ -27,7 +27,7 @@ class Launcher(GObject.Object):
 
     __gtype_name__ = "GaliLauncher"
 
-    game: ABCStartable|None = None
+    game: Startable|None = None
     pool: Pool
 
     def __init__(self) -> None:
@@ -40,7 +40,7 @@ class Launcher(GObject.Object):
             return False
         # TODO define the pool running status
 
-    def set_game(self, game: ABCStartable):
+    def set_game(self, game: Startable):
         """Set the game for the launcher
         * Can raise GameRuningError if the current game is running"""
         if self.is_running():
@@ -80,7 +80,7 @@ class Launcher(GObject.Object):
         """Force kill the running game. Data loss can occur, please prefer the stop method"""
         # TODO force stop the pool 
 
-def startup_queue_subprocess(startup_chain_class: type[ABCStartupChain], game: ABCStartable, options: dict[str, Any]) -> None:
+def startup_queue_subprocess(startup_chain_class: type[StartupChain], game: Startable, options: dict[str, Any]) -> None:
     """Execute a game startup chain in an independent subprocess"""
     startup_chain = startup_chain_class(
         game=game,

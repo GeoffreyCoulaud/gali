@@ -4,11 +4,11 @@ from shutil import which
 from os import setsid
 from subprocess import run
 
-from gali.sources.abc_startup_chain import ABCStartupChain
+from gali.sources.startup_chain import StartupChain
 from gali.utils.sandbox import is_flatpak
 
 
-class ABCCLIStartupChain(ABCStartupChain):
+class CLIStartupChain(StartupChain):
     """Class representing a startup chain that starts a game from a command in a subprocess"""
 
     @abstractmethod

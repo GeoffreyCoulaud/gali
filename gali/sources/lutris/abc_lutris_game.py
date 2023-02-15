@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from gali.sources.abc_generic_game import ABCGenericGame
+from gali.sources.generic_game import GenericGame
 
 
 @dataclass
-class ABCLutrisGame(ABCGenericGame):
+class ABCLutrisGame(GenericGame):
 
     platform: str = field(default="PC", init=False)
     game_slug: str = field(default=None)

@@ -1,10 +1,10 @@
-from gali.sources.abc_script_startup_chain import ABCScriptStartupChain
+from gali.sources.script_startup_chain import ScriptStartupChain
 from gali.utils.lutris_export_script import lutris_export_script
 from gali.utils.wine_path import posix_to_wine
 from gali.sources.cemu.abc_cemu_lutris_game import ABCCemuLutrisGame
 
 
-class CemuLutrisStartupChain(ABCScriptStartupChain):
+class CemuLutrisStartupChain(ScriptStartupChain):
 
     name: str = "Cemu in Lutris"
     game: ABCCemuLutrisGame

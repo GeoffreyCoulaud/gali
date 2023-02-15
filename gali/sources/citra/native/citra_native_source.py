@@ -3,13 +3,13 @@ from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
-from gali.sources.abc_emulation_source import ABCEmulationSource
+from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
 from gali.sources.citra.native.citra_native_game import CitraNativeGame
-from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
+from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class CitraNativeSource(ABCEmulationSource, ABCFileDependentScannable):
+class CitraNativeSource(EmulationSource, FileDependentScannable):
 
     name: str = "Citra"
     game_class: type[CitraNativeGame] = CitraNativeGame

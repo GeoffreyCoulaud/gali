@@ -1,7 +1,7 @@
 from abc import ABC
 
 
-class ABCGame(ABC):
+class Game(ABC):
     """Abstract base class representing a game.
     * For type-checking purposes only, inherit directly from BaseGame."""
 

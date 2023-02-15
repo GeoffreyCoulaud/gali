@@ -9,17 +9,17 @@ from xml.etree.ElementTree import ElementTree  # nosec B405
 from defusedxml.ElementTree import parse as xml_parse
 
 from gali.utils.locations import HOME
-from gali.sources.abc_emulation_source import ABCEmulationSource
+from gali.sources.emulation_source import EmulationSource
 from gali.utils.rpx_metadata import RPXMetadata
 from gali.sources.cemu.lutris.cemu_lutris_game import CemuLutrisGame
 from gali.sources.lutris.native.lutris_native_source import LutrisNativeSource
 from gali.utils.wine_path import wine_to_posix
 from gali.sources.game_dir import GameDir
-from gali.sources.abc_scannable import UnscannableReason
+from gali.sources.scannable import UnscannableReason
 
 
 # TODO extract common points to a base CemuSource
-class CemuLutrisSource(ABCEmulationSource):
+class CemuLutrisSource(EmulationSource):
 
     name: str = "Cemu (Lutris)"
     game_class: type[CemuLutrisGame] = CemuLutrisGame
