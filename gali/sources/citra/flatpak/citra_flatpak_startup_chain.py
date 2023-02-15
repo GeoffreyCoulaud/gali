@@ -1,12 +1,7 @@
-from typing import Iterable
-
-from gali.sources.citra.native.citra_native_startup_chain import CitraNativeStartupChain
+from gali.sources.citra.abc_citra_startup_chain import ABCCitraStartupChain
 
 
-class CitraFlatpakStartupChain(CitraNativeStartupChain):
+class CitraFlatpakStartupChain(ABCCitraStartupChain):
 
     name = "Citra Flatpak"
     stem = ["flatpak", "run", "org.citra_emu.citra"]
-
-    def get_start_command_suffix(self) -> Iterable[str]:
-        return [self.game.game_path]

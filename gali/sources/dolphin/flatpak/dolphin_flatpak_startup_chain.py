@@ -1,9 +1,7 @@
-from gali.sources.dolphin.native.dolphin_native_startup_chain import DolphinNativeStartupChain
-from gali.sources.dolphin.abc_dolphin_game import ABCDolphinGame
+from gali.sources.dolphin.abc_dolphin_startup_chain import ABCDolphinStartupChain
 
 
-class DolphinFlatpakStartupChain(DolphinNativeStartupChain):
+class DolphinFlatpakStartupChain(ABCDolphinStartupChain):
 
-    game: ABCDolphinGame
     name = "Dolphin Flatpak"
     stem = ["flatpak", "run", "org.DolphinEmu.dolphin-emu"]
