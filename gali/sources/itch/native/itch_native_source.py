@@ -2,7 +2,7 @@ import json
 from sqlite3 import connect, Row
 
 from gali.sources.abc_source import ABCSource
-from gali.sources.itch.itch_game import ItchGame
+from gali.sources.itch.native.itch_native_game import ItchNativeGame
 from gali.utils.locations import HOME
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
@@ -14,7 +14,7 @@ class NoCandidateException(Exception):
 class ItchSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Itch"
-    game_class: type[ItchGame] = ItchGame
+    game_class: type[ItchNativeGame] = ItchNativeGame
     db_path: str = f"{HOME}/.config/itch/db/butler.db"
     db_request: str = """
         SELECT
@@ -48,7 +48,7 @@ class ItchSource(ABCSource, ABCFileDependentScannable):
         connection.close()
         return rows
 
-    def get_games(self, rows: list[Row]) -> tuple[ItchGame]:
+    def get_games(self, rows: list[Row]) -> tuple[ItchNativeGame]:
         games = []
         for row in rows:
 
@@ -87,7 +87,7 @@ class ItchSource(ABCSource, ABCFileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[ItchGame]:
+    def scan(self) -> tuple[ItchNativeGame]:
         db_contents = self.get_db_contents()
         games = self.get_games(db_contents)
         return games

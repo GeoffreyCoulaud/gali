@@ -1,11 +1,11 @@
 from gali.sources.abc_startable import ABCStartable
 from gali.sources.itch.abc_itch_game import ABCItchGame
-from gali.sources.itch.itch_linux_startup_chain import ItchLinuxStartupChain
-from gali.sources.itch.itch_script_startup_chain import ItchScriptStartupChain
-from gali.sources.itch.itch_java_startup_chain import ItchJavaStartupChain
+from gali.sources.itch.native.itch_linux_startup_chain import ItchLinuxStartupChain
+from gali.sources.itch.native.itch_script_startup_chain import ItchScriptStartupChain
+from gali.sources.itch.native.itch_java_startup_chain import ItchJavaStartupChain
 
 
-class ItchGame(ABCItchGame, ABCStartable):
+class ItchNativeGame(ABCItchGame, ABCStartable):
 
     startup_chains = list()
 
