@@ -1,14 +1,10 @@
-from dataclasses import dataclass, field
-
-from gali.sources.abc_generic_game import ABCGenericGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.steam.abc_steam_game import ABCSteamGame
 from gali.sources.steam.steam_startup_chain import SteamStartupChain
 
 
-@dataclass
-class SteamGame(ABCGenericGame):
+class SteamGame(ABCSteamGame, ABCStartable):
 
-    platform: str = field(default="PC", init=False)
-    app_id: str = field(default=None)
     startup_chains = [
         SteamStartupChain
     ]

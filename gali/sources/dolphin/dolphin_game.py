@@ -1,13 +1,10 @@
-from dataclasses import dataclass, field
-
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.dolphin.abc_dolphin_game import ABCDolphinGame
 from gali.sources.dolphin.dolphin_startup_chain import DolphinStartupChain
 
 
-@dataclass
-class DolphinGame(ABCEmulationGame):
+class DolphinGame(ABCDolphinGame, ABCStartable):
 
-    platform: str = field(default="Nintendo - Gamecube / Wii", init=False)
     startup_chains = [
         DolphinStartupChain
     ]

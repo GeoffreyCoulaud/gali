@@ -1,10 +1,8 @@
-from dataclasses import dataclass
-
-from gali.sources.retroarch.retroarch_game import RetroarchGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.retroarch.abc_retroarch_game import ABCRetroarchGame
 from gali.sources.retroarch.retroarch_flatpak_startup_chain import RetroarchFlatpakStartupChain
 
-@dataclass
-class RetroarchFlatpakGame(RetroarchGame):
+class RetroarchFlatpakGame(ABCRetroarchGame, ABCStartable):
 
     startup_chains = [
         RetroarchFlatpakStartupChain

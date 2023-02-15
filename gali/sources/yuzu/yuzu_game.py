@@ -1,12 +1,10 @@
-from dataclasses import dataclass, field
-
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.yuzu.abc_yuzu_game import ABCYuzuGame
 from gali.sources.yuzu.yuzu_startup_chain import YuzuStartupChain
 
-@dataclass
-class YuzuGame(ABCEmulationGame):
 
-    platform: str = field(default="Nintendo - Switch", init=False)
+class YuzuGame(ABCYuzuGame, ABCStartable):
+
     startup_chains = [
         YuzuStartupChain
     ]

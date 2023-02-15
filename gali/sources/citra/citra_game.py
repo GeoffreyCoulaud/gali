@@ -1,12 +1,10 @@
-from dataclasses import dataclass, field
-
-from gali.sources.abc_emulation_game import ABCEmulationGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.citra.abc_citra_game import ABCCitraGame
 from gali.sources.citra.citra_startup_chain import CitraStartupChain
 
-@dataclass
-class CitraGame(ABCEmulationGame):
 
-    platform: str = field(default="Nintendo - 3DS", init=False)
+class CitraGame(ABCCitraGame, ABCStartable):
+
     startup_chains = [
         CitraStartupChain
     ]

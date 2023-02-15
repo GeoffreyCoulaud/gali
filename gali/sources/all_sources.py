@@ -1,4 +1,4 @@
-from gali.sources.cemu.cemu_source import CemuLutrisSource
+from gali.sources.cemu.cemu_lutris_source import CemuLutrisSource
 from gali.sources.citra.citra_source import CitraSource
 from gali.sources.citra.citra_flatpak_source import CitraFlatpakSource
 from gali.sources.desktop.desktop_source import DesktopSource

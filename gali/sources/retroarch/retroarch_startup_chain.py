@@ -1,10 +1,12 @@
 from typing import Iterable
 
 from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
+from gali.sources.retroarch.abc_retroarch_game import ABCRetroarchGame
 
 
 class RetroarchStartupChain(ABCStemmedCLIStartupChain):
 
+    game: ABCRetroarchGame
     name = "Retroarch"
     stem = ["retroarch", "--libretro"]
 

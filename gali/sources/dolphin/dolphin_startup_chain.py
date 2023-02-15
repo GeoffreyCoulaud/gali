@@ -1,10 +1,12 @@
 from typing import Iterable
 
 from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
+from gali.sources.dolphin.abc_dolphin_game import ABCDolphinGame
 
 
 class DolphinStartupChain(ABCStemmedCLIStartupChain):
 
+    game: ABCDolphinGame
     name = "Dolphin"
     stem = ["dolphin-emu"]
 

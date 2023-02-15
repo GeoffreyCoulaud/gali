@@ -1,9 +1,9 @@
 from typing import Iterable
 
-from gali.sources.itch.itch_startup_chain import ItchStartupChain
+from gali.sources.itch.abc_itch_startup_chain import ABCItchStartupChain
 from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
 
-class ItchScriptStartupChain(ItchStartupChain, ABCStemmedCLIStartupChain):
+class ItchScriptStartupChain(ABCItchStartupChain, ABCStemmedCLIStartupChain):
 
     name = "Itch Shell script candidate"
 

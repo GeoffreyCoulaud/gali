@@ -1,7 +1,8 @@
 from gali.sources.abc_startup_chain import ABCStartupChain
+from gali.sources.itch.abc_itch_game import ABCItchGame
 
 
-class ItchStartupChain(ABCStartupChain):
+class ABCItchStartupChain(ABCStartupChain):
     """An abstract Itch startup chain
     
     From http://docs.itch.ovh/butlerd/master/#/?id=verdict-struct
@@ -15,8 +16,11 @@ class ItchStartupChain(ABCStartupChain):
     executable, a Java or Love2D bundle, an HTML index, etc.
     """
 
+    game: ABCItchGame
+
     # TODO define the common parts for itch startup chains and group them here
 
+    # --- Old code kept for later (maybe) ---
     # Build start command
     # base_path = self.verdict["basePath"]
     # exec_path = candidate["path"]

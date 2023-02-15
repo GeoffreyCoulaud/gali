@@ -1,14 +1,10 @@
-from dataclasses import dataclass, field
-
-from gali.sources.abc_generic_game import ABCGenericGame
+from gali.sources.abc_startable import ABCStartable
+from gali.sources.legendary.abc_legendary_game import ABCLegendaryGame
 from gali.sources.legendary.legendary_startup_chain import LegendaryStartupChain
 
 
-@dataclass
-class LegendaryGame(ABCGenericGame):
+class LegendaryGame(ABCLegendaryGame, ABCStartable):
 
-    platform: str = field(default="PC", init=False)
-    app_name: str = field(default=None)
     startup_chains = [
         LegendaryStartupChain
     ]

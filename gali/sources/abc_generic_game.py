@@ -1,10 +1,8 @@
 from dataclasses import dataclass, field
 
-from gali.sources.abc_startable import ABCStartable
-
 
 @dataclass
-class ABCGenericGame(ABCStartable):
+class ABCGenericGame():
     """Base class representing a game"""
 
     name: str = field(default="")
