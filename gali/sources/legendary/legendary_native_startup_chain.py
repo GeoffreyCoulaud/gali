@@ -4,7 +4,7 @@ from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
 from gali.sources.legendary.abc_legendary_game import ABCLegendaryGame
 
 
-class LegendaryStartupChain(ABCStemmedCLIStartupChain):
+class LegendaryNativeStartupChain(ABCStemmedCLIStartupChain):
 
     game: ABCLegendaryGame
     name = "Legendary"

@@ -4,7 +4,7 @@ from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
 from gali.sources.dolphin.abc_dolphin_game import ABCDolphinGame
 
 
-class DolphinStartupChain(ABCStemmedCLIStartupChain):
+class DolphinNativeStartupChain(ABCStemmedCLIStartupChain):
 
     game: ABCDolphinGame
     name = "Dolphin"

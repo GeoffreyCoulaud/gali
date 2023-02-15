@@ -2,15 +2,15 @@ import json
 
 from gali.utils.locations import HOME
 from gali.sources.abc_source import ABCSource
-from gali.sources.legendary.legendary_game import LegendaryGame
+from gali.sources.legendary.legendary_native_game import LegendaryNativeGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class LegendarySource(ABCSource, ABCFileDependentScannable):
+class LegendaryNativeSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Legendary"
-    game_class: type[LegendaryGame] = LegendaryGame
+    game_class: type[LegendaryNativeGame] = LegendaryNativeGame
     config_path: str = f"{HOME}/.config/legendary/config.ini"
     default_install_dir: str = f"{HOME}/.config/legendary"
 
@@ -38,7 +38,7 @@ class LegendarySource(ABCSource, ABCFileDependentScannable):
         else:
             return config
 
-    def get_games(self, installed_json: dict) -> tuple[LegendaryGame]:
+    def get_games(self, installed_json: dict) -> tuple[LegendaryNativeGame]:
 
         games = []
 
@@ -65,7 +65,7 @@ class LegendarySource(ABCSource, ABCFileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[LegendaryGame]:
+    def scan(self) -> tuple[LegendaryNativeGame]:
         config = self.get_config()
         installed_json = self.get_installed_json(config)
         games = self.get_games(installed_json)

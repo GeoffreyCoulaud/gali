@@ -1,9 +1,9 @@
 from gali.sources.retroarch.retroarch_flatpak_game import RetroarchFlatpakGame
-from gali.sources.retroarch.retroarch_source import RetroarchSource
+from gali.sources.retroarch.retroarch_native_source import RetroarchNativeSource
 from gali.utils.locations import HOME
 
 
-class RetroarchFlatpakSource(RetroarchSource):
+class RetroarchFlatpakSource(RetroarchNativeSource):
 
     name: str = "Retroarch (Flatpak)"
     game_class: type[RetroarchFlatpakGame] = RetroarchFlatpakGame

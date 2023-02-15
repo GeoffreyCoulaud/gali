@@ -2,14 +2,14 @@ from sqlite3 import connect, Row
 
 from gali.utils.locations import HOME
 from gali.sources.abc_source import ABCSource
-from gali.sources.lutris.lutris_game import LutrisGame
+from gali.sources.lutris.lutris_native_game import LutrisNativeGame
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class LutrisSource(ABCSource, ABCFileDependentScannable):
+class LutrisNativeSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Lutris"
-    game_class: type[LutrisGame] = LutrisGame
+    game_class: type[LutrisNativeGame] = LutrisNativeGame
 
     db_path: str = f"{HOME}/.local/share/lutris/pga.db"
     db_request: str = """
@@ -32,7 +32,7 @@ class LutrisSource(ABCSource, ABCFileDependentScannable):
         connection.close()
         return rows
 
-    def get_games(self, rows: list[Row]) -> tuple[LutrisGame]:
+    def get_games(self, rows: list[Row]) -> tuple[LutrisNativeGame]:
         games = []
         for row in rows:
 
@@ -59,7 +59,7 @@ class LutrisSource(ABCSource, ABCFileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[LutrisGame]:
+    def scan(self) -> tuple[LutrisNativeGame]:
         db_rows = self.get_db_contents()
         games = self.get_games(db_rows)
         return games

@@ -5,14 +5,14 @@ from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.abc_emulation_source import ABCEmulationSource
 from gali.sources.game_dir import GameDir
-from gali.sources.citra.citra_game import CitraGame
+from gali.sources.citra.citra_native_game import CitraNativeGame
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class CitraSource(ABCEmulationSource, ABCFileDependentScannable):
+class CitraNativeSource(ABCEmulationSource, ABCFileDependentScannable):
 
     name: str = "Citra"
-    game_class: type[CitraGame] = CitraGame
+    game_class: type[CitraNativeGame] = CitraNativeGame
     config_path: str = f"{HOME}/.config/citra-emu/qt-config.ini"
     rom_extensions: tuple[str] = (".3ds", ".cci")
 
@@ -43,7 +43,7 @@ class CitraSource(ABCEmulationSource, ABCFileDependentScannable):
             rom_dirs.append(GameDir(path, depth))
         return tuple(rom_dirs)
 
-    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[CitraGame]:
+    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[CitraNativeGame]:
         games = []
         for rom_dir in rom_dirs:
             rom_paths = []
@@ -61,7 +61,7 @@ class CitraSource(ABCEmulationSource, ABCFileDependentScannable):
                 games.append(game)
         return tuple(games)
 
-    def scan(self) -> tuple[CitraGame]:
+    def scan(self) -> tuple[CitraNativeGame]:
         config = self.get_config()
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)

@@ -2,17 +2,17 @@ import os
 import json
 from pathlib import PurePath
 
-from gali.sources.retroarch.retroarch_game import RetroarchGame
+from gali.sources.retroarch.retroarch_native_game import RetroarchNativeGame
 from gali.sources.abc_source import ABCSource
 from gali.utils.cfg_parser import CfgParser
 from gali.utils.locations import HOME
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class RetroarchSource(ABCSource, ABCFileDependentScannable):
+class RetroarchNativeSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Retroarch"
-    game_class: type[RetroarchGame] = RetroarchGame
+    game_class: type[RetroarchNativeGame] = RetroarchNativeGame
     config_path: str = f"{HOME}/.config/retroarch/retroarch.cfg"
 
     def get_config(self) -> CfgParser:
@@ -42,7 +42,7 @@ class RetroarchSource(ABCSource, ABCFileDependentScannable):
         playlists = tuple(filter(filter_fn, iterator))
         return playlists
 
-    def get_games(self, playlist_paths: tuple[str]) -> tuple[RetroarchGame]:
+    def get_games(self, playlist_paths: tuple[str]) -> tuple[RetroarchNativeGame]:
 
         games = []
 
@@ -91,7 +91,7 @@ class RetroarchSource(ABCSource, ABCFileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[RetroarchGame]:
+    def scan(self) -> tuple[RetroarchNativeGame]:
         config = self.get_config()
         playlist_paths = self.get_playlist_paths(config)
         games = self.get_games(playlist_paths)

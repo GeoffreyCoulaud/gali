@@ -1,9 +1,9 @@
 from gali.sources.ppsspp.ppsspp_flatpak_game import PPSSPPFlatpakGame
-from gali.sources.ppsspp.ppsspp_source import PPSSPPSource
+from gali.sources.ppsspp.ppsspp_native_source import PPSSPPNativeSource
 from gali.utils.locations import HOME
 
 
-class PPSSPPFlatpakSource(PPSSPPSource):
+class PPSSPPFlatpakSource(PPSSPPNativeSource):
 
     name: str = "PPSSPP (Flatpak)"
     game_class: type[PPSSPPFlatpakGame] = PPSSPPFlatpakGame

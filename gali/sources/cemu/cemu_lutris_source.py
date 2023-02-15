@@ -12,7 +12,7 @@ from gali.utils.locations import HOME
 from gali.sources.abc_emulation_source import ABCEmulationSource
 from gali.utils.rpx_metadata import RPXMetadata
 from gali.sources.cemu.cemu_lutris_game import CemuLutrisGame
-from gali.sources.lutris.lutris_source import LutrisSource
+from gali.sources.lutris.lutris_native_source import LutrisNativeSource
 from gali.utils.wine_path import wine_to_posix
 from gali.sources.game_dir import GameDir
 from gali.sources.abc_scannable import UnscannableReason
@@ -33,7 +33,7 @@ class CemuLutrisSource(ABCEmulationSource):
     )
 
     def get_cemu_lutris_config_path(self) -> str: 
-        with sqlite3.connect(LutrisSource.db_path) as connection:
+        with sqlite3.connect(LutrisNativeSource.db_path) as connection:
             sql = "SELECT configpath FROM 'games' WHERE slug = 'cemu'"
             cursor = connection.execute(sql)
             row = cursor.fetchone()
@@ -164,7 +164,7 @@ class CemuLutrisSource(ABCEmulationSource):
         # Any LutrisGame with the slug "cemu" is fine, just specify so.
         
         # Not scannable if no Lutris DB is present
-        file = LutrisSource.db_path
+        file = LutrisNativeSource.db_path
         if (not isfile(file)) or (not access(file, R_OK)):
             return UnscannableReason(f"Lutris db file is not readable : {file}")
         

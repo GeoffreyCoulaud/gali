@@ -1,19 +1,20 @@
+from math import inf
 from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.abc_emulation_source import ABCEmulationSource
 from gali.sources.game_dir import GameDir
-from gali.sources.ppsspp.ppsspp_game import PPSSPPGame
+from gali.sources.yuzu.yuzu_native_game import YuzuNativeGame
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class PPSSPPSource(ABCEmulationSource, ABCFileDependentScannable):
+class YuzuNativeSource(ABCEmulationSource, ABCFileDependentScannable):
 
-    name: str = "PPSSPP"
-    game_class: type[PPSSPPGame] = PPSSPPGame
-    config_path: str = f"{HOME}/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
-    rom_extensions: tuple[str] = (".iso", ".cso")
+    name: str = "Yuzu"
+    game_class: type[YuzuNativeGame] = YuzuNativeGame
+    config_path: str = f"{HOME}/.config/yuzu/qt-config.ini"
+    rom_extensions: tuple[str] = (".xci", ".nsp", ".nso", ".nro")
 
     def get_config(self) -> ExplicitConfigParser:
         config = ExplicitConfigParser()
@@ -22,14 +23,34 @@ class PPSSPPSource(ABCEmulationSource, ABCFileDependentScannable):
 
     def get_rom_dirs(self, config: ExplicitConfigParser) -> tuple[GameDir]:
         rom_dirs = []
-        items = config.items("PinnedPaths")
-        for (key, path) in items:
-            rom_dirs.append(GameDir(path, 0))
+        n_dirs = config.getint(
+            "UI",
+            r"Paths\gamedirs\size",
+            fallback=0
+        )
+        for i in range(1, n_dirs + 1):
+            deep = config.getboolean(
+                "UI",
+                f"Paths\\gamedirs\\{i}\\deep_scan",
+                fallback=False
+            )
+            path = config.get(
+                "UI",
+                f"Paths\\gamedirs\\{i}\\path",
+                fallback=None
+            )
+            if path is None:
+                continue
+            if path in ("SDMC", "UserNAND", "SysNAND"):
+                continue
+            depth = inf if deep else 0
+            rom_dirs.append(GameDir(path, depth))
         return tuple(rom_dirs)
 
-    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[PPSSPPGame]:
+    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[YuzuNativeGame]:
         games = []
         for rom_dir in rom_dirs:
+            rom_paths = []
             try:
                 rom_paths = self.get_rom_paths(rom_dir, self.rom_extensions)
             except OSError:
@@ -44,7 +65,7 @@ class PPSSPPSource(ABCEmulationSource, ABCFileDependentScannable):
                 games.append(game)
         return tuple(games)
 
-    def scan(self) -> list[PPSSPPGame]:
+    def scan(self) -> tuple[YuzuNativeGame]:
         config = self.get_config()
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)

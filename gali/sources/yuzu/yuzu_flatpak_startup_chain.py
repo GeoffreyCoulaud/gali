@@ -1,8 +1,8 @@
 from gali.sources.yuzu.abc_yuzu_game import ABCYuzuGame
-from gali.sources.yuzu.yuzu_startup_chain import YuzuStartupChain
+from gali.sources.yuzu.yuzu_native_startup_chain import YuzuNativeStartupChain
 
 
-class YuzuFlatpakStartupChain(YuzuStartupChain):
+class YuzuFlatpakStartupChain(YuzuNativeStartupChain):
 
     game: ABCYuzuGame
     name = "Yuzu Flatpak"

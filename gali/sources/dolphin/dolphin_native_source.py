@@ -5,14 +5,14 @@ from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.game_dir import GameDir
 from gali.sources.abc_emulation_source import ABCEmulationSource
-from gali.sources.dolphin.dolphin_game import DolphinGame
+from gali.sources.dolphin.dolphin_native_game import DolphinNativeGame
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class DolphinSource(ABCEmulationSource, ABCFileDependentScannable):
+class DolphinNativeSource(ABCEmulationSource, ABCFileDependentScannable):
 
     name: str = "Dolphin"
-    game_class: type[DolphinGame] = DolphinGame
+    game_class: type[DolphinNativeGame] = DolphinNativeGame
     config_path: str = f"{HOME}/.config/dolphin-emu/Dolphin.ini"
     rom_extensions: tuple[str] = (".ciso", ".iso", ".wbfs", ".gcm", ".gcz")
 
@@ -41,7 +41,7 @@ class DolphinSource(ABCEmulationSource, ABCFileDependentScannable):
             rom_dirs.append(GameDir(path, depth))
         return tuple(rom_dirs)
 
-    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[DolphinGame]:
+    def get_rom_games(self, rom_dirs: tuple[GameDir]) -> tuple[DolphinNativeGame]:
         games = []
         for rom_dir in rom_dirs:
             rom_paths = []
@@ -59,7 +59,7 @@ class DolphinSource(ABCEmulationSource, ABCFileDependentScannable):
                 games.append(game)
         return tuple(games)
 
-    def scan(self) -> tuple[DolphinGame]:
+    def scan(self) -> tuple[DolphinNativeGame]:
         config = self.get_config()
         rom_dirs = self.get_rom_dirs(config)
         rom_games = self.get_rom_games(rom_dirs)

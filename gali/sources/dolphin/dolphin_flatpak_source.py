@@ -1,9 +1,9 @@
-from gali.sources.dolphin.dolphin_source import DolphinSource
+from gali.sources.dolphin.dolphin_native_source import DolphinNativeSource
 from gali.sources.dolphin.dolphin_flatpak_game import DolphinFlatpakGame
 from gali.utils.locations import HOME
 
 
-class DolphinFlatpakSource(DolphinSource):
+class DolphinFlatpakSource(DolphinNativeSource):
 
     name: str = "Dolphin (Flatpak)"
     game_class: type[DolphinFlatpakGame] = DolphinFlatpakGame
