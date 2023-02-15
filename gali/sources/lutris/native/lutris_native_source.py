@@ -3,7 +3,7 @@ from gali.sources.lutris.lutris_source import LutrisSource
 from gali.utils.locations import HOME
 
 
-class LutrisSource(LutrisSource):
+class LutrisNativeSource(LutrisSource):
 
     name: str = "Lutris"
     game_class: type[LutrisNativeGame] = LutrisNativeGame
