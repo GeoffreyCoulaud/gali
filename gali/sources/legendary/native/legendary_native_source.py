@@ -2,7 +2,7 @@ import json
 
 from gali.utils.locations import HOME
 from gali.sources.abc_source import ABCSource
-from gali.sources.legendary.legendary_native_game import LegendaryNativeGame
+from gali.sources.legendary.native.legendary_native_game import LegendaryNativeGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 

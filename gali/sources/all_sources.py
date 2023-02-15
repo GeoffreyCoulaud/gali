@@ -7,7 +7,7 @@ from gali.sources.dolphin.flatpak.dolphin_flatpak_source import DolphinFlatpakSo
 from gali.sources.heroic.heroic_source import HeroicSource
 from gali.sources.heroic.heroic_flatpak_source import HeroicFlatpakSource
 from gali.sources.itch.itch_source import ItchSource
-from gali.sources.legendary.legendary_native_source import LegendaryNativeSource
+from gali.sources.legendary.native.legendary_native_source import LegendaryNativeSource
 from gali.sources.lutris.native.lutris_native_source import LutrisNativeSource
 from gali.sources.ppsspp.native.ppsspp_native_source import PPSSPPNativeSource
 from gali.sources.ppsspp.flatpak.ppsspp_flatpak_source import PPSSPPFlatpakSource
