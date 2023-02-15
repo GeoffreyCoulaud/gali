@@ -5,10 +5,10 @@ from gali.sources.dolphin.dolphin_game import DolphinGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.sources.game_dir import GameDir
 from gali.sources.emulation_source import EmulationSource
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class DolphinSource(EmulationSource, FileDependentScannable):
+class DolphinSource(EmulationSource, FileDependentSource):
 
     name: str
     game_class: type[DolphinGame]

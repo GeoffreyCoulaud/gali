@@ -1,12 +1,11 @@
 import json
 from sqlite3 import connect, Row
 from gali.sources.itch.itch_game import ItchGame
-from gali.sources.source import Source
 from gali.sources.itch.native.itch_native_game import ItchNativeGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class ItchNativeSource(Source, FileDependentScannable):
+class ItchNativeSource(FileDependentSource):
 
     name: str
     db_path: str

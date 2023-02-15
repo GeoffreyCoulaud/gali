@@ -2,9 +2,8 @@ import vdf
 import os
 import re
 
-from gali.sources.source import Source
 from gali.sources.steam.steam_game import SteamGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
 class InvalidManifestException(Exception):
@@ -23,7 +22,7 @@ def fullmatch_any(value: str, patterns: tuple[re.Pattern]) -> bool:
     return False
 
 
-class SteamSource(Source, FileDependentScannable):
+class SteamSource(FileDependentSource):
 
     name: str
     steam_dir: str

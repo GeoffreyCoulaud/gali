@@ -1,12 +1,10 @@
 import json
 
-from gali.utils.locations import HOME
-from gali.sources.source import Source
 from gali.sources.heroic.heroic_xdg_game import HeroicXDGGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class HeroicSource(Source, FileDependentScannable):
+class HeroicSource(FileDependentSource):
 
     name: str
     config_path: str

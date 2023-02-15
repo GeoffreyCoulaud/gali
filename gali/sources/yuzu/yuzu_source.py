@@ -5,10 +5,10 @@ from gali.sources.yuzu.yuzu_game import YuzuGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.sources.emulation_source import EmulationSource
 from gali.sources.game_dir import GameDir
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class YuzuSource(EmulationSource, FileDependentScannable):
+class YuzuSource(EmulationSource, FileDependentSource):
 
     name: str
     config_path: str

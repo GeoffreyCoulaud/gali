@@ -1,12 +1,11 @@
 import json
 
-from gali.sources.source import Source
 from gali.sources.legendary.legendary_game import LegendaryGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class LegendarySource(Source, FileDependentScannable):
+class LegendarySource(FileDependentSource):
 
     name: str
     config_path: str

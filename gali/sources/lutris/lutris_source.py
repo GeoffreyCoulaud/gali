@@ -1,11 +1,10 @@
 from sqlite3 import connect, Row
 
 from gali.sources.lutris.lutris_game import LutrisGame
-from gali.sources.source import Source
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class LutrisSource(Source, FileDependentScannable):
+class LutrisSource(FileDependentSource):
 
     name: str
     db_path: str

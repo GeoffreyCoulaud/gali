@@ -3,12 +3,11 @@ import json
 from pathlib import PurePath
 
 from gali.sources.retroarch.retroarch_game import RetroarchGame
-from gali.sources.source import Source
 from gali.utils.cfg_parser import CfgParser
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.file_dependent_source import FileDependentSource
 
 
-class RetroarchSource(Source, FileDependentScannable):
+class RetroarchSource(FileDependentSource):
 
     name: str
     config_path: str
