@@ -11,7 +11,7 @@ class NoCandidateException(Exception):
     pass
 
 
-class ItchSource(ABCSource, ABCFileDependentScannable):
+class ItchNativeSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Itch"
     game_class: type[ItchNativeGame] = ItchNativeGame
