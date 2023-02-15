@@ -1,9 +1,7 @@
-from gali.sources.retroarch.abc_retroarch_game import ABCRetroarchGame
-from gali.sources.retroarch.native.retroarch_native_startup_chain import RetroarchNativeStartupChain
+from gali.sources.retroarch.abc_retroarch_startup_chain import ABCRetroarchStartupChain
 
-# TODO decouple from native startup chain (common parts in ABC)
-class RetroarchFlatpakStartupChain(RetroarchNativeStartupChain):
 
-    game: ABCRetroarchGame
+class RetroarchFlatpakStartupChain(ABCRetroarchStartupChain):
+
     name = "Retroarch Flatpak"
     stem = ["flatpak", "run", "org.libretro.RetroArch", "--libretro"]

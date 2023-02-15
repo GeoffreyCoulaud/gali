@@ -1,9 +1,7 @@
-from gali.sources.yuzu.abc_yuzu_game import ABCYuzuGame
-from gali.sources.yuzu.native.yuzu_native_startup_chain import YuzuNativeStartupChain
+from gali.sources.yuzu.abc_yuzu_startup_chain import ABCYuzuStartupChain
 
 
-class YuzuFlatpakStartupChain(YuzuNativeStartupChain):
+class YuzuFlatpakStartupChain(ABCYuzuStartupChain):
 
-    game: ABCYuzuGame
     name = "Yuzu Flatpak"
     stem = ["flatpak", "run", "org.yuzu_emu.yuzu"]
