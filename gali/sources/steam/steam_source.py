@@ -153,7 +153,7 @@ class SteamSource(FileDependentSource):
 
         return tuple(games)
 
-    def scan(self) -> tuple[SteamXDGGame]:
+    def scan(self) -> tuple[SteamGame]:
         config = self.get_library_config()
         game_dir_paths = self.get_dir_paths(config)
         manifest_paths = self.get_manifest_paths(game_dir_paths)
