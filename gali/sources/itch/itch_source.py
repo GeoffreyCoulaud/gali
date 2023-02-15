@@ -1,11 +1,10 @@
 import json
 from sqlite3 import connect, Row
 from gali.sources.itch.itch_game import ItchGame
-from gali.sources.itch.native.itch_native_game import ItchNativeGame
 from gali.sources.file_dependent_source import FileDependentSource
 
 
-class ItchNativeSource(FileDependentSource):
+class ItchSource(FileDependentSource):
 
     name: str
     db_path: str
@@ -43,7 +42,7 @@ class ItchNativeSource(FileDependentSource):
         connection.close()
         return rows
 
-    def get_games(self, rows: list[Row]) -> tuple[ItchNativeGame]:
+    def get_games(self, rows: list[Row]) -> tuple[ItchGame]:
         games = []
         for row in rows:
 
@@ -82,7 +81,7 @@ class ItchNativeSource(FileDependentSource):
 
         return tuple(games)
 
-    def scan(self) -> tuple[ItchNativeGame]:
+    def scan(self) -> tuple[ItchGame]:
         db_contents = self.get_db_contents()
         games = self.get_games(db_contents)
         return games
