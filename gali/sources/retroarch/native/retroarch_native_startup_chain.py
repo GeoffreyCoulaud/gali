@@ -1,7 +1,7 @@
-from gali.sources.retroarch.abc_retroarch_startup_chain import ABCRetroarchStartupChain
+from gali.sources.retroarch.retroarch_startup_chain import RetroarchStartupChain
 
 
-class RetroarchNativeStartupChain(ABCRetroarchStartupChain):
+class RetroarchNativeStartupChain(RetroarchStartupChain):
 
     name = "Retroarch"
     stem = ["retroarch", "--libretro"]

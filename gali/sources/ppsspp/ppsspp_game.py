@@ -4,6 +4,6 @@ from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCYuzuGame(EmulationGame):
+class PPSSPPGame(EmulationGame):
 
-    platform: str = field(default="Nintendo - Switch", init=False)
+    platform: str = field(default="Sony - PSP", init=False)

@@ -4,6 +4,6 @@ from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCPPSSPPGame(EmulationGame):
+class RetroarchGame(EmulationGame):
 
-    platform: str = field(default="Sony - PSP", init=False)
+    core_path: str = field(default=None)

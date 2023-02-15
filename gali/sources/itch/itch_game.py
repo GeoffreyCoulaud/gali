@@ -4,7 +4,7 @@ from gali.sources.generic_game import GenericGame
 
 
 @dataclass
-class ABCItchGame(GenericGame):
+class ItchGame(GenericGame):
 
     platform: str = field(default="PC", init=False)
     caves: list = field(default=None)

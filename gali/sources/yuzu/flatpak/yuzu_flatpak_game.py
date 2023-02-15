@@ -1,9 +1,9 @@
 from gali.sources.startable import Startable
-from gali.sources.yuzu.abc_yuzu_game import ABCYuzuGame
+from gali.sources.yuzu.yuzu_game import YuzuGame
 from gali.sources.yuzu.flatpak.yuzu_flatpak_startup_chain import YuzuFlatpakStartupChain
 
 
-class YuzuFlatpakGame(ABCYuzuGame, Startable):
+class YuzuFlatpakGame(YuzuGame, Startable):
 
     startup_chains = [
         YuzuFlatpakStartupChain

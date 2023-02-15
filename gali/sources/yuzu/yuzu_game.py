@@ -4,6 +4,6 @@ from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCRetroarchGame(EmulationGame):
+class YuzuGame(EmulationGame):
 
-    core_path: str = field(default=None)
+    platform: str = field(default="Nintendo - Switch", init=False)

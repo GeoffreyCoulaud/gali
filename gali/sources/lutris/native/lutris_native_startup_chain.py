@@ -1,10 +1,10 @@
 from gali.sources.script_startup_chain import ScriptStartupChain
-from gali.sources.lutris.abc_lutris_game import ABCLutrisGame
+from gali.sources.lutris.lutris_game import LutrisGame
 from gali.utils.lutris_export_script import lutris_export_script
 
 class LutrisNativeStartupChain(ScriptStartupChain):
 
-    game: ABCLutrisGame
+    game: LutrisGame
     name = "Lutris"
     _tempfile: str
 

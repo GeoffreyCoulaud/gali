@@ -1,7 +1,7 @@
-from gali.sources.yuzu.abc_yuzu_startup_chain import ABCYuzuStartupChain
+from gali.sources.yuzu.yuzu_startup_chain import YuzuStartupChain
 
 
-class YuzuNativeStartupChain(ABCYuzuStartupChain):
+class YuzuNativeStartupChain(YuzuStartupChain):
 
     name = "Yuzu"
     stem = ["yuzu"]

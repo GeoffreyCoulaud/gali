@@ -1,7 +1,7 @@
-from gali.sources.dolphin.abc_dolphin_startup_chain import ABCDolphinStartupChain
+from gali.sources.dolphin.dolphin_startup_chain import DolphinStartupChain
 
 
-class DolphinNativeStartupChain(ABCDolphinStartupChain):
+class DolphinNativeStartupChain(DolphinStartupChain):
 
     name = "Dolphin"
     stem = ["dolphin-emu"]

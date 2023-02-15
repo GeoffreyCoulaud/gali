@@ -1,12 +1,12 @@
 from typing import Iterable
 
 from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
-from gali.sources.yuzu.abc_yuzu_game import ABCYuzuGame
+from gali.sources.yuzu.yuzu_game import YuzuGame
 
 
-class ABCYuzuStartupChain(StemmedCLIStartupChain):
+class YuzuStartupChain(StemmedCLIStartupChain):
 
-    game: ABCYuzuGame
+    game: YuzuGame
 
     def get_start_command(self) -> Iterable[str]:
         return [self.game.game_path]

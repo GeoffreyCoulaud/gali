@@ -1,7 +1,7 @@
-from gali.sources.ppsspp.abc_ppsspp_startup_chain import ABCPPSSPPStartupChain
+from gali.sources.ppsspp.ppsspp_startup_chain import PPSSPPStartupChain
 
 
-class PPSSPPNativeStartupChain(ABCPPSSPPStartupChain):
+class PPSSPPNativeStartupChain(PPSSPPStartupChain):
 
     name = "PPSSPP SDL frontend"
     stem = ["PPSSPPSDL"]

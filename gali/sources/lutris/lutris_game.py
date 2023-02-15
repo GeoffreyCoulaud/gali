@@ -4,7 +4,7 @@ from gali.sources.generic_game import GenericGame
 
 
 @dataclass
-class ABCLutrisGame(GenericGame):
+class LutrisGame(GenericGame):
 
     platform: str = field(default="PC", init=False)
     game_slug: str = field(default=None)

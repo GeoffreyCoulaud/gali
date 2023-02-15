@@ -1,10 +1,10 @@
 from typing import Iterable
 
-from gali.sources.itch.abc_itch_startup_chain import ABCItchStartupChain
+from gali.sources.itch.itch_startup_chain import ItchStartupChain
 from gali.sources.cli_startup_chain import CLIStartupChain
 
 
-class ItchLinuxStartupChain(ABCItchStartupChain, CLIStartupChain):
+class ItchLinuxStartupChain(ItchStartupChain, CLIStartupChain):
 
     name = "Itch Linux candidate"
 

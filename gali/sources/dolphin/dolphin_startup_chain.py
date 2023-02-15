@@ -1,12 +1,12 @@
 from typing import Iterable
 
 from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
-from gali.sources.dolphin.abc_dolphin_game import ABCDolphinGame
+from gali.sources.dolphin.dolphin_game import DolphinGame
 
 
-class ABCDolphinStartupChain(StemmedCLIStartupChain):
+class DolphinStartupChain(StemmedCLIStartupChain):
 
-    game: ABCDolphinGame
+    game: DolphinGame
 
     def get_start_command_suffix(self) -> Iterable[str]:
         suffix = list()

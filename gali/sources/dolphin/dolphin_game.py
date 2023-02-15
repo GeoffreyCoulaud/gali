@@ -4,6 +4,6 @@ from gali.sources.emulation_game import EmulationGame
 
 
 @dataclass
-class ABCDolphinGame(EmulationGame):
+class DolphinGame(EmulationGame):
 
     platform: str = field(default="Nintendo - Gamecube / Wii", init=False)

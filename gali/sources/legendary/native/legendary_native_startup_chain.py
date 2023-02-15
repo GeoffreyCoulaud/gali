@@ -1,12 +1,12 @@
 from typing import Iterable
 
 from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
-from gali.sources.legendary.abc_legendary_game import ABCLegendaryGame
+from gali.sources.legendary.legendary_game import LegendaryGame
 
 
 class LegendaryNativeStartupChain(StemmedCLIStartupChain):
 
-    game: ABCLegendaryGame
+    game: LegendaryGame
     name = "Legendary"
     stem = ["legendary", "launch"]
 

@@ -4,7 +4,7 @@ from gali.sources.generic_game import GenericGame
 
 
 @dataclass
-class ABCLegendaryGame(GenericGame):
+class LegendaryGame(GenericGame):
 
     platform: str = field(default="PC", init=False)
     app_name: str = field(default=None)

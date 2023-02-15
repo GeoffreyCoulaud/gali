@@ -1,7 +1,7 @@
-from gali.sources.citra.abc_citra_startup_chain import ABCCitraStartupChain
+from gali.sources.citra.citra_startup_chain import CitraStartupChain
 
 
-class CitraNativeStartupChain(ABCCitraStartupChain):
+class CitraNativeStartupChain(CitraStartupChain):
 
     name = "Citra"
     stem = ["citra-qt"]

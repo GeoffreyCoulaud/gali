@@ -1,7 +1,7 @@
-from gali.sources.ppsspp.abc_ppsspp_startup_chain import ABCPPSSPPStartupChain
+from gali.sources.ppsspp.ppsspp_startup_chain import PPSSPPStartupChain
 
 
-class PPSSPPFlatpakStartupChain(ABCPPSSPPStartupChain):
+class PPSSPPFlatpakStartupChain(PPSSPPStartupChain):
 
     name = "PPSSPP Flatpak"
     stem = ["flatpak", "run", "org.ppsspp.PPSSPP"]

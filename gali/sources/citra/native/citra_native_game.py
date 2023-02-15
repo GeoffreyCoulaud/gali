@@ -1,9 +1,9 @@
 from gali.sources.startable import Startable
-from gali.sources.citra.abc_citra_game import ABCCitraGame
+from gali.sources.citra.citra_game import CitraGame
 from gali.sources.citra.native.citra_native_startup_chain import CitraNativeStartupChain
 
 
-class CitraNativeGame(ABCCitraGame, Startable):
+class CitraNativeGame(CitraGame, Startable):
 
     startup_chains = [
         CitraNativeStartupChain
