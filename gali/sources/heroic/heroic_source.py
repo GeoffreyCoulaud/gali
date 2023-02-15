@@ -1,12 +1,12 @@
 import json
 
 from gali.utils.locations import HOME
-from gali.sources.source import Source
+from gali.sources.abc_source import ABCSource
 from gali.sources.heroic.heroic_game import HeroicGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class HeroicSource(Source, FileDependentScannable):
+class HeroicSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Heroic"
     game_class: type[HeroicGame] = HeroicGame

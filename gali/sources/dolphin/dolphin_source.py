@@ -4,12 +4,12 @@ from pathlib import PurePath
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
 from gali.sources.game_dir import GameDir
-from gali.sources.emulation_source import EmulationSource
+from gali.sources.abc_emulation_source import ABCEmulationSource
 from gali.sources.dolphin.dolphin_game import DolphinGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class DolphinSource(EmulationSource, FileDependentScannable):
+class DolphinSource(ABCEmulationSource, ABCFileDependentScannable):
 
     name: str = "Dolphin"
     game_class: type[DolphinGame] = DolphinGame

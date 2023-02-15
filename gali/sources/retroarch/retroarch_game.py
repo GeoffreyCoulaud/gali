@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 
-from gali.sources.emulation_game import EmulationGame
+from gali.sources.abc_emulation_game import ABCEmulationGame
 from gali.sources.retroarch.retroarch_startup_chain import RetroarchStartupChain
 
 
 @dataclass
-class RetroarchGame(EmulationGame):
+class RetroarchGame(ABCEmulationGame):
 
     core_path: str = field(default=None)
     startup_chains = [

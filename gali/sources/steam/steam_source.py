@@ -2,10 +2,10 @@ import vdf
 import os
 import re
 
-from gali.sources.source import Source
+from gali.sources.abc_source import ABCSource
 from gali.sources.steam.steam_game import SteamGame
 from gali.utils.locations import HOME
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
 class InvalidManifestException(Exception):
@@ -24,7 +24,7 @@ def fullmatch_any(value: str, patterns: tuple[re.Pattern]) -> bool:
     return False
 
 
-class SteamSource(Source, FileDependentScannable):
+class SteamSource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Steam"
     game_class: type[SteamGame] = SteamGame

@@ -3,11 +3,11 @@ from typing import Iterable
 from tempfile import mkstemp
 from os import remove
 
-from gali.sources.shell_command_startup_chain import ShellCommandStartupChain
+from gali.sources.abc_cli_startup_chain import ABCCLIStartupChain
 from gali.utils.prepare_filename import prepare_filename
 
 
-class ShellScriptStartupChain(ShellCommandStartupChain):
+class ABCScriptStartupChain(ABCCLIStartupChain):
     """Class representing a startup chain that starts a game from generated shell script in a subprocess"""
     
     _tempfile: str

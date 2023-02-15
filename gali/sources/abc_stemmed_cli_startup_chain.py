@@ -1,10 +1,10 @@
 from abc import abstractmethod
 from typing import Iterable, Sequence
 
-from gali.sources.shell_command_startup_chain import ShellCommandStartupChain
+from gali.sources.abc_cli_startup_chain import ABCCLIStartupChain
 
 
-class StemmedShellCommandStartupChain(ShellCommandStartupChain):
+class ABCStemmedCLIStartupChain(ABCCLIStartupChain):
 
     stem: Sequence[str] = list()
 

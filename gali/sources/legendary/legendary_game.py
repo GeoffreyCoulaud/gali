@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 
-from gali.sources.base_game import BaseGame
+from gali.sources.abc_generic_game import ABCGenericGame
 from gali.sources.legendary.legendary_startup_chain import LegendaryStartupChain
 
 
 @dataclass
-class LegendaryGame(BaseGame):
+class LegendaryGame(ABCGenericGame):
 
     platform: str = field(default="PC", init=False)
     app_name: str = field(default=None)

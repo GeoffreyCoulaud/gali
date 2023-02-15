@@ -2,10 +2,10 @@ import re
 import shlex
 from typing import Iterable
 
-from gali.sources.shell_command_startup_chain import ShellCommandStartupChain
+from gali.sources.abc_cli_startup_chain import ABCCLIStartupChain
 
 
-class DesktopStartupChain(ShellCommandStartupChain):
+class DesktopStartupChain(ABCCLIStartupChain):
 
     name = "Desktop Entry"
 

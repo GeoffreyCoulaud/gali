@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 
-from gali.sources.emulation_game import EmulationGame
+from gali.sources.abc_emulation_game import ABCEmulationGame
 from gali.sources.cemu.cemu_lutris_startup_chain import CemuLutrisStartupChain
 
 
 @dataclass
-class CemuGame(EmulationGame):
+class CemuGame(ABCEmulationGame):
     """Abstract class representing a Cemu game"""
 
     platform: str = field(default="Nintendo - Wii U", init=False)

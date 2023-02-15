@@ -1,13 +1,13 @@
 import json
 
 from gali.utils.locations import HOME
-from gali.sources.source import Source
+from gali.sources.abc_source import ABCSource
 from gali.sources.legendary.legendary_game import LegendaryGame
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class LegendarySource(Source, FileDependentScannable):
+class LegendarySource(ABCSource, ABCFileDependentScannable):
 
     name: str = "Legendary"
     game_class: type[LegendaryGame] = LegendaryGame

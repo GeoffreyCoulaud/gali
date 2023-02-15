@@ -2,9 +2,9 @@ from abc import abstractmethod
 from os import access, R_OK, PathLike
 from os.path import isfile
 
-from gali.sources.scannable import Scannable, UnscannableReason
+from gali.sources.abc_scannable import ABCScannable, UnscannableReason
 
-class FileDependentScannable(Scannable):
+class ABCFileDependentScannable(ABCScannable):
     """Abstract class representing a scannable that depends on a file to be
     present and readable for is_scannable to return true"""
 

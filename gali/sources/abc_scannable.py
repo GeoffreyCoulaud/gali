@@ -20,7 +20,7 @@ class UnscannableReason():
         return False
 
 
-class Scannable(ABC):
+class ABCScannable(ABC):
     """
     Abstract class representing a scannable (eg. a Source).
     Implementations must specify the scan method.

@@ -2,13 +2,13 @@ from pathlib import PurePath
 
 from gali.utils.explicit_config_parser import ExplicitConfigParser
 from gali.utils.locations import HOME
-from gali.sources.emulation_source import EmulationSource
+from gali.sources.abc_emulation_source import ABCEmulationSource
 from gali.sources.game_dir import GameDir
 from gali.sources.ppsspp.ppsspp_game import PPSSPPGame
-from gali.sources.file_dependent_scannable import FileDependentScannable
+from gali.sources.abc_file_dependent_scannable import ABCFileDependentScannable
 
 
-class PPSSPPSource(EmulationSource, FileDependentScannable):
+class PPSSPPSource(ABCEmulationSource, ABCFileDependentScannable):
 
     name: str = "PPSSPP"
     game_class: type[PPSSPPGame] = PPSSPPGame

@@ -1,9 +1,9 @@
 from typing import Iterable
 
-from gali.sources.stemmed_shell_command_startup_chain import StemmedShellCommandStartupChain
+from gali.sources.abc_stemmed_cli_startup_chain import ABCStemmedCLIStartupChain
 
 
-class HeroicStartupChain(StemmedShellCommandStartupChain):
+class HeroicStartupChain(ABCStemmedCLIStartupChain):
 
     name = "Heroic"
     stem = ["xdg-open"]

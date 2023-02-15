@@ -3,16 +3,16 @@ from traceback import print_tb
 from gi.repository import Gio, GObject, Gtk
 from typing import Iterable
 
-from gali.sources.source import Source
+from gali.sources.abc_source import ABCSource
 from gali.sources.all_sources import all_sources
-from gali.sources.base_game import BaseGame
+from gali.sources.abc_generic_game import ABCGenericGame
 
 
 class GameGObject(GObject.GObject):
     """A GObject wrapper around Gali games for use with GTK"""
     __gtype_name__ = "GameGObject"
 
-    game: BaseGame
+    game: ABCGenericGame
 
     def __init__(self, game):
         GObject.GObject.__init__(self)
@@ -33,7 +33,7 @@ class GamesListStore(Gio.ListStore):
     def __init__(self) -> None:
         super().__init__(item_type=GameGObject)
 
-    def extend(self, games: Iterable[BaseGame]):
+    def extend(self, games: Iterable[ABCGenericGame]):
         """Add multiple games to itself.
         Will only emit `Gio.ListModel::items-changed` once."""
         store_len = self.get_n_items()
@@ -55,8 +55,8 @@ class GamesListStore(Gio.ListStore):
 class Library():
     """A class representing a multi-source game library"""
 
-    _source_games_map: dict[type[Source], list[BaseGame]] = dict()
-    _hidden_sources: set[type[Source]] = set()
+    _source_games_map: dict[type[ABCSource], list[ABCGenericGame]] = dict()
+    _hidden_sources: set[type[ABCSource]] = set()
     
     # View containing the games to display in the UI
     gio_list_store: GamesListStore
@@ -82,18 +82,18 @@ class Library():
             self._source_games_map[klass].clear()
         self.gio_list_store.remove_all()
 
-    def extend(self, klass: type[Source], games: Iterable[BaseGame]):
+    def extend(self, klass: type[ABCSource], games: Iterable[ABCGenericGame]):
         """Add games from a given source to the library"""
         self._source_games_map[klass].extend(games)
         if klass in self._hidden_sources: return
         self.gio_list_store.extend(games)
 
-    def hide_source(self, klass: type[Source]):
+    def hide_source(self, klass: type[ABCSource]):
         """Hide a source in the view""" 
         self._hidden_sources.add(klass)
         self.gio_list_store.remove_of_type(klass.game_class)
 
-    def show_source(self, klass: type[Source]):
+    def show_source(self, klass: type[ABCSource]):
         """Show a source in the view"""
         if klass not in self._hidden_sources: return
         self._hidden_sources.remove(klass)

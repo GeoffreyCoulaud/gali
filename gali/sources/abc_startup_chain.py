@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from gali.sources.game import Game
+from gali.sources.abc_game import ABCGame
 
 
-class StartupChain(ABC):
+class ABCStartupChain(ABC):
     """Class representing a startup chain for a startable object.
     
     A startup chain represents a broad method of starting a game of a certain type.
@@ -23,10 +23,10 @@ class StartupChain(ABC):
     """
 
     name: str
-    game: Game
+    game: ABCGame
     options: dict[str, Any]
 
-    def __init__(self, game: Game, options: dict[str, Any]) -> None:
+    def __init__(self, game: ABCGame, options: dict[str, Any]) -> None:
         """Create a startup chain.
         
         Keys for options are strings, values are of any type. 

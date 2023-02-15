@@ -1,7 +1,7 @@
-from gali.sources.shell_script_startup_chain import ShellScriptStartupChain
+from gali.sources.abc_script_startup_chain import ABCScriptStartupChain
 from gali.utils.lutris_export_script import lutris_export_script
 
-class LutrisStartupChain(ShellScriptStartupChain):
+class LutrisStartupChain(ABCScriptStartupChain):
 
     name = "Lutris"
     _tempfile: str
