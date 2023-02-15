@@ -8,29 +8,21 @@ from os.path import isfile
 from xml.etree.ElementTree import ElementTree  # nosec B405
 from defusedxml.ElementTree import parse as xml_parse
 
-from gali.utils.locations import HOME
-from gali.sources.emulation_source import EmulationSource
-from gali.utils.rpx_metadata import RPXMetadata
+from gali.sources.cemu.cemu_source import CemuSource
 from gali.sources.cemu.lutris.cemu_lutris_game import CemuLutrisGame
 from gali.sources.lutris.native.lutris_native_source import LutrisNativeSource
-from gali.utils.wine_path import wine_to_posix
 from gali.sources.game_dir import GameDir
 from gali.sources.scannable import UnscannableReason
+from gali.utils.rpx_metadata import RPXMetadata
+from gali.utils.wine_path import wine_to_posix
+from gali.utils.locations import HOME
 
 
 # TODO extract common points to a base CemuSource
-class CemuLutrisSource(EmulationSource):
+class CemuLutrisSource(CemuSource):
 
     name: str = "Cemu (Lutris)"
     game_class: type[CemuLutrisGame] = CemuLutrisGame
-    rom_extensions: tuple[str] = (
-        ".wud",
-        ".wux",
-        ".wad",
-        ".iso",
-        ".rpx",
-        ".elf"
-    )
 
     def get_cemu_lutris_config_path(self) -> str: 
         with sqlite3.connect(LutrisNativeSource.db_path) as connection:

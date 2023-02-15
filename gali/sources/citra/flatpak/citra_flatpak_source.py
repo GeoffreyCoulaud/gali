@@ -1,8 +1,8 @@
-from gali.sources.citra.native.citra_native_source import CitraNativeSource
 from gali.sources.citra.flatpak.citra_flatpak_game import CitraFlatpakGame
+from gali.sources.citra.citra_source import CitraSource
 from gali.utils.locations import HOME
 
-class CitraFlatpakSource(CitraNativeSource):
+class CitraFlatpakSource(CitraSource):
 
     name: str = "Citra (Flatpak)"
     game_class: type[CitraFlatpakGame] = CitraFlatpakGame

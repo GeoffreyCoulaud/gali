@@ -1,9 +1,9 @@
 from gali.sources.yuzu.flatpak.yuzu_flatpak_game import YuzuFlatpakGame
-from gali.sources.yuzu.native.yuzu_native_source import YuzuNativeSource
+from gali.sources.yuzu.yuzu_source import YuzuSource
 from gali.utils.locations import HOME
 
 
-class YuzuFlatpakSource(YuzuNativeSource):
+class YuzuFlatpakSource(YuzuSource):
 
     name: str = "Yuzu (Flatpak)"
     game_class: type[YuzuFlatpakGame] = YuzuFlatpakGame

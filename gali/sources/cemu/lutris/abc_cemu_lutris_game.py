@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from gali.sources.cemu.abc_cemu_game import ABCCemuGame
+from gali.sources.cemu.cemu_game import CemuGame
 
 
 @dataclass
-class ABCCemuLutrisGame(ABCCemuGame):
+class ABCCemuLutrisGame(CemuGame):
     """Class representing a Cemu in Lutris game"""
 
     wine_prefix_path: str = field(default="")

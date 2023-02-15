@@ -1,8 +1,8 @@
-from gali.sources.steam.native.steam_native_source import SteamNativeSource
+from gali.sources.steam.steam_source import SteamSource
 from gali.utils.locations import HOME
 
 
-class SteamFlatpakSource(SteamNativeSource):
+class SteamFlatpakSource(SteamSource):
 
     name: str = "Steam (Flatpak)"
     steam_dir: str = f"{HOME}/.var/app/com.valvesoftware.Steam/.local/share/Steam"
