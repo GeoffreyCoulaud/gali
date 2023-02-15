@@ -3,7 +3,7 @@ import os
 import re
 
 from gali.sources.source import Source
-from gali.sources.steam.steam_game import SteamGame
+from gali.sources.steam.steam_xdg_game import SteamXDGGame
 from gali.utils.locations import HOME
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
@@ -24,10 +24,10 @@ def fullmatch_any(value: str, patterns: tuple[re.Pattern]) -> bool:
     return False
 
 
-class SteamSource(Source, FileDependentScannable):
+class SteamNativeSource(Source, FileDependentScannable):
 
     name: str = "Steam"
-    game_class: type[SteamGame] = SteamGame
+    game_class: type[SteamXDGGame] = SteamXDGGame
 
     steam_dir: str = f"{HOME}/.local/share/Steam"
     rel_library_config: str = "config/libraryfolders.vdf"
@@ -87,7 +87,7 @@ class SteamSource(Source, FileDependentScannable):
 
         return mainfest_paths
 
-    def read_manifest(self, manifest_path: str) -> SteamGame:
+    def read_manifest(self, manifest_path: str) -> SteamXDGGame:
 
         # Get data
         try:
@@ -127,7 +127,7 @@ class SteamSource(Source, FileDependentScannable):
         )
         return game
 
-    def get_games(self, manifest_paths: tuple[str]) -> tuple[SteamGame]:
+    def get_games(self, manifest_paths: tuple[str]) -> tuple[SteamXDGGame]:
 
         games = []
 
@@ -155,7 +155,7 @@ class SteamSource(Source, FileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[SteamGame]:
+    def scan(self) -> tuple[SteamXDGGame]:
         config = self.get_library_config()
         game_dir_paths = self.get_dir_paths(config)
         manifest_paths = self.get_manifest_paths(game_dir_paths)

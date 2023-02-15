@@ -1,10 +1,10 @@
-from gali.sources.startable import Startable
-from gali.sources.heroic.abc_heroic_game import ABCHeroicGame
-from gali.sources.heroic.heroic_startup_chain import HeroicStartupChain
+from dataclasses import dataclass, field
+
+from gali.sources.generic_game import GenericGame
 
 
-class HeroicGame(ABCHeroicGame, Startable):
+@dataclass
+class HeroicGame(GenericGame):
 
-    startup_chains = [
-        HeroicStartupChain
-    ]
+    platform: str = field(default="PC", init=False)
+    app_name: str = field(default=None)

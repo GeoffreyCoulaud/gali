@@ -1,12 +1,12 @@
 from typing import Iterable
 
 from gali.sources.stemmed_cli_startup_chain import StemmedCLIStartupChain
-from gali.sources.steam.abc_steam_game import ABCSteamGame
+from gali.sources.steam.steam_game import SteamGame
 
 
-class SteamStartupChain(StemmedCLIStartupChain):
+class SteamXDGStartupChain(StemmedCLIStartupChain):
 
-    game: ABCSteamGame
+    game: SteamGame
     name = "Steam"
     stem = "xdg-open"
 

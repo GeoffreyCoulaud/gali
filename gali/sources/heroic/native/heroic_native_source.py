@@ -2,14 +2,14 @@ import json
 
 from gali.utils.locations import HOME
 from gali.sources.source import Source
-from gali.sources.heroic.heroic_game import HeroicGame
+from gali.sources.heroic.heroic_xdg_game import HeroicXDGGame
 from gali.sources.file_dependent_scannable import FileDependentScannable
 
 
-class HeroicSource(Source, FileDependentScannable):
+class HeroicNativeSource(Source, FileDependentScannable):
 
     name: str = "Heroic"
-    game_class: type[HeroicGame] = HeroicGame
+    game_class: type[HeroicXDGGame] = HeroicXDGGame
     config_path: str = f"{HOME}/.config/heroic/lib-cache/library.json"
 
     def get_config(self) -> dict:
@@ -21,7 +21,7 @@ class HeroicSource(Source, FileDependentScannable):
         else:
             return config
 
-    def get_games(self, config: dict) -> tuple[HeroicGame]:
+    def get_games(self, config: dict) -> tuple[HeroicXDGGame]:
 
         games = []
         library = config["library"]
@@ -50,7 +50,7 @@ class HeroicSource(Source, FileDependentScannable):
 
         return tuple(games)
 
-    def scan(self) -> tuple[HeroicGame]:
+    def scan(self) -> tuple[HeroicXDGGame]:
         config = self.get_config()
         games = self.get_games(config)
         return games
