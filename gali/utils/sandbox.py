@@ -7,7 +7,7 @@ def get_flatpak_id() -> Union[str, None]:
     return os.environ.get("FLATPAK_ID", default=None)
 
 
-def is_flatpak() -> bool:
+def in_flatpak_sandbox() -> bool:
     """Detect if the app is running inside a Flatpak sandbox.
 
     This relies on the environment variable FLATPAK_ID to be set.

@@ -5,7 +5,7 @@ from os import setsid
 from subprocess import run
 
 from gali.sources.startup_chain import StartupChain
-from gali.utils.sandbox import is_flatpak
+from gali.utils.sandbox import in_flatpak_sandbox
 
 
 class CLIStartupChain(StartupChain):
@@ -21,10 +21,10 @@ class CLIStartupChain(StartupChain):
         
         # Get shell command
         args = list()
-        if is_flatpak(): args.extend(["flatpak-spawn", "--host"])
+        if in_flatpak_sandbox(): args.extend(["flatpak-spawn", "--host"])
         args.extend(self.get_start_command())
         
-        # Resolve command path
+        # Resolve command path to not need shell=True
         args[0] = which(args[0])
         
         # Start command in a subprocess

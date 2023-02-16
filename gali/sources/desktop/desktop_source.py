@@ -7,7 +7,7 @@ from gali.sources.desktop.desktop_game import DesktopGame
 from gali.utils.locations import XDG_DATA_DIRS, XDG_DATA_HOME
 from gali.utils.deep_find_files import deep_find_files
 from gali.utils.explicit_config_parser import ExplicitConfigParser
-from gali.utils.sandbox import is_flatpak
+from gali.utils.sandbox import in_flatpak_sandbox
 
 
 class DesktopSource(Source):
@@ -99,6 +99,6 @@ class DesktopSource(Source):
         For a future fix, see :
         https://github.com/flatpak/xdg-desktop-portal/issues/809
         """
-        if is_flatpak():
+        if in_flatpak_sandbox():
             return UnscannableReason("Not scannable inside of the flatpak sandbox")
         return True

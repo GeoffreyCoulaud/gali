@@ -56,7 +56,7 @@ class Application(Adw.Application):
         singletons.launcher.start()
 
     def on_stop_game_requested(self, *data):
-        singletons.launcher.stop()
+        singletons.launcher.terminate()
 
     def on_kill_game_requested(self, *data):
         builder = Gtk.Builder.new_from_resource(resource_path="/com/github/geoffreycoulaud/gali/ui/templates/kill_game_confirm_dialog.ui")

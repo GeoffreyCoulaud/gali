@@ -1,7 +1,8 @@
 from gi.repository import GObject
-from multiprocessing.pool import Pool
-from typing import Any
+from multiprocessing import Process
+from typing import Any, Mapping
 
+from gali.sources.game import Game
 from gali.sources.startable import Startable
 from gali.sources.startup_chain import StartupChain
 
@@ -28,23 +29,13 @@ class Launcher(GObject.Object):
     __gtype_name__ = "GaliLauncher"
 
     game: Startable|None = None
-    pool: Pool
+    process: Process|None = None
 
     def __init__(self) -> None:
         super().__init__()
-        self.pool = Pool(processes=1)
-
-    def is_running(self) -> bool:
-        """Get the game running status"""
-        if self.game is None: 
-            return False
-        # TODO define the pool running status
 
     def set_game(self, game: Startable):
-        """Set the game for the launcher
-        * Can raise GameRuningError if the current game is running"""
-        if self.is_running():
-            raise GameRunningError()
+        """Set the game for the launcher"""
         self.game = game
 
     def start(self):
@@ -63,29 +54,35 @@ class Launcher(GObject.Object):
         # TODO define which options to pass to the startup chain
         options = dict()
 
-        # Start game in a multiprocessing pool of size 1
-        self.pool.apply_async(startup_queue_subprocess, [], {
-            "startup_chain": startup_chain,
-            "game": self.game,
-            "options": options
-        })
-        self.pool.close()
-        self.pool.join()
+        # Start game in a subprocess
+        self.process = Process(
+            target=startup_chain_worker, 
+            kwargs={
+                "startup_chain_class": startup_chain,
+                "game": self.game,
+                "options": options
+            }
+        )
+        self.process.start()
 
-    def stop(self) -> int|None:
+    def terminate(self) -> None:
         """Stop the running game"""
-        # TODO stop the pool
+        self.process.terminate()
 
-    def kill(self):
-        """Force kill the running game. Data loss can occur, please prefer the stop method"""
-        # TODO force stop the pool 
+    def kill(self) -> None:
+        """Force kill the running game. 
+        * Data loss can occur, please prefer the terminate method"""
+        self.process.kill()
 
-def startup_queue_subprocess(startup_chain_class: type[StartupChain], game: Startable, options: dict[str, Any]) -> None:
+def startup_chain_worker(*args, startup_chain_class: type[StartupChain], game: Game, options: Mapping[str, Any]) -> None:
     """Execute a game startup chain in an independent subprocess"""
-    startup_chain = startup_chain_class(
-        game=game,
-        options=options
-    )
+    
+    # Execute the startup chain
+    startup_chain = startup_chain_class(game=game, options=options)
     startup_chain.prepare()
     startup_chain.start()
     startup_chain.cleanup()
+
+    # Notify that the game process has terminated
+    # TODO use dbus (maybe) to notify that the process terminated
+    print("Game startup chain finished :D")

@@ -8,7 +8,6 @@ class CemuLutrisStartupChain(ScriptStartupChain):
 
     name: str = "Cemu in Lutris"
     game: ABCCemuLutrisGame
-    _tempfile: str
 
     def make_script(self) -> None:
         # TODO export lutris script first
