@@ -18,8 +18,9 @@ class ScriptStartupChain(CLIStartupChain):
 
     def prepare(self) -> None:
         """Create a temp file ready to contain a shell script"""
+        # TODO what happens when the temp file is created in the sanbox but ran on the host 
         (_, path) = mkstemp()
-        self._tempfile = path
+        self.tempfile = path
         self.make_script()
 
     def get_start_command(self) -> Iterable[str]:
@@ -28,8 +29,9 @@ class ScriptStartupChain(CLIStartupChain):
 
     def cleanup(self) -> None:
         """Delete the temp file"""
+        # TODO same as prepare
         try:
-            remove(self._tempfile)
+            remove(self.tempfile)
         except FileNotFoundError:
             # If the file doesn't exist, nothing to do.
             pass

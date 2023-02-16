@@ -9,8 +9,6 @@ class HeroicSource(FileDependentSource):
     name: str
     config_path: str
 
-    game_class: type[HeroicXDGGame] = HeroicXDGGame
-
     def get_config(self) -> dict:
         try:
             with open(self.config_path, "r", encoding="utf-8-sig") as file:
