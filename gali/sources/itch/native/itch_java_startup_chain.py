@@ -10,5 +10,5 @@ class ItchJavaStartupChain(ItchStartupChain, StemmedCLIStartupChain):
     stem = ["java", "-jar"]
 
     def get_start_command_suffix(self) -> Iterable[str]:
-        # TODO 
+        # TODO start itch java candidate
         pass

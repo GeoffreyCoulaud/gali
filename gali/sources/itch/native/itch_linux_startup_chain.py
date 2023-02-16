@@ -9,5 +9,5 @@ class ItchLinuxStartupChain(ItchStartupChain, CLIStartupChain):
     name = "Itch Linux candidate"
 
     def get_start_command(self) -> Iterable[str]:
-        # TODO
+        # TODO start itch command candidate 
         pass

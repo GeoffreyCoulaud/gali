@@ -7,6 +7,6 @@ class ItchScriptStartupChain(ItchStartupChain, StemmedCLIStartupChain):
 
     name = "Itch Shell script candidate"
 
-    def make_script(self) -> Iterable[str]:
-        # TODO
+    def get_start_command_suffix(self) -> Iterable[str]:
+        # TODO start itch script candidate
         pass
