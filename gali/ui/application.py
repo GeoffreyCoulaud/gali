@@ -65,9 +65,9 @@ class Application(Adw.Application):
         dialog.set_transient_for(self.props.active_window)
         dialog.present()
 
-    def on_kill_game_confirm_response(self, response: str, *data):
-        if response == "kill":
-            singletons.launcher.kill()
+    def on_kill_game_confirm_response(self, dialog: Adw.MessageDialog, response: str, *data):
+        if not response == "kill": return
+        singletons.launcher.terminate(force=True)
 
     def create_action(self, name, callback, shortcuts=None):
         """Add an application action.

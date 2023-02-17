@@ -40,5 +40,5 @@ if __name__ == "__main__":
     resource = Gio.Resource.load(os.path.join(pkgdatadir, "gali.gresource"))
     resource._register()
 
-    from gali import main
-    sys.exit(main.main(VERSION))
+    from gali.main import main
+    sys.exit(main(VERSION))

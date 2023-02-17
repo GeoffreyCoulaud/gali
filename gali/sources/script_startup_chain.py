@@ -28,6 +28,10 @@ class ScriptStartupChain(CLIStartupChain):
 
     def cleanup(self) -> None:
         """Delete the temp file"""
+
+        # ! DEBG
+        return
+
         try:
             remove(self.tempfile)
         except FileNotFoundError:

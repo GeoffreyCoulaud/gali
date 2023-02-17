@@ -24,9 +24,6 @@ class CLIStartupChain(StartupChain):
         if in_flatpak_sandbox(): args.extend(["flatpak-spawn", "--host"])
         args.extend(self.get_start_command())
         
-        # Resolve command path to not need shell=True
-        args[0] = which(args[0])
-        
         # Start command in a subprocess
         print(f"Starting \"{self.game.name}\"")
         print(args)

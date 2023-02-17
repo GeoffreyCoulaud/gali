@@ -35,7 +35,8 @@ install_data(
         'main.py',
         'library.py',
         'launcher.py',
-        'singletons.py'
+        'singletons.py',
+        'game_wrapper_process.py'
     ], 
     install_dir: moduledir
 )
