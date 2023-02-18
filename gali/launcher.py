@@ -2,7 +2,7 @@ import pickle
 import inspect
 import sys
 from gi.repository import GObject
-from os import killpg
+from os import killpg, pathsep, environ
 from signal import SIGTERM, SIGKILL
 from subprocess import Popen, PIPE
 
@@ -81,8 +81,12 @@ class Launcher(GObject.Object):
         # - terminating the game terminates its subprocesses
         # - exiting the launcher must not exit the game
         module = inspect.getabsfile(StartupChainRunner)
+        process_args = [sys.executable, module]
+        process_env = environ.copy()
+        process_env["PYTHONPATH"] = pathsep.join(sys.path)
         self.process = Popen(
-            args=[sys.executable, module], 
+            args=process_args, 
+            env=process_env,
             start_new_session=True,
             stdin=PIPE
         )
