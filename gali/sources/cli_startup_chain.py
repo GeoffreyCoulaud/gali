@@ -1,7 +1,5 @@
 from abc import abstractmethod
 from typing import Iterable
-from shutil import which
-from os import setsid
 from subprocess import run
 
 from gali.sources.startup_chain import StartupChain
@@ -27,4 +25,4 @@ class CLIStartupChain(StartupChain):
         # Start command in a subprocess
         print(f"Starting \"{self.game.name}\"")
         print(args)
-        run(args=args, preexec_fn=setsid)
+        run(args=args)

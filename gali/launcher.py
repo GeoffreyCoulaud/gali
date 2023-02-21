@@ -44,16 +44,13 @@ class Launcher(GObject.Object):
 
     def is_running(self) -> bool:
         """Get the launcher running status"""
-        if (self.game is None) or (self.process is None):
-            return False
-        return True
+        if (self.game is None) or (self.process is None): return False
         return self.process.poll() is None
 
     def set_game(self, game: Startable):
         """Set the game for the launcher
         * Can raise GameRunningError if trying to change game when already running"""
-        if self.is_running():
-            raise GameRunningError()
+        if self.is_running(): raise GameRunningError()
         self.game = game
 
     def start(self):
@@ -61,15 +58,11 @@ class Launcher(GObject.Object):
         * Can raise GameNotSetError if no game is set
         * Can raise NoStartupChainError if game has no startup chain"""
 
-        if self.is_running():
-            raise GameRunningError()
-
-        if self.game is None: 
-            raise GameNotSetError()
+        if self.is_running(): raise GameRunningError()
+        if self.game is None: raise GameNotSetError()
 
         # TODO remove when choosing startup chain is implemented (sc passed as an argument)
-        if len(self.game.startup_chains) == 0:
-            raise NoStartupChainError()
+        if len(self.game.startup_chains) == 0: raise NoStartupChainError()
         startup_chain_class = self.game.startup_chains[0]
 
         # TODO Remove when choosing startup chain options is implemented (options passed as an argument)
@@ -99,7 +92,7 @@ class Launcher(GObject.Object):
     def terminate(self, force: bool = False) -> None:
         """Stop the running game
         * Setting force=True can incur data loss. Use at your own risk"""
-        if not self.is_running(): 
-            return
+        # TODO doesn't work in flatpak sandbox : Since games are run on the host and not in a sandbox, we can't send a signal to them 
+        if not self.is_running(): return
         signal = SIGKILL if force else SIGTERM
         killpg(self.process.pid, signal)
