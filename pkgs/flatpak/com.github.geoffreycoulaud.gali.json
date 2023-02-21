@@ -1,0 +1,52 @@
+{
+    "app-id" : "com.github.geoffreycoulaud.gali",
+    "runtime" : "org.gnome.Platform",
+    "runtime-version" : "43",
+    "sdk" : "org.gnome.Sdk",
+    "command" : "gali",
+    "finish-args" : [
+        "--share=network",
+        "--share=ipc",
+        "--socket=fallback-x11",
+        "--device=dri",
+        "--socket=wayland",
+        "--talk-name=org.freedesktop.Flatpak",
+        "--filesystem=home/.var/app/org.citra_emu.citra:ro",
+        "--filesystem=home/.var/app/org.DolphinEmu.dolphin-emu:ro",
+        "--filesystem=home/.var/app/org.ppsspp.PPSSPP:ro",
+        "--filesystem=home/.var/app/org.yuzu_emu.yuzu:ro",
+        "--filesystem=home/.var/app/com.heroicgameslauncher.hgl:ro",
+        "--filesystem=home/.var/app/com.valvesoftware.Steam:ro",
+        "--filesystem=home/.var/app/org.libretro.RetroArch:ro"
+    ],
+    "cleanup" : [
+        "/include",
+        "/lib/pkgconfig",
+        "/man",
+        "/share/doc",
+        "/share/gtk-doc",
+        "/share/man",
+        "/share/pkgconfig",
+        "*.la",
+        "*.a"
+    ],
+    "modules" : [
+        "python3-vdf.json",
+        "python3-pyyaml.json",
+        "python3-defusedxml.json",
+        {
+            "name" : "gali",
+            "builddir" : true,
+            "buildsystem" : "meson",
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "file:///home/geoffrey/Repositories/gali"
+                }
+            ]
+        }
+    ],
+    "build-options" : {
+        "env" : {        }
+    }
+}

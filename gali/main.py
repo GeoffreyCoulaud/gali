@@ -1,14 +1,15 @@
+#!/bin/python3
+
 import sys
 from os import environ
-from tempfile import mkstemp
 
-from gali.ui.application import Application
-from gali.utils.sandbox import in_flatpak_sandbox
+# TODO apply flatpak specific setup
+# (Trying to universalize distribution to non-flatpak)
 
-# Set up the singletons
-import gali.singletons as singletons
+def main():
 
-def main(version):
+    from gali.ui.application import Application
+    from gali.utils.sandbox import in_flatpak_sandbox
 
     # In flatpak, set the TMPDIR in $XDG_RUNTIME_DIR/app/$FLATPAK_ID
     # see https://docs.flatpak.org/en/latest/sandbox-permissions.html?highlight=XDG_RUNTIME_DIR#filesystem-access
@@ -21,3 +22,6 @@ def main(version):
     # Create and run app
     application = Application()
     return application.run(sys.argv)
+
+if __name__ == "__main__":
+    main()
