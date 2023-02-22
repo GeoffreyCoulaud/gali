@@ -8,12 +8,11 @@ project(
 	],
 )
 
-i18n = import('i18n')
-gnome = import('gnome')
-
 subdir('data')
-subdir('gali')
+subdir('src')
 subdir('po')
+
+gnome = import('gnome')
 
 gnome.post_install(
 	glib_compile_schemas: true,

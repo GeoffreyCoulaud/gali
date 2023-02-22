@@ -13,11 +13,11 @@ modules:
   - python3-pyyaml.json
   - python3-defusedxml.json
   - name: gali
+    buildsystem: meson
+    builddir: true
     sources: 
       - type: dir
         path: ../../gali
-        builddir: true
-        buildsystem: meson
 
 # Sandbox permissions
 finish-args:

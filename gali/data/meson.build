@@ -1,3 +1,5 @@
+i18n = import('i18n')
+
 desktop_file = i18n.merge_file(
 	input: 'com.github.geoffreycoulaud.gali.desktop.in',
 	output: 'com.github.geoffreycoulaud.gali.desktop',
