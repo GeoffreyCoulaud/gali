@@ -226,7 +226,6 @@ Install `flatpak-builder` then build and run the app:
 ```
 $ git clone https://github.com/GeoffreyCoulaud/gali.git
 $ cd gali/pkgs/flatpak
-$ mkdir build
 $ flatpak-builder --force-clean build *.yml gali
 $ flatpak-builder --run build *.yml gali
 ```
