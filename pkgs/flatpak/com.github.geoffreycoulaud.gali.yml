@@ -1,20 +1,32 @@
+# App info
 app-id: com.github.geoffreycoulaud.gali
+command: gali
+
+# Sandbox info
 runtime: org.gnome.Platform
 runtime-version: '43'
 sdk: org.gnome.Sdk
-command: gali
-default-branch: "main"
+
+# Sources
 modules:
-  - name: "python3-vdf"
-    sources: "python3-vdf.json"
-  - name: "python3-pyyaml"
-    sources: "python3-pyyaml.json"
-  - name: "python3-defusedxml",
-    sources: "python3-defusedxml.json"
-  - name: "gali"
+
+  - name: python3-vdf
+    sources: python3-vdf.json
+
+  - name: python3-pyyaml
+    sources: python3-pyyaml.json
+
+  - name: python3-defusedxml
+    sources: python3-defusedxml.json
+
+  - name: gali
     sources: 
-      - type: "dir"
-        path: "../../gali"
+      - type: dir
+        path: ../../gali
+        builddir: true
+        buildsystem: meson
+
+# Sandbox permissions
 finish-args:
   - --share=network
   - --share=ipc
@@ -29,3 +41,16 @@ finish-args:
   - --filesystem=home/.var/app/com.heroicgameslauncher.hgl:ro
   - --filesystem=home/.var/app/com.valvesoftware.Steam:ro
   - --filesystem=home/.var/app/org.libretro.RetroArch:ro
+
+# Files to remove at the end
+# ? Purpose : slim down the bundle
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - /man
+  - /share/doc
+  - /share/gtk-doc
+  - /share/man
+  - /share/pkgconfig
+  - "*.la"
+  - "*.a"
