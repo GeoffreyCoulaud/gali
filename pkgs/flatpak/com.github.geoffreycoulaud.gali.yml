@@ -9,16 +9,9 @@ sdk: org.gnome.Sdk
 
 # Sources
 modules:
-
-  - name: python3-vdf
-    sources: python3-vdf.json
-
-  - name: python3-pyyaml
-    sources: python3-pyyaml.json
-
-  - name: python3-defusedxml
-    sources: python3-defusedxml.json
-
+  - python3-vdf.json
+  - python3-pyyaml.json
+  - python3-defusedxml.json
   - name: gali
     sources: 
       - type: dir
