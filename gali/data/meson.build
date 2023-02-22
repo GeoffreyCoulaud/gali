@@ -1,3 +1,5 @@
+subdir('icons')
+
 i18n = import('i18n')
 
 desktop_file = i18n.merge_file(

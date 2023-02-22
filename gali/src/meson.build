@@ -1,5 +1,3 @@
-pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'gali')
 gnome = import('gnome')
 
 gnome.compile_resources('gali',
@@ -25,7 +23,6 @@ configure_file(
     install_dir: get_option('bindir')
 )
 
-install_subdir('games', install_dir: moduledir)
 install_subdir('sources', install_dir: moduledir)
 install_subdir('ui', install_dir: moduledir)
 install_subdir('utils', install_dir: moduledir)
