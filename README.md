@@ -215,7 +215,21 @@ It's still the same source under the hood, so all of these are **variants** of t
 **This is in active development, but not ready. Be patient !**
 
 ### For developers
-Open the project in Gnome Builder and start Gali from there.
+
+#### Native
+
+Not supported yet
+
+#### Flatpak
+
+Install `flatpak-builder` then build and run the app:  
+```
+$ git clone https://github.com/GeoffreyCoulaud/gali.git
+$ cd gali/pkgs/flatpak
+$ mkdir build
+$ flatpak-builder --force-clean build com.github.geoffreycoulaud.gali.yml gali
+$ flatpak-builder --run build com.github.geoffreycoulaud.gali.yml gali
+```
 
 ## TODO
 
