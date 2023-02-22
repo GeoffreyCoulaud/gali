@@ -16,8 +16,8 @@ modules:
     buildsystem: meson
     builddir: true
     sources: 
-      - type: git
-        path: "."
+      - type: dir
+        path: ../../gali
 
 # Sandbox permissions
 finish-args:
