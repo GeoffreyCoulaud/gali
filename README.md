@@ -211,16 +211,11 @@ It's still the same source under the hood, so all of these are **variants** of t
 
 ## Usage
 
-### For users
 **This is in active development, but not ready. Be patient !**
 
-### For developers
+## Building
 
-#### Native
-
-Not supported yet
-
-#### Flatpak
+### Flatpak
 
 Install `flatpak-builder` then build and run the app:  
 ```
