@@ -217,6 +217,8 @@ Everything is done to make adding new sources as simple as possible.
 
 ### Building from source
 
+The build directory can be changed at will, but a `build` subdir of the repository is recommended.
+
 ```sh
 git clone https://github.com/GeoffreyCoulaud/gali.git
 cd gali/gali
@@ -225,7 +227,11 @@ meson compile
 meson install
 ```
 
-The build directory can be changed at will, but a `build` subdir of the repository is recommended.
+Then, simply start in a terminal
+
+```sh
+gali
+```
 
 ## TODO
 
