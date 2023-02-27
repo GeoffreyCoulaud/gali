@@ -1,12 +1,8 @@
-<div style="display: grid; grid-template-columns: 12em 1fr; gap: 1em">
-	<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 12em;">
-	<div>
-		<h1>Gali</h1>
-		<p>
-			View and start all your games from a single launcher
-		</p>
-	</div>
-</div>
+<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 12em; float: left;">
+
+# Gali
+
+View and start all your games from a single launcher
 
 ## Supported game sources
 
