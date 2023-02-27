@@ -222,7 +222,7 @@ git clone https://github.com/GeoffreyCoulaud/gali.git
 cd gali/gali
 meson setup ../build && cd ../build
 meson compile
-meson installxsxw
+meson install
 ```
 
 The build directory can be changed at will, but a `build` subdir of the repository is recommended.
