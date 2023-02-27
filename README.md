@@ -1,4 +1,4 @@
-<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 12em; float: left;">
+<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" align="left" width="120">
 
 # Gali
 
