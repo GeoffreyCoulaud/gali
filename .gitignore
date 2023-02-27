@@ -1,2 +1,1 @@
-pkgs/flatpak/build
-pkgs/flatpak/.flatpak-builder
+build

@@ -1,22 +1,14 @@
-# GALI
+<div style="display: grid; grid-template-columns: 12em 1fr; gap: 1em">
+	<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 100%;">
+	<div>
+		<h1>Gali</h1>
+		<p>
+			View and start all your games from a single launcher
+		</p>
+	</div>
+</div>
 
-A game launcher for **linux** where your library is the star of the show.
-
-
-> I'm so tired of launchers that each have 20% of my games.  
-I want to view them all in the same place !
-
-If you think alike, Gali is for you.
-
-However, gali is **not** 
-
-* A game manager that handles downloading, managing, uninstalling
-* A general-purpose app launcher
-* A replacement for other game launchers
-* A compatibility layer
-* A windows app
-
-## Supported sources
+## Supported game sources
 
 <table>
 	<thead>
@@ -209,13 +201,35 @@ For example, *Retroarch* is distributed in all of these formats:
 
 It's still the same source under the hood, so all of these are **variants** of the standalone version.
 
+## Vision
+
+Gali is inspired by the Unix philosophy, "Do one thing and do it well". We diverge a slightly by doing *a few* things instead of a single one. 
+
+Those are:
+* Viewing games from a maximum of (local) sources
+* Starting all games normally
+* When possible, stopping started games
+
+This means that every other task concerning games is left to the game sources. This means that Gali will not be able to install, move, uninstall, manage games.  
+Its goal is not to become the next Steam or Itch. Gali is only a frontend.
+
+Everything is done to make adding new sources as simple as possible.
+
 ## Installation
 
-**This is in active development, but not ready. Be patient !**
+**Gali is development. Please be patient !**
 
-## Building
+### Building from source
 
-TODO : Meson build steps
+```sh
+git clone https://github.com/GeoffreyCoulaud/gali.git
+cd gali/gali
+meson setup ../build && cd ../build
+meson compile
+meson installxsxw
+```
+
+The build directory can be changed at will, but a `build` subdir of the repository is recommended.
 
 ## TODO
 
