@@ -1,5 +1,5 @@
 <div style="display: grid; grid-template-columns: 12em 1fr; gap: 1em">
-	<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 100%;">
+	<img src="gali/data/icons/scalable/com.github.geoffreycoulaud.gali.svg" alt="gali's logo" style="width: 12em;">
 	<div>
 		<h1>Gali</h1>
 		<p>
