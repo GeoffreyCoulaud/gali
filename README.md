@@ -209,21 +209,13 @@ For example, *Retroarch* is distributed in all of these formats:
 
 It's still the same source under the hood, so all of these are **variants** of the standalone version.
 
-## Usage
+## Installation
 
 **This is in active development, but not ready. Be patient !**
 
 ## Building
 
-### Flatpak
-
-Install `flatpak-builder` then build and run the app:  
-```
-$ git clone https://github.com/GeoffreyCoulaud/gali.git
-$ cd gali/pkgs/flatpak
-$ flatpak-builder --force-clean build *.yml gali
-$ flatpak-builder --run build *.yml gali
-```
+TODO : Meson build steps
 
 ## TODO
 
