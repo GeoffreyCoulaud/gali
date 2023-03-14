@@ -199,9 +199,8 @@ It's still the same source under the hood, so all of these are **variants** of t
 
 ## Vision
 
-Gali is inspired by the Unix philosophy, "Do one thing and do it well". We diverge a slightly by doing *a few* things instead of a single one. 
+Gali is inspired by the Unix philosophy, "Do one thing and do it well". We diverge slightly by doing *a few* things :
 
-Those are:
 * Viewing games from a maximum of (local) sources
 * Starting all games normally
 * When possible, stopping started games
